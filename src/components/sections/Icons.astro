@@ -1,5 +1,7 @@
 ---
-/* ACF layout: icons (theme inc/sections/icons.php). Tech tiles + clients grid. */
+/* ACF layout: icons (theme inc/sections/icons.php).
+   variant="default" → tech tiles (blob + small icon + heading + text).
+   variant="logos"   → client logo wall (real logo sizing, grayscale→color, case links). */
 import { mediaSrc, mediaAlt } from '../../lib/media';
 
 interface Props {
@@ -8,58 +10,186 @@ interface Props {
   text?: string;
   icons: Array<Record<string, any>>;
   link?: Record<string, any> | '' | null;
+  variant?: 'default' | 'logos';
 }
-const { index, bg = '', text = '', icons, link } = Astro.props;
+const { index, bg = '', text = '', icons, link, variant = 'default' } = Astro.props;
 const l = link && typeof link === 'object' ? link : null;
 const BLOB =
   'M52.7,-59C68.3,-49.7,81,-33.1,85.8,-13.9C90.5,5.2,87.4,26.9,75.7,40.5C64,54,43.8,59.3,26,61.6C8.1,63.9,-7.3,63.2,-22.1,58.7C-36.9,54.2,-51.1,45.9,-56.7,33.9C-62.4,21.8,-59.6,5.9,-57.2,-10.6C-54.9,-27.1,-53.1,-44.1,-43.7,-54.5C-34.2,-65,-17.1,-68.8,0.7,-69.6C18.5,-70.5,37.1,-68.4,52.7,-59Z';
+
+/* extract an embedded case-study <a> from a tile's text field */
+const linkOf = (html: string | undefined) => {
+  if (!html) return null;
+  const m = html.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/s);
+  return m ? { url: m[1], label: m[2].replace(/<[^>]+>/g, '').trim() } : null;
+};
+const stripTags = (s: string) => (s || '').replace(/<[^>]+>/g, '').trim();
 ---
 
-<section class="icons" style={`background-color: ${bg}`} id={`section${index}`} data-scroll data-scroll-repeat>
-  <div class="container-fluid py-10">
-    <div class="row pt-10">
-      <div class="col-md-6 mx-auto paragraph" data-scroll data-scroll-opacity>
-        <Fragment set:html={text} />
-      </div>
-    </div>
-    <div class="row pb-md-6">
-      {icons.map((tile) => {
-        const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
-        return (
-          <div
-            class="col-md-6 col-lg-3 text-center paragraph hover-underline pt-10 mt-10 mt-lg-0"
-            data-scroll
-            data-scroll-opacity
-          >
-            <div data-scroll data-scroll-opacity class="position-relative">
-              <svg class="icons-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  stroke="#F3F4FB"
-                  stroke-width="1"
-                  fill="none"
-                  d={BLOB}
-                  transform="translate(100 100)"
-                />
-              </svg>
-              {img && mediaSrc(img) && (
-                <div class="ratio mb-4 mx-auto" style="width:  26px; height:  24px; --bs-aspect-ratio: 100%;">
-                  <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
-                </div>
-              )}
-              <strong class="mb-2">{tile.title}</strong>
-              <Fragment set:html={tile.text ?? ''} />
-            </div>
+{
+  variant === 'logos' ? (
+    <section class="gi-clients" id={`section${index}`} data-scroll data-scroll-repeat>
+      <div class="container-fluid py-10">
+        <div class="row pt-10">
+          <div class="col-lg-8 mx-auto text-center paragraph gi-clients-head" data-scroll data-scroll-opacity>
+            <Fragment set:html={text} />
           </div>
-        );
-      })}
-
-      {l && (
-        <div class="col-12 mt-10 pt-6 d-flex justify-content-center" data-scroll data-scroll-opacity>
-          <a class="btn btn-arrow btn-text" href={l.url} target={l.target || '_self'}>
-            <span>{l.title}</span>
-          </a>
         </div>
-      )}
-    </div>
-  </div>
-</section>
+        <div class="gi-logo-wall" data-scroll data-scroll-opacity>
+          {icons.map((tile) => {
+            const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
+            const cs = linkOf(tile.text);
+            return (
+              <div class="gi-logo-cell">
+                {img && mediaSrc(img) && (
+                  <img
+                    class="gi-logo"
+                    src={mediaSrc(img)}
+                    alt={mediaAlt(img) || stripTags(tile.title)}
+                    title={stripTags(tile.title)}
+                    loading="lazy"
+                  />
+                )}
+                {cs && (
+                  <a class="gi-logo-link" href={cs.url}>
+                    {cs.label}
+                  </a>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section
+      class="icons"
+      style={`background-color: ${bg}`}
+      id={`section${index}`}
+      data-scroll
+      data-scroll-repeat
+    >
+      <div class="container-fluid py-10">
+        <div class="row pt-10">
+          <div class="col-md-6 mx-auto paragraph" data-scroll data-scroll-opacity>
+            <Fragment set:html={text} />
+          </div>
+        </div>
+        <div class="row pb-md-6">
+          {icons.map((tile) => {
+            const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
+            return (
+              <div
+                class="col-md-6 col-lg-3 text-center paragraph hover-underline pt-10 mt-10 mt-lg-0"
+                data-scroll
+                data-scroll-opacity
+              >
+                <div data-scroll data-scroll-opacity class="position-relative">
+                  <svg class="icons-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke="#F3F4FB" stroke-width="1" fill="none" d={BLOB} transform="translate(100 100)" />
+                  </svg>
+                  {img && mediaSrc(img) && (
+                    <div class="ratio mb-4 mx-auto" style="width:  26px; height:  24px; --bs-aspect-ratio: 100%;">
+                      <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
+                    </div>
+                  )}
+                  <strong class="mb-2">{tile.title}</strong>
+                  <Fragment set:html={tile.text ?? ''} />
+                </div>
+              </div>
+            );
+          })}
+
+          {l && (
+            <div class="col-12 mt-10 pt-6 d-flex justify-content-center" data-scroll data-scroll-opacity>
+              <a class="btn btn-arrow btn-text" href={l.url} target={l.target || '_self'}>
+                <span>{l.title}</span>
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .gi-clients {
+    background: #fff;
+  }
+  .gi-clients-head {
+    margin-bottom: 1rem;
+  }
+  .gi-logo-wall {
+    max-width: 1080px;
+    margin: 2.5rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    border-top: 1px solid #ececf3;
+    border-left: 1px solid #ececf3;
+  }
+  .gi-logo-cell {
+    border-right: 1px solid #ececf3;
+    border-bottom: 1px solid #ececf3;
+    min-height: 132px;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .gi-logo {
+    max-width: 148px;
+    max-height: 52px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.62;
+    transition:
+      filter 0.25s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+  .gi-logo-cell:hover .gi-logo {
+    filter: grayscale(0);
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  .gi-logo-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0d9e6d;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+  .gi-logo-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  @media (max-width: 900px) {
+    .gi-logo-wall {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .gi-logo-wall {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .gi-logo-cell {
+      min-height: 108px;
+      padding: 1.1rem 0.75rem;
+    }
+    .gi-logo {
+      max-width: 120px;
+      max-height: 42px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gi-logo {
+      transition: none;
+    }
+  }
+</style>

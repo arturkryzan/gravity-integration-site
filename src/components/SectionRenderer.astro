@@ -18,8 +18,10 @@ interface Props {
   overrides?: Record<number, Record<number, any>>;
   /** section-index offset when rendering a slice (keeps #sectionN anchors stable) */
   startIndex?: number;
+  /** global section indices that are client-logo walls (icons variant) */
+  logoSections?: number[];
 }
-const { sections, overrides = {}, startIndex = 0 } = Astro.props;
+const { sections, overrides = {}, startIndex = 0, logoSections = [] } = Astro.props;
 ---
 
 {
@@ -31,7 +33,16 @@ const { sections, overrides = {}, startIndex = 0 } = Astro.props;
     if (layout === 'text_img')
       return <TextImg index={index} text={s.text} img={s.img} img_placement={s.img_placement} />;
     if (layout === 'icons')
-      return <Icons index={index} bg={s.bg} text={s.text} icons={s.icons ?? []} link={s.link} />;
+      return (
+        <Icons
+          index={index}
+          bg={s.bg}
+          text={s.text}
+          icons={s.icons ?? []}
+          link={s.link}
+          variant={logoSections.includes(index) ? 'logos' : 'default'}
+        />
+      );
     if (layout === 'quote') return <Quote index={index} bg={s.bg} text={s.text} />;
     if (layout === 'text_boxes')
       return <TextBoxes index={index} text={s.text} boxes={s.boxes ?? []} />;

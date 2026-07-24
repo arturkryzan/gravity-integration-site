@@ -69,43 +69,13 @@ body.nav-open .nav-main {
 body.nav-opening .nav-main {
   display: block;
 }
-/* Unify the fullscreen menu to ONE clean background — the theme shipped a
-   3-tone striped menu (light / #6b6d81 / #464861 per column) that read as
-   ugly hard-edged bands. One cohesive light surface, dark readable text. */
-.nav-main,
-.nav-main .col-pull .overlay,
-.nav-main .col-pull:nth-of-type(2) .overlay,
-.nav-main .col-pull:nth-of-type(3) .overlay,
-.nav-main .col-pull:last-of-type .overlay {
-  background: #f3f4fb !important;
-}
-.nav-main .nav-medium,
-.nav-main .nav-medium a,
-.nav-main .nav-small,
-.nav-main .nav-small a {
-  color: #464861 !important;
-}
+/* Original 3-tone menu (theme design): col1 light, col2 gray #6b6d81, col3
+   dark #464861 — those per-column colours live in legacy.css. Text is dark on
+   the light column (nav-big) and white on the gray/dark columns (inherited).
+   The close-X and socials icons sit over the dark right column, so their
+   original white stroke/fill is correct — no override needed. */
 .nav-main .nav-small a {
   opacity: 0.7;
-}
-/* close button + social icons were white (for the old dark column) — make them
-   dark & visible on the light menu, but ONLY while the menu is open (they stay
-   white over the dark hero when closed). */
-body.nav-open .hamburger,
-body.nav-open .hamburger span {
-  color: #464861 !important;
-}
-body.nav-open .hamburger svg circle,
-body.nav-open .nav-main .socials svg circle {
-  stroke: #464861 !important;
-}
-body.nav-open .nav-main .socials svg path {
-  fill: #464861 !important;
-}
-/* the close X is drawn with strokes (not fills); the menu-glyph uses fills */
-body.nav-open .hamburger svg path {
-  fill: #464861 !important;
-  stroke: #464861 !important;
 }
 .nav-main .socials a {
   opacity: 0.7;

@@ -1,0 +1,84 @@
+---
+/* ACF layout: text_boxes (theme inc/sections/text_boxes.php) */
+import { mediaSrc, mediaAlt } from '../../lib/media';
+
+interface Props {
+  index: number;
+  text?: string;
+  boxes: Array<Record<string, any>>;
+}
+const { index, text = '', boxes } = Astro.props;
+---
+
+<section data-scroll data-scroll-repeat data-scroll-offset="100%, 50%">
+  <div class="container-fluid pt-lg-10 mb-lg-5">
+    <div class="row mb-lg-10 py-100" id={`section${index}`}>
+      {text && (
+        <>
+          <div
+            class="col-lg-5 offset-lg-1 paragraph pb-lg-6 hover-underline mb-lg-10"
+            data-scroll
+            data-scroll-opacity
+          >
+            <Fragment set:html={text} />
+          </div>
+          <div
+            class="boxes-decorative ratio"
+            data-scroll
+            data-scroll-delay=".1"
+            data-scroll-speed="-1"
+            style=" --bs-aspect-ratio: 84%;"
+          >
+            <img src="/theme/static/lines.svg" alt="" loading="lazy" class="lazyload" />
+          </div>
+        </>
+      )}
+    </div>
+
+    <div class="row position-relative pb-100">
+      <div class="col-8 boxes-img d-none d-md-block">
+        <div
+          class="ratio"
+          style=" --bs-aspect-ratio: 59.85%;"
+          data-scroll
+          data-scroll-delay=".1"
+          data-scroll-speed="-1"
+        >
+          <img src="/theme/content/img.jpg" alt="" loading="lazy" class="lazyload" />
+        </div>
+      </div>
+      {boxes?.length > 0 && (
+        <>
+          <div class="col-1 offset-2 pt-10 bg-white position-relative zIndex2 d-none d-lg-block">
+            <div class="pt-10" />
+          </div>
+          <div class="col-lg-8 pt-lg-10 bg-white position-relative zIndex2">
+            <div class="row boxes">
+              {boxes.map((box) => {
+                const icon = box.icon && typeof box.icon === 'object' ? box.icon : null;
+                const link = box.link && typeof box.link === 'object' ? box.link : null;
+                return (
+                  <div class="col-md-6 paragraph hover-underline pt-10 pb-4">
+                    <div data-scroll data-scroll-opacity>
+                      {icon && mediaSrc(icon) && (
+                        <div class="ratio bg-gray mb-4" style="height:  24px; --bs-aspect-ratio: 100%;">
+                          <img src={mediaSrc(icon)} alt={mediaAlt(icon)} loading="lazy" class="lazyload" />
+                        </div>
+                      )}
+                      <Fragment set:html={box.text ?? ''} />
+                      {link && (
+                        <a class="btn btn-text" href={link.url} target={link.target || '_self'}>
+                          <span>{link.title}</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+</section>

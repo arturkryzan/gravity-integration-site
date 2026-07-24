@@ -1,0 +1,69 @@
+---
+/* Homepage hero (theme hero.php + snippet 24 overhaul), video re-encoded with poster. */
+interface Props {
+  h1: string;
+}
+const { h1 } = Astro.props;
+---
+
+<section class="hero bg-violet d-flex align-items-end" data-scroll-section>
+  <video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="/video/homehero-poster.jpg"
+    class="img-fit h-100 w-100"
+    style="object-fit: cover;"
+  >
+    <source src="/video/homehero.webm" type="video/webm" />
+    <source src="/video/homehero.mp4" type="video/mp4" />
+  </video>
+  <div class="container-fluid">
+    <div class="row align-items-start">
+      <div class="col-lg-8 hero-text pb-6" data-scroll data-scroll-opacity>
+        <div class="d-inline-block hero-text-circle">
+          <h1 set:html={h1} />
+        </div>
+      </div>
+    </div>
+    <div class="row pb-10">
+      <div class="col-lg-7" data-scroll data-scroll-opacity>
+        <p style="color:rgba(255,255,255,0.75);font-size:1.1rem;line-height:1.65;margin-bottom:1.5rem;">
+          139+ konektorów, Always&#8209;on&#8209;data, instalacja lokalna. Plany od&nbsp;2&nbsp;999
+          PLN/rok. Pobierz i&nbsp;sprawdź dziś.
+        </p>
+        <div
+          style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;margin-bottom:1.25rem;"
+        >
+          <a class="btn btn-arrow btn-arrow-white" href="/pobieranie/"
+            ><span>Pobierz za darmo</span></a
+          >
+          <a class="btn btn-arrow btn-arrow-white" href="#section-demo" data-scroll-to
+            ><span>Umów 15&#8209;min demo</span></a
+          >
+        </div>
+        <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;line-height:1.5;margin:0;">
+          Wybierany przez Bispol, Frogum, Hewalex, Lindner i&nbsp;20+ innych firm produkcyjnych
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="hero-decorative ratio"
+    data-scroll
+    data-scroll-delay=".1"
+    data-scroll-speed=".3"
+    style=" --bs-aspect-ratio: 93%;"
+  >
+    <img
+      src="/theme/static/lineshome.svg"
+      alt=""
+      role="presentation"
+      aria-hidden="true"
+      loading="lazy"
+      class="lazyload"
+    />
+  </div>
+</section>

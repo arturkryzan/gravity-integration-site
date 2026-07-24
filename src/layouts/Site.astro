@@ -1,29 +1,35 @@
 ---
+/* Full site shell: head + announcement bar + header/nav + main + footer.
+   Mirrors the live WP body structure (theme head.php/header.php/footer.php). */
 import '@fontsource/epilogue/400.css';
 import '@fontsource/epilogue/600.css';
-import '@fontsource/epilogue/700.css';
-import '@fontsource/epilogue/800.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/600.css';
 import '../styles/tokens.css';
+import '../styles/legacy.css';
+import '../styles/site.css';
 import site from '../data/site.json';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
   description?: string;
-  /** canonical path, e.g. "/technologia/" */
   path: string;
+  bodyClass?: string;
   ogImage?: string;
 }
-const { title, description = '', path, ogImage = '/og-homehero.png' } = Astro.props;
+const { title, description = '', path, bodyClass = '', ogImage = '/og-homehero.png' } = Astro.props;
 const canonical = new URL(path, site.siteUrl).href;
 ---
 
 <!doctype html>
-<html lang="pl">
+<html lang="pl" class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
@@ -53,29 +59,40 @@ const canonical = new URL(path, site.siteUrl).href;
         sameAs: [site.linkedin],
       })}
     />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: title,
+        description,
+        url: canonical,
+        inLanguage: 'pl-PL',
+        isPartOf: { '@type': 'WebSite', name: site.siteName, url: site.siteUrl },
+      })}
+    />
 
     <!-- GA4 — same property as the WP site for data continuity -->
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4}`}></script>
     <script is:inline define:vars={{ ga4: site.ga4 }}>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', ga4);
     </script>
+    <slot name="head" />
   </head>
-  <body>
-    <slot />
+  <body class={bodyClass}>
+    <AnnouncementBar />
+    <div class="page-container">
+      <Header />
+      <main data-scroll-section>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <script src="../scripts/main.js"></script>
   </body>
 </html>
-
-<style is:global>
-  html {
-    font-family: var(--gi-font-heading);
-    scroll-behavior: smooth;
-  }
-  body {
-    margin: 0;
-    background: var(--gi-bg-light);
-    color: var(--gi-text-on-light);
-  }
-</style>

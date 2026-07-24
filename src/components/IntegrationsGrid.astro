@@ -1,0 +1,77 @@
+---
+/* /integracje/ grid (was snippet 31) — data now from the integrations collection. */
+import { getCollection } from 'astro:content';
+const categories = (await getCollection('integrationCategories')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const total = categories.reduce((n, c) => n + c.data.items.length, 0);
+const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', 'Kafka', 'MQTT', 'EDI'];
+---
+
+<style is:global>
+  .gi-integracje { max-width: 1140px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .gi-integracje h2.gi-cat-title {
+    font-size: 1.6rem; font-weight: 700; margin: 3.5rem 0 0.5rem; padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(1,236,144,0.2);
+  }
+  .gi-integracje h2.gi-cat-title span.gi-count { font-size: 0.85rem; font-weight: 400; color: rgba(0,0,0,0.4); margin-left: 0.5rem; }
+  .gi-integracje .gi-cat-desc { color: rgba(0,0,0,0.55); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; max-width: 760px; }
+  .gi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.85rem; margin-bottom: 1rem; }
+  .gi-tile {
+    background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px;
+    padding: 1.1rem 1rem; text-align: center; transition: all 0.2s ease;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 90px; position: relative;
+  }
+  .gi-tile:hover { border-color: rgba(1,236,144,0.4); box-shadow: 0 4px 16px rgba(1,236,144,0.08); transform: translateY(-2px); }
+  .gi-tile .gi-tile-name { font-size: 0.85rem; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
+  .gi-tile .gi-tile-sub { font-size: 0.7rem; color: rgba(0,0,0,0.4); margin-top: 0.25rem; }
+
+  .gi-intro { text-align: center; padding: 2rem 0 1rem; }
+  .gi-intro .gi-big-number { font-size: 3.5rem; font-weight: 800; color: #27EA93; line-height: 1; }
+  .gi-intro .gi-intro-sub { font-size: 1.15rem; color: rgba(0,0,0,0.55); margin-top: 0.5rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+  .gi-proto-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; justify-content: center; }
+  .gi-proto-badge { background: rgba(1,236,144,0.08); color: #0d9e6d; font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 20px; }
+
+  @media (max-width: 768px) {
+    .gi-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.65rem; }
+    .gi-integracje h2.gi-cat-title { font-size: 1.3rem; }
+    .gi-intro .gi-big-number { font-size: 2.5rem; }
+  }
+</style>
+
+<div class="gi-integracje">
+  <div class="gi-intro">
+    <div class="gi-big-number">139+</div>
+    <div class="gi-intro-sub">
+      gotowych konektorów i&nbsp;adapterów.<br />Twoje systemy połączone w&nbsp;jedną szynę
+      danych&nbsp;—&nbsp;bez programowania.
+    </div>
+    <div class="gi-proto-row">
+      {badges.map((b) => <span class="gi-proto-badge">{b}</span>)}
+    </div>
+  </div>
+
+  {
+    categories.map((cat) => (
+      <>
+        <h2 class="gi-cat-title" id={cat.id}>
+          {cat.data.icon} {cat.data.title}
+          <span class="gi-count">({cat.data.items.length})</span>
+        </h2>
+        <p class="gi-cat-desc" set:html={cat.data.description} />
+        <div class="gi-grid">
+          {cat.data.items.map((item) => (
+            <div class="gi-tile">
+              <div class="gi-tile-name">{item.name}</div>
+              {item.sub && <div class="gi-tile-sub">{item.sub}</div>}
+            </div>
+          ))}
+        </div>
+      </>
+    ))
+  }
+</div>
+
+{total !== 139 && <p style="display:none" data-count-warning>integration count {total} ≠ 139</p>}

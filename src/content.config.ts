@@ -5,9 +5,11 @@ import { glob, file } from 'astro/loaders';
 const mediaRef = z
   .object({
     file: z.string().nullable(),
-    url: z.string().optional(),
+    url: z.string().nullable().optional(),
     alt: z.string().default(''),
-    wpId: z.number(),
+    width: z.number().nullable().optional(),
+    height: z.number().nullable().optional(),
+    wpId: z.number().nullable().optional(),
   })
   .nullable();
 
@@ -74,13 +76,15 @@ const clients = defineCollection({
 
 const integrationCategories = defineCollection({
   loader: file('./src/data/integrations.json', {
-    parser: (t) => JSON.parse(t).categories.map((c: any) => ({ ...c, id: c.id })),
+    parser: (t) =>
+      JSON.parse(t).categories.map((c: any, i: number) => ({ ...c, id: c.id, order: i })),
   }),
   schema: z.object({
     icon: z.string(),
     title: z.string(),
     description: z.string(),
     count: z.number(),
+    order: z.number(),
     items: z.array(z.object({ name: z.string(), sub: z.string() })),
   }),
 });

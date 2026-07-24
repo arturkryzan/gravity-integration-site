@@ -10,31 +10,37 @@
   "navLabel": "ELMET Poznań",
   "rows": [
     {
-      "text": "<h2><strong>ELMET Poznań S.A.</strong>\r\nIntegracja sprzedaży wielokanałowej BaseLinker z Graffiti.ERP</h2>\r\n<strong>Firma:</strong> ELMET Poznań S.A. | Poznań, Wielkopolska\r\n<strong>Branża:</strong> Elektrotechnika — dystrybucja materiałów i urządzeń elektrycznych\r\n<strong>System ERP:</strong> Graffiti.ERP\r\n<strong>Platforma OMS:</strong> BaseLinker",
+      "text": "<h2><strong>ELMET Poznań S.A.</strong><br />\nIntegracja sprzedaży wielokanałowej BaseLinker z Graffiti.ERP</h2>\n<p><strong>Firma:</strong> ELMET Poznań S.A. | Poznań, Wielkopolska<br />\n<strong>Branża:</strong> Elektrotechnika —&nbsp;dystrybucja materiałów i urządzeń elektrycznych<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>Platforma OMS:</strong> BaseLinker</p>\n",
       "img": {
         "file": "media/elmet-poznan-logo.png",
+        "url": null,
         "alt": "",
+        "width": 800,
+        "height": 400,
         "wpId": 447
       },
       "link": ""
     },
     {
-      "text": "<h3>Wyzwanie</h3>\r\nELMET Poznań realizuje sprzedaż wielokanałową — zamówienia napływają jednocześnie z platformy BaseLinker, obsługującej marketplace’y i sklepy internetowe, oraz bezpośrednio z systemu Graffiti.ERP. Brak automatycznej synchronizacji oznaczał ręczne przepisywanie zamówień, niezgodności w stanach magazynowych, problemy z parowania metod wysyłki i płatności między systemami oraz opóźnienia w informowaniu klientów o statusie realizacji. Przy rosnącej liczbie kanałów sprzedaży i zróżnicowanych metodach dostawy — od kuriera po odbiór osobisty — ręczna obsługa stawała się wąskim gardłem całego procesu.",
+      "text": "<h3>Wyzwanie</h3>\n<p>ELMET Poznań realizuje sprzedaż wielokanałową —&nbsp;zamówienia napływają jednocześnie z platformy BaseLinker, obsługującej marketplace’y i sklepy internetowe, oraz&nbsp;bezpośrednio z systemu Graffiti.ERP. Brak automatycznej synchronizacji oznaczał ręczne przepisywanie zamówień, niezgodności w stanach magazynowych, problemy z parowania metod wysyłki i płatności między systemami oraz&nbsp;opóźnienia w informowaniu klientów o statusie realizacji. Przy rosnącej liczbie kanałów sprzedaży i zróżnicowanych metodach dostawy —&nbsp;od&nbsp;kuriera po&nbsp;odbiór osobisty —&nbsp;ręczna obsługa stawała się wąskim gardłem całego procesu.</p>\n",
       "img": {
         "file": "media/baselinker-case-logo.png",
+        "url": null,
         "alt": "",
+        "width": 800,
+        "height": 400,
         "wpId": 448
       },
       "link": ""
     },
     {
-      "text": "<h3>Rozwiązanie</h3>\r\ngravity.integration komunikuje się z API BaseLinker, pobierając zamówienia, dane klientów i metody dostawy, a następnie przetwarza je i zapisuje w Graffiti.ERP. Cały proces działa w pełni automatycznie:\r\n\r\n• <strong>Automatyczne pobieranie zamówień z BaseLinker</strong> — projekty gravity.integration odpytują API BaseLinker, pobierają nowe zamówienia wraz z pozycjami, danymi adresowymi i metodą wysyłki\r\n• <strong>Inteligentne mapowanie wysyłek</strong> — moduł Grafbuilder paruje metody wysyłki BaseLinker z odpowiednikami w Graffiti.ERP i WMS; brakujące metody tworzone są automatycznie\r\n• <strong>Automatyczne uzupełnianie słowników</strong> — gdy brakuje kontrahenta w Graffiti, gravity.integration pobiera dane z białej księgi (walidacja NIP przez DLL Graffiti) i zakłada nową kartotekę\r\n• <strong>Parowanie metod płatności</strong> — automatyczne tworzenie brakujących metod płatności w Graffiti tak, aby były zgodne z fakturą\r\n• <strong>Informacja zwrotna o realizacji</strong> — status zamówienia z Graffiti (etap kompletacji, wysyłki, fakturowania) wraca do BaseLinker w czasie rzeczywistym",
-      "img": "",
+      "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration komunikuje się z API BaseLinker, pobierając zamówienia, dane klientów i metody dostawy, a następnie przetwarza je&nbsp;i zapisuje w Graffiti.ERP. Cały proces działa w pełni automatycznie:</p>\n<p>• <strong>Automatyczne pobieranie zamówień z BaseLinker</strong> —&nbsp;projekty gravity.integration odpytują API BaseLinker, pobierają nowe zamówienia wraz z pozycjami, danymi adresowymi i metodą wysyłki<br />\n• <strong>Inteligentne mapowanie wysyłek</strong> —&nbsp;moduł Grafbuilder paruje metody wysyłki BaseLinker z odpowiednikami w Graffiti.ERP i WMS; brakujące metody tworzone są&nbsp;automatycznie<br />\n• <strong>Automatyczne uzupełnianie słowników</strong> —&nbsp;gdy&nbsp;brakuje kontrahenta w Graffiti, gravity.integration pobiera dane z białej księgi (walidacja NIP przez&nbsp;DLL Graffiti) i zakłada nową kartotekę<br />\n• <strong>Parowanie metod płatności</strong> —&nbsp;automatyczne tworzenie brakujących metod płatności w Graffiti tak, aby były zgodne z fakturą<br />\n• <strong>Informacja zwrotna o realizacji</strong> —&nbsp;status zamówienia z Graffiti (etap kompletacji, wysyłki, fakturowania) wraca do BaseLinker w czasie rzeczywistym</p>\n",
+      "img": null,
       "link": ""
     },
     {
-      "text": "<h3>Rezultaty</h3>\r\n• Pełna automatyzacja przepływu zamówień z BaseLinker do Graffiti.ERP — bez ręcznego przepisywania\r\n• Automatyczne tworzenie brakujących kontrahentów z walidacją danych z białej księgi\r\n• Spójne metody wysyłki i płatności między systemami — parowanie i automatyczne tworzenie brakujących pozycji\r\n• Klient na bieżąco widzi aktualny status zamówienia dzięki informacji zwrotnej z Graffiti\r\n• Skalowalność — podłączenie kolejnych marketplace’ów i kanałów sprzedaży bez dodatkowej pracy integracyjnej",
-      "img": "",
+      "text": "<h3>Rezultaty</h3>\n<p>• Pełna automatyzacja przepływu zamówień z BaseLinker do Graffiti.ERP —&nbsp;bez&nbsp;ręcznego przepisywania<br />\n• Automatyczne tworzenie brakujących kontrahentów z walidacją danych z białej księgi<br />\n• Spójne metody wysyłki i płatności między systemami —&nbsp;parowanie i automatyczne tworzenie brakujących pozycji<br />\n• Klient na&nbsp;bieżąco widzi aktualny status zamówienia dzięki informacji zwrotnej z Graffiti<br />\n• Skalowalność —&nbsp;podłączenie kolejnych marketplace’ów i kanałów sprzedaży bez&nbsp;dodatkowej pracy integracyjnej</p>\n",
+      "img": null,
       "link": ""
     }
   ],

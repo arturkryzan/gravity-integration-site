@@ -7,23 +7,23 @@
     "description": "Cennik platformy ESB gravity.integration. Darmowa wersja Community, plany Professional i Enterprise. Korzystne ceny, polski producent, pełne wsparcie.",
     "focusKeyword": "cennik ETL, platforma ETL cena"
   },
-  "h1": "Cennik",
-  "decorative": "0",
-  "newsletter": "0",
+  "h1": "<h1>Cennik</h1>",
+  "decorative": false,
+  "newsletter": false,
   "sections": [
     {
       "acf_fc_layout": "text_columns",
-      "nav_li": "",
-      "text0": "gravity.integration jest produktem w fazie ciągłego rozwoju, który współtworzymy razem z Wami. Dlatego postawiliśmy na niespotykaną nigdzie indziej politykę cenową wśród narzędzi tej klasy. Po pierwsze, możesz pobrać <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration całkowicie za darmo</a>, a następnie używać bez ograniczeń dotyczących przesyłu danych a także przez 14 dni używać oprogramowania komercyjnie.",
-      "text1": "Po drugie, jeśli zdecydujesz się na zastosowanie komercyjne, obowiązuje tylko dwie, proste ceny: 2999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za instancję. Nie obowiązują Cię żadne ograniczenia w budowaniu środowiska integracyjnego, a <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na rynku</a>! Porównaj sam gravity z konkurencją, gwarantujemy, że wrócisz!"
+      "nav_li": null,
+      "text0": "<p>gravity.integration jest produktem w&nbsp;fazie ciągłego rozwoju, który&nbsp;współtworzymy razem z&nbsp;Wami. Dlatego postawiliśmy na&nbsp;niespotykaną nigdzie indziej politykę cenową wśród narzędzi tej&nbsp;klasy. Po&nbsp;pierwsze, możesz pobrać <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration całkowicie za&nbsp;darmo</a>, a&nbsp;następnie używać bez&nbsp;ograniczeń dotyczących przesyłu danych a&nbsp;także przez&nbsp;14 dni używać oprogramowania komercyjnie.</p>\n",
+      "text1": "<p>Po&nbsp;drugie, jeśli zdecydujesz się na&nbsp;zastosowanie komercyjne, obowiązuje tylko&nbsp;dwie, proste ceny: 2999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za&nbsp;instancję. Nie&nbsp;obowiązują Cię żadne ograniczenia w&nbsp;budowaniu środowiska integracyjnego, a&nbsp;<a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na&nbsp;rynku</a>! Porównaj sam gravity z&nbsp;konkurencją, gwarantujemy, że&nbsp;wrócisz!</p>\n"
     },
     {
       "acf_fc_layout": "pricing",
-      "nav_li": "",
+      "nav_li": null,
       "pricing": [
         {
-          "name": "Do celów szkoleniowych \r\noraz testowych",
-          "text": "<ul>\r\n \t<li>Za darmo, z pełnym wsparciem.</li>\r\n \t<li>Możliwość przejścia na wersję komercyjną w każdej chwili.</li>\r\n</ul>",
+          "name": "Do&nbsp;celów szkoleniowych <br />\r\noraz testowych",
+          "text": "<ul>\n<li>Za&nbsp;darmo, z&nbsp;pełnym wsparciem.</li>\n<li>Możliwość przejścia na&nbsp;wersję komercyjną w&nbsp;każdej chwili.</li>\n</ul>\n",
           "price": "0",
           "currency": "PLN",
           "btn": "Pobierz",
@@ -31,25 +31,25 @@
         },
         {
           "name": "Pojedyncze zastosowanie komercyjne",
-          "text": "<ul>\r\n \t<li>Jedno połączenie wykorzystywane komercyjnie.</li>\r\n \t<li>Pełne wsparcie.</li>\r\n \t<li>Cena netto za instancję.</li>\r\n</ul>",
+          "text": "<ul>\n<li>Jedno połączenie wykorzystywane komercyjnie.</li>\n<li>Pełne wsparcie.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
           "price": "2999",
           "currency": "PLN",
           "btn": "Kup licencję",
           "btn_link": "https://buy.stripe.com/14A8wP2aB9NSeFtdtZ38402"
         },
         {
-          "name": "Do zastosowań \r\nkomercyjnych",
-          "text": "<ul>\r\n \t<li>Jedna, prosta stawka.</li>\r\n \t<li>Nielimitowana liczba projektów.</li>\r\n \t<li>Pełne wsparcie priorytetowe.</li>\r\n \t<li>Cena netto za instancję.</li>\r\n</ul>",
+          "name": "Do&nbsp;zastosowań <br />\r\nkomercyjnych",
+          "text": "<ul>\n<li>Jedna, prosta stawka.</li>\n<li>Nielimitowana liczba projektów.</li>\n<li>Pełne wsparcie priorytetowe.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
           "price": "7999",
           "currency": "PLN",
           "btn": "Kup licencję",
           "btn_link": "https://buy.stripe.com/00w14n3eF9NSbth9dJ38401"
         },
         {
-          "name": "Wdrożenie środowiska \r\nintegracyjnego",
-          "text": "Zapytaj już dziś, jak możemy zmienić architekturę IT w Twojej firmie.",
+          "name": "Wdrożenie środowiska <br />\r\nintegracyjnego",
+          "text": "<p>Zapytaj już dziś, jak możemy zmienić architekturę IT w&nbsp;Twojej&nbsp;firmie.</p>\n",
           "price": "",
-          "currency": "",
+          "currency": null,
           "btn": "Zamów kontakt",
           "btn_link": "/kontakt"
         }
@@ -57,34 +57,33 @@
     },
     {
       "acf_fc_layout": "faq",
-      "nav_li": "",
+      "nav_li": null,
       "faq": [
         {
-          "que": "Czy wersje gravity.integration czymś się różnią?",
-          "ans": "Nie. Zawsze pobierasz ten sam instalator. Możesz dowolnie, bezpłatnie i bez ograniczeń korzystać ze wszystkich funkcji oprogramowania tak długo, jak sam nie odnosisz z tego wykorzystania korzyści."
+          "que": "Czy&nbsp;wersje gravity.integration czymś się różnią?",
+          "ans": "<p>Nie. Zawsze pobierasz ten sam instalator. Możesz dowolnie, bezpłatnie i&nbsp;bez&nbsp;ograniczeń korzystać ze&nbsp;wszystkich funkcji oprogramowania tak&nbsp;długo, jak sam nie&nbsp;odnosisz z&nbsp;tego wykorzystania korzyści.</p>\n"
         },
         {
-          "que": "Kiedy należy zakupić wersję komercyjną i jak to zrobić?",
-          "ans": "Możesz bez problemów testować środowisko swoje lub swoich klientów tak długo, jak potrzebujesz. W momencie, w którym zdecydujesz się opuścić środowisko testowe, konieczny jest zakup licencji. Jeśli planujesz wykorzystać gravity.integration tylko do jednego zastosowania, np. połączenie systemu ERP z dostawcami usług logistycznych możesz skorzystać ze specjalnej, promocyjnej licencji. Dla wielu zastosowań wykup pełną licencję i twórz bez ograniczeń dowolną liczbę połączeń.\r\nMożesz to łatwo zrobić z poziomu oprogramowania lub skontaktować się z nami <a href=\"/kontakt/\">tutaj</a>."
+          "que": "Kiedy należy zakupić wersję komercyjną i&nbsp;jak to&nbsp;zrobić?",
+          "ans": "<p>Możesz bez&nbsp;problemów testować środowisko swoje lub swoich klientów tak&nbsp;długo, jak potrzebujesz. W&nbsp;momencie, w&nbsp;którym&nbsp;zdecydujesz się opuścić środowisko testowe, konieczny jest zakup licencji. Jeśli planujesz wykorzystać gravity.integration tylko&nbsp;do&nbsp;jednego zastosowania, np.&nbsp;połączenie systemu ERP z&nbsp;dostawcami usług logistycznych możesz skorzystać ze&nbsp;specjalnej, promocyjnej licencji. Dla wielu zastosowań wykup pełną licencję i&nbsp;twórz bez&nbsp;ograniczeń dowolną liczbę połączeń.<br />\nMożesz to&nbsp;łatwo zrobić z&nbsp;poziomu oprogramowania lub skontaktować się z&nbsp;nami <a href=\"/kontakt/\">tutaj</a>.</p>\n"
         },
         {
-          "que": "Czy z jednej licencji gravity.integration może korzystać wielu użytkowników? ",
-          "ans": "Tak, pojedyncza licencja jest ograniczona do jednej instancji (instalacji na jednym fizycznym urządzeniu) i nie ma limitu użytkowników. Kolejne licencje będą Ci potrzebne, jeśli zdecydujesz się uruchomić więcej instancji."
+          "que": "Czy&nbsp;z&nbsp;jednej licencji gravity.integration może korzystać wielu użytkowników?",
+          "ans": "<p>Tak, pojedyncza licencja jest ograniczona do&nbsp;jednej instancji (instalacji na&nbsp;jednym fizycznym urządzeniu) i&nbsp;nie&nbsp;ma&nbsp;limitu użytkowników. Kolejne licencje będą Ci&nbsp;potrzebne, jeśli zdecydujesz się uruchomić więcej instancji.</p>\n"
         },
         {
-          "que": "Na czym polega priorytetowe wsparcie? ",
-          "ans": "Zapytania dotyczące działających instancji komercyjnych będą przez nas podejmowane priorytetowo. Jednak nawet wersja darmowa jest objęta maksymalnie 72 godzinnym czasem odpowiedzi na zapytania."
+          "que": "Na&nbsp;czym polega priorytetowe wsparcie?",
+          "ans": "<p>Zapytania dotyczące działających instancji komercyjnych będą przez&nbsp;nas podejmowane priorytetowo. Jednak nawet wersja darmowa jest objęta maksymalnie 72 godzinnym czasem odpowiedzi na&nbsp;zapytania.</p>\n"
         },
         {
-          "que": "Dlaczego cena gravity.integration jest tak korzystna? ",
-          "ans": "Oprogramowanie jest wynikiem naszych doświadczeń na rynku oprogramowania korporacyjnego. Zdecydowaliśmy się stworzyć gravity ze względu na bardzo wysoki koszt rozwiązań ESB innych firm oraz niechęć do łączenia wszystkiego ze wszystkim przy pomocy komend SQL. Wierzymy, że przygotowane przez nas software zmieni sposób projektowania systemów IT. Stąd bardzo duży nacisk na współpracę z Wami oraz atrakcyjną cenę, dzięki czemu chcemy popularyzować dobre praktyki."
+          "que": "Dlaczego cena gravity.integration jest tak&nbsp;korzystna?",
+          "ans": "<p>Oprogramowanie jest wynikiem naszych doświadczeń na&nbsp;rynku oprogramowania korporacyjnego. Zdecydowaliśmy się stworzyć gravity ze&nbsp;względu na&nbsp;bardzo wysoki koszt rozwiązań ESB innych firm oraz&nbsp;niechęć do&nbsp;łączenia wszystkiego ze&nbsp;wszystkim przy pomocy komend SQL. Wierzymy, że&nbsp;przygotowane przez&nbsp;nas software zmieni sposób projektowania systemów IT. Stąd bardzo duży nacisk na&nbsp;współpracę z&nbsp;Wami oraz&nbsp;atrakcyjną cenę, dzięki czemu chcemy popularyzować dobre praktyki.</p>\n"
         },
         {
-          "que": "Jak realizowana jest płatność? ",
-          "ans": "Korzystamy z bezpiecznego rozwiązania Stripe. Podana cena jest ceną netto za rok / za instancję. Na ekranie płatności możesz wybrać ilość instancji. Płatność będzie odnawiana co rok, ale nie martw się - przypomnimy Ci o tym! Jeśli z jakiegoś powodu chcesz, abyśmy wystawili Ci dokument ręcznie, skontaktuj się z nami używając formularza.\r\n\r\n&nbsp;\r\n\r\n&nbsp;"
+          "que": "Jak realizowana jest płatność?",
+          "ans": "<p>Korzystamy z&nbsp;bezpiecznego rozwiązania Stripe. Podana cena jest ceną netto za&nbsp;rok / za&nbsp;instancję. Na&nbsp;ekranie płatności możesz wybrać ilość instancji. Płatność będzie odnawiana co&nbsp;rok, ale&nbsp;nie&nbsp;martw się &#8211; przypomnimy Ci&nbsp;o&nbsp;tym! Jeśli z&nbsp;jakiegoś powodu chcesz, abyśmy wystawili Ci&nbsp;dokument ręcznie, skontaktuj się z&nbsp;nami używając formularza.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n"
         }
       ]
     }
-  ],
-  "wpContent": ""
+  ]
 }

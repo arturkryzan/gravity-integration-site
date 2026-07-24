@@ -1,0 +1,85 @@
+---
+import { getEntry } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+import PageHero from '../../components/PageHero.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SectionRenderer from '../../components/SectionRenderer.astro';
+import heroes from '../../data/page_heroes.json';
+
+const page = (await getEntry('pages', 'pobieranie'))!.data;
+const hero = (heroes as Record<string, any>)['pobieranie'];
+const crumbs = page.sections
+  .map((s: any, i: number) => ({ label: s.nav_li, anchor: `section${i}` }))
+  .filter((c: any) => c.label);
+
+/* Replace the WP shortcode with the real MailerLite embed (form gAV0lr, account 1115638) */
+const sections = page.sections.map((s: any) => {
+  if (typeof s.text === 'string' && s.text.includes('[mailerlite_form')) {
+    return {
+      ...s,
+      text: s.text.replace(
+        /\[mailerlite_form[^\]]*\]/,
+        '<div class="ml-embedded" data-form="gAV0lr"></div>',
+      ),
+    };
+  }
+  return s;
+});
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <Fragment slot="head">
+    <style>
+      /* loading placeholder while the MailerLite embed initializes (was snippet 18) */
+      .ml-embedded:empty {
+        min-height: 320px;
+        position: relative;
+      }
+      .ml-embedded:empty::before {
+        content: '';
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 32px;
+        height: 32px;
+        margin: -16px 0 0 -16px;
+        border: 3px solid rgba(70, 72, 97, 0.2);
+        border-top-color: #464861;
+        border-radius: 50%;
+        animation: mlspin 0.8s linear infinite;
+      }
+      .ml-embedded:not(:empty)::before {
+        display: none;
+      }
+      @keyframes mlspin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script is:inline>
+      (function (w, d, e, u, f, l, n) {
+        (w[f] =
+          w[f] ||
+          function () {
+            (w[f].q = w[f].q || []).push(arguments);
+          }),
+          (l = d.createElement(e)),
+          (l.async = 1),
+          (l.src = u),
+          (n = d.getElementsByTagName(e)[0]),
+          n.parentNode.insertBefore(l, n);
+      })(window, document, 'script', 'https://assets.mailerlite.com/js/universal.js', 'ml');
+      ml('account', '1115638');
+      ml('enablePopups', true);
+    </script>
+  </Fragment>
+  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <Breadcrumbs items={crumbs} />
+  <SectionRenderer sections={sections} />
+</Site>

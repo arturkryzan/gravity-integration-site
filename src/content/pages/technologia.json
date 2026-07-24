@@ -7,70 +7,84 @@
     "description": "Poznaj unikalne technologie gravity.integration: Always-on-data, firstSIGNAL, IntelliChain, Powers AI. Polska szyna danych ESB nowej generacji.",
     "focusKeyword": "ETL nowej generacji,integracja danych,ESB,ETL,ERP intergacja"
   },
-  "h1": "<h1><span style=\"text-decoration: underline;\">Więcej</span> niż ESB</h1>",
-  "decorative": "1",
-  "newsletter": "1",
+  "h1": "<h1><span style=\"text-decoration: underline;\">Więcej</span> niż ESB</h1>\n",
+  "decorative": true,
+  "newsletter": true,
   "sections": [
     {
       "acf_fc_layout": "text_img",
-      "nav_li": "Witajcie w przyszłości ",
-      "text": "<h2>gravity.integration zostawia szyny ESB w poprzedniej epoce</h2>\r\ngravity.integration to światowej klasy oprogramowanie klasy ESB (Enterprise Service Bus), które służy do integrowania oprogramowania.\r\nTyle teorii. W praktyce, gravity.integration to unikatowe rozwiązanie, które potrafi o wiele więcej. Powstało na bazie naszego 20 letniego doświadczenia w tworzeniu oprogramowania korporacyjnego klasy ERP. W 2020 roku dostrzegliśmy potrzebę lepsze wymiany informacji między naszymi autorskimi systemami a rozwiązaniami form trzecich u naszych klientów – jednak dostępne na rynku produkty były ograniczone i zbyt drogie.\r\n\r\nWięc postanowiliśmy stworzyć takie oprogramowanie, a że nie lubimy półśrodków, oddajemy w Wasze ręce wyjątkowe rozwiązanie, które sami stosujemy i uważamy je za najlepsze w klasie. Nie bez powodu.\r\n\r\n<a class=\"vp-s vp-yt-type\" title=\"NEURON\" href=\"https://www.youtube.com/watch?v=OYjMCjyzKKM\" data-ytid=\"OYjMCjyzKKM\">Zobacz wideo</a>\r\n\r\n&nbsp;",
+      "nav_li": "Witajcie w&nbsp;przyszłości",
+      "text": "<h2>gravity.integration zostawia szyny ESB w&nbsp;poprzedniej epoce</h2>\n<p>gravity.integration to&nbsp;światowej klasy oprogramowanie klasy ESB (Enterprise Service Bus), które służy do&nbsp;integrowania oprogramowania.<br />\nTyle teorii. W&nbsp;praktyce, gravity.integration to&nbsp;unikatowe rozwiązanie, które potrafi o&nbsp;wiele więcej. Powstało na&nbsp;bazie naszego 20 letniego doświadczenia w&nbsp;tworzeniu oprogramowania korporacyjnego klasy ERP. W&nbsp;2020 roku dostrzegliśmy potrzebę lepsze wymiany informacji między naszymi autorskimi systemami a&nbsp;rozwiązaniami form trzecich u&nbsp;naszych klientów – jednak dostępne na&nbsp;rynku produkty były ograniczone i&nbsp;zbyt drogie.</p>\n<p>Więc postanowiliśmy stworzyć takie oprogramowanie, a&nbsp;że&nbsp;nie&nbsp;lubimy półśrodków, oddajemy w&nbsp;Wasze ręce wyjątkowe rozwiązanie, które sami stosujemy i&nbsp;uważamy je&nbsp;za&nbsp;najlepsze w&nbsp;klasie. Nie&nbsp;bez&nbsp;powodu.</p>\n<p><a class=\"vp-s vp-yt-type\" title=\"NEURON\" href=\"https://www.youtube.com/watch?v=OYjMCjyzKKM\" data-ytid=\"OYjMCjyzKKM\">Zobacz wideo</a></p>\n<p>&nbsp;</p>\n",
       "img": {
         "file": "media/etl-text.png",
-        "alt": "gravity.integration ESB - logo tekstowe",
+        "url": null,
+        "alt": "gravity.integration ETL - logo tekstowe",
+        "width": 434,
+        "height": 555,
         "wpId": 21
       },
       "img_placement": "left"
     },
     {
       "acf_fc_layout": "quote",
-      "nav_li": "",
+      "nav_li": null,
       "bg": "#F3F4FB",
-      "text": "W świecie, gdzie wszystko jest połączone, to, jak się łączysz, jest wszystkim."
+      "text": "W&nbsp;świecie, gdzie wszystko jest połączone, to, jak się łączysz, jest wszystkim."
     },
     {
       "acf_fc_layout": "text_boxes",
       "nav_li": "Technologie gravity",
-      "text": "<h2>Narzędzia jutra</h2>\r\njuż dziś w Twoich rękach. Zapoznaj się z opracowanymi w Caffeine Minds technologiami, które pozwalają nam mówić, że <strong>gravity</strong> to więcej niż ESB.",
+      "text": "<h2>Narzędzia jutra</h2>\n<p>już dziś w&nbsp;Twoich&nbsp;rękach. Zapoznaj się z&nbsp;opracowanymi w&nbsp;Caffeine Minds technologiami, które pozwalają nam mówić, że&nbsp;<strong>gravity</strong> to&nbsp;więcej niż ESB.</p>\n",
       "boxes": [
         {
-          "text": "<strong>Always-on-data</strong>\r\n\r\nJedyna szyna danych, która pracuje nawet wtedy, kiedy Ty nie musisz. gravity.integration przetwarza dane także w okresach braku aktywności, aby w razie potrzeby móc samodzielnie wywołać zdarzenie.",
+          "text": "<p><strong>Always-on-data</strong></p>\n<p>Jedyna szyna danych, która&nbsp;pracuje nawet wtedy, kiedy Ty&nbsp;nie&nbsp;musisz. gravity.integration przetwarza dane także w&nbsp;okresach braku aktywności, aby w&nbsp;razie potrzeby móc samodzielnie wywołać zdarzenie.</p>\n",
           "link": "",
           "icon": {
             "file": "media/ic_247.svg",
-            "alt": "Ikona Always-on-data - technologia gravity.integration",
+            "url": null,
+            "alt": "Ikona Always-on-data - technologia GRAVITY",
+            "width": 0,
+            "height": 0,
             "wpId": 37
           }
         },
         {
-          "text": "<strong>Powers AI, AI powered</strong>\r\n\r\nPrzystosowana już dziś do rozwiązań z przyszłości, oprogramowanie gravity.integration dostarcza doskonałej jakości danych do uczenia maszynowego i jest gotowe do przyjęcia zwrotnego tej wiedzy.",
+          "text": "<p><strong>Powers AI, AI powered</strong></p>\n<p>Przystosowana już dziś do&nbsp;rozwiązań z&nbsp;przyszłości, oprogramowanie gravity.integration dostarcza doskonałej jakości danych do&nbsp;uczenia maszynowego i&nbsp;jest gotowe do&nbsp;przyjęcia zwrotnego tej&nbsp;wiedzy.</p>\n",
           "link": "",
           "icon": {
             "file": "media/icon.svg",
-            "alt": "Ikona - element interfejsu gravity.integration",
+            "url": null,
+            "alt": "Ikona - element interfejsu GRAVITY",
+            "width": 0,
+            "height": 0,
             "wpId": 41
           }
         },
         {
-          "text": "<strong>firstSIGNAL</strong>\r\n\r\ngravity.integration to nie tylko wyjątkowe narzędzie dla programistów – to także rzeczywista przewaga w biznesie. Odpowiednio zaprogramowana szyna pozwala informować o zdarzeniach zanim trafią one do docelowego rozwiązania.",
+          "text": "<p><strong>firstSIGNAL</strong></p>\n<p>gravity.integration to&nbsp;nie&nbsp;tylko&nbsp;wyjątkowe narzędzie dla programistów – to&nbsp;także rzeczywista przewaga w&nbsp;biznesie. Odpowiednio zaprogramowana szyna pozwala informować o&nbsp;zdarzeniach zanim trafią one do&nbsp;docelowego rozwiązania.</p>\n",
           "link": "",
           "icon": {
             "file": "media/icon2.svg",
-            "alt": "Ikona - element interfejsu gravity.integration 2",
+            "url": null,
+            "alt": "Ikona - element interfejsu GRAVITY 2",
+            "width": 0,
+            "height": 0,
             "wpId": 40
           }
         },
         {
-          "text": "<strong>IntelliChain</strong>\r\n\r\nBudowanie integracji nigdy nie było takie proste! Konstrukcja, którą nazwaliśmy inteligentnym łańcuchem, nie tylko przyspiesza proces integracji ale też czyni późniejsze zmiany banalnie prostymi.",
+          "text": "<p><strong>IntelliChain</strong></p>\n<p>Budowanie integracji nigdy nie&nbsp;było takie proste! Konstrukcja, którą nazwaliśmy inteligentnym łańcuchem, nie&nbsp;tylko&nbsp;przyspiesza proces integracji ale&nbsp;też czyni późniejsze zmiany banalnie prostymi.</p>\n",
           "link": "",
           "icon": {
             "file": "media/icon3.svg",
-            "alt": "Ikona - element interfejsu gravity.integration 3",
+            "url": null,
+            "alt": "Ikona - element interfejsu GRAVITY 3",
+            "width": 0,
+            "height": 0,
             "wpId": 39
           }
         }
       ]
     }
-  ],
-  "wpContent": ""
+  ]
 }

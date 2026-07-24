@@ -1,0 +1,149 @@
+---
+/* ROI calculator (was snippet 19) — HTML/CSS/JS ported verbatim. */
+---
+
+<section id="scroll-calc" data-scroll data-scroll-repeat data-scroll-call="spyCalc" data-scroll-offset="100%, 50%">
+  <div class="container-fluid pt-10 pb-10" style="background:#1a1b2e;">
+    <div class="row">
+      <div class="col-12" data-scroll data-scroll-opacity>
+
+<style>
+#gi-roi-calculator{--gi-green:#01EC90;--gi-dark:#1a1b2e;--gi-card:#242538;--gi-border:#464861;--gi-text:#c8cad0;--gi-white:#fff;font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--gi-text)}
+#gi-roi-calculator h2{color:var(--gi-white);font-size:2rem;font-weight:700;text-align:center;margin:2rem 0 3rem}
+.gi-calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem}
+@media(max-width:768px){.gi-calc-grid{grid-template-columns:1fr}}
+.gi-calc-card{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:2rem}
+.gi-calc-card h3{color:var(--gi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
+.gi-slider-group{margin-bottom:1.5rem}
+.gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--gi-text)}
+.gi-slider-value{font-weight:700;color:var(--gi-green);font-size:1rem;min-width:80px;text-align:right}
+.gi-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--gi-border);outline:none;cursor:pointer}
+.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
+.gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
+.gi-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
+@media(max-width:768px){.gi-kpi-row{grid-template-columns:1fr}}
+.gi-kpi{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:1.5rem;text-align:center}
+.gi-kpi-value{font-size:2rem;font-weight:800;color:var(--gi-green);line-height:1.2}
+.gi-kpi-label{font-size:.8rem;color:var(--gi-text);margin-top:.3rem}
+.gi-chart-container{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:2rem;margin-bottom:2.5rem}
+.gi-chart-container h3{color:var(--gi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
+.gi-bar-wrap{display:flex;align-items:center;margin-bottom:1rem;gap:1rem}
+.gi-bar-label{width:100px;font-size:.8rem;color:var(--gi-text);text-align:right;flex-shrink:0}
+.gi-bar-track{flex:1;background:var(--gi-border);border-radius:6px;height:32px;position:relative;overflow:hidden}
+.gi-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.75rem;font-weight:700;color:var(--gi-dark);transition:width .5s ease}
+.gi-bar-fill.current{background:#ef4444}
+.gi-bar-fill.gravity{background:var(--gi-green)}
+.gi-breakdown{width:100%;border-collapse:collapse;margin-bottom:2rem}
+.gi-breakdown th,.gi-breakdown td{padding:.75rem 1rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--gi-border)}
+.gi-breakdown th{color:var(--gi-text);font-weight:600}
+.gi-breakdown td{color:var(--gi-white)}
+.gi-breakdown .gi-savings{color:var(--gi-green);font-weight:700}
+.gi-cta-box{text-align:center;padding:2rem 0 1rem}
+</style>
+
+<div id="gi-roi-calculator">
+  <h2>Sprawdź, ile możesz zaoszczędzić dzięki gravity.integration</h2>
+  <p style="text-align:center;color:var(--gi-text);font-size:.9rem;max-width:640px;margin:0 auto 3rem;line-height:1.7;opacity:.85;">Kalkulacja oparta jest na uśrednionych danych z realizacji projektów integracyjnych z wykorzystaniem gravity.integration. Rzeczywiste oszczędności mogą się różnić w zależności od złożoności systemów i specyfiki środowiska IT.</p>
+
+  <div class="gi-calc-grid">
+    <div class="gi-calc-card">
+      <h3>Parametry projektów</h3>
+      <div class="gi-slider-group">
+        <div class="gi-slider-label"><span>Projekty integracyjne / rok</span><span class="gi-slider-value" id="v-projects">3</span></div>
+        <input type="range" class="gi-range" id="s-projects" min="1" max="20" value="3">
+      </div>
+      <div class="gi-slider-group">
+        <div class="gi-slider-label"><span>Śr. czas projektu (dni robocze)</span><span class="gi-slider-value" id="v-days">30</span></div>
+        <input type="range" class="gi-range" id="s-days" min="5" max="120" value="30">
+      </div>
+      <div class="gi-slider-group">
+        <div class="gi-slider-label"><span>Wielkość zespołu</span><span class="gi-slider-value" id="v-team">2</span></div>
+        <input type="range" class="gi-range" id="s-team" min="1" max="10" value="2">
+      </div>
+    </div>
+    <div class="gi-calc-card">
+      <h3>Koszty</h3>
+      <div class="gi-slider-group">
+        <div class="gi-slider-label"><span>Stawka dzienna (PLN netto)</span><span class="gi-slider-value" id="v-rate">1 500</span></div>
+        <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value="1500">
+      </div>
+      <div class="gi-slider-group">
+        <div class="gi-slider-label"><span>Obecne narzędzia / licencje (PLN / rok)</span><span class="gi-slider-value" id="v-tool">0</span></div>
+        <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="gi-kpi-row">
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-save">—</div><div class="gi-kpi-label">Roczna oszczędność (PLN)</div></div>
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-extra">—</div><div class="gi-kpi-label">Dodatkowe projekty w tym samym czasie</div></div>
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-roi">—</div><div class="gi-kpi-label">ROI w pierwszym roku</div></div>
+  </div>
+
+  <div class="gi-chart-container">
+    <h3>Czas realizacji projektu (dni robocze)</h3>
+    <div class="gi-bar-wrap">
+      <div class="gi-bar-label">Obecny</div>
+      <div class="gi-bar-track"><div class="gi-bar-fill current" id="bar-current"></div></div>
+    </div>
+    <div class="gi-bar-wrap">
+      <div class="gi-bar-label">gravity</div>
+      <div class="gi-bar-track"><div class="gi-bar-fill gravity" id="bar-gravity"></div></div>
+    </div>
+  </div>
+
+  <table class="gi-breakdown">
+    <thead><tr><th>Faza</th><th>Obecny koszt</th><th>Z gravity</th><th>Oszczędność</th></tr></thead>
+    <tbody id="gi-tbody"></tbody>
+  </table>
+
+  <div class="gi-cta-box">
+    <a class="btn btn-arrow btn-arrow-green" href="https://gravity-integration.com/pobieranie/"><span>Pobierz gravity.integration za darmo</span></a>
+  </div>
+</div>
+
+<script is:inline>
+(function(){
+  var LIC1=2999,LICM=7999,DR=.60,TR=.40,MR=.70,DS=.50,TS=.25,DPS=.10,MS=.15;
+  var fmt=function(n){return n.toLocaleString("pl-PL")};
+  var sl={p:document.getElementById("s-projects"),d:document.getElementById("s-days"),t:document.getElementById("s-team"),r:document.getElementById("s-rate"),tl:document.getElementById("s-tool")};
+  function calc(){
+    var P=+sl.p.value,D=+sl.d.value,T=+sl.t.value,R=+sl.r.value,TL=+sl.tl.value;
+    document.getElementById("v-projects").textContent=P;
+    document.getElementById("v-days").textContent=D;
+    document.getElementById("v-team").textContent=T;
+    document.getElementById("v-rate").textContent=fmt(R);
+    document.getElementById("v-tool").textContent=fmt(TL);
+    var dd=D*DS,td=D*TS,dpd=D*DPS,md=D*MS;
+    var cDev=dd*T*R,cTest=td*T*R,cDep=dpd*T*R,cMnt=md*T*R;
+    var cTot=(cDev+cTest+cDep+cMnt)*P+TL;
+    var gDev=dd*(1-DR)*T*R,gTest=td*(1-TR)*T*R,gDep=dpd*(1-.66)*T*R,gMnt=md*(1-MR)*T*R;
+    var gLic=P<=1?LIC1:LICM,setup=(1+3)*T*R;
+    var gTot=(gDev+gTest+gDep+gMnt)*P+gLic+setup;
+    var sav=cTot-gTot;
+    var gDaysP=Math.round(dd*(1-DR)+td*(1-TR)+dpd+md*(1-MR));
+    var extra=D>0?Math.floor((D-gDaysP)*P/D):0;
+    var roi=gTot>0?((sav/gTot)*100):0;
+    document.getElementById("kpi-save").textContent=fmt(Math.round(sav))+" PLN";
+    document.getElementById("kpi-extra").textContent="+"+extra;
+    document.getElementById("kpi-roi").textContent=Math.round(roi)+"%";
+    var mx=Math.max(D,gDaysP,1);
+    document.getElementById("bar-current").style.width=(D/mx*100)+"%";
+    document.getElementById("bar-current").textContent=D+" dni";
+    document.getElementById("bar-gravity").style.width=(gDaysP/mx*100)+"%";
+    document.getElementById("bar-gravity").textContent=gDaysP+" dni";
+    var rows=[["Rozwój",cDev*P,gDev*P],["Testy",cTest*P,gTest*P],["Wdrożenie",cDep*P,gDep*P],["Utrzymanie",cMnt*P,gMnt*P],["Licencje / narzędzia",TL,gLic]];
+    var h="";
+    rows.forEach(function(r){var s=r[1]-r[2];h+="<tr><td>"+r[0]+"</td><td>"+fmt(Math.round(r[1]))+" PLN</td><td>"+fmt(Math.round(r[2]))+" PLN</td><td class=\"gi-savings\">"+(s>0?"-":"")+fmt(Math.round(Math.abs(s)))+" PLN</td></tr>"});
+    h+="<tr style=\"border-top:2px solid #464861;font-weight:700\"><td>Razem / rok</td><td>"+fmt(Math.round(cTot))+" PLN</td><td>"+fmt(Math.round(gTot))+" PLN</td><td class=\"gi-savings\">"+(sav>0?"-":"")+fmt(Math.round(Math.abs(sav)))+" PLN</td></tr>";
+    document.getElementById("gi-tbody").innerHTML=h;
+  }
+  Object.values(sl).forEach(function(s){s.addEventListener("input",calc)});
+  calc();
+})();
+</script>
+
+      </div>
+    </div>
+  </div>
+</section>

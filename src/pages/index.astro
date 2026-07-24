@@ -1,11 +1,32 @@
 ---
 import { getEntry } from 'astro:content';
-import Base from '../layouts/Base.astro';
-import PageSkeleton from '../components/PageSkeleton.astro';
+import Site from '../layouts/Site.astro';
+import HomeHero from '../components/HomeHero.astro';
+import SectionRenderer from '../components/SectionRenderer.astro';
+import DemoSection from '../components/DemoSection.astro';
 
-const page = (await getEntry('pages', 'home'))!;
+const page = (await getEntry('pages', 'home'))!.data;
+
+/* live-site row overrides (was snippets 30 + 12):
+   section0 row0 → developers SVG animation, row1 → business SVG + extra CTA
+   section2 rows → use-case videos */
+const overrides = {
+  0: {
+    0: { media: 'svg-dev' },
+    1: { media: 'svg-biz', extraLinks: [{ title: 'Policz korzyści', url: '/kalkulator/' }] },
+  },
+  2: {
+    0: { media: { video: 'use_01' } },
+    1: { media: { video: 'use_02' } },
+    2: { media: { video: 'use_03' } },
+    3: { media: { video: 'use_04' } },
+  },
+};
 ---
 
-<Base title={page.data.seo.title} description={page.data.seo.description} path="/">
-  <PageSkeleton page={page.data} />
-</Base>
+<Site title={page.seo.title} description={page.seo.description} path="/" bodyClass="home">
+  <HomeHero h1={page.h1} />
+  <SectionRenderer sections={page.sections.slice(0, 3)} overrides={overrides} />
+  <DemoSection />
+  <SectionRenderer sections={page.sections.slice(3)} startIndex={3} />
+</Site>

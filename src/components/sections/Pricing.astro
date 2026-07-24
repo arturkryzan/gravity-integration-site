@@ -1,0 +1,46 @@
+---
+/* ACF layout: pricing (theme inc/sections/pricing.php + components/price-item.php) */
+interface Props {
+  index: number;
+  pricing: Array<Record<string, any>>;
+}
+const { index, pricing } = Astro.props;
+---
+
+<section id={`scroll${index}`} data-scroll data-scroll-repeat>
+  <div class="container-fluid bg-green pricing py-8 py-lg-0">
+    <div class="pricing-lines d-none d-lg-block" data-scroll data-scroll-opacity>
+      <div class="circle" data-scroll data-scroll-delay=".2" data-scroll-speed="1"></div>
+      <div class="circle" data-scroll data-scroll-delay=".1" data-scroll-speed="1"></div>
+      <img src="/theme/static/linespricing0.svg" alt="" data-scroll data-scroll-delay=".5" data-scroll-speed="-1" />
+      <img src="/theme/static/linespricing1.svg" alt="" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
+    </div>
+
+    <div class="row pt-10" id={`section${index}`}>
+      {pricing.map((item) => (
+        <div class="col-lg-4 py-8 price-item">
+          <div class="bg-white pt-10 px-10 pb-8 text-center h-100 d-flex flex-column" data-scroll data-scroll-opacity>
+            <img src="/theme/static/logo_small.svg" alt="gravity.integration" class="mx-auto mb-6" />
+            <h2 class="h3 ff-main lh-1-2 mb-6" set:html={item.name} />
+            <div class="paragraph mb-5">
+              <Fragment set:html={item.text ?? ''} />
+            </div>
+            <div class="mt-auto">
+              {item.price !== '' && item.currency && (
+                <div class="d-flex justify-content-center h1 price-item-value">
+                  <span>{item.price}</span>
+                  <span>&nbsp; {item.currency}</span>
+                </div>
+              )}
+              {item.btn && item.btn_link && (
+                <a class="btn btn-arrow btn-arrow-white mt-6 mx-auto" href={item.btn_link}>
+                  <span>{item.btn}</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

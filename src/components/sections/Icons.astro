@@ -1,0 +1,65 @@
+---
+/* ACF layout: icons (theme inc/sections/icons.php). Tech tiles + clients grid. */
+import { mediaSrc, mediaAlt } from '../../lib/media';
+
+interface Props {
+  index: number;
+  bg?: string;
+  text?: string;
+  icons: Array<Record<string, any>>;
+  link?: Record<string, any> | '' | null;
+}
+const { index, bg = '', text = '', icons, link } = Astro.props;
+const l = link && typeof link === 'object' ? link : null;
+const BLOB =
+  'M52.7,-59C68.3,-49.7,81,-33.1,85.8,-13.9C90.5,5.2,87.4,26.9,75.7,40.5C64,54,43.8,59.3,26,61.6C8.1,63.9,-7.3,63.2,-22.1,58.7C-36.9,54.2,-51.1,45.9,-56.7,33.9C-62.4,21.8,-59.6,5.9,-57.2,-10.6C-54.9,-27.1,-53.1,-44.1,-43.7,-54.5C-34.2,-65,-17.1,-68.8,0.7,-69.6C18.5,-70.5,37.1,-68.4,52.7,-59Z';
+---
+
+<section class="icons" style={`background-color: ${bg}`} id={`section${index}`} data-scroll data-scroll-repeat>
+  <div class="container-fluid py-10">
+    <div class="row pt-10">
+      <div class="col-md-6 mx-auto paragraph" data-scroll data-scroll-opacity>
+        <Fragment set:html={text} />
+      </div>
+    </div>
+    <div class="row pb-md-6">
+      {icons.map((tile) => {
+        const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
+        return (
+          <div
+            class="col-md-6 col-lg-3 text-center paragraph hover-underline pt-10 mt-10 mt-lg-0"
+            data-scroll
+            data-scroll-opacity
+          >
+            <div data-scroll data-scroll-opacity class="position-relative">
+              <svg class="icons-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  stroke="#F3F4FB"
+                  stroke-width="1"
+                  fill="none"
+                  d={BLOB}
+                  transform="translate(100 100)"
+                />
+              </svg>
+              {img && mediaSrc(img) && (
+                <div class="ratio mb-4 mx-auto" style="width:  26px; height:  24px; --bs-aspect-ratio: 100%;">
+                  <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
+                </div>
+              )}
+              <strong class="mb-2">{tile.title}</strong>
+              <Fragment set:html={tile.text ?? ''} />
+            </div>
+          </div>
+        );
+      })}
+
+      {l && (
+        <div class="col-12 mt-10 pt-6 d-flex justify-content-center" data-scroll data-scroll-opacity>
+          <a class="btn btn-arrow btn-text" href={l.url} target={l.target || '_self'}>
+            <span>{l.title}</span>
+          </a>
+        </div>
+      )}
+    </div>
+  </div>
+</section>

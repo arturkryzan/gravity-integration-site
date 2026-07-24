@@ -1,0 +1,62 @@
+{
+  "technologia": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/06/etl-scaled.jpg",
+    "alt": "gravity.integration ESB - grafika produktowa",
+    "h1": "<h1><span style=\"text-decoration: underline;\">Więcej</span> niż ESB</h1>",
+    "circle": true,
+    "local": "/uploads/etl-scaled.jpg"
+  },
+  "polityka-prywatnosci": {
+    "img": null,
+    "alt": "",
+    "h1": "<h2>Polityka prywatności opisuje zasady przetwarzania przez&nbsp;nas informacji na&nbsp;Twój&nbsp;temat, w&nbsp;tym danych osobowych oraz&nbsp;ciasteczek, czyli tzw. cookies.</h2>",
+    "circle": false
+  },
+  "kontakt": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/06/contact.png",
+    "alt": "Kontakt - ilustracja sekcji kontaktowej",
+    "h1": "<h1>Kontakt</h1>",
+    "circle": false,
+    "local": "/uploads/contact.png"
+  },
+  "pobieranie": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/06/pobieranie-1.png",
+    "alt": "Pobieranie gravity.integration - ilustracja",
+    "h1": "<h1>Pobieranie</h1>",
+    "circle": false,
+    "local": "/uploads/pobieranie-1.png"
+  },
+  "cennik": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/07/heropricing.jpg",
+    "alt": "Sekcja cennik - obraz nagłówkowy",
+    "h1": "<h1>Cennik</h1>",
+    "circle": false,
+    "local": "/uploads/heropricing.jpg"
+  },
+  "case-studies": {
+    "img": null,
+    "alt": "",
+    "h1": "<h1>Case Studies</h1>",
+    "circle": true
+  },
+  "kalkulator": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/07/heropricing.jpg",
+    "alt": "Sekcja cennik - obraz nagłówkowy",
+    "h1": "<h1>Kalkulator <span style=\"text-decoration: underline;\">ROI</span></h1>",
+    "circle": true,
+    "local": "/uploads/heropricing.jpg"
+  },
+  "czym-jest-esb": {
+    "img": "https://gravity-integration.com/wp-content/uploads/2022/07/heropricing.jpg",
+    "alt": "Sekcja cennik - obraz nagłówkowy",
+    "h1": "<h1><span style=\"text-decoration: underline;\">Czym</span> jest ESB?</h1>",
+    "circle": true,
+    "local": "/uploads/heropricing.jpg"
+  },
+  "integracje": {
+    "img": null,
+    "alt": "",
+    "h1": "<h1><span style=\"text-decoration: underline;\">Integracje</span> gravity.integration</h1>",
+    "circle": true
+  }
+}

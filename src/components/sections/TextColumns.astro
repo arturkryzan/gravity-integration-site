@@ -1,0 +1,26 @@
+---
+/* ACF layout: text_columns */
+interface Props {
+  index: number;
+  text0?: string;
+  text1?: string;
+}
+const { index, text0 = '', text1 = '' } = Astro.props;
+---
+
+<section data-scroll data-scroll-repeat data-scroll-offset="100%, 50%">
+  <div class="container-fluid pt-10 mb-5">
+    <div class="row mb-lg-10" id={`section${index}`}>
+      {text0 && (
+        <div class="col-lg-5 paragraph pt-5 pb-5 mb-10" data-scroll data-scroll-opacity>
+          <Fragment set:html={text0} />
+        </div>
+      )}
+      {text1 && (
+        <div class="col-lg-5 offset-lg-1 paragraph pt-5 pb-5 mb-10" data-scroll data-scroll-opacity>
+          <Fragment set:html={text1} />
+        </div>
+      )}
+    </div>
+  </div>
+</section>

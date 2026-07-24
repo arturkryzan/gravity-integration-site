@@ -11,33 +11,42 @@
   "navLabel": "Kapitan Navi",
   "rows": [
     {
-      "text": "<h2><strong>KAPITAN NAVI</strong>\r\nAutomatyzacja rejestracji czasu pracy z systemem RCP Roger</h2>\r\n<strong>Firma:</strong> Kapitan Navi | Trzebiatów, Zachodniopomorskie\r\n<strong>Branża:</strong> Przetwórstwo rybne — producent śledzi marynowanych\r\n<strong>System ERP:</strong> Graffiti.ERP\r\n<strong>System RCP:</strong> Roger (baza MSSQL)",
+      "text": "<h2><strong>KAPITAN NAVI</strong><br />\nAutomatyzacja rejestracji czasu pracy z systemem RCP Roger</h2>\n<p><strong>Firma:</strong> Kapitan Navi | Trzebiatów, Zachodniopomorskie<br />\n<strong>Branża:</strong> Przetwórstwo rybne — producent śledzi marynowanych<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>System RCP:</strong> Roger (baza MSSQL)</p>\n",
       "img": {
         "file": "media/kapitan-navi-logo-hires.png",
+        "url": null,
         "alt": "Logo firmy Kapitan Navi",
+        "width": 800,
+        "height": 400,
         "wpId": 393
       },
       "link": ""
     },
     {
-      "text": "<h3>Wyzwanie</h3>\r\nKapitan Navi korzysta z systemu kontroli dostępu Roger do rejestrowania wejść i wyjść pracowników przez bramki RCP (kołowroty i śluzy) w strefach produkcyjnych. Dane z systemu Roger gromadzone były w bazie MSSQL, ale ich analiza wymagała ręcznego eksportowania, obróbki w arkuszach kalkulacyjnych i porównywania z ewidencją w systemie ERP. Kierownicy produkcji nie mieli szybkiego wglądu w rzeczywisty czas pracy, długość przerw ani poprawność odbijania się pracowników na wyznaczonych bramkach.",
-      "img": "",
+      "text": "<h3>Wyzwanie</h3>\n<p>Kapitan Navi korzysta z systemu kontroli dostępu Roger do rejestrowania wejść i wyjść pracowników przez bramki RCP (kołowroty i śluzy) w strefach produkcyjnych. Dane z systemu Roger gromadzone były w bazie MSSQL, ale ich analiza wymagała ręcznego eksportowania, obróbki w arkuszach kalkulacyjnych i porównywania z ewidencją w systemie ERP. Kierownicy produkcji nie mieli szybkiego wglądu w rzeczywisty czas pracy, długość przerw ani poprawność odbijania się pracowników na wyznaczonych bramkach.</p>\n",
+      "img": null,
       "link": ""
     },
     {
-      "text": "<h3>Rozwiązanie</h3>\r\ngravity.integration połączył bazę MSSQL systemu Roger z bazą PostgreSQL systemu Graffiti.ERP za pomocą dwóch projektów ESB:\r\n\r\n• <strong>Migracja danych RCP w czasie rzeczywistym</strong> — surowe dane z czytników Roger pobierane są cyklicznie co 1 minutę, filtrowane po wybranych bramkach (kołowrotach i śluzach) i zapisywane do bazy Graffiti\r\n• <strong>Automatyczna obróbka algorytmem SQL</strong> — funkcja SQL przetwarza surowe odczyty według wytycznych klienta: klasyfikuje okresy pracy i przerw, identyfikuje bramki wejścia/wyjścia, oblicza sumy czasów\r\n• <strong>Wizualizacja w module Grafbuilder</strong> — przetworzone dane trafiają do panelu analitycznego, w którym kontrolujący widzi wszystko w jednym miejscu\r\n• <strong>Generowanie raportów</strong> — raporty dzienne i szczegółowe RCP dostępne natychmiast, z możliwością eksportu do formatu Excel",
+      "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration połączył bazę MSSQL systemu Roger z bazą PostgreSQL systemu Graffiti.ERP za pomocą dwóch projektów ESB:</p>\n<p>• <strong>Migracja danych RCP w czasie rzeczywistym</strong> — surowe dane z czytników Roger pobierane są cyklicznie co 1 minutę, filtrowane po wybranych bramkach (kołowrotach i śluzach) i zapisywane do bazy Graffiti<br />\n• <strong>Automatyczna obróbka algorytmem SQL</strong> — funkcja SQL przetwarza surowe odczyty według wytycznych klienta: klasyfikuje okresy pracy i przerw, identyfikuje bramki wejścia/wyjścia, oblicza sumy czasów<br />\n• <strong>Wizualizacja w module Grafbuilder</strong> — przetworzone dane trafiają do panelu analitycznego, w którym kontrolujący widzi wszystko w jednym miejscu<br />\n• <strong>Generowanie raportów</strong> — raporty dzienne i szczegółowe RCP dostępne natychmiast, z możliwością eksportu do formatu Excel</p>\n",
       "img": {
         "file": "media/roger-rcp-logo.png",
+        "url": null,
         "alt": "Logo systemu Roger RCP",
+        "width": 800,
+        "height": 400,
         "wpId": 394
       },
       "link": ""
     },
     {
-      "text": "<h3>Rezultaty</h3>\r\n• Pełna automatyzacja przepływu danych RCP — z czytników Roger prosto do Graffiti.ERP bez ręcznej interwencji\r\n• Aktualizacja danych co 1 minutę — kierownik produkcji widzi aktualny stan w czasie rzeczywistym\r\n• Szczegółowa analiza czasu pracy: czas w strefie produkcyjnej, czas przerw, poprawność odbijania na bramkach\r\n• Gotowe raporty RCP — dzienne i szczegółowe — generowane jednym kliknięciem z poziomu Graffiti.ERP\r\n• Eliminacja ręcznego eksportu i obróbki danych w arkuszach kalkulacyjnych",
+      "text": "<h3>Rezultaty</h3>\n<p>• Pełna automatyzacja przepływu danych RCP — z czytników Roger prosto do Graffiti.ERP bez ręcznej interwencji<br />\n• Aktualizacja danych co 1 minutę — kierownik produkcji widzi aktualny stan w czasie rzeczywistym<br />\n• Szczegółowa analiza czasu pracy: czas w strefie produkcyjnej, czas przerw, poprawność odbijania na bramkach<br />\n• Gotowe raporty RCP — dzienne i szczegółowe — generowane jednym kliknięciem z poziomu Graffiti.ERP<br />\n• Eliminacja ręcznego eksportu i obróbki danych w arkuszach kalkulacyjnych</p>\n",
       "img": {
         "file": "media/kapitan-navi-gravity-integration-etl.png",
-        "alt": "Diagram przepływu danych w gravity.integration ESB",
+        "url": null,
+        "alt": "Diagram przepływu danych w gravity.integration ETL",
+        "width": 1920,
+        "height": 1039,
         "wpId": 388
       },
       "link": ""

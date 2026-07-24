@@ -12,28 +12,37 @@
   "navLabel": "Tip-topol",
   "rows": [
     {
-      "text": "<h2><strong>TIP-TOPOL  </strong>\r\nAutomatyzacja logistyki w branży motoryzacyjnej</h2>\r\n<strong>Firma:</strong> TIP-TOPOL Sp. z o.o. | Pobiedziska, Wielkopolska\r\n<strong>Branża:</strong> Motoryzacja — produkcja i dystrybucja wyposażenia warsztatowego, membran pneumatycznych, ciężarków do wyważania\r\n<strong>Zatrudnienie:</strong> 200–500 pracowników\r\n<strong>System ERP:</strong> Graffiti.ERP\r\n<h3>Wyzwanie</h3>\r\nTIP-TOPOL jako największy polski producent ciężarków do wyważania kół i membran do zawieszeń pneumatycznych realizuje dziennie setki wysyłek do klientów w całej Polsce i Europie. Obsługa zamówień wymagała ręcznego logowania się do paneli operatorów kurierskich — DPD, InPost, GLS — kopiowania danych adresowych, generowania listów przewozowych i śledzenia statusów przesyłek w osobnych systemach. Przy skali działalności TIP-TOPOL oznaczało to godziny pracy administracyjnej dziennie, ryzyko pomyłek i opóźnień w informowaniu klientów o statusie dostawy.",
+      "text": "<h2><strong>TIP-TOPOL  </strong><br />\nAutomatyzacja logistyki w branży motoryzacyjnej</h2>\n<p><strong>Firma:</strong> TIP-TOPOL Sp. z o.o. | Pobiedziska, Wielkopolska<br />\n<strong>Branża:</strong> Motoryzacja — produkcja i dystrybucja wyposażenia warsztatowego, membran pneumatycznych, ciężarków do wyważania<br />\n<strong>Zatrudnienie:</strong> 200–500 pracowników<br />\n<strong>System ERP:</strong> Graffiti.ERP</p>\n<h3>Wyzwanie</h3>\n<p>TIP-TOPOL jako największy polski producent ciężarków do wyważania kół i membran do zawieszeń pneumatycznych realizuje dziennie setki wysyłek do klientów w całej Polsce i Europie. Obsługa zamówień wymagała ręcznego logowania się do paneli operatorów kurierskich — DPD, InPost, GLS — kopiowania danych adresowych, generowania listów przewozowych i śledzenia statusów przesyłek w osobnych systemach. Przy skali działalności TIP-TOPOL oznaczało to godziny pracy administracyjnej dziennie, ryzyko pomyłek i opóźnień w informowaniu klientów o statusie dostawy.</p>\n",
       "img": {
         "file": "media/tiptopol-case-logo.png",
+        "url": null,
         "alt": "Logo firmy Tiptopol",
+        "width": 800,
+        "height": 400,
         "wpId": 384
       },
       "link": ""
     },
     {
-      "text": "<h3>Rozwiązanie</h3>\r\nDzięki gravity.integration połączyliśmy system Graffiti.ERP firmy TIP-TOPOL bezpośrednio z API operatorów logistycznych. Szyna danych ESB automatyzuje cały proces:\r\n\r\n• <strong>Automatyczne generowanie listów przewozowych</strong> — dane z zamówienia w ERP trafiają bezpośrednio do systemu kuriera, bez przepisywania\r\n• <strong>Aktualizacja statusów w czasie rzeczywistym</strong> — informacje o nadaniu, doręczeniu i problemach wracają do ERP automatycznie\r\n• <strong>Obsługa wielu operatorów z jednego miejsca</strong> — DPD, InPost, GLS i Allegro podłączone przez jednolity interfejs REST API\r\n• <strong>Drukowanie etykiet z poziomu ERP</strong> — pracownik magazynu nie opuszcza systemu, w którym pracuje\r\n\r\nWdrożenie zajęło kilka dni i nie wymagało zmian w istniejącej infrastrukturze IT firmy.",
+      "text": "<h3>Rozwiązanie</h3>\n<p>Dzięki gravity.integration połączyliśmy system Graffiti.ERP firmy TIP-TOPOL bezpośrednio z API operatorów logistycznych. Szyna danych ESB automatyzuje cały proces:</p>\n<p>• <strong>Automatyczne generowanie listów przewozowych</strong> — dane z zamówienia w ERP trafiają bezpośrednio do systemu kuriera, bez przepisywania<br />\n• <strong>Aktualizacja statusów w czasie rzeczywistym</strong> — informacje o nadaniu, doręczeniu i problemach wracają do ERP automatycznie<br />\n• <strong>Obsługa wielu operatorów z jednego miejsca</strong> — DPD, InPost, GLS i Allegro podłączone przez jednolity interfejs REST API<br />\n• <strong>Drukowanie etykiet z poziomu ERP</strong> — pracownik magazynu nie opuszcza systemu, w którym pracuje</p>\n<p>Wdrożenie zajęło kilka dni i nie wymagało zmian w istniejącej infrastrukturze IT firmy.</p>\n",
       "img": {
         "file": "media/tiptopol-dpd-integration.gif",
+        "url": null,
         "alt": "Animacja integracji gravity.integration z systemem DPD",
+        "width": 1911,
+        "height": 982,
         "wpId": 383
       },
       "link": ""
     },
     {
-      "text": "<h3>Rezultaty</h3>\r\n• Eliminacja ręcznego wprowadzania danych do paneli kurierskich\r\n• Redukcja pomyłek w adresach i danych przesyłek\r\n• Szybsza obsługa zamówień — od złożenia do wysyłki\r\n• Pełna widoczność statusów wszystkich przesyłek w jednym systemie\r\n• Możliwość podłączenia kolejnych operatorów bez dodatkowych kosztów integracji",
+      "text": "<h3>Rezultaty</h3>\n<p>• Eliminacja ręcznego wprowadzania danych do paneli kurierskich<br />\n• Redukcja pomyłek w adresach i danych przesyłek<br />\n• Szybsza obsługa zamówień — od złożenia do wysyłki<br />\n• Pełna widoczność statusów wszystkich przesyłek w jednym systemie<br />\n• Możliwość podłączenia kolejnych operatorów bez dodatkowych kosztów integracji</p>\n",
       "img": {
         "file": "media/logistics-operators-logos.png",
+        "url": null,
         "alt": "Loga operatorów logistycznych — DPD, InPost, DHL, UPS, FedEx",
+        "width": 800,
+        "height": 400,
         "wpId": 385
       },
       "link": ""

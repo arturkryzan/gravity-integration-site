@@ -1,0 +1,19 @@
+---
+/* ACF layout: quote */
+interface Props {
+  index: number;
+  bg?: string;
+  text?: string;
+}
+const { index, bg = '', text = '' } = Astro.props;
+---
+
+<section id={`section${index}`} data-scroll data-scroll-repeat data-scroll-offset="100%, 0">
+  <div class="container-fluid py-10" style={`background-color: ${bg}`}>
+    <div class="row py-10">
+      <div class="col-md-10 mx-auto paragraph text-center px-xl-10" data-scroll data-scroll-opacity>
+        <h3><Fragment set:html={text} /></h3>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+---
+/* Subpage hero (theme page/hero.php): featured image + h1, optional circle decoration. */
+interface Props {
+  h1: string;
+  img?: string | null;
+  alt?: string;
+  circle?: boolean;
+}
+const { h1, img = null, alt = '', circle = false } = Astro.props;
+---
+
+<section class="hero hero-small d-flex align-items-end" data-scroll-section>
+  {img && <img src={img} alt={alt} class="lazyload img-fit h-100 w-100" />}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 hero-text pb-10" data-scroll data-scroll-opacity>
+        <div class={`d-inline-block${circle ? ' hero-text-circle' : ''}`}>
+          <Fragment set:html={h1} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

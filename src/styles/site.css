@@ -1,0 +1,141 @@
+/* ============================================================
+   site.css — post-WordPress additions & Locomotive Scroll replacement
+   Loaded AFTER legacy.css. Replicates the live site's behavior
+   with native scroll + CSS transitions (no LS, no GSAP).
+   ============================================================ */
+
+/* ---- reveal-on-view (replaces Locomotive's is-inview) ----
+   legacy.css: [data-scroll-opacity]{opacity:0} + .is-inview{opacity:1}
+   Fallbacks first: content must never be invisible without JS. */
+html:not(.js) [data-scroll-opacity] {
+  opacity: 1 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-opacity] {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}
+
+/* Locomotive leftovers neutralized (native scrolling everywhere).
+   The theme sets html,body{overflow:hidden;height:100%} at ≥1400px because LS
+   scrolled via transforms — snippet 31 shipped this exact override per-page. */
+html,
+body {
+  overflow: visible !important;
+  height: auto !important;
+}
+[data-scroll-container] {
+  transform: none !important;
+  will-change: auto !important;
+  min-height: auto !important;
+}
+.c-scrollbar,
+.c-scrollbar_thumb {
+  display: none !important;
+}
+[data-scroll-section] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---- sticky header show/hide (native scroll version of snippet 26) ---- */
+header {
+  transition:
+    transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
+    top 0.2s ease;
+}
+body.header-hidden header:not(.nav-is-open) {
+  transform: translateY(calc(-100% - var(--gi-bar-h, 44px)));
+}
+
+/* ---- full-screen nav (CSS transitions replacing GSAP timeline) ---- */
+.nav-main {
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+body.nav-open .nav-main {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+/* pre-display state so the opacity transition can run */
+body.nav-opening .nav-main {
+  display: block;
+}
+.col-pull .overlay {
+  background: #f3f4fb;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: 0 50%;
+}
+body.nav-open .col-pull:nth-child(1) .overlay { transition-delay: 0s; }
+body.nav-open .col-pull:nth-child(2) .overlay { transition-delay: 0.16s; }
+body.nav-open .col-pull:nth-child(3) .overlay { transition-delay: 0.33s; }
+body.nav-open .col-pull .overlay {
+  transform: scaleX(1);
+}
+.nav-main .col-pull-inner,
+.col-pull .socials,
+.col-pull .img-lines {
+  transition: opacity 0.5s ease 0.3s;
+}
+body.nav-open .nav-main .col-pull-inner,
+body.nav-open .col-pull .socials,
+body.nav-open .col-pull .img-lines {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-main,
+  .col-pull .overlay,
+  .nav-main .col-pull-inner,
+  .col-pull .socials,
+  .col-pull .img-lines {
+    transition: none !important;
+  }
+}
+
+/* ---- announcement bar (snippet 16, componentized) ---- */
+:root {
+  --gi-bar-h: 44px;
+}
+body {
+  margin-top: var(--gi-bar-h) !important;
+}
+header {
+  top: var(--gi-bar-h) !important;
+}
+#gi-announce-bar a:hover {
+  opacity: 0.85;
+}
+
+/* ---- cookie notice: not ported (was force-hidden on live) ---- */
+
+/* ---- forms: CF7-equivalent feedback styles ---- */
+.wpcf7-response-output {
+  margin: 1.5em 0;
+  padding: 0.6em 1em;
+  border: 2px solid #27ea93;
+  font-size: 0.9rem;
+}
+.form-status[hidden] {
+  display: none;
+}
+.wpcf7-not-valid-tip {
+  color: #dc3232;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* ---- lazyload compat: we ship real src, keep class inert ---- */
+img.lazyload {
+  opacity: 1;
+}
+
+/* ---- videos in use-case rows ---- */
+.use-case-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}

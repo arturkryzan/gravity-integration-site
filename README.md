@@ -48,7 +48,7 @@ npm run build    # → dist/
 
 - [x] Phase 0 — extraction (see rebuild-extract/)
 - [x] Phase 1 — scaffold, content model, migration, tokens, fonts, build green
-- [ ] Phase 2 — real components & pages (hero, announcement bar, SVG heroes, tiles, videos, forms, integracje grid, ROI calculator, case studies)
+- [x] Phase 2 — all components & pages rebuilt; text parity 10/10 vs live (only deliberate removals: TurnKey/reCAPTCHA credits, stale © year, LS hacks)
 - [ ] Phase 3 — form endpoint → MailerLite + GA4 events
 - [ ] Phase 4 — SEO parity gate (full diff vs rendered snapshots)
 - [ ] Phase 5 — deploy pipeline + launch

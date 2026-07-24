@@ -4,7 +4,10 @@
     "name": "Bispol",
     "logo": {
       "file": "media/bispol-logo-1.png",
+      "url": null,
       "alt": "Logo firmy Bispol",
+      "width": 400,
+      "height": 200,
       "wpId": 359
     },
     "caseStudyLink": null
@@ -14,7 +17,10 @@
     "name": "Consorfrut",
     "logo": {
       "file": "media/consorfrut-logo.png",
+      "url": null,
       "alt": "Logo firmy Consorfrut",
+      "width": 200,
+      "height": 100,
       "wpId": 360
     },
     "caseStudyLink": null
@@ -24,7 +30,10 @@
     "name": "Fideli",
     "logo": {
       "file": "media/fideli-logo.png",
+      "url": null,
       "alt": "Logo firmy Fideli",
+      "width": 200,
+      "height": 100,
       "wpId": 361
     },
     "caseStudyLink": null
@@ -34,7 +43,10 @@
     "name": "Witamina",
     "logo": {
       "file": "media/witamina-logo.png",
+      "url": null,
       "alt": "Logo firmy Witamina",
+      "width": 200,
+      "height": 100,
       "wpId": 362
     },
     "caseStudyLink": null
@@ -44,7 +56,10 @@
     "name": "Gelg",
     "logo": {
       "file": "media/gelg-logo.png",
+      "url": null,
       "alt": "Logo firmy Gelg",
+      "width": 200,
+      "height": 100,
       "wpId": 363
     },
     "caseStudyLink": null
@@ -54,7 +69,10 @@
     "name": "Kapitan Navi",
     "logo": {
       "file": "media/kapitan-navi-logo.png",
+      "url": null,
       "alt": "Logo firmy Kapitan Navi",
+      "width": 200,
+      "height": 100,
       "wpId": 364
     },
     "caseStudyLink": "/case-studies/"
@@ -64,7 +82,10 @@
     "name": "Frogum",
     "logo": {
       "file": "media/frogum-logo.png",
+      "url": null,
       "alt": "Logo firmy Frogum",
+      "width": 200,
+      "height": 100,
       "wpId": 365
     },
     "caseStudyLink": null
@@ -74,7 +95,10 @@
     "name": "NAC",
     "logo": {
       "file": "media/nac-logo.png",
+      "url": null,
       "alt": "Logo firmy NAC — New American Concept",
+      "width": 800,
+      "height": 400,
       "wpId": 366
     },
     "caseStudyLink": "/case-studies/#section6"
@@ -84,7 +108,10 @@
     "name": "HENMAR",
     "logo": {
       "file": "media/henmar-logo.png",
+      "url": null,
       "alt": "Logo firmy HENMAR",
+      "width": 200,
+      "height": 100,
       "wpId": 367
     },
     "caseStudyLink": null
@@ -94,7 +121,10 @@
     "name": "MAXPOL",
     "logo": {
       "file": "media/maxpol-logo.png",
+      "url": null,
       "alt": "Logo firmy MAXPOL",
+      "width": 200,
+      "height": 100,
       "wpId": 368
     },
     "caseStudyLink": null
@@ -104,7 +134,10 @@
     "name": "TiA",
     "logo": {
       "file": "media/tia-logo.png",
+      "url": null,
       "alt": "Logo firmy TiA",
+      "width": 200,
+      "height": 100,
       "wpId": 369
     },
     "caseStudyLink": null
@@ -114,7 +147,10 @@
     "name": "Hewalex",
     "logo": {
       "file": "media/hewalex-logo.png",
+      "url": null,
       "alt": "Logo firmy Hewalex",
+      "width": 200,
+      "height": 100,
       "wpId": 370
     },
     "caseStudyLink": null
@@ -124,7 +160,10 @@
     "name": "SERIX",
     "logo": {
       "file": "media/serix-logo.png",
+      "url": null,
       "alt": "Logo firmy SERIX",
+      "width": 200,
+      "height": 100,
       "wpId": 371
     },
     "caseStudyLink": null
@@ -134,7 +173,10 @@
     "name": "Lindner",
     "logo": {
       "file": "media/lindner-logo.png",
+      "url": null,
       "alt": "Logo firmy Lindner",
+      "width": 200,
+      "height": 100,
       "wpId": 372
     },
     "caseStudyLink": null
@@ -144,7 +186,10 @@
     "name": "Metaltech",
     "logo": {
       "file": "media/metaltech-logo.png",
+      "url": null,
       "alt": "Logo firmy Metaltech",
+      "width": 200,
+      "height": 100,
       "wpId": 373
     },
     "caseStudyLink": null
@@ -154,7 +199,10 @@
     "name": "MTM",
     "logo": {
       "file": "media/mtm-logo.png",
+      "url": null,
       "alt": "Logo firmy MTM",
+      "width": 200,
+      "height": 100,
       "wpId": 374
     },
     "caseStudyLink": null
@@ -164,7 +212,10 @@
     "name": "WZE",
     "logo": {
       "file": "media/wze-logo.png",
+      "url": null,
       "alt": "Logo firmy WZE",
+      "width": 200,
+      "height": 100,
       "wpId": 375
     },
     "caseStudyLink": null
@@ -174,7 +225,10 @@
     "name": "Biall",
     "logo": {
       "file": "media/biall-logo.png",
+      "url": null,
       "alt": "Logo firmy Biall",
+      "width": 200,
+      "height": 100,
       "wpId": 376
     },
     "caseStudyLink": null
@@ -184,7 +238,10 @@
     "name": "Zniczplast",
     "logo": {
       "file": "media/zniczplast-logo.png",
+      "url": null,
       "alt": "Logo firmy Zniczplast",
+      "width": 200,
+      "height": 100,
       "wpId": 377
     },
     "caseStudyLink": null
@@ -194,7 +251,10 @@
     "name": "Tiptopol",
     "logo": {
       "file": "media/tiptopol-logo.png",
+      "url": null,
       "alt": "Logo firmy Tiptopol",
+      "width": 200,
+      "height": 100,
       "wpId": 378
     },
     "caseStudyLink": "/case-studies/"
@@ -204,7 +264,10 @@
     "name": "EZT",
     "logo": {
       "file": "media/ezt-logo.png",
+      "url": null,
       "alt": "Logo firmy EZT",
+      "width": 200,
+      "height": 100,
       "wpId": 379
     },
     "caseStudyLink": null
@@ -214,7 +277,10 @@
     "name": "ELMET Poznań",
     "logo": {
       "file": "media/elmet-poznan-logo.png",
+      "url": null,
       "alt": "",
+      "width": 800,
+      "height": 400,
       "wpId": 447
     },
     "caseStudyLink": "/case-studies/#section4"

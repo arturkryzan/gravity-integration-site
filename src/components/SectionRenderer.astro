@@ -1,0 +1,48 @@
+---
+/* Maps ACF flexible-content layouts to components (theme inc/sections/sections.php). */
+import TextImgLink from './sections/TextImgLink.astro';
+import TextImg from './sections/TextImg.astro';
+import Icons from './sections/Icons.astro';
+import Quote from './sections/Quote.astro';
+import TextBoxes from './sections/TextBoxes.astro';
+import TextColumns from './sections/TextColumns.astro';
+import Pricing from './sections/Pricing.astro';
+import Faq from './sections/Faq.astro';
+import Downloads from './sections/Downloads.astro';
+import ContactForm from './sections/ContactForm.astro';
+import Links from './sections/Links.astro';
+
+interface Props {
+  sections: Array<Record<string, any>>;
+  /** per-section-index row overrides for text_img_link (SVG heroes, videos) */
+  overrides?: Record<number, Record<number, any>>;
+  /** section-index offset when rendering a slice (keeps #sectionN anchors stable) */
+  startIndex?: number;
+}
+const { sections, overrides = {}, startIndex = 0 } = Astro.props;
+---
+
+{
+  sections.map((s, i) => {
+    const index = startIndex + i;
+    const layout = s.acf_fc_layout;
+    if (layout === 'text_img_link')
+      return <TextImgLink index={index} rows={s.rows ?? []} overrides={overrides[index]} />;
+    if (layout === 'text_img')
+      return <TextImg index={index} text={s.text} img={s.img} img_placement={s.img_placement} />;
+    if (layout === 'icons')
+      return <Icons index={index} bg={s.bg} text={s.text} icons={s.icons ?? []} link={s.link} />;
+    if (layout === 'quote') return <Quote index={index} bg={s.bg} text={s.text} />;
+    if (layout === 'text_boxes')
+      return <TextBoxes index={index} text={s.text} boxes={s.boxes ?? []} />;
+    if (layout === 'text_columns')
+      return <TextColumns index={index} text0={s.text0} text1={s.text1} />;
+    if (layout === 'pricing') return <Pricing index={index} pricing={s.pricing ?? []} />;
+    if (layout === 'faq') return <Faq index={index} faq={s.faq ?? []} />;
+    if (layout === 'downloads') return <Downloads index={index} downloads={s.downloads ?? []} />;
+    if (layout === 'contact_form') return <ContactForm />;
+    if (layout === 'links') return <Links index={index} text={s.text} links={s.links ?? []} />;
+    if (layout === 'space') return <div class="pt-100" />;
+    return null;
+  })
+}

@@ -1,0 +1,178 @@
+---
+/* "Umów 15-minutowe demo" section (was snippet 13 + CF7 form 414).
+   variant="integracje" swaps the heading (was snippet 31's replacement).
+   POST endpoint /api/demo-request lands in Phase 3. */
+interface Props { variant?: 'home' | 'integracje' }
+const { variant = 'home' } = Astro.props;
+---
+<style>
+/* Reset ALL theme form styles inside demo wrapper */
+#demo-form-wrapper .wpcf7-form{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;
+}
+#demo-form-wrapper .hidden-fields-container{display:none!important;}
+#demo-form-wrapper .demo-field{position:static!important;}
+#demo-form-wrapper .demo-field-full{grid-column:1/-1;}
+#demo-form-wrapper .demo-field label{
+  position:static!important;
+  color:rgba(255,255,255,0.65)!important;
+  font-size:0.85rem!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  display:block!important;
+  margin-bottom:0.35rem!important;
+  font-family:inherit!important;
+}
+#demo-form-wrapper .demo-field input[type="text"],
+#demo-form-wrapper .demo-field input[type="email"],
+#demo-form-wrapper .demo-field input[type="tel"]{
+  width:100%!important;
+  background:rgba(255,255,255,0.1)!important;
+  border:1px solid rgba(255,255,255,0.15)!important;
+  border-radius:0.5rem!important;
+  padding:0.7rem 1rem!important;
+  color:#fff!important;
+  font-size:0.95rem!important;
+  max-height:none!important;
+  transition:border-color 0.2s!important;
+  box-sizing:border-box!important;
+}
+#demo-form-wrapper .demo-field input[type="text"]:focus,
+#demo-form-wrapper .demo-field input[type="email"]:focus,
+#demo-form-wrapper .demo-field input[type="tel"]:focus{
+  border-color:#27EA93!important;outline:none!important;background:rgba(255,255,255,0.13)!important;
+}
+#demo-form-wrapper input::placeholder{color:rgba(255,255,255,0.35)!important;}
+#demo-form-wrapper .wpcf7-acceptance label{
+  display:flex!important;align-items:flex-start!important;gap:0.5rem!important;cursor:pointer;
+  position:static!important;text-transform:none!important;letter-spacing:0!important;font-size:inherit!important;
+}
+#demo-form-wrapper .wpcf7-acceptance input[type="checkbox"]{
+  -webkit-appearance:checkbox!important;-moz-appearance:checkbox!important;appearance:checkbox!important;
+  position:static!important;margin-top:3px!important;accent-color:#27EA93;flex-shrink:0;
+  width:16px!important;height:16px!important;min-width:16px!important;min-height:16px!important;
+  opacity:1!important;visibility:visible!important;display:inline-block!important;
+  border:1px solid rgba(255,255,255,0.4)!important;cursor:pointer!important;
+}
+#demo-form-wrapper .wpcf7-acceptance .wpcf7-list-item-label{
+  color:rgba(255,255,255,0.55);font-size:0.78rem;line-height:1.4;
+}
+#demo-form-wrapper .wpcf7-list-item{margin-left:0!important;}
+#demo-form-wrapper .demo-submit-btn{
+  display:block!important;
+  position:static!important;
+  width:100%!important;
+  background:#27EA93!important;
+  color:#464861!important;
+  border:none!important;
+  border-radius:0.5rem!important;
+  padding:0.85rem 2rem!important;
+  font-size:1rem!important;
+  font-weight:600!important;
+  cursor:pointer!important;
+  transition:background 0.2s,transform 0.1s!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  text-indent:0!important;
+  font-family:inherit!important;
+}
+#demo-form-wrapper .demo-submit-btn:hover{background:#20d484!important;transform:translateY(-1px)!important;}
+#demo-form-wrapper .wpcf7-response-output{
+  grid-column:1/-1;color:#27EA93!important;border:none!important;padding:0.5rem 0!important;font-size:0.9rem;
+}
+#demo-form-wrapper .wpcf7-not-valid-tip{
+  color:#ff6b6b!important;font-size:0.75rem!important;margin-top:0.3rem!important;
+  position:static!important;display:block!important;
+  text-transform:none!important;letter-spacing:0!important;
+  font-weight:400!important;font-family:inherit!important;
+  padding:0!important;text-align:left!important;
+}
+#demo-form-wrapper .wpcf7-form-control-wrap{position:relative!important;display:block!important;}
+#demo-form-wrapper .wpcf7-form p{margin:0!important;}
+@media(max-width:767px){
+  #demo-form-wrapper .wpcf7-form{grid-template-columns:1fr!important;}
+  #demo-form-wrapper{padding:1.5rem 1.25rem!important;}
+  #section-demo{padding:3rem 0!important;}
+}
+</style>
+<section id="section-demo" style="background-color:#464861;padding:5rem 0;position:relative;overflow:hidden;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 mx-auto text-center" style="margin-bottom:2.5rem;">
+        {variant === 'integracje' ? (
+        <>
+        <h2 style="color:#fff;font-size:2.2rem;font-weight:700;margin-bottom:0.5rem;line-height:1.3;">
+          Nie widzisz swojego systemu?
+        </h2>
+        <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;line-height:1.6;max-width:540px;margin:0 auto;">
+          Integrujemy też systemy niestandardowe, legacy i&nbsp;rozwiązania pisane na&nbsp;zamówienie. Jeśli system ma API lub bazę danych&nbsp;—&nbsp;podłączymy go.
+        </p>
+        </>
+      ) : (
+        <>
+        <h2 style="color:#fff;font-size:2.2rem;font-weight:700;margin-bottom:1rem;line-height:1.3;">
+          Sprawdź gravity.integration na&nbsp;żywo<br>
+          <span style="color:#27EA93;">Umów 15&#8209;minutowe demo</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;line-height:1.6;max-width:540px;margin:0 auto;">
+          Pokaż nam swój scenariusz integracji — przygotujemy demo dopasowane do&nbsp;Twoich systemów. Bez zobowiązań, bez slajdów.
+        </p>
+        </>
+      )}
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-6">
+        <div id="demo-form-wrapper" style="background:rgba(255,255,255,0.07);border-radius:1rem;padding:2rem 2.5rem;backdrop-filter:blur(6px);">
+          
+<div class="wpcf7" lang="pl-PL" dir="ltr">
+<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p><ul></ul></div>
+<form action="/api/demo-request" data-form="demo" method="post" class="wpcf7-form init" aria-label="Formularz demo" novalidate="novalidate" data-status="init">
+
+<div class="demo-field">
+<label>Imię i nazwisko</label>
+<span class="wpcf7-form-control-wrap" data-name="your-name"><input type="text" name="your-name" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Jan Kowalski" value="" /></span>
+</div>
+<div class="demo-field">
+<label>E-mail służbowy</label>
+<span class="wpcf7-form-control-wrap" data-name="your-email"><input type="email" name="your-email" size="40" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="jan@firma.pl" value="" /></span>
+</div>
+<div class="demo-field">
+<label>Firma</label>
+<span class="wpcf7-form-control-wrap" data-name="your-company"><input type="text" name="your-company" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Nazwa firmy" value="" /></span>
+</div>
+<div class="demo-field">
+<label>Telefon <span style="opacity:0.5">(opcjonalnie)</span></label>
+<span class="wpcf7-form-control-wrap" data-name="your-phone"><input type="tel" name="your-phone" size="40" class="wpcf7-form-control wpcf7-tel wpcf7-text" aria-invalid="false" placeholder="+48 123 456 789" value="" /></span>
+</div>
+<div class="demo-field demo-field-full" style="position:absolute!important;left:-9999px!important;top:-9999px!important;height:0!important;width:0!important;overflow:hidden!important;" aria-hidden="true" tabindex="-1">
+<label>Leave empty</label>
+<input type="text" name="website_url" value="" autocomplete="off" tabindex="-1" />
+</div>
+<input type="hidden" name="_demo_ts" value="" />
+<input type="hidden" name="_demo_token" value="" />
+<div class="demo-field demo-field-full">
+<span class="wpcf7-form-control-wrap" data-name="demo-consent"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="demo-consent" value="1" aria-invalid="false" /><span class="wpcf7-list-item-label">Zgadzam się na kontakt w celu umówienia demo. Administratorem danych jest Caffeine Minds sp.&nbsp;z&nbsp;o.o.</span></label></span></span></span>
+</div>
+<div class="demo-field demo-field-full demo-field-submit">
+<button type="submit" class="demo-submit-btn">Umów demo →</button>
+</div>
+<div class="wpcf7-response-output" aria-hidden="true"></div>
+</form>
+</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<script>
+  /* anti-spam bootstrap (port of snippet 15's client side) */
+  document.querySelectorAll('form[data-form="demo"]').forEach((f) => {
+    const ts = f.querySelector('input[name="_demo_ts"]');
+    if (ts) ts.value = String(Date.now());
+    const tok = f.querySelector('input[name="_demo_token"]');
+    if (tok) tok.value = btoa('grvty' + Math.random().toString(36).slice(2));
+  });
+</script>

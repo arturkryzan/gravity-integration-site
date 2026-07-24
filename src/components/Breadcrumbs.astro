@@ -1,0 +1,18 @@
+---
+interface Props {
+  items?: Array<{ label: string; anchor: string }>;
+}
+const { items = [] } = Astro.props;
+---
+
+<section class="breadcrumbs d-none d-md-block">
+  <div class="container-fluid">
+    <div class="row">
+      <ul class="col-12 d-flex flex-wrap hover-underline">
+        {items.map((it) => (
+          <li><a data-scroll-to href={`#${it.anchor}`} set:html={it.label} /></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

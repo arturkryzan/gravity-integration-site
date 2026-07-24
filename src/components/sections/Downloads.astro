@@ -1,0 +1,90 @@
+---
+/* ACF layout: downloads (theme inc/sections/downloads.php) */
+import { mediaSrc, mediaAlt, mediaRatio } from '../../lib/media';
+
+interface Props {
+  index: number;
+  downloads: Array<Record<string, any>>;
+}
+const { index, downloads } = Astro.props;
+---
+
+<section
+  id={`section${index}`}
+  data-scroll
+  data-scroll-repeat
+  style="background-color: #FAFAFA;"
+  class="py-10 mt-100"
+>
+  {index !== 0 && (
+    <img
+      src="/theme/static/linesdownload.svg"
+      alt=""
+      class="download-img"
+      data-scroll
+      data-scroll-delay=".1"
+      data-scroll-speed="-1"
+    />
+  )}
+
+  {downloads.map((row, i) => {
+    const file = row.file && typeof row.file === 'object' ? row.file : null;
+    const contact = row.contact && typeof row.contact === 'object' ? row.contact : null;
+    const img = row.img && typeof row.img === 'object' ? row.img : null;
+    return (
+      <div
+        class={`container-fluid py-10${i % 2 === 0 ? ' pe-lg-0' : ' ps-lg-0'}`}
+        id={`download${i}`}
+      >
+        <div class="row">
+          <div
+            class={`col-lg-4 offset-lg-1 pe-xl-0 order-2${i % 2 !== 0 ? ' order-lg-2' : ' order-lg-0'}`}
+            data-scroll
+            data-scroll-opacity
+          >
+            <div class="paragraph hover-underline">
+              {row.cat && (
+                <div class="btn mb-4 btn-text d-flex align-items-center">
+                  <svg class="me-3 mb-1" fill="none" height="6" viewBox="0 0 6 6" width="6" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="3" cy="3" fill="#464961" opacity=".5" r="3" />
+                  </svg>
+                  <span class="opacity50">{row.cat}</span>
+                </div>
+              )}
+              <Fragment set:html={row.text ?? ''} />
+            </div>
+            {(file || contact) && (
+              <div class="d-flex flex-wrap align-items-center">
+                {file && (
+                  <a
+                    class="btn btn-arrow btn-download mt-6 me-10"
+                    href={file.url}
+                    target={file.url?.startsWith('#') ? '_self' : '_blank'}
+                    data-scroll-to={file.url?.startsWith('#') ? true : undefined}
+                  >
+                    <span>Pobierz</span>
+                  </a>
+                )}
+                {contact && (
+                  <div class="hover-underline mt-6">
+                    <a class="btn btn-text me-10" href={contact.url} target={contact.target || '_self'}>
+                      <span>{contact.title}</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div class={`col-md-6 mb-5 mb-lg-0${i % 2 === 0 ? ' offset-lg-1' : ''}`}>
+            {img && mediaSrc(img) && (
+              <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}`}>
+                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</section>

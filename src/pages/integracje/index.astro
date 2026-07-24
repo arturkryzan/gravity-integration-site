@@ -1,0 +1,20 @@
+---
+import { getEntry } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+import PageHero from '../../components/PageHero.astro';
+import IntegrationsGrid from '../../components/IntegrationsGrid.astro';
+import DemoSection from '../../components/DemoSection.astro';
+
+const page = (await getEntry('pages', 'integracje'))!.data;
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <PageHero h1={page.h1} circle={true} />
+  <IntegrationsGrid />
+  <DemoSection variant="integracje" />
+</Site>

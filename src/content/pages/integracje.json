@@ -7,9 +7,8 @@
     "description": "Pełna lista integracji gravity.integration: systemy ERP (SAP, Comarch, enova), CRM, WMS, e-commerce, marketplace, bazy danych, kurierzy i więcej. 139+ gotowych konektorów.",
     "focusKeyword": "integracje ESB"
   },
-  "h1": "<h1><span style=\"text-decoration: underline;\">Integracje</span> gravity.integration</h1>",
-  "decorative": "1",
-  "newsletter": "",
-  "sections": [],
-  "wpContent": ""
+  "h1": "<h1><span style=\"text-decoration: underline;\">Integracje</span> gravity.integration</h1>\n",
+  "decorative": true,
+  "newsletter": false,
+  "sections": []
 }

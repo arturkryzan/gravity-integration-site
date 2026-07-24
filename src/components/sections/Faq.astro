@@ -1,0 +1,40 @@
+---
+/* ACF layout: faq (theme inc/sections/faq.php + components/accordion-item.php) */
+interface Props {
+  index: number;
+  faq: Array<{ que: string; ans: string }>;
+}
+const { index, faq } = Astro.props;
+---
+
+<section data-scroll data-scroll-repeat>
+  <div class="container-fluid pt-100 pb-10 mb-lg-5 faq" style="background: #F8F8FC;">
+    <div class="row pt-10" id={`section${index}`}>
+      <div class="col-12">
+        {faq.map((item, i) => (
+          <div class="col-lg-8 accordion-item" data-scroll data-scroll-opacity>
+            <button
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target={`#collapse${index}-${i}`}
+              aria-expanded="false"
+              aria-controls={`collapse${index}-${i}`}
+              class="btn-accordion"
+            >
+              <span set:html={item.que} />
+            </button>
+            <div class="collapse paragraph" id={`collapse${index}-${i}`}>
+              <div class="py-4 paragraph paragraph-small">
+                <Fragment set:html={item.ans} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="faq-lines d-none d-lg-block" data-scroll data-scroll-opacity>
+      <div class="circle" data-scroll data-scroll-delay=".2" data-scroll-speed="1"></div>
+      <img src="/theme/static/linesfaq.svg" alt="" loading="lazy" class="lazyload" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
+    </div>
+  </div>
+</section>

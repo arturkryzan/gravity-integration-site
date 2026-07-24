@@ -8,8 +8,8 @@
     "focusKeyword": "czym jest ESB"
   },
   "h1": "<h1><span style=\"text-decoration: underline;\">Czym</span> jest ESB?</h1>",
-  "decorative": "1",
-  "newsletter": "",
+  "decorative": true,
+  "newsletter": false,
   "sections": [
     {
       "acf_fc_layout": "text_columns",
@@ -19,17 +19,20 @@
     },
     {
       "acf_fc_layout": "quote",
-      "nav_li": "",
+      "nav_li": null,
       "bg": "#F3F4FB",
       "text": "Dobra integracja nie&nbsp;polega na&nbsp;łączeniu systemów —&nbsp;polega na&nbsp;łączeniu procesów biznesowych."
     },
     {
       "acf_fc_layout": "text_img",
       "nav_li": "Jak działa ESB?",
-      "text": "<h2>Jak działa szyna integracyjna?</h2>\n<p>ESB działa jak centralny węzeł komunikacyjny. Każdy system podłączony do&nbsp;szyny wysyła i&nbsp;odbiera dane w&nbsp;ustandaryzowany sposób, niezależnie od&nbsp;tego, w&nbsp;jakiej technologii został zbudowany. Szyna zajmuje się tłumaczeniem formatów, routingiem wiadomości i&nbsp;orkiestracją procesów.</p>\n<p>W praktyce oznacza to, że&nbsp;kiedy w&nbsp;systemie ERP zostanie wystawiona faktura, szyna automatycznie przekaże odpowiednie dane do&nbsp;systemu księgowego, zaktualizuje stan magazynowy w&nbsp;WMS i&nbsp;wyśle powiadomienie do&nbsp;platformy e‑commerce —&nbsp;wszystko bez&nbsp;interwencji człowieka.</p>\n<p>Kluczowe mechanizmy ESB to&nbsp;adaptery (łączniki do&nbsp;konkretnych systemów), transformacja danych (konwersja formatów XML, JSON, CSV i&nbsp;innych), routing (inteligentne kierowanie wiadomości) oraz&nbsp;monitoring (podgląd przepływu danych w&nbsp;czasie rzeczywistym).</p>\n",
+      "text": "<h2>Jak działa szyna integracyjna?</h2>\n<p>ESB działa jak centralny węzeł komunikacyjny. Każdy system podłączony do&nbsp;szyny wysyła i&nbsp;odbiera dane w&nbsp;ustandaryzowany sposób, niezależnie od&nbsp;tego, w&nbsp;jakiej technologii został zbudowany. Szyna zajmuje się tłumaczeniem formatów, routingiem wiadomości i&nbsp;orkiestracją procesów.</p>\n<p>W&nbsp;praktyce oznacza to, że&nbsp;kiedy w&nbsp;systemie ERP zostanie wystawiona faktura, szyna automatycznie przekaże odpowiednie dane do&nbsp;systemu księgowego, zaktualizuje stan magazynowy w&nbsp;WMS i&nbsp;wyśle powiadomienie do&nbsp;platformy e‑commerce —&nbsp;wszystko bez&nbsp;interwencji człowieka.</p>\n<p>Kluczowe mechanizmy ESB to&nbsp;adaptery (łączniki do&nbsp;konkretnych systemów), transformacja danych (konwersja formatów XML, JSON, CSV i&nbsp;innych), routing (inteligentne kierowanie wiadomości) oraz&nbsp;monitoring (podgląd przepływu danych w&nbsp;czasie rzeczywistym).</p>\n",
       "img": {
         "file": "media/erp_wms_crm.png",
+        "url": null,
         "alt": "",
+        "width": 1920,
+        "height": 1080,
         "wpId": 408
       },
       "img_placement": "left"
@@ -43,10 +46,13 @@
     {
       "acf_fc_layout": "text_img",
       "nav_li": "Kiedy wybrać ESB?",
-      "text": "<h2>Kiedy firma potrzebuje szyny integracyjnej?</h2>\n<p>Nie każda organizacja potrzebuje ESB od&nbsp;pierwszego dnia. Jeśli korzystasz z&nbsp;jednego systemu i&nbsp;jednej platformy sprzedażowej —&nbsp;proste API w&nbsp;zupełności wystarczy. Jednak w&nbsp;momencie, gdy&nbsp;liczba systemów rośnie, a&nbsp;dane muszą przepływać w&nbsp;wielu kierunkach, szyna integracyjna staje się koniecznością.</p>\n<p>Typowe sygnały, że&nbsp;Twoja firma potrzebuje ESB:<br />\n— Zespół IT spędza coraz więcej czasu na&nbsp;utrzymaniu istniejących integracji zamiast budować nowe<br />\n— Dane między systemami są&nbsp;niespójne lub opóźnione<br />\n— Dodanie nowego systemu wymaga tygodni pracy programistów<br />\n— Awaria jednego połączenia powoduje efekt domina w&nbsp;całej organizacji<br />\n— Brakuje centralnego widoku na&nbsp;to, jakie dane przepływają między systemami</p>\n",
+      "text": "<h2>Kiedy firma potrzebuje szyny integracyjnej?</h2>\n<p>Nie&nbsp;każda organizacja potrzebuje ESB od&nbsp;pierwszego dnia. Jeśli korzystasz z&nbsp;jednego systemu i&nbsp;jednej platformy sprzedażowej —&nbsp;proste API w&nbsp;zupełności wystarczy. Jednak w&nbsp;momencie, gdy&nbsp;liczba systemów rośnie, a&nbsp;dane muszą przepływać w&nbsp;wielu kierunkach, szyna integracyjna staje się koniecznością.</p>\n<p>Typowe sygnały, że&nbsp;Twoja firma potrzebuje ESB:<br />\n— Zespół IT spędza coraz więcej czasu na&nbsp;utrzymaniu istniejących integracji zamiast budować nowe<br />\n— Dane między systemami są&nbsp;niespójne lub opóźnione<br />\n— Dodanie nowego systemu wymaga tygodni pracy programistów<br />\n— Awaria jednego połączenia powoduje efekt domina w&nbsp;całej organizacji<br />\n— Brakuje centralnego widoku na&nbsp;to, jakie dane przepływają między systemami</p>\n",
       "img": {
         "file": "media/use1-scaled.png",
+        "url": null,
         "alt": "",
+        "width": 2560,
+        "height": 1429,
         "wpId": 411
       },
       "img_placement": "right"
@@ -54,7 +60,7 @@
     {
       "acf_fc_layout": "text_columns",
       "nav_li": "ESB a&nbsp;alternatywy",
-      "text0": "<h2>ESB a&nbsp;inne podejścia integracyjne</h2>\n<p>ESB bywa porównywane z&nbsp;architekturą mikroserwisów i&nbsp;rozwiązaniami iPaaS (Integration Platform as&nbsp;a&nbsp;Service). Mikroserwisy sprawdzają się, gdy&nbsp;budujesz system od&nbsp;zera i&nbsp;każdy komponent tworzy Twój&nbsp;zespół. Jednak w&nbsp;rzeczywistości większość firm integruje gotowe oprogramowanie —&nbsp;ERP, WMS, systemy logistyczne —&nbsp;których&nbsp;architektury nie&nbsp;kontroluje.</p>\n<p>W takim środowisku ESB jest najrozsądniejszym wyborem, bo&nbsp;pozwala łączyć systemy bez&nbsp;ingerencji w&nbsp;ich kod źródłowy. Adaptery szyny potrafią komunikować się z&nbsp;dowolnym API, bazą danych czy&nbsp;nawet plikiem płaskim, tworząc jednolity ekosystem wymiany danych.</p>\n",
+      "text0": "<h2>ESB a&nbsp;inne podejścia integracyjne</h2>\n<p>ESB bywa porównywane z&nbsp;architekturą mikroserwisów i&nbsp;rozwiązaniami iPaaS (Integration Platform as&nbsp;a&nbsp;Service). Mikroserwisy sprawdzają się, gdy&nbsp;budujesz system od&nbsp;zera i&nbsp;każdy komponent tworzy Twój&nbsp;zespół. Jednak w&nbsp;rzeczywistości większość firm integruje gotowe oprogramowanie —&nbsp;ERP, WMS, systemy logistyczne —&nbsp;których&nbsp;architektury nie&nbsp;kontroluje.</p>\n<p>W&nbsp;takim środowisku ESB jest najrozsądniejszym wyborem, bo&nbsp;pozwala łączyć systemy bez&nbsp;ingerencji w&nbsp;ich kod źródłowy. Adaptery szyny potrafią komunikować się z&nbsp;dowolnym API, bazą danych czy&nbsp;nawet plikiem płaskim, tworząc jednolity ekosystem wymiany danych.</p>\n",
       "text1": "<p>Rozwiązania iPaaS (chmurowe platformy integracyjne) mogą być atrakcyjne dla mniejszych firm, ale&nbsp;w&nbsp;przypadku dużych wolumenów danych i&nbsp;wymagań dotyczących bezpieczeństwa —&nbsp;szczególnie w&nbsp;produkcji, logistyce i&nbsp;handlu —&nbsp;lokalna szyna ESB zapewnia pełną kontrolę nad&nbsp;danymi i&nbsp;niższe koszty w&nbsp;dłuższej perspektywie.</p>\n<p><strong>gravity.integration</strong> to&nbsp;polskie rozwiązanie klasy ESB, które łączy zalety tradycyjnej szyny integracyjnej z&nbsp;nowoczesnymi technologiami. Autorskie mechanizmy takie jak Always-on-data, IntelliChain czy&nbsp;firstSIGNAL sprawiają, że&nbsp;gravity to&nbsp;więcej niż klasyczne ESB —&nbsp;<a href=\"/technologia/\">poznaj nasze technologie</a>.</p>\n"
     },
     {
@@ -83,6 +89,5 @@
         }
       ]
     }
-  ],
-  "wpContent": ""
+  ]
 }

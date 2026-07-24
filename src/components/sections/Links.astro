@@ -1,0 +1,39 @@
+---
+/* ACF layout: links — grid of labeled links (verified against live /kontakt/ markup) */
+interface Props {
+  index: number;
+  text?: string;
+  links: Array<Record<string, any>>;
+}
+const { index, text = '', links } = Astro.props;
+---
+
+<section id={`section${index}`} data-scroll data-scroll-repeat>
+  <div class="container-fluid pt-10 pt-lg-0 pb-100">
+    <div class="row py-10">
+      <div class="col-lg-9 offset-lg-1 paragraph" data-scroll data-scroll-opacity>
+        <Fragment set:html={text} />
+      </div>
+    </div>
+    <div class="row boxes">
+      {links.map((l, i) => {
+        const link = l.link && typeof l.link === 'object' ? l.link : null;
+        return (
+          link && (
+            <div
+              class={`col-md-6 col-lg-3 paragraph hover-underline pt-6 pb-4${i % 3 === 0 ? ' offset-lg-1' : ''}`}
+              data-scroll
+              data-scroll-opacity
+            >
+              <strong set:html={l.title} />
+              <br />
+              <a class="btn btn-text mt-4 d-inline-block" href={link.url} target={link.target || '_self'}>
+                <span>{link.title || link.url}</span>
+              </a>
+            </div>
+          )
+        );
+      })}
+    </div>
+  </div>
+</section>

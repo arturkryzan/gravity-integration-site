@@ -88,6 +88,10 @@ body.nav-opening .nav-main {
 .nav-main .nav-big a {
   color: #ffffff !important;
 }
+/* ...but keep the green hover (our !important white was overriding it) */
+.nav-main .nav-big a:hover {
+  color: #27ea93 !important;
+}
 /* logo stays white on the dark menu (theme dims it to slate when open) */
 body.nav-open header .logo path {
   fill: #ffffff !important;

@@ -58,22 +58,26 @@ function initNav() {
       requestAnimationFrame(() =>
         requestAnimationFrame(() => document.body.classList.add('nav-open')),
       );
-      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('nav-lock');
     } else {
-      document.body.classList.remove('nav-open');
-      document.body.style.overflow = '';
-      setTimeout(() => document.body.classList.remove('nav-opening'), 500);
+      closeNav();
     }
   });
+
+  function closeNav() {
+    document.body.classList.remove('nav-open');
+    document.documentElement.classList.remove('nav-lock');
+    hamburger.classList.remove('is-active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    setTimeout(() => document.body.classList.remove('nav-opening'), 500);
+  }
+
   /* close menu when a nav link is clicked (same-page anchors) */
-  navMain.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => {
-      document.body.classList.remove('nav-open');
-      document.body.style.overflow = '';
-      hamburger.classList.remove('is-active');
-      setTimeout(() => document.body.classList.remove('nav-opening'), 500);
-    }),
-  );
+  navMain.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeNav));
+  /* close on Escape */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('nav-open')) closeNav();
+  });
 }
 
 /* ---- accordions (Bootstrap-collapse markup, vanilla behavior) ---- */

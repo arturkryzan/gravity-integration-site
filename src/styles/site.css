@@ -69,11 +69,25 @@ body.nav-open .nav-main {
 body.nav-opening .nav-main {
   display: block;
 }
-/* Original 3-tone menu (theme design): col1 light, col2 gray #6b6d81, col3
-   dark #464861 — those per-column colours live in legacy.css. Text is dark on
-   the light column (nav-big) and white on the gray/dark columns (inherited).
-   The close-X and socials icons sit over the dark right column, so their
-   original white stroke/fill is correct — no override needed. */
+/* Menu columns (was theme's white / gray / dark — the white read as a stripe).
+   Give the primary-nav column the brand green so the menu reads as *colored*,
+   not grayscale: green (primary) / gray #6b6d81 / dark #464861. */
+.nav-main .col-pull:first-child .overlay {
+  background: #27ea93 !important;
+}
+.nav-main .nav-big,
+.nav-main .nav-big a {
+  color: #0a0a12 !important;
+}
+.nav-main .nav-big a:hover {
+  color: #ffffff !important;
+}
+/* Logo sits over the green column when the menu is open — darken it to
+   near-black so it reads crisply on green (theme only dims it to slate). The
+   close button is over the dark right column and stays white (no override). */
+body.nav-open header .logo path {
+  fill: #0a0a12 !important;
+}
 .nav-main .nav-small a {
   opacity: 0.7;
 }
@@ -100,6 +114,21 @@ body.nav-opening .nav-main {
 @media (max-width: 900px) {
   .nav-main .img-lines {
     display: none;
+  }
+}
+/* Below the md breakpoint the columns stack, so the close button sits over the
+   GREEN top band (not the dark column as on desktop) — darken it there. */
+@media (max-width: 767px) {
+  body.nav-open .hamburger,
+  body.nav-open .hamburger span {
+    color: #0a0a12 !important;
+  }
+  body.nav-open .hamburger svg circle {
+    stroke: #0a0a12 !important;
+  }
+  body.nav-open .hamburger svg path {
+    fill: #0a0a12 !important;
+    stroke: #0a0a12 !important;
   }
 }
 body.nav-open .col-pull:nth-child(1) .overlay { transition-delay: 0s; }

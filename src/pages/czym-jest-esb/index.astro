@@ -1,0 +1,22 @@
+---
+import { getEntry } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+import PageHero from '../../components/PageHero.astro';
+import EsbArticle from '../../components/EsbArticle.astro';
+import DemoSection from '../../components/DemoSection.astro';
+import heroes from '../../data/page_heroes.json';
+
+const page = (await getEntry('pages', 'czym-jest-esb'))!.data;
+const hero = (heroes as Record<string, any>)['czym-jest-esb'];
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <EsbArticle />
+  <DemoSection />
+</Site>

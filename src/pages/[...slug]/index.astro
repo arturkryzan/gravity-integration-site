@@ -17,7 +17,12 @@ const DEMO_PAGES = ['technologia', 'cennik', 'case-studies', 'czym-jest-esb'];
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
   return pages
-    .filter((p) => !['/', '/integracje/', '/kalkulator/', '/pobieranie/'].includes(p.data.url))
+    .filter(
+      (p) =>
+        !['/', '/integracje/', '/kalkulator/', '/pobieranie/', '/czym-jest-esb/'].includes(
+          p.data.url,
+        ),
+    )
     .map((p) => ({
       params: { slug: p.data.url.replace(/^\/|\/$/g, '') },
       props: { page: p.data },

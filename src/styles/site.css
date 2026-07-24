@@ -69,37 +69,40 @@ body.nav-open .nav-main {
 body.nav-opening .nav-main {
   display: block;
 }
-/* Menu columns (was theme's white / gray / dark — the white read as a stripe).
-   Give the primary-nav column the brand green so the menu reads as *colored*,
-   not grayscale: green (primary) / gray #6b6d81 / dark #464861. */
-.nav-main .col-pull:first-child .overlay {
-  background: #27ea93 !important;
+/* Dark cohesive menu. The theme's white/gray/dark had a white column that read
+   as a stripe. Use three DARK slate tones (keeping the gray + dark you liked,
+   replacing the white with a dark slate) so every section is clearly there but
+   none is a bright band. White text + white logo throughout — never black. */
+.nav-main,
+.nav-main .col-pull .overlay {
+  background: #6b6d81 !important; /* col1 — primary nav */
 }
+.nav-main .col-pull:nth-of-type(2) .overlay {
+  background: #565971 !important; /* col2 — secondary nav */
+}
+.nav-main .col-pull:last-of-type .overlay {
+  background: #464861 !important; /* col3 — socials + legal */
+}
+/* nav-big is dark in the theme — make it white on the dark menu */
 .nav-main .nav-big,
 .nav-main .nav-big a {
-  color: #0a0a12 !important;
-}
-.nav-main .nav-big a:hover {
   color: #ffffff !important;
 }
-/* Logo sits over the green column when the menu is open — darken it to
-   near-black so it reads crisply on green (theme only dims it to slate). The
-   close button is over the dark right column and stays white (no override). */
+/* logo stays white on the dark menu (theme dims it to slate when open) */
 body.nav-open header .logo path {
-  fill: #0a0a12 !important;
+  fill: #ffffff !important;
 }
 .nav-main .nav-small a {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 .nav-main .socials a {
-  opacity: 0.7;
+  opacity: 0.75;
   transition: opacity 0.2s ease;
 }
 .nav-main .socials a:hover {
   opacity: 1;
 }
 .col-pull .overlay {
-  background: #f3f4fb;
   transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   transform-origin: 0 50%;
 }
@@ -114,21 +117,6 @@ body.nav-open header .logo path {
 @media (max-width: 900px) {
   .nav-main .img-lines {
     display: none;
-  }
-}
-/* Below the md breakpoint the columns stack, so the close button sits over the
-   GREEN top band (not the dark column as on desktop) — darken it there. */
-@media (max-width: 767px) {
-  body.nav-open .hamburger,
-  body.nav-open .hamburger span {
-    color: #0a0a12 !important;
-  }
-  body.nav-open .hamburger svg circle {
-    stroke: #0a0a12 !important;
-  }
-  body.nav-open .hamburger svg path {
-    fill: #0a0a12 !important;
-    stroke: #0a0a12 !important;
   }
 }
 body.nav-open .col-pull:nth-child(1) .overlay { transition-delay: 0s; }

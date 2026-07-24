@@ -1,0 +1,11 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageSkeleton from '../components/PageSkeleton.astro';
+
+const page = (await getEntry('pages', 'home'))!;
+---
+
+<Base title={page.data.seo.title} description={page.data.seo.description} path="/">
+  <PageSkeleton page={page.data} />
+</Base>

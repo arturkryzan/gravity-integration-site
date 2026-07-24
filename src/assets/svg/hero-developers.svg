@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" style="width:100%;height:100%;background:#0a0a12;border-radius:12px;overflow:hidden">
+  <defs>
+    <radialGradient id="cg" cx="50%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#27EA93" stop-opacity="0.4"/>
+      <stop offset="30%" stop-color="#27EA93" stop-opacity="0.12"/>
+      <stop offset="70%" stop-color="#1a3a5c" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#0a0a12" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sphere" cx="38%" cy="34%" r="55%">
+      <stop offset="0%" stop-color="#5dffc0" stop-opacity="0.9"/>
+      <stop offset="30%" stop-color="#27EA93" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#0d6b47" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#041f15" stop-opacity="0.8"/>
+    </radialGradient>
+    <radialGradient id="sp" cx="30%" cy="25%" r="40%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#27EA93" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#27EA93" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#27EA93" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pw" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#aaffdd" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#27EA93" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vg" cx="50%" cy="0%" r="100%">
+      <stop offset="0%" stop-color="#0a0a12" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#0a0a12" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0a0a12" stop-opacity="0.8"/>
+    </radialGradient>
+    <filter id="gb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="ts" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#000" flood-opacity="0.7"/></filter>
+    <linearGradient id="gp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111119" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0a0a12" stop-opacity="0.65"/>
+    </linearGradient>
+  </defs>
+  <style>
+    @keyframes go1{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes go2{from{transform:rotate(120deg)}to{transform:rotate(480deg)}}
+    @keyframes go3{from{transform:rotate(240deg)}to{transform:rotate(600deg)}}
+    @keyframes go4{from{transform:rotate(60deg)}to{transform:rotate(420deg)}}
+    @keyframes go5{from{transform:rotate(180deg)}to{transform:rotate(540deg)}}
+    @keyframes go6{from{transform:rotate(300deg)}to{transform:rotate(660deg)}}
+    @keyframes grev{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+    @keyframes gp1{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.35;transform:scale(1.1)}}
+    @keyframes gfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    @keyframes gtw{0%,100%{opacity:.15}50%{opacity:.65}}
+    @keyframes gda{to{stroke-dashoffset:-60}}
+    @keyframes gsph{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    .go1{animation:go1 20s linear infinite;transform-origin:400px 260px}
+    .go2{animation:go2 28s linear infinite;transform-origin:400px 260px}
+    .go3{animation:go3 35s linear infinite;transform-origin:400px 260px}
+    .go4{animation:go4 16s linear infinite;transform-origin:400px 260px}
+    .go5{animation:go5 24s linear infinite;transform-origin:400px 260px}
+    .go6{animation:go6 30s linear infinite;transform-origin:400px 260px}
+    .grev{animation:grev 45s linear infinite;transform-origin:400px 260px}
+    .gcp{animation:gp1 5s ease-in-out infinite;transform-origin:400px 260px}
+    .gtf{animation:gfl 7s ease-in-out infinite}
+    .gst{animation:gtw 3s ease-in-out infinite}
+    .gda{stroke-dasharray:8 52;animation:gda 4s linear infinite}
+    .gsph{animation:gsph 6s ease-in-out infinite;transform-origin:400px 260px}
+  </style>
+  <!-- depth bg -->
+  <rect width="800" height="520" fill="#0a0a12"/>
+  <rect width="800" height="520" fill="url(#vg)" opacity=".5"/>
+  <!-- stars with size variation for depth -->
+  <circle cx="120" cy="80" r="1.5" fill="#fff" class="gst" opacity=".5" style="animation-delay:0s"/>
+  <circle cx="680" cy="40" r=".7" fill="#ccc" class="gst" style="animation-delay:1.2s"/>
+  <circle cx="50" cy="370" r="1" fill="#fff" class="gst" style="animation-delay:.6s"/>
+  <circle cx="750" cy="420" r=".5" fill="#aaa" class="gst" style="animation-delay:2s"/>
+  <circle cx="350" cy="25" r="1.2" fill="#fff" class="gst" opacity=".6" style="animation-delay:.3s"/>
+  <circle cx="600" cy="490" r=".6" fill="#bbb" class="gst" style="animation-delay:1.5s"/>
+  <circle cx="200" cy="470" r=".8" fill="#ddd" class="gst" style="animation-delay:.9s"/>
+  <circle cx="730" cy="150" r="1.3" fill="#fff" class="gst" opacity=".4" style="animation-delay:1.8s"/>
+  <circle cx="500" cy="70" r=".4" fill="#999" class="gst" style="animation-delay:.4s"/>
+  <circle cx="280" cy="150" r=".6" fill="#bbb" class="gst" style="animation-delay:2.2s"/>
+  <circle cx="580" cy="380" r="1" fill="#ddd" class="gst" opacity=".3" style="animation-delay:1.1s"/>
+  <!-- ambient glow -->
+  <circle cx="400" cy="260" r="220" fill="url(#cg)" class="gcp"/>
+  <circle cx="400" cy="260" r="140" fill="url(#cg)" opacity=".4" class="gcp" style="animation-delay:1.5s"/>
+  <!-- 3D tilted orbit rings (ellipses for perspective) -->
+  <ellipse cx="400" cy="260" rx="100" ry="35" fill="none" stroke="#27EA93" stroke-width="0.8" opacity=".18" transform="rotate(-8,400,260)"/>
+  <ellipse cx="400" cy="260" rx="160" ry="55" fill="none" stroke="#27EA93" stroke-width="0.6" opacity=".12" transform="rotate(5,400,260)"/>
+  <ellipse cx="400" cy="260" rx="230" ry="80" fill="none" stroke="#27EA93" stroke-width="0.4" opacity=".08" transform="rotate(-3,400,260)"/>
+  <!-- vertical tilted ring for depth -->
+  <ellipse cx="400" cy="260" rx="45" ry="130" fill="none" stroke="#27EA93" stroke-width="0.5" opacity=".07" transform="rotate(12,400,260)"/>
+  <!-- dashed flowing orbit -->
+  <ellipse cx="400" cy="260" rx="190" ry="65" fill="none" stroke="#27EA93" stroke-width=".7" opacity=".12" transform="rotate(-10,400,260)" class="gda"/>
+  <!-- orbiting particles on tilted planes -->
+  <g class="go1"><circle cx="500" cy="260" r="6" fill="url(#pw)" filter="url(#gb)"/><circle cx="500" cy="260" r="3" fill="#fff"/></g>
+  <g class="go2"><circle cx="300" cy="260" r="5" fill="url(#pg)" filter="url(#gb)"/><circle cx="300" cy="260" r="2.5" fill="#27EA93"/></g>
+  <g class="go3"><circle cx="560" cy="260" r="9" fill="url(#pg)" filter="url(#gb)"/><circle cx="560" cy="260" r="3.5" fill="#27EA93"/></g>
+  <g class="go4"><circle cx="240" cy="260" r="7" fill="url(#pw)" filter="url(#gb)"/><circle cx="240" cy="260" r="3" fill="#fff"/></g>
+  <g class="go5"><circle cx="630" cy="260" r="5" fill="url(#pg)" filter="url(#gb)"/><circle cx="630" cy="260" r="2" fill="#27EA93"/></g>
+  <g class="go6"><circle cx="170" cy="260" r="4" fill="url(#pg)" filter="url(#gb)"/><circle cx="170" cy="260" r="1.8" fill="#27EA93"/></g>
+  <g class="grev"><circle cx="400" cy="100" r="3" fill="#fff" opacity=".3" filter="url(#gb)"/><circle cx="400" cy="420" r="2.5" fill="#27EA93" opacity=".25" filter="url(#gb)"/></g>
+  <!-- 3D sphere core with specular highlight -->
+  <g class="gsph">
+    <circle cx="400" cy="260" r="28" fill="url(#sphere)"/>
+    <circle cx="400" cy="260" r="28" fill="url(#sp)"/>
+    <circle cx="400" cy="260" r="28" fill="none" stroke="#27EA93" stroke-width=".8" opacity=".4"/>
+    <circle cx="392" cy="250" r="6" fill="#fff" opacity=".25"/>
+  </g>
+  <!-- gravitational field curves -->
+  <path d="M400 260Q290 190 220 80" fill="none" stroke="#27EA93" stroke-width=".5" opacity=".08"/>
+  <path d="M400 260Q510 330 580 440" fill="none" stroke="#27EA93" stroke-width=".5" opacity=".08"/>
+  <path d="M400 260Q310 310 180 360" fill="none" stroke="#27EA93" stroke-width=".4" opacity=".06"/>
+  <path d="M400 260Q490 200 630 160" fill="none" stroke="#27EA93" stroke-width=".4" opacity=".06"/>
+  <!-- frosted glass text panel -->
+  <rect x="150" y="160" width="500" height="240" rx="16" fill="url(#gp)" opacity=".75"/>
+  <rect x="150" y="160" width="500" height="240" rx="16" fill="none" stroke="#27EA93" stroke-width=".4" opacity=".15"/>
+  <!-- text with drop shadow -->
+  <g class="gtf" filter="url(#ts)">
+    <text x="400" y="220" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">Dla programist&#xF3;w,</text>
+    <text x="400" y="278" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">wdro&#x17C;eniowc&#xF3;w,</text>
+    <text x="400" y="336" text-anchor="middle" fill="#27EA93" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" letter-spacing="1" filter="url(#glow)">buntownik&#xF3;w</text>
+    <text x="400" y="385" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="44" font-weight="400" letter-spacing=".6" opacity=".85">i software house&#x27;&#xF3;w</text>
+  </g>
+</svg>

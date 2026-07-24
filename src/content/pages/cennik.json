@@ -1,0 +1,90 @@
+{
+  "wpId": 158,
+  "slug": "cennik",
+  "url": "/cennik/",
+  "seo": {
+    "title": "Cennik gravity.integration — od wersji darmowej do Enterprise",
+    "description": "Cennik platformy ESB gravity.integration. Darmowa wersja Community, plany Professional i Enterprise. Korzystne ceny, polski producent, pełne wsparcie.",
+    "focusKeyword": "cennik ETL, platforma ETL cena"
+  },
+  "h1": "Cennik",
+  "decorative": "0",
+  "newsletter": "0",
+  "sections": [
+    {
+      "acf_fc_layout": "text_columns",
+      "nav_li": "",
+      "text0": "gravity.integration jest produktem w fazie ciągłego rozwoju, który współtworzymy razem z Wami. Dlatego postawiliśmy na niespotykaną nigdzie indziej politykę cenową wśród narzędzi tej klasy. Po pierwsze, możesz pobrać <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration całkowicie za darmo</a>, a następnie używać bez ograniczeń dotyczących przesyłu danych a także przez 14 dni używać oprogramowania komercyjnie.",
+      "text1": "Po drugie, jeśli zdecydujesz się na zastosowanie komercyjne, obowiązuje tylko dwie, proste ceny: 2999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za instancję. Nie obowiązują Cię żadne ograniczenia w budowaniu środowiska integracyjnego, a <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na rynku</a>! Porównaj sam gravity z konkurencją, gwarantujemy, że wrócisz!"
+    },
+    {
+      "acf_fc_layout": "pricing",
+      "nav_li": "",
+      "pricing": [
+        {
+          "name": "Do celów szkoleniowych \r\noraz testowych",
+          "text": "<ul>\r\n \t<li>Za darmo, z pełnym wsparciem.</li>\r\n \t<li>Możliwość przejścia na wersję komercyjną w każdej chwili.</li>\r\n</ul>",
+          "price": "0",
+          "currency": "PLN",
+          "btn": "Pobierz",
+          "btn_link": "/pobieranie/"
+        },
+        {
+          "name": "Pojedyncze zastosowanie komercyjne",
+          "text": "<ul>\r\n \t<li>Jedno połączenie wykorzystywane komercyjnie.</li>\r\n \t<li>Pełne wsparcie.</li>\r\n \t<li>Cena netto za instancję.</li>\r\n</ul>",
+          "price": "2999",
+          "currency": "PLN",
+          "btn": "Kup licencję",
+          "btn_link": "https://buy.stripe.com/14A8wP2aB9NSeFtdtZ38402"
+        },
+        {
+          "name": "Do zastosowań \r\nkomercyjnych",
+          "text": "<ul>\r\n \t<li>Jedna, prosta stawka.</li>\r\n \t<li>Nielimitowana liczba projektów.</li>\r\n \t<li>Pełne wsparcie priorytetowe.</li>\r\n \t<li>Cena netto za instancję.</li>\r\n</ul>",
+          "price": "7999",
+          "currency": "PLN",
+          "btn": "Kup licencję",
+          "btn_link": "https://buy.stripe.com/00w14n3eF9NSbth9dJ38401"
+        },
+        {
+          "name": "Wdrożenie środowiska \r\nintegracyjnego",
+          "text": "Zapytaj już dziś, jak możemy zmienić architekturę IT w Twojej firmie.",
+          "price": "",
+          "currency": "",
+          "btn": "Zamów kontakt",
+          "btn_link": "/kontakt"
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "faq",
+      "nav_li": "",
+      "faq": [
+        {
+          "que": "Czy wersje gravity.integration czymś się różnią?",
+          "ans": "Nie. Zawsze pobierasz ten sam instalator. Możesz dowolnie, bezpłatnie i bez ograniczeń korzystać ze wszystkich funkcji oprogramowania tak długo, jak sam nie odnosisz z tego wykorzystania korzyści."
+        },
+        {
+          "que": "Kiedy należy zakupić wersję komercyjną i jak to zrobić?",
+          "ans": "Możesz bez problemów testować środowisko swoje lub swoich klientów tak długo, jak potrzebujesz. W momencie, w którym zdecydujesz się opuścić środowisko testowe, konieczny jest zakup licencji. Jeśli planujesz wykorzystać gravity.integration tylko do jednego zastosowania, np. połączenie systemu ERP z dostawcami usług logistycznych możesz skorzystać ze specjalnej, promocyjnej licencji. Dla wielu zastosowań wykup pełną licencję i twórz bez ograniczeń dowolną liczbę połączeń.\r\nMożesz to łatwo zrobić z poziomu oprogramowania lub skontaktować się z nami <a href=\"/kontakt/\">tutaj</a>."
+        },
+        {
+          "que": "Czy z jednej licencji gravity.integration może korzystać wielu użytkowników? ",
+          "ans": "Tak, pojedyncza licencja jest ograniczona do jednej instancji (instalacji na jednym fizycznym urządzeniu) i nie ma limitu użytkowników. Kolejne licencje będą Ci potrzebne, jeśli zdecydujesz się uruchomić więcej instancji."
+        },
+        {
+          "que": "Na czym polega priorytetowe wsparcie? ",
+          "ans": "Zapytania dotyczące działających instancji komercyjnych będą przez nas podejmowane priorytetowo. Jednak nawet wersja darmowa jest objęta maksymalnie 72 godzinnym czasem odpowiedzi na zapytania."
+        },
+        {
+          "que": "Dlaczego cena gravity.integration jest tak korzystna? ",
+          "ans": "Oprogramowanie jest wynikiem naszych doświadczeń na rynku oprogramowania korporacyjnego. Zdecydowaliśmy się stworzyć gravity ze względu na bardzo wysoki koszt rozwiązań ESB innych firm oraz niechęć do łączenia wszystkiego ze wszystkim przy pomocy komend SQL. Wierzymy, że przygotowane przez nas software zmieni sposób projektowania systemów IT. Stąd bardzo duży nacisk na współpracę z Wami oraz atrakcyjną cenę, dzięki czemu chcemy popularyzować dobre praktyki."
+        },
+        {
+          "que": "Jak realizowana jest płatność? ",
+          "ans": "Korzystamy z bezpiecznego rozwiązania Stripe. Podana cena jest ceną netto za rok / za instancję. Na ekranie płatności możesz wybrać ilość instancji. Płatność będzie odnawiana co rok, ale nie martw się - przypomnimy Ci o tym! Jeśli z jakiegoś powodu chcesz, abyśmy wystawili Ci dokument ręcznie, skontaktuj się z nami używając formularza.\r\n\r\n&nbsp;\r\n\r\n&nbsp;"
+        }
+      ]
+    }
+  ],
+  "wpContent": ""
+}

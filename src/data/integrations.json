@@ -1,0 +1,679 @@
+{
+  "marketing_count": "139+",
+  "total_integrations": 139,
+  "categories": [
+    {
+      "id": "erp",
+      "icon": "🏢",
+      "title": "Systemy ERP",
+      "description": "Integracja z najpopularniejszymi systemami klasy ERP na rynku polskim i międzynarodowym. Automatyczna synchronizacja dokumentów, kontrahentów, stanów magazynowych i finansów.",
+      "count": 24,
+      "items": [
+        {
+          "name": "SAP S/4HANA",
+          "sub": "SAP"
+        },
+        {
+          "name": "SAP Business One",
+          "sub": "SAP"
+        },
+        {
+          "name": "SAP ECC",
+          "sub": "SAP"
+        },
+        {
+          "name": "Comarch ERP Optima",
+          "sub": "Comarch"
+        },
+        {
+          "name": "Comarch ERP XL",
+          "sub": "Comarch"
+        },
+        {
+          "name": "Comarch ERP Altum",
+          "sub": "Comarch"
+        },
+        {
+          "name": "Subiekt GT",
+          "sub": "InsERT"
+        },
+        {
+          "name": "Subiekt NEXO PRO",
+          "sub": "InsERT"
+        },
+        {
+          "name": "Navireo",
+          "sub": "InsERT"
+        },
+        {
+          "name": "enova365",
+          "sub": "Soneta"
+        },
+        {
+          "name": "Symfonia ERP",
+          "sub": "Symfonia"
+        },
+        {
+          "name": "Dynamics 365 F&O",
+          "sub": "Microsoft"
+        },
+        {
+          "name": "Dynamics NAV",
+          "sub": "Microsoft"
+        },
+        {
+          "name": "Streamsoft Prestiż",
+          "sub": "Streamsoft"
+        },
+        {
+          "name": "WAPRO Mag",
+          "sub": "Asseco"
+        },
+        {
+          "name": "Impuls EVO",
+          "sub": "BPSC"
+        },
+        {
+          "name": "Graffiti ERP",
+          "sub": "Graffiti.ERP S.A."
+        },
+        {
+          "name": "Sage Symfonia",
+          "sub": "Sage"
+        },
+        {
+          "name": "IFS Applications",
+          "sub": "IFS"
+        },
+        {
+          "name": "Oracle ERP Cloud",
+          "sub": "Oracle"
+        },
+        {
+          "name": "Infor M3 / LN",
+          "sub": "Infor"
+        },
+        {
+          "name": "Unit4 TETA",
+          "sub": "Unit4"
+        },
+        {
+          "name": "Exact Globe",
+          "sub": "Exact"
+        },
+        {
+          "name": "Vendo ERP",
+          "sub": "CFI"
+        }
+      ]
+    },
+    {
+      "id": "crm",
+      "icon": "🤝",
+      "title": "Systemy CRM",
+      "description": "Dwukierunkowa synchronizacja kontaktów, szans sprzedażowych, historii interakcji i pipeline'ów. Połącz CRM z ERP i automatyzuj cały lejek sprzedaży.",
+      "count": 9,
+      "items": [
+        {
+          "name": "Salesforce",
+          "sub": ""
+        },
+        {
+          "name": "HubSpot CRM",
+          "sub": ""
+        },
+        {
+          "name": "Dynamics 365 CRM",
+          "sub": "Microsoft"
+        },
+        {
+          "name": "Pipedrive",
+          "sub": ""
+        },
+        {
+          "name": "Livespace",
+          "sub": ""
+        },
+        {
+          "name": "Zoho CRM",
+          "sub": ""
+        },
+        {
+          "name": "SugarCRM",
+          "sub": ""
+        },
+        {
+          "name": "Freshsales",
+          "sub": "Freshworks"
+        },
+        {
+          "name": "monday CRM",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "wms",
+      "icon": "📦",
+      "title": "Systemy WMS",
+      "description": "Integracja z systemami zarządzania magazynem — synchronizacja stanów, lokalizacji, partii, zamówień kompletacyjnych i dokumentów magazynowych w czasie rzeczywistym.",
+      "count": 11,
+      "items": [
+        {
+          "name": "SAP WM / EWM",
+          "sub": "SAP"
+        },
+        {
+          "name": "Comarch WMS",
+          "sub": "Comarch"
+        },
+        {
+          "name": "Anteeo WMS",
+          "sub": ""
+        },
+        {
+          "name": "OPTIPROMAG",
+          "sub": ""
+        },
+        {
+          "name": "Logifact WMS",
+          "sub": ""
+        },
+        {
+          "name": "Think Espiro",
+          "sub": ""
+        },
+        {
+          "name": "EasyStorage WMS",
+          "sub": ""
+        },
+        {
+          "name": "Sente WMS",
+          "sub": ""
+        },
+        {
+          "name": "DataConsult WMS",
+          "sub": ""
+        },
+        {
+          "name": "Qguar WMS",
+          "sub": "Quantum"
+        },
+        {
+          "name": "vector.wms",
+          "sub": "Caffeine Minds"
+        }
+      ]
+    },
+    {
+      "id": "ecommerce",
+      "icon": "🛒",
+      "title": "Platformy e-commerce",
+      "description": "Synchronizacja produktów, zamówień, cen i stanów magazynowych z wiodącymi platformami sklepów internetowych.",
+      "count": 14,
+      "items": [
+        {
+          "name": "WooCommerce",
+          "sub": ""
+        },
+        {
+          "name": "Magento 2",
+          "sub": "Adobe Commerce"
+        },
+        {
+          "name": "Shopify",
+          "sub": ""
+        },
+        {
+          "name": "PrestaShop",
+          "sub": ""
+        },
+        {
+          "name": "Shoper",
+          "sub": ""
+        },
+        {
+          "name": "IdoSell",
+          "sub": ""
+        },
+        {
+          "name": "Sky-Shop",
+          "sub": ""
+        },
+        {
+          "name": "Shopware",
+          "sub": ""
+        },
+        {
+          "name": "AtomStore",
+          "sub": ""
+        },
+        {
+          "name": "Sellingo",
+          "sub": ""
+        },
+        {
+          "name": "RedCart",
+          "sub": ""
+        },
+        {
+          "name": "Sote",
+          "sub": ""
+        },
+        {
+          "name": "Click Shop",
+          "sub": ""
+        },
+        {
+          "name": "cStore",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "marketplace",
+      "icon": "🏬",
+      "title": "Marketplace",
+      "description": "Automatyzacja sprzedaży wielokanałowej — oferty, zamówienia, stany i komunikacja z klientem na największych platformach handlowych.",
+      "count": 8,
+      "items": [
+        {
+          "name": "Allegro",
+          "sub": ""
+        },
+        {
+          "name": "Amazon",
+          "sub": "FBA / FBM / Vendor"
+        },
+        {
+          "name": "eBay",
+          "sub": ""
+        },
+        {
+          "name": "Empik Marketplace",
+          "sub": ""
+        },
+        {
+          "name": "Erli",
+          "sub": ""
+        },
+        {
+          "name": "Zalando",
+          "sub": ""
+        },
+        {
+          "name": "Kaufland",
+          "sub": ""
+        },
+        {
+          "name": "Wayfair",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "oms",
+      "icon": "📋",
+      "title": "Systemy OMS",
+      "description": "Integracja z managerami zamówień — centralizacja obsługi wielokanałowej, automatyczne tworzenie dokumentów w ERP.",
+      "count": 7,
+      "items": [
+        {
+          "name": "BaseLinker",
+          "sub": ""
+        },
+        {
+          "name": "Sellasist",
+          "sub": ""
+        },
+        {
+          "name": "Apilo",
+          "sub": ""
+        },
+        {
+          "name": "easySales",
+          "sub": ""
+        },
+        {
+          "name": "Sellrocket",
+          "sub": ""
+        },
+        {
+          "name": "CLIPPERON",
+          "sub": ""
+        },
+        {
+          "name": "PlentyMarkets",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "db",
+      "icon": "🗄️",
+      "title": "Bazy danych",
+      "description": "Natywne konektory do popularnych silników bazodanowych. Odczyt, zapis, synchronizacja tabel, widoków i procedur składowanych.",
+      "count": 9,
+      "items": [
+        {
+          "name": "Microsoft SQL Server",
+          "sub": ""
+        },
+        {
+          "name": "PostgreSQL",
+          "sub": ""
+        },
+        {
+          "name": "MySQL / MariaDB",
+          "sub": ""
+        },
+        {
+          "name": "Oracle Database",
+          "sub": ""
+        },
+        {
+          "name": "MongoDB",
+          "sub": ""
+        },
+        {
+          "name": "IBM DB2",
+          "sub": ""
+        },
+        {
+          "name": "SQLite",
+          "sub": ""
+        },
+        {
+          "name": "Firebird",
+          "sub": ""
+        },
+        {
+          "name": "Redis",
+          "sub": "Cache / Pub-Sub"
+        }
+      ]
+    },
+    {
+      "id": "pim",
+      "icon": "🏷️",
+      "title": "Systemy PIM",
+      "description": "Centralne zarządzanie danymi produktowymi — synchronizacja opisów, atrybutów, zdjęć i specyfikacji między PIM a kanałami sprzedaży.",
+      "count": 5,
+      "items": [
+        {
+          "name": "Akeneo PIM",
+          "sub": ""
+        },
+        {
+          "name": "Pimcore",
+          "sub": ""
+        },
+        {
+          "name": "Ergonode PIM",
+          "sub": ""
+        },
+        {
+          "name": "Icecat",
+          "sub": ""
+        },
+        {
+          "name": "Salsify",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "courier",
+      "icon": "🚚",
+      "title": "Firmy kurierskie i logistyka",
+      "description": "Automatyczne generowanie listów przewozowych, śledzenie przesyłek, integracja z brokerami kurierskimi.",
+      "count": 12,
+      "items": [
+        {
+          "name": "InPost",
+          "sub": "Paczkomaty / Kurier"
+        },
+        {
+          "name": "DHL",
+          "sub": ""
+        },
+        {
+          "name": "DPD",
+          "sub": ""
+        },
+        {
+          "name": "GLS",
+          "sub": ""
+        },
+        {
+          "name": "UPS",
+          "sub": ""
+        },
+        {
+          "name": "FedEx",
+          "sub": ""
+        },
+        {
+          "name": "Poczta Polska",
+          "sub": ""
+        },
+        {
+          "name": "ORLEN Paczka",
+          "sub": ""
+        },
+        {
+          "name": "DB Schenker",
+          "sub": ""
+        },
+        {
+          "name": "Raben",
+          "sub": ""
+        },
+        {
+          "name": "Furgonetka",
+          "sub": "Broker"
+        },
+        {
+          "name": "Apaczka",
+          "sub": "Broker"
+        }
+      ]
+    },
+    {
+      "id": "invoice",
+      "icon": "🧾",
+      "title": "Fakturowanie i KSeF",
+      "description": "Automatyczna wymiana faktur elektronicznych, integracja z Krajowym Systemem e-Faktur i popularnymi platformami fakturowania online.",
+      "count": 5,
+      "items": [
+        {
+          "name": "KSeF",
+          "sub": "Krajowy System e-Faktur"
+        },
+        {
+          "name": "Fakturownia",
+          "sub": ""
+        },
+        {
+          "name": "iFirma",
+          "sub": ""
+        },
+        {
+          "name": "wFirma",
+          "sub": ""
+        },
+        {
+          "name": "InFakt",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "id": "file",
+      "icon": "📁",
+      "title": "Formaty plików i EDI",
+      "description": "Import i eksport danych w dowolnym formacie. Mapowanie pól, walidacja schematów, automatyczna konwersja między formatami.",
+      "count": 9,
+      "items": [
+        {
+          "name": "XML",
+          "sub": ""
+        },
+        {
+          "name": "JSON",
+          "sub": ""
+        },
+        {
+          "name": "CSV / TSV",
+          "sub": ""
+        },
+        {
+          "name": "Excel (XLSX)",
+          "sub": ""
+        },
+        {
+          "name": "EDIFACT",
+          "sub": "UN/CEFACT"
+        },
+        {
+          "name": "Comarch EDI",
+          "sub": ""
+        },
+        {
+          "name": "PDF",
+          "sub": "Parsowanie / OCR"
+        },
+        {
+          "name": "Flat file / TXT",
+          "sub": ""
+        },
+        {
+          "name": "DBF",
+          "sub": "dBASE"
+        }
+      ]
+    },
+    {
+      "id": "protocol",
+      "icon": "🔌",
+      "title": "Protokoły i API",
+      "description": "Gotowe adaptery komunikacyjne — podłącz dowolny system, który udostępnia interfejs programistyczny lub transmisję plików.",
+      "count": 14,
+      "items": [
+        {
+          "name": "REST API",
+          "sub": ""
+        },
+        {
+          "name": "SOAP / WSDL",
+          "sub": ""
+        },
+        {
+          "name": "GraphQL",
+          "sub": ""
+        },
+        {
+          "name": "gRPC",
+          "sub": ""
+        },
+        {
+          "name": "Webhooks",
+          "sub": ""
+        },
+        {
+          "name": "FTP / SFTP",
+          "sub": ""
+        },
+        {
+          "name": "ODBC / JDBC",
+          "sub": ""
+        },
+        {
+          "name": "MQTT",
+          "sub": "IoT"
+        },
+        {
+          "name": "AMQP",
+          "sub": "RabbitMQ"
+        },
+        {
+          "name": "Apache Kafka",
+          "sub": ""
+        },
+        {
+          "name": "OPC UA",
+          "sub": "Automatyka"
+        },
+        {
+          "name": "AS2",
+          "sub": "EDI / B2B"
+        },
+        {
+          "name": "TCP/IP",
+          "sub": "Socket"
+        },
+        {
+          "name": "SMTP",
+          "sub": "E-mail"
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "icon": "⚙️",
+      "title": "Pozostałe systemy",
+      "description": "Integracje z systemami HR, BI, komunikacji, automatyki przemysłowej i innymi narzędziami biznesowymi.",
+      "count": 12,
+      "items": [
+        {
+          "name": "Microsoft 365",
+          "sub": "Exchange / SharePoint"
+        },
+        {
+          "name": "Google Workspace",
+          "sub": ""
+        },
+        {
+          "name": "Active Directory",
+          "sub": "LDAP"
+        },
+        {
+          "name": "Power BI",
+          "sub": "Microsoft"
+        },
+        {
+          "name": "Tableau",
+          "sub": ""
+        },
+        {
+          "name": "VIES",
+          "sub": "Weryfikacja VAT UE"
+        },
+        {
+          "name": "GUS / REGON",
+          "sub": ""
+        },
+        {
+          "name": "MES",
+          "sub": "Systemy wykonawcze"
+        },
+        {
+          "name": "SCADA",
+          "sub": "Automatyka"
+        },
+        {
+          "name": "RCP / Roger",
+          "sub": "Kontrola dostępu"
+        },
+        {
+          "name": "Slack / Teams",
+          "sub": "Powiadomienia"
+        },
+        {
+          "name": "Jira / Azure DevOps",
+          "sub": ""
+        }
+      ]
+    }
+  ]
+}

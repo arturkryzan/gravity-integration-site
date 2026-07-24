@@ -1,0 +1,76 @@
+{
+  "wpId": 7,
+  "slug": "technologia",
+  "url": "/technologia/",
+  "seo": {
+    "title": "Technologia gravity.integration — więcej niż ESB",
+    "description": "Poznaj unikalne technologie gravity.integration: Always-on-data, firstSIGNAL, IntelliChain, Powers AI. Polska szyna danych ESB nowej generacji.",
+    "focusKeyword": "ETL nowej generacji,integracja danych,ESB,ETL,ERP intergacja"
+  },
+  "h1": "<h1><span style=\"text-decoration: underline;\">Więcej</span> niż ESB</h1>",
+  "decorative": "1",
+  "newsletter": "1",
+  "sections": [
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": "Witajcie w przyszłości ",
+      "text": "<h2>gravity.integration zostawia szyny ESB w poprzedniej epoce</h2>\r\ngravity.integration to światowej klasy oprogramowanie klasy ESB (Enterprise Service Bus), które służy do integrowania oprogramowania.\r\nTyle teorii. W praktyce, gravity.integration to unikatowe rozwiązanie, które potrafi o wiele więcej. Powstało na bazie naszego 20 letniego doświadczenia w tworzeniu oprogramowania korporacyjnego klasy ERP. W 2020 roku dostrzegliśmy potrzebę lepsze wymiany informacji między naszymi autorskimi systemami a rozwiązaniami form trzecich u naszych klientów – jednak dostępne na rynku produkty były ograniczone i zbyt drogie.\r\n\r\nWięc postanowiliśmy stworzyć takie oprogramowanie, a że nie lubimy półśrodków, oddajemy w Wasze ręce wyjątkowe rozwiązanie, które sami stosujemy i uważamy je za najlepsze w klasie. Nie bez powodu.\r\n\r\n<a class=\"vp-s vp-yt-type\" title=\"NEURON\" href=\"https://www.youtube.com/watch?v=OYjMCjyzKKM\" data-ytid=\"OYjMCjyzKKM\">Zobacz wideo</a>\r\n\r\n&nbsp;",
+      "img": {
+        "file": "media/etl-text.png",
+        "alt": "gravity.integration ESB - logo tekstowe",
+        "wpId": 21
+      },
+      "img_placement": "left"
+    },
+    {
+      "acf_fc_layout": "quote",
+      "nav_li": "",
+      "bg": "#F3F4FB",
+      "text": "W świecie, gdzie wszystko jest połączone, to, jak się łączysz, jest wszystkim."
+    },
+    {
+      "acf_fc_layout": "text_boxes",
+      "nav_li": "Technologie gravity",
+      "text": "<h2>Narzędzia jutra</h2>\r\njuż dziś w Twoich rękach. Zapoznaj się z opracowanymi w Caffeine Minds technologiami, które pozwalają nam mówić, że <strong>gravity</strong> to więcej niż ESB.",
+      "boxes": [
+        {
+          "text": "<strong>Always-on-data</strong>\r\n\r\nJedyna szyna danych, która pracuje nawet wtedy, kiedy Ty nie musisz. gravity.integration przetwarza dane także w okresach braku aktywności, aby w razie potrzeby móc samodzielnie wywołać zdarzenie.",
+          "link": "",
+          "icon": {
+            "file": "media/ic_247.svg",
+            "alt": "Ikona Always-on-data - technologia gravity.integration",
+            "wpId": 37
+          }
+        },
+        {
+          "text": "<strong>Powers AI, AI powered</strong>\r\n\r\nPrzystosowana już dziś do rozwiązań z przyszłości, oprogramowanie gravity.integration dostarcza doskonałej jakości danych do uczenia maszynowego i jest gotowe do przyjęcia zwrotnego tej wiedzy.",
+          "link": "",
+          "icon": {
+            "file": "media/icon.svg",
+            "alt": "Ikona - element interfejsu gravity.integration",
+            "wpId": 41
+          }
+        },
+        {
+          "text": "<strong>firstSIGNAL</strong>\r\n\r\ngravity.integration to nie tylko wyjątkowe narzędzie dla programistów – to także rzeczywista przewaga w biznesie. Odpowiednio zaprogramowana szyna pozwala informować o zdarzeniach zanim trafią one do docelowego rozwiązania.",
+          "link": "",
+          "icon": {
+            "file": "media/icon2.svg",
+            "alt": "Ikona - element interfejsu gravity.integration 2",
+            "wpId": 40
+          }
+        },
+        {
+          "text": "<strong>IntelliChain</strong>\r\n\r\nBudowanie integracji nigdy nie było takie proste! Konstrukcja, którą nazwaliśmy inteligentnym łańcuchem, nie tylko przyspiesza proces integracji ale też czyni późniejsze zmiany banalnie prostymi.",
+          "link": "",
+          "icon": {
+            "file": "media/icon3.svg",
+            "alt": "Ikona - element interfejsu gravity.integration 3",
+            "wpId": 39
+          }
+        }
+      ]
+    }
+  ],
+  "wpContent": ""
+}

@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageSkeleton from '../../components/PageSkeleton.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages
+    .filter((p) => p.data.url !== '/')
+    .map((p) => ({
+      params: { slug: p.data.url.replace(/^\/|\/$/g, '') },
+      props: { page: p.data },
+    }));
+}
+const { page } = Astro.props;
+---
+
+<Base title={page.seo.title} description={page.seo.description} path={page.url}>
+  <PageSkeleton page={page} />
+</Base>

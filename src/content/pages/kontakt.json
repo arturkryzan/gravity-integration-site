@@ -1,0 +1,79 @@
+{
+  "wpId": 87,
+  "slug": "kontakt",
+  "url": "/kontakt/",
+  "seo": {
+    "title": "Kontakt — gravity.integration",
+    "description": "Skontaktuj się z zespołem gravity.integration. Zapytaj o wdrożenie, wsparcie techniczne lub partnerstwo. Caffeine Minds sp. z o.o., Bielsko-Biała.",
+    "focusKeyword": "kontakt GRAVITY.integration"
+  },
+  "h1": "Kontakt",
+  "decorative": "0",
+  "newsletter": "0",
+  "sections": [
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": "",
+      "text": "<h2>O nas</h2>\r\nCaffeine Minds sp. z o.o. jest częścią grupy kapitałowej DM Investments, która od ponad 20 lat rozwija w Polsce systemy informatyczne oraz wspiera innowacje.\r\n\r\nKluczowa dla DM Investments spółka Graffiti ERP S.A, od ponad 20 lat wytwarza autorskie oprogramowanie ERP dla średnich oraz dużych przedsiębiorstw produkcyjnych.\r\n\r\nCaffeine Minds jest inkubatorem najbardziej innowacyjnych pomysłów i technologii, które na codzień wytwarza nasz zespół.\r\n\r\n&nbsp;",
+      "img": {
+        "file": "media/CM_CLAIM.png",
+        "alt": "gravity.integration - hasło reklamowe",
+        "wpId": 210
+      },
+      "img_placement": "right"
+    },
+    {
+      "acf_fc_layout": "contact_form",
+      "nav_li": "",
+      "title": "Wyślij zapytanie "
+    },
+    {
+      "acf_fc_layout": "links",
+      "nav_li": "",
+      "text": "<h2>Przydatne linki</h2>\r\nZapraszamy do bezpośredniego kontaktu oraz sprawdzenia pozostałych przedsięwzięć DM Investments.",
+      "links": [
+        {
+          "title": "Graffiti ERP S.A.",
+          "link": {
+            "title": "https://graffiti-erp.pl",
+            "url": "https://graffiti-erp.pl",
+            "target": "_blank"
+          }
+        },
+        {
+          "title": "Caffeine Minds",
+          "link": {
+            "title": "https://caffeine-minds.com/",
+            "url": "https://caffeine-minds.com/",
+            "target": "_blank"
+          }
+        },
+        {
+          "title": "DM Investments",
+          "link": {
+            "title": "https://dminvestments.pl/",
+            "url": "https://dminvestments.pl/",
+            "target": ""
+          }
+        },
+        {
+          "title": "Napisz do nas",
+          "link": {
+            "title": "contact@caffeine-minds.com",
+            "url": "mailto:contact@caffeine-minds.com",
+            "target": ""
+          }
+        },
+        {
+          "title": "Polityka prywatności ",
+          "link": {
+            "title": "Polityka prywatności",
+            "url": "/polityka-prywatnosci/",
+            "target": ""
+          }
+        }
+      ]
+    }
+  ],
+  "wpContent": ""
+}

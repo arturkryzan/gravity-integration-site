@@ -1,0 +1,81 @@
+---
+import '@fontsource/epilogue/400.css';
+import '@fontsource/epilogue/600.css';
+import '@fontsource/epilogue/700.css';
+import '@fontsource/epilogue/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
+import '../styles/tokens.css';
+import site from '../data/site.json';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** canonical path, e.g. "/technologia/" */
+  path: string;
+  ogImage?: string;
+}
+const { title, description = '', path, ogImage = '/og-homehero.png' } = Astro.props;
+const canonical = new URL(path, site.siteUrl).href;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index,follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.siteName} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, site.siteUrl).href} />
+    <meta property="og:locale" content="pl_PL" />
+
+    <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicons/favicon-32x32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon-152x152.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: site.company.name,
+        url: site.siteUrl,
+        logo: new URL('/favicons/favicon-196x196.png', site.siteUrl).href,
+        sameAs: [site.linkedin],
+      })}
+    />
+
+    <!-- GA4 — same property as the WP site for data continuity -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4}`}></script>
+    <script is:inline define:vars={{ ga4: site.ga4 }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', ga4);
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    font-family: var(--gi-font-heading);
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--gi-bg-light);
+    color: var(--gi-text-on-light);
+  }
+</style>

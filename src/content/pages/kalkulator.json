@@ -1,0 +1,52 @@
+{
+  "wpId": 424,
+  "slug": "kalkulator",
+  "url": "/kalkulator/",
+  "seo": {
+    "title": "Kalkulator ROI integracji danych - gravity.integration",
+    "description": "Oblicz, ile zaoszczędzisz na projektach integracyjnych z gravity.integration. Interaktywny kalkulator ROI — sprawdź redukcję kosztów, czasu wdrożenia i liczbę dodatkowych projektów.",
+    "focusKeyword": "kalkulator ROI integracja,ESB korzyści,ROI inwestycji"
+  },
+  "h1": "<h1>Kalkulator <span style=\"text-decoration: underline;\">ROI</span></h1>",
+  "decorative": "1",
+  "newsletter": "1",
+  "sections": [
+    {
+      "acf_fc_layout": "text_columns",
+      "nav_li": "",
+      "text0": "Każdy projekt integracyjny to tygodnie kodowania, testów i wdrożeń. Skrypty SQL, pliki CSV, jednorazowe połączenia — rosną szybciej niż zespół, który ma je utrzymać. Im więcej systemów, tym więcej chaosu. A każdy chaos kosztuje.",
+      "text1": "gravity.integration zastępuje dziesiątki skryptów jedną platformą. Gotowe atomy integracyjne, wizualny edytor przepływów i technologie takie jak Always‑on‑data czy IntelliChain skracają czas realizacji nawet o 60%. Sprawdź poniżej, ile to oznacza dla Twojego budżetu."
+    },
+    {
+      "acf_fc_layout": "faq",
+      "nav_li": "",
+      "faq": [
+        {
+          "que": "Skąd wynikają różnice w czasie realizacji z gravity.integration?",
+          "ans": "gravity.integration zastępuje ręczne kodowanie połączeń wizualnym edytorem przepływów i gotowymi atomami integracyjnymi. Technologia IntelliChain pozwala budować złożone integracje w minuty zamiast dni, a Always‑on‑data eliminuje potrzebę pisania skryptów monitorujących. W efekcie faza developmentu skraca się nawet o 60%, a czas testów — o 40%, ponieważ platforma automatycznie waliduje przepływy danych."
+        },
+        {
+          "que": "Ile kosztuje gravity.integration?",
+          "ans": "Oprogramowanie jest darmowe do celów testowych i szkoleniowych — bez ograniczeń czasowych ani funkcjonalnych. Licencja komercyjna to 2 999 PLN netto rocznie za pojedyncze zastosowanie lub 7 999 PLN netto rocznie za nielimitowaną liczbę połączeń na instancję. To ułamek ceny konkurencyjnych rozwiązań ESB na rynku."
+        },
+        {
+          "que": "Czy mogę przetestować gravity za darmo?",
+          "ans": "<strong>Tak</strong>. Pobierasz pełną wersję oprogramowania bez żadnych ograniczeń funkcjonalnych. Możesz testować dowolnie długo — nie ma limitu czasu ani przesyłu danych. Licencja komercyjna jest potrzebna dopiero w momencie, gdy zdecydujesz się na zastosowanie produkcyjne."
+        },
+        {
+          "que": "Jak szybko mogę wdrożyć gravity w moim zespole?",
+          "ans": "Instalacja zajmuje około 15 minut. Pełne wdrożenie pierwszego połączenia integracyjnego to zazwyczaj 1–4 dni robocze, w zależności od złożoności systemów źródłowych. <strong>Dodatkowo oferujemy bezpłatne wsparcie zdalne dla pierwszego projektu integracyjnego. </strong>"
+        },
+        {
+          "que": "Czy gravity.integration integruje się z moim ERP, MES lub WMS?",
+          "ans": "gravity.integration łączy się z dowolnym systemem, który udostępnia API, bazę danych, pliki lub protokoły komunikacyjne. Wspieramy integracje z systemami ERP, MES, WMS, CRM, platformami e‑commerce oraz narzędziami własnymi. Jeśli Twój system wymienia dane — gravity potrafi je przetworzyć."
+        },
+        {
+          "que": "Co jeśli potrzebuję więcej niż jedną instancję?",
+          "ans": "Każda licencja obejmuje jedną instancję z <strong>nielimitowaną liczbą użytkowników</strong>. Jeśli planujesz uruchomić gravity na kilku serwerach lub w kilku środowiskach (np. produkcja + staging), potrzebujesz osobnej licencji dla każdej instancji. Skontaktuj się z nami — przygotujemy indywidualną ofertę."
+        }
+      ]
+    }
+  ],
+  "wpContent": "<div id=\"gi-roi-calculator\"></div>"
+}

@@ -1,0 +1,222 @@
+[
+  {
+    "order": 0,
+    "name": "Bispol",
+    "logo": {
+      "file": "media/bispol-logo-1.png",
+      "alt": "Logo firmy Bispol",
+      "wpId": 359
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 1,
+    "name": "Consorfrut",
+    "logo": {
+      "file": "media/consorfrut-logo.png",
+      "alt": "Logo firmy Consorfrut",
+      "wpId": 360
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 2,
+    "name": "Fideli",
+    "logo": {
+      "file": "media/fideli-logo.png",
+      "alt": "Logo firmy Fideli",
+      "wpId": 361
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 3,
+    "name": "Witamina",
+    "logo": {
+      "file": "media/witamina-logo.png",
+      "alt": "Logo firmy Witamina",
+      "wpId": 362
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 4,
+    "name": "Gelg",
+    "logo": {
+      "file": "media/gelg-logo.png",
+      "alt": "Logo firmy Gelg",
+      "wpId": 363
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 5,
+    "name": "Kapitan Navi",
+    "logo": {
+      "file": "media/kapitan-navi-logo.png",
+      "alt": "Logo firmy Kapitan Navi",
+      "wpId": 364
+    },
+    "caseStudyLink": "/case-studies/"
+  },
+  {
+    "order": 6,
+    "name": "Frogum",
+    "logo": {
+      "file": "media/frogum-logo.png",
+      "alt": "Logo firmy Frogum",
+      "wpId": 365
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 7,
+    "name": "NAC",
+    "logo": {
+      "file": "media/nac-logo.png",
+      "alt": "Logo firmy NAC — New American Concept",
+      "wpId": 366
+    },
+    "caseStudyLink": "/case-studies/#section6"
+  },
+  {
+    "order": 8,
+    "name": "HENMAR",
+    "logo": {
+      "file": "media/henmar-logo.png",
+      "alt": "Logo firmy HENMAR",
+      "wpId": 367
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 9,
+    "name": "MAXPOL",
+    "logo": {
+      "file": "media/maxpol-logo.png",
+      "alt": "Logo firmy MAXPOL",
+      "wpId": 368
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 10,
+    "name": "TiA",
+    "logo": {
+      "file": "media/tia-logo.png",
+      "alt": "Logo firmy TiA",
+      "wpId": 369
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 11,
+    "name": "Hewalex",
+    "logo": {
+      "file": "media/hewalex-logo.png",
+      "alt": "Logo firmy Hewalex",
+      "wpId": 370
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 12,
+    "name": "SERIX",
+    "logo": {
+      "file": "media/serix-logo.png",
+      "alt": "Logo firmy SERIX",
+      "wpId": 371
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 13,
+    "name": "Lindner",
+    "logo": {
+      "file": "media/lindner-logo.png",
+      "alt": "Logo firmy Lindner",
+      "wpId": 372
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 14,
+    "name": "Metaltech",
+    "logo": {
+      "file": "media/metaltech-logo.png",
+      "alt": "Logo firmy Metaltech",
+      "wpId": 373
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 15,
+    "name": "MTM",
+    "logo": {
+      "file": "media/mtm-logo.png",
+      "alt": "Logo firmy MTM",
+      "wpId": 374
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 16,
+    "name": "WZE",
+    "logo": {
+      "file": "media/wze-logo.png",
+      "alt": "Logo firmy WZE",
+      "wpId": 375
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 17,
+    "name": "Biall",
+    "logo": {
+      "file": "media/biall-logo.png",
+      "alt": "Logo firmy Biall",
+      "wpId": 376
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 18,
+    "name": "Zniczplast",
+    "logo": {
+      "file": "media/zniczplast-logo.png",
+      "alt": "Logo firmy Zniczplast",
+      "wpId": 377
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 19,
+    "name": "Tiptopol",
+    "logo": {
+      "file": "media/tiptopol-logo.png",
+      "alt": "Logo firmy Tiptopol",
+      "wpId": 378
+    },
+    "caseStudyLink": "/case-studies/"
+  },
+  {
+    "order": 20,
+    "name": "EZT",
+    "logo": {
+      "file": "media/ezt-logo.png",
+      "alt": "Logo firmy EZT",
+      "wpId": 379
+    },
+    "caseStudyLink": null
+  },
+  {
+    "order": 21,
+    "name": "ELMET Poznań",
+    "logo": {
+      "file": "media/elmet-poznan-logo.png",
+      "alt": "",
+      "wpId": 447
+    },
+    "caseStudyLink": "/case-studies/#section4"
+  }
+]

@@ -1,0 +1,36 @@
+/* ============================================================
+   gravity.integration — design tokens
+   Single source of truth. #27EA93/#27EB93 unified to #27EA93.
+   ============================================================ */
+:root {
+  /* brand */
+  --gi-green: #27ea93;            /* primary accent (unified) */
+  --gi-green-rgb: 39 234 147;
+  --gi-green-deep: #0d9e6d;       /* darker green for text on light bg */
+
+  /* surfaces */
+  --gi-bg-dark: #0a0a12;          /* darkest (hero, SVG scenes) */
+  --gi-bg-dark-alt: #111119;      /* dark section alt */
+  --gi-bg-slate: #464861;         /* demo-form section */
+  --gi-bg-card-dark: #242538;     /* calculator cards */
+  --gi-bg-calc: #1a1b2e;          /* calculator section */
+  --gi-bg-light: #ffffff;
+
+  /* text */
+  --gi-text-on-dark: #ffffff;
+  --gi-text-muted-on-dark: rgb(255 255 255 / 0.75);
+  --gi-text-on-light: #1a1a2e;
+  --gi-text-muted-on-light: rgb(0 0 0 / 0.55);
+
+  /* typography */
+  --gi-font-heading: 'Epilogue', system-ui, sans-serif;
+  --gi-font-ui: 'Inter', system-ui, sans-serif;
+
+  /* layout */
+  --gi-container: 1140px;
+  --gi-radius: 10px;
+  --gi-radius-lg: 16px;
+
+  /* announcement bar */
+  --gi-bar-h: 44px;
+}

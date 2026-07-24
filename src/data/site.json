@@ -1,0 +1,20 @@
+{
+  "siteName": "gravity.integration",
+  "siteUrl": "https://gravity-integration.com",
+  "company": {
+    "name": "Caffeine Minds sp. z o.o.",
+    "krs": "0000500700",
+    "nip": "7811898493",
+    "address": "ul. Jasielska 16, 60-476 Poznań",
+    "group": "DM Investments sp. z o.o."
+  },
+  "ga4": "G-EWVWPJGYVM",
+  "linkedin": "https://www.linkedin.com/showcase/gravityintegration/",
+  "docs": "https://docs.gravity-integration.com",
+  "marketingCount": "139+",
+  "priceAnchor": "od 2 999 PLN/rok",
+  "todo": {
+    "kontaktCity": "Bielsko-Biała (meta/copy) vs Poznań (KRS) — decyzja Artura",
+    "nacCaseStudy": "branża, miasto, metryki, cytat"
+  }
+}

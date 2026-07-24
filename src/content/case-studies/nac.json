@@ -1,0 +1,52 @@
+{
+  "order": 3,
+  "anchor": "section6",
+  "slug": "nac",
+  "company": "NAC (New American Concept)",
+  "systems": [
+    "cStore",
+    "Graffiti.ERP",
+    "Grafbuilder"
+  ],
+  "navLabel": "NAC",
+  "rows": [
+    {
+      "text": "<h2><strong>NAC</strong>\r\nIntegracja platformy e-commerce cStore z Graffiti.ERP</h2>\r\n<strong>Firma:</strong> NAC\r\n<strong>System ERP:</strong> Graffiti.ERP\r\n<strong>Platforma e-commerce:</strong> cStore (B2B/B2C)",
+      "img": {
+        "file": "media/nac-logo.png",
+        "alt": "Logo firmy NAC — New American Concept",
+        "wpId": 366
+      },
+      "link": ""
+    },
+    {
+      "text": "<h3>Wyzwanie</h3>\r\nSprzedaż wielokanałowa prowadzona na platformie cStore wymaga stałej, spójnej wymiany danych z systemem Graffiti.ERP. Zamówienia, stany magazynowe, cenniki, indeksy i dane kontrahentów muszą być zgodne po obu stronach — w przeciwnym razie pojawiają się rozbieżności w dostępności towaru, nieaktualne ceny dla poszczególnych grup cennikowych oraz konieczność ręcznego przepisywania zamówień. Dodatkową złożoność wprowadza obsługa klientów B2B: każda grupa cennikowa ma własne warunki, część asortymentu wymaga rezerwacji określonych ilości pod konkretnych kontrahentów, a klient korzystający z platformy oczekuje pełnej historii swoich zamówień — niezależnie od kanału, w którym powstały. Przy rosnącej liczbie kontrahentów i pozycji asortymentowych ręczna synchronizacja stawała się wąskim gardłem procesu sprzedaży.",
+      "img": {
+        "file": "media/cstore-logo.png",
+        "alt": "Logo platformy e-commerce cStore",
+        "wpId": 449
+      },
+      "link": ""
+    },
+    {
+      "text": "<h3>Rozwiązanie</h3>\r\ngravity.integration udostępnia gotowy webservice (API) wystawiony na zewnątrz — z zestawem metod, które platforma cStore wywołuje bezpośrednio. To system zewnętrzny odpytuje API gravity.integration za każdym razem, gdy chce przesłać lub pobrać dane z Graffiti.ERP, dzięki czemu wymiana pozostaje spójna i kontrolowana. Synchronizacja obejmuje (→ do cStore, ↔ dwukierunkowo):\r\n\r\n• <strong>Zamówienia klienta (↔)</strong> — dodawanie nagłówka wraz z pozycjami; zwrotnie cStore pobiera wszystkie zamówienia kontrahenta niezależnie od kanału (także wprowadzone poza platformą), aby prezentować kompletną informację w oparciu o grupy cennikowe (filtr: lista kontrahentów B2B)\r\n• <strong>Kartoteki magazynowe — stany (→)</strong> — plany sprzedażowe wg grup cennikowych: obliczanie ilości rezerwacyjnej dla klientów B2B pod daną grupę oraz wolnych ilości dostępnych dla wszystkich (B2B/B2C)\r\n• <strong>Cenniki (→)</strong> — grupy cennikowe skorelowane z kartotekami kontrahenckimi i indeksami",
+      "img": {
+        "file": "media/cstore-pozycje-cennika-graffiti.png",
+        "alt": "cStore — panel administracyjny: Pozycje cennika produktu (grupy cennikowe) zsynchronizowane z Graffiti.ERP przez gravity.integration",
+        "wpId": 450
+      },
+      "link": ""
+    },
+    {
+      "text": "<h3>Moduł Grafbuilder</h3>\r\nPozostałe dane oraz orkiestrację całego procesu obsługuje autorski moduł Grafbuilder. Zakres synchronizacji uzupełniają:\r\n\r\n• <strong>Indeksy i kontrahenci (→)</strong> — przesyłani do cStore jako podstawa katalogu i uprawnień cenowych\r\n• <strong>Faktury sprzedażowe (←)</strong> — informacja o fakturach z możliwością pobrania PDF na żądanie z poziomu platformy; wydruk generowany jest w wariancie zgodnym z Graffiti.ERP (przez DLL)\r\n• <strong>Dokumenty magazynowe (←)</strong> — przekazywane z Graffiti.ERP do cStore\r\n\r\nPo otrzymaniu zamówienia z cStore i obróbce danych zamówienia trafiają do Graffiti.ERP. Grafbuilder buduje plany sprzedażowe dla kontrahentów B2B — wraz z widokami, wyzwalaczami i funkcjami SQL (m.in. badanie limitów magazynowych oraz priorytety rezerwacyjne dla zamówień).",
+      "img": "",
+      "link": ""
+    },
+    {
+      "text": "<h3>Rezultaty</h3>\r\n• Pełna automatyzacja wymiany danych między cStore a Graffiti.ERP — bez ręcznego przepisywania zamówień i dokumentów\r\n• Stany i ceny zgodne w czasie rzeczywistym, z uwzględnieniem grup cennikowych i ilości rezerwacyjnych dla klientów B2B\r\n• Jeden, kompletny widok zamówień kontrahenta na platformie — niezależnie od kanału sprzedaży\r\n• Faktury (PDF w wariancie Graffiti) i dokumenty magazynowe dostępne dla klienta na żądanie\r\n• Skalowalność — obsługa rosnącej liczby kontrahentów B2B i indeksów bez zwiększania nakładu pracy",
+      "img": "",
+      "link": ""
+    }
+  ],
+  "todo": "branża/miasto/metryki/cytat — do uzupełnienia"
+}

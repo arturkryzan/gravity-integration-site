@@ -14,6 +14,16 @@ AddType application/manifest+json .webmanifest
 # ---------------------------------------------------------------- errors ----
 ErrorDocument 404 /404.html
 
+# The English subtree gets the English 404. <If> is Apache 2.4 core, not a
+# module, so it is deliberately NOT wrapped in <IfModule>: on 2.4 it works, and
+# anywhere older the config is refused outright rather than silently ignored.
+# A refused restart is the better failure — the alternative is English visitors
+# quietly landing on a Polish page nobody notices for months. Matching on the
+# URI covers any depth under /en/, and /en/404.html is itself served directly.
+<If "%{REQUEST_URI} =~ m#^/en/#">
+  ErrorDocument 404 /en/404.html
+</If>
+
 # ---------------------------------------------- canonical host + redirects ----
 <IfModule mod_rewrite.c>
   RewriteEngine On

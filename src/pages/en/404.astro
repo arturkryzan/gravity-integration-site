@@ -1,0 +1,29 @@
+---
+/* The English 404 — dist/en/404.html.
+   Apache points the /en/ subtree here with a conditional ErrorDocument (see
+   public/.htaccess); everything outside /en/ keeps the Polish /404.html. Being
+   under src/pages/en/ is what makes Astro.currentLocale 'en', so every string
+   and every recovery link on it resolves English.
+
+   The emitted path is NOT automatic. Astro special-cases only the root
+   404.astro; this one is an ordinary route, so with `trailingSlash: 'always'`
+   the build writes dist/en/404/index.html. The `gi:en-404` integration in
+   astro.config.mjs moves it to dist/en/404.html afterwards, and the sitemap
+   filter drops the URL. Both live in the config — see the comments there.
+
+   noindex, and no hreflang pair: a 404 is not a translation of anything. */
+import Site from '../../layouts/Site.astro';
+import NotFound from '../../components/NotFound.astro';
+import { localeOf, t } from '../../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
+---
+
+<Site
+  title={s('nf.title')}
+  description={s('nf.desc')}
+  path="/en/404.html"
+  bodyClass="page page-404"
+  robots="noindex,follow"
+>
+  <NotFound />
+</Site>

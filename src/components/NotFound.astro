@@ -1,0 +1,146 @@
+---
+/* The 404 body, shared by both locales.
+   Apache serves it via ErrorDocument (see public/.htaccess): / and everything
+   Polish gets dist/404.html, anything under /en/ gets dist/en/404.html. The two
+   page files are thin wrappers so that this markup — and the styles under it —
+   exist once.
+
+   The recovery links resolve through linkUrl(), so an English visitor who
+   mistyped a URL is offered English pages rather than being dropped back into
+   Polish. */
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
+
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+
+const [download, home, cases, contact] = await Promise.all([
+  linkUrl('pobieranie', lang),
+  linkUrl('home', lang),
+  linkUrl('case-studies', lang),
+  linkUrl('kontakt', lang),
+]);
+---
+
+<section class="nf">
+  <div class="nf-wrap">
+    <p class="nf-code" aria-hidden="true">4<span class="nf-dot"></span>4</p>
+    <h1 class="nf-h">{s('nf.h')}</h1>
+    <p class="nf-p" set:html={s('nf.pHtml')} />
+    <nav class="nf-links" aria-label={s('nf.nav.aria')}>
+      <a class="nf-btn nf-btn-solid" href={download}>{s('nf.download')}</a>
+      <a class="nf-btn nf-btn-ghost" href={home}>{s('nav.home')}</a>
+      <a class="nf-btn nf-btn-ghost" href={cases}>{s('nf.cases')}</a>
+      <a class="nf-btn nf-btn-ghost" href={contact}>{s('nav.contact')}</a>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .nf {
+    background: var(--gi-bg-dark, #0a0a12);
+    color: #fff;
+    min-height: 82vh;
+    display: grid;
+    place-items: center;
+    padding: calc(var(--gi-bar-h, 44px) + 7rem) 1.5rem 5rem;
+    font-family: Epilogue, system-ui, sans-serif;
+  }
+  .nf-wrap {
+    max-width: 38rem;
+    text-align: center;
+  }
+  /* The "0" is the brand's green sphere — the same dot the logo carries. */
+  .nf-code {
+    margin: 0 0 1rem;
+    font-size: clamp(4.5rem, 12vw, 6rem);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.08em;
+  }
+  .nf-dot {
+    width: 0.72em;
+    height: 0.72em;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #6ef5b8, var(--gi-green, #27ea93) 58%, #0d9e63);
+    box-shadow: 0 0 34px rgb(39 234 147 / 0.45);
+  }
+  .nf-h {
+    margin: 0 0 0.9rem;
+    font-size: clamp(1.35rem, 3.4vw, 1.9rem);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .nf-p {
+    margin: 0 auto 2rem;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: rgb(255 255 255 / 0.84);
+    max-width: 32rem;
+    text-wrap: pretty;
+  }
+  /* :global() because the paragraph is set:html — its anchor carries no
+     scoping attribute. */
+  .nf-p :global(a) {
+    color: var(--gi-green, #27ea93);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .nf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nf-btn:active {
+    transform: translateY(1px);
+  }
+  .nf-btn-solid {
+    background: var(--gi-green, #27ea93);
+    color: #0a0a12;
+  }
+  .nf-btn-solid:hover {
+    background: #4ff0a8;
+    color: #0a0a12;
+  }
+  .nf-btn-ghost {
+    border: 1.5px solid rgb(255 255 255 / 0.4);
+    color: #fff;
+  }
+  .nf-btn-ghost:hover {
+    border-color: var(--gi-green, #27ea93);
+    color: var(--gi-green, #27ea93);
+  }
+  .nf-btn:focus-visible {
+    outline: 2px solid var(--gi-green, #27ea93);
+    outline-offset: 3px;
+  }
+  @media (max-width: 560px) {
+    .nf-links {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

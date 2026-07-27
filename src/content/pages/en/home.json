@@ -1,7 +1,7 @@
 {
   "wpId": 2,
   "lang": "en",
-  "draft": true,
+  "draft": false,
   "slug": "home",
   "url": "/en/",
   "seo": {

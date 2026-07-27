@@ -23,19 +23,6 @@ const NH = 17; // node box half-height
 ---
 
 <article class="esb">
-  {/* ---------- jump nav ---------- */}
-  <nav class="esb-toc" aria-label="Spis treści">
-    <div class="esb-wrap">
-      <ul>
-        {esb.nav.map((n) => (
-          <li>
-            <a href={`#${n.anchor}`} data-scroll-to set:html={n.label} />
-          </li>
-        ))}
-      </ul>
-    </div>
-  </nav>
-
   {/* ---------- intro / definition ---------- */}
   <section id="section0" class="esb-band">
     <div class="esb-wrap esb-prose">
@@ -225,34 +212,6 @@ const NH = 17; // node box half-height
   }
   .esb-band--tint {
     background: var(--tint);
-  }
-
-  /* ---- jump nav ---- */
-  .esb-toc {
-    position: sticky;
-    top: var(--gi-bar-h, 44px);
-    z-index: 5;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: saturate(180%) blur(10px);
-    border-bottom: 1px solid var(--line);
-  }
-  .esb-toc ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 1.75rem;
-    list-style: none;
-    margin: 0;
-    padding: 0.9rem 0;
-  }
-  .esb-toc a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.92rem;
-    font-weight: 600;
-    transition: color 0.2s ease;
-  }
-  .esb-toc a:hover {
-    color: var(--green-deep);
   }
 
   /* ---- prose ---- */
@@ -508,14 +467,6 @@ const NH = 17; // node box half-height
   @media (max-width: 560px) {
     .esb-diagram {
       grid-template-columns: 1fr;
-    }
-    .esb-toc ul {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .esb-toc a {
-      white-space: nowrap;
     }
   }
 </style>

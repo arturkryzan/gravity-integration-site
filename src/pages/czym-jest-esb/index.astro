@@ -2,9 +2,11 @@
 import { getEntry } from 'astro:content';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import EsbArticle from '../../components/EsbArticle.astro';
 import DemoSection from '../../components/DemoSection.astro';
 import heroes from '../../data/page_heroes.json';
+import esb from '../../data/esb-content.json';
 
 const page = (await getEntry('pages', 'czym-jest-esb'))!.data;
 const hero = (heroes as Record<string, any>)['czym-jest-esb'];
@@ -17,6 +19,7 @@ const hero = (heroes as Record<string, any>)['czym-jest-esb'];
   bodyClass={`page page-id-${page.wpId}`}
 >
   <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <Breadcrumbs items={esb.nav} />
   <EsbArticle />
   <DemoSection />
 </Site>

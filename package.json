@@ -15,7 +15,9 @@
     "astro": "^7.1.3"
   },
   "devDependencies": {
+    "pixelmatch": "^7.2.0",
     "playwright": "^1.61.1",
+    "pngjs": "^7.0.0",
     "serve": "^14.2.6"
   }
 }

@@ -12,3 +12,6 @@ dist/
 # scratch output from scripts/
 shots/
 dist-baseline/
+audit-shots/
+regress-shots/
+audit-*.json

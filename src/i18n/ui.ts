@@ -348,10 +348,15 @@ const en: Partial<Record<UiKey, string>> = {
   'nav.caseStudies': 'Case Studies',
   'nav.docs': 'Documentation',
   'nav.integrations': 'Integrations',
-  /* Deliberately Polish: the privacy policy exists only in Polish (a decision,
-     not a gap), and a label promising an English page the link can't deliver
-     would be worse than naming what's actually there. */
-  'nav.privacy': 'Polityka prywatności',
+  /* The policy exists only in Polish (a decision, not a gap), so the label has
+     to do two jobs: be findable by someone hunting for the privacy policy, and
+     not promise an English page the link can't deliver. The Polish title alone
+     did the second and failed the first — to an English reader it is just
+     foreign words in a menu, and a privacy policy is precisely the thing people
+     go looking for on purpose. Naming it in English and stating the language in
+     parentheses is the same shape the cookie bar already uses two hundred lines
+     below; the anchor carries hreflang="pl" so machines get it too. */
+  'nav.privacy': 'Privacy policy (in Polish)',
   'nav.menuOpen': 'MENU',
   'nav.menuClose': 'CLOSE',
 

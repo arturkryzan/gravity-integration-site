@@ -5,8 +5,10 @@
    Labels come from the ui.ts dictionary and hrefs from linkUrl(), so an
    English page gets an English nav that links to published English pages —
    and falls back to the Polish URL for anything not yet translated (the rule
-   is documented on linkUrl). The privacy policy is Polish-only by decision,
-   so its label stays Polish in both locales and its link never localises. */
+   is documented on linkUrl). The privacy policy is Polish-only by decision, so
+   its link never localises; the label names it in the reader's language and
+   says which language the document is in, and the anchor carries hreflang="pl"
+   so that is machine-readable rather than only stated in the text. */
 import LangSwitch from './LangSwitch.astro';
 import { linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
@@ -108,7 +110,7 @@ const year = new Date().getFullYear();
 						    (no published translation) it leaves no gap and no stray <br> —
 						    unlike the privacy link below, which is glued to one. */}
 						<LangSwitch slug={slug} class="mb-4 d-block" />
-						<a href={href['polityka-prywatnosci']} class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+						<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
 						{s('footer.copyright')} {year} gravity.integration					</div>		
 				</div>
 			</div>
@@ -131,7 +133,7 @@ const year = new Date().getFullYear();
 					{/* The mobile twin of the block above — the nav's two columns collapse
 					    at md, and each keeps its own copy rather than one moving. */}
 					<LangSwitch slug={slug} class="mb-4 d-block" />
-					<a href={href['polityka-prywatnosci']} class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+					<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
 					{s('footer.copyright')} {year} gravity.integration				</div>
 			</div>
 		</div>

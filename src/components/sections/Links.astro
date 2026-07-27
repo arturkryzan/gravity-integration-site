@@ -1,6 +1,9 @@
 ---
 /* ACF layout: links — grid of labeled links (verified against live /kontakt/ markup) */
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
+import { localeOf, t } from '../../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
+
 interface Props {
   index: number;
   text?: string;
@@ -36,7 +39,7 @@ const { index, text = '', links } = Astro.props;
               >
                 <span>{link.title || link.url}</span>
                 {opensNewTab(link.url, link.target) && (
-                  <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                  <span class="visually-hidden">{s('a11y.newTab')}</span>
                 )}
               </a>
             </div>

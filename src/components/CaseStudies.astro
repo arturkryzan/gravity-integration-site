@@ -13,6 +13,7 @@
    doubles as the boundary between studies. The 296px rail column runs through
    both the light body and the dark panel, so the page has one vertical spine. */
 import type { CsStudy } from '../lib/case-studies';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props {
   studies: CsStudy[];
@@ -21,8 +22,10 @@ const { studies } = Astro.props;
 
 /* The outcome stage is the one a prospect scrolls for; it gets the dark panel.
    Matched by heading rather than by position so a study without one (or with a
-   differently ordered one) still renders every stage. */
-const PAYOFF = 'Rezultaty';
+   differently ordered one) still renders every stage. Localised because it
+   matches against the CONTENT's own heading — 'Rezultaty' in the Polish files,
+   'Results' in the English ones (Phase 4c). */
+const PAYOFF = t(localeOf(Astro.currentLocale))('cs.payoff');
 
 /* A hyphen is a line-break opportunity, so at narrow widths a title reads
    "Integracja platformy e-" / "commerce cStore z Graffiti.ERP". No CSS property

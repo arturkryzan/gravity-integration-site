@@ -118,6 +118,28 @@ export async function translationUrl(slug: string, to: Lang): Promise<string | n
 }
 
 /**
+ * Where an internal link on a page rendered in `lang` should point.
+ *
+ * The nav, the CTAs and the announcement bar all link to *pages*, and on an
+ * English page those links should stay in English — but only when there is a
+ * published English page to land on. A published page must never send a real
+ * visitor to a draft (Polish placeholder text under a /en/ URL, noindexed), so
+ * the rule mirrors the switcher's: same slug in `lang` if it's published,
+ * otherwise the default locale's URL. An English home page shipped ahead of
+ * the English pricing page links to /cennik/ until the translation lands —
+ * honest Polish over broken English.
+ *
+ * For `lang === DEFAULT_LOCALE` this resolves to the Polish URL it always was.
+ */
+export async function linkUrl(slug: string, lang: Lang): Promise<string> {
+  if (lang !== DEFAULT_LOCALE) {
+    const hit = await translationUrl(slug, lang);
+    if (hit) return hit;
+  }
+  return (await getPage(slug, DEFAULT_LOCALE)).data.url;
+}
+
+/**
  * The hreflang set for a page — every locale it genuinely exists in.
  *
  * Returns `[]` unless the page exists in ALL locales. hreflang has to

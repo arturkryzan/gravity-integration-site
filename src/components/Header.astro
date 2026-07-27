@@ -1,7 +1,15 @@
 ---
 /* Site header: logo + hamburger + full-screen nav.
-   Markup ported 1:1 from the live theme (nav.php + rendered output). */
+   Markup ported 1:1 from the live theme (nav.php + rendered output).
+
+   Labels come from the ui.ts dictionary and hrefs from linkUrl(), so an
+   English page gets an English nav that links to published English pages —
+   and falls back to the Polish URL for anything not yet translated (the rule
+   is documented on linkUrl). The privacy policy is Polish-only by decision,
+   so its label stays Polish in both locales and its link never localises. */
 import LangSwitch from './LangSwitch.astro';
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props {
   /** Passed through to the language switcher so it can offer *this* page in the
@@ -10,6 +18,28 @@ interface Props {
   slug?: string;
 }
 const { slug } = Astro.props;
+
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+
+/* One lookup per nav target; the keys are the language-neutral slugs. */
+const NAV_SLUGS = [
+  'home',
+  'kalkulator',
+  'pobieranie',
+  'kontakt',
+  'technologia',
+  'czym-jest-esb',
+  'cennik',
+  'case-studies',
+  'integracje',
+  'polityka-prywatnosci',
+] as const;
+const href = Object.fromEntries(
+  await Promise.all(NAV_SLUGS.map(async (k) => [k, await linkUrl(k, lang)])),
+) as Record<(typeof NAV_SLUGS)[number], string>;
+
+const year = new Date().getFullYear();
 ---
 <header data-scroll-section>
 	<div class="container-fluid pb-lg-0">
@@ -26,8 +56,8 @@ const { slug } = Astro.props;
 			</div>
 			<div class="col-6 text-end position-relative">
 				<button aria-expanded="false" class="hamburger d-flex align-items-center">
-					<span class="btn btn-text me-4">MENU</span>
-					<span class="btn btn-text me-4">CLOSE</span>
+					<span class="btn btn-text me-4">{s('nav.menuOpen')}</span>
+					<span class="btn btn-text me-4">{s('nav.menuClose')}</span>
 					<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="20" cy="20" r="19.5" stroke="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M25.3692 11.9118C25.7554 11.9533 26.1451 11.8792 26.4892 11.699C26.8332 11.5187 27.1159 11.2404 27.3016 10.8992C27.4873 10.5581 27.5675 10.1695 27.5321 9.78278C27.4967 9.39602 27.3473 9.02846 27.1028 8.7267C26.8583 8.42493 26.5297 8.20254 26.1587 8.08771C25.7877 7.97287 25.3909 7.97076 25.0187 8.08164C24.6465 8.19252 24.3156 8.4114 24.0679 8.71055C23.8202 9.00969 23.6669 9.37563 23.6274 9.762C23.5746 10.2778 23.7283 10.7935 24.0547 11.1964C24.3811 11.5992 24.8537 11.8565 25.3692 11.9118ZM17.3556 24.1754C18.182 24.6528 19.1315 24.8744 20.0839 24.8121C21.0363 24.7499 21.9488 24.4066 22.7061 23.8257C23.4634 23.2448 24.0314 22.4524 24.3383 21.5487C24.6452 20.6449 24.6772 19.6705 24.4303 18.7486C24.1834 17.8266 23.6686 16.9986 22.951 16.3693C22.2335 15.74 21.3454 15.3376 20.3991 15.213C19.4529 15.0884 18.4909 15.2472 17.6349 15.6694C16.7789 16.0915 16.0674 16.758 15.5902 17.5846C14.9516 18.693 14.7788 20.0095 15.1098 21.2451C15.4407 22.4808 16.2484 23.5346 17.3556 24.1754ZM14.8813 31.7711C14.5386 31.953 14.1497 32.0292 13.7638 31.99H13.752C13.2365 31.9346 12.7639 31.6774 12.4375 31.2745C12.1111 30.8717 11.9574 30.356 12.0102 29.8402C12.0494 29.4542 12.2022 29.0886 12.4492 28.7895C12.6962 28.4903 13.0264 28.2712 13.398 28.1597C13.7695 28.0482 14.1658 28.0494 14.5367 28.1632C14.9076 28.2769 15.2364 28.498 15.4816 28.7986C15.7269 29.0993 15.8774 29.4658 15.9143 29.852C15.9512 30.2382 15.8727 30.6266 15.6889 30.9682C15.505 31.3098 15.224 31.5892 14.8813 31.7711Z" fill="white"/>
@@ -51,10 +81,10 @@ const { slug } = Astro.props;
 				<div class="col-pull-inner d-flex flex-column col">
 					<div class="nav-big">
 						<ul>
-							<li><a href="/" aria-current="page">Strona główna</a></li>
-<li><a href="/kalkulator/">Kalkulator ROI</a></li>
-<li><a href="/pobieranie/">Pobieranie</a></li>
-<li><a href="/kontakt/">Kontakt</a></li>
+							<li><a href={href.home} aria-current="page">{s('nav.home')}</a></li>
+<li><a href={href.kalkulator}>{s('nav.roiCalculator')}</a></li>
+<li><a href={href.pobieranie}>{s('nav.download')}</a></li>
+<li><a href={href.kontakt}>{s('nav.contact')}</a></li>
 						</ul>
 					</div>	
 				</div>
@@ -65,12 +95,12 @@ const { slug } = Astro.props;
 				<div class="col-pull-inner d-inline-flex justify-content-between flex-column">
 					<div class="nav-medium">
 						<ul>
-							<li><a href="/technologia/">Technologia</a></li>
-<li><a href="/czym-jest-esb/">Czym jest ESB?</a></li>
-<li><a href="/cennik/">Cennik</a></li>
-<li><a href="/case-studies/">Case Studies</a></li>
-<li><a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">Dokumentacja<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a></li>
-<li><a href="/integracje/">Integracje</a></li>
+							<li><a href={href.technologia}>{s('nav.technology')}</a></li>
+<li><a href={href['czym-jest-esb']}>{s('nav.whatIsEsb')}</a></li>
+<li><a href={href.cennik}>{s('nav.pricing')}</a></li>
+<li><a href={href['case-studies']}>{s('nav.caseStudies')}</a></li>
+<li><a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">{s('nav.docs')}<span class="visually-hidden">{s('a11y.newTab')}</span></a></li>
+<li><a href={href.integracje}>{s('nav.integrations')}</a></li>
 						</ul>
 					</div>	
 					<div class="nav-small paragraph hover-underline py-10 d-none d-md-block">
@@ -78,8 +108,8 @@ const { slug } = Astro.props;
 						    (no published translation) it leaves no gap and no stray <br> —
 						    unlike the privacy link below, which is glued to one. */}
 						<LangSwitch slug={slug} class="mb-4 d-block" />
-						<a href="/polityka-prywatnosci/" class="mb-4 d-inline-block">Polityka prywatności</a><br>
-						© Copyright 2026 gravity.integration					</div>		
+						<a href={href['polityka-prywatnosci']} class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+						{s('footer.copyright')} {year} gravity.integration					</div>		
 				</div>
 			</div>
 
@@ -89,7 +119,7 @@ const { slug } = Astro.props;
 <ul class="d-flex flex-md-column socials">
 	
 			<li class="me-6 me-md-0 mb-md-6">
-			<a href="https://www.linkedin.com/showcase/gravityintegration/about/?viewAsMember=true" target="_blank" rel="noopener" aria-label="LinkedIn (otwiera się w nowej karcie)" class="d-inline-block">
+			<a href="https://www.linkedin.com/showcase/gravityintegration/about/?viewAsMember=true" target="_blank" rel="noopener" aria-label={s('a11y.linkedin')} class="d-inline-block">
 				<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<circle cx="20" cy="20" r="19.5" stroke="white"/>
 					<path d="M14.4773 12.7695C13.5631 12.7695 12.815 13.5176 12.815 14.4319C12.815 15.3462 13.5631 16.0942 14.4773 16.0942C15.3916 16.0942 16.1397 15.3462 16.1397 14.4319C16.1397 13.5176 15.3916 12.7695 14.4773 12.7695ZM27.1111 20.541C26.9033 18.7124 26.0721 17.5903 23.5786 17.5903C22.1241 17.5903 21.1682 18.1306 20.7527 18.8786H20.7111V17.5903H18.0098V19.4189V27.1903H20.7942V22.4111C20.7942 21.1643 21.0436 19.9591 22.5812 19.9591C24.1189 19.9591 24.2436 21.3721 24.2436 22.5358V27.2319H27.1111V21.9124C27.1942 21.4137 27.1527 20.9565 27.1111 20.541ZM12.7734 20.1254V27.1903H16.1397V19.5436V17.5488H12.7734V20.1254Z" fill="white"/>
@@ -101,8 +131,8 @@ const { slug } = Astro.props;
 					{/* The mobile twin of the block above — the nav's two columns collapse
 					    at md, and each keeps its own copy rather than one moving. */}
 					<LangSwitch slug={slug} class="mb-4 d-block" />
-					<a href="/polityka-prywatnosci/" class="mb-4 d-inline-block">Polityka prywatności</a><br>
-					© Copyright 2026 gravity.integration				</div>
+					<a href={href['polityka-prywatnosci']} class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+					{s('footer.copyright')} {year} gravity.integration				</div>
 			</div>
 		</div>
 	</div>

@@ -3,6 +3,9 @@
 import { mediaSrc, mediaAlt, mediaRatio, mediaDims } from '../../lib/media';
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 
+import { localeOf, t } from '../../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
+
 interface Props {
   index: number;
   downloads: Array<Record<string, any>>;
@@ -66,9 +69,9 @@ const { index, downloads } = Astro.props;
                     rel={file.url?.startsWith('#') ? undefined : 'noopener'}
                     data-scroll-to={file.url?.startsWith('#') ? true : undefined}
                   >
-                    <span>Pobierz</span>
+                    <span>{s('common.download')}</span>
                     {!file.url?.startsWith('#') && (
-                      <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                      <span class="visually-hidden">{s('a11y.newTab')}</span>
                     )}
                   </a>
                 )}
@@ -82,7 +85,7 @@ const { index, downloads } = Astro.props;
                     >
                       <span>{contact.title}</span>
                       {opensNewTab(contact.url, contact.target) && (
-                        <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                        <span class="visually-hidden">{s('a11y.newTab')}</span>
                       )}
                     </a>
                   </div>

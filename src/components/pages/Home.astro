@@ -5,27 +5,28 @@
  * a page. Everything a page actually IS lives here, and both locales render the
  * same structure over their own content — `getPage('home', lang)` picks the
  * language off the URL, so there is nothing to keep in sync by hand. */
-import { getPage } from '../../i18n/routes';
-import { localeOf } from '../../i18n/ui';
+import { getPage, linkUrl } from '../../i18n/routes';
+import { localeOf, t } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import HomeHero from '../../components/HomeHero.astro';
 import SectionRenderer from '../../components/SectionRenderer.astro';
 import DemoSection from '../../components/DemoSection.astro';
 
 const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
 const entry = await getPage('home', lang);
 const page = entry.data;
 
 /* live-site row overrides (was snippets 30 + 12):
    section0 row0 → developers SVG animation, row1 → business SVG + extra CTA
-   section2 rows → use-case videos
-
-   TODO(Phase 3): the CTA label and href are hard-coded Polish. They move into
-   ui.ts alongside the rest of the interface strings. */
+   section2 rows → use-case videos */
 const overrides = {
   0: {
     0: { media: 'svg-dev' },
-    1: { media: 'svg-biz', extraLinks: [{ title: 'Policz korzyści', url: '/kalkulator/' }] },
+    1: {
+      media: 'svg-biz',
+      extraLinks: [{ title: s('home.roiCta'), url: await linkUrl('kalkulator', lang) }],
+    },
   },
   2: {
     0: { media: { video: 'use_01' } },

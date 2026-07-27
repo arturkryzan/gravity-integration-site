@@ -4,6 +4,9 @@
    not rewritten). Only presentation changes: real hierarchy, designed lists,
    a meaningful point-to-point-vs-ESB diagram, a distinct pull-quote, cleaner FAQ. */
 import esb from '../data/esb-content.json';
+import { localeOf, t } from '../i18n/ui';
+
+const s = t(localeOf(Astro.currentLocale));
 
 /* ---- diagram geometry: 6 systems in a hexagon ---- */
 const R = 132;
@@ -36,8 +39,8 @@ const NH = 17; // node box half-height
     <div class="esb-wrap">
       <div class="esb-diagram">
         <figure class="esb-panel">
-          <figcaption><span class="esb-tag esb-tag--warn">punkt‑punkt</span></figcaption>
-          <svg viewBox="0 0 380 350" role="img" aria-label="Integracja punkt-punkt: każdy system połączony bezpośrednio z każdym innym — plątanina połączeń.">
+          <figcaption><span class="esb-tag esb-tag--warn">{s('esb.tag.p2p')}</span></figcaption>
+          <svg viewBox="0 0 380 350" role="img" aria-label={s('esb.aria.p2p')}>
             {mesh.map(([i, j]) => (
               <line
                 x1={nodes[i].x} y1={nodes[i].y}
@@ -58,8 +61,8 @@ const NH = 17; // node box half-height
         </figure>
 
         <figure class="esb-panel">
-          <figcaption><span class="esb-tag esb-tag--ok">przez szynę ESB</span></figcaption>
-          <svg viewBox="0 0 380 350" role="img" aria-label="Integracja przez szynę ESB: każdy system połączony z jednym centralnym punktem — szyną integracyjną.">
+          <figcaption><span class="esb-tag esb-tag--ok">{s('esb.tag.bus')}</span></figcaption>
+          <svg viewBox="0 0 380 350" role="img" aria-label={s('esb.aria.bus')}>
             {nodes.map((n) => (
               <line x1={n.x} y1={n.y} x2={cx} y2={cy} stroke="#27ea93" stroke-width="2" />
             ))}
@@ -67,7 +70,7 @@ const NH = 17; // node box half-height
             <circle cx={cx} cy={cy} r="42" fill="#27ea93" />
             <circle cx={cx} cy={cy} r="42" fill="none" stroke="#0a0a12" stroke-opacity="0.06" stroke-width="1" />
             <text x={cx} y={cy - 2} text-anchor="middle" class="esb-hub-t">ESB</text>
-            <text x={cx} y={cy + 14} text-anchor="middle" class="esb-hub-s">szyna</text>
+            <text x={cx} y={cy + 14} text-anchor="middle" class="esb-hub-s">{s('esb.hub.sub')}</text>
             {nodes.map((n) => (
               <g>
                 <rect
@@ -157,7 +160,7 @@ const NH = 17; // node box half-height
   {/* ---------- FAQ ---------- */}
   <section id="section6" class="esb-faq">
     <div class="esb-wrap">
-      <h2>FAQ</h2>
+      <h2>{s('esb.faq')}</h2>
       <div class="esb-faq-list">
         {esb.faq.map((f, i) => (
           <details class="esb-faq-item" open={i === 0}>

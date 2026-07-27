@@ -2,6 +2,8 @@
 /* /integracje/ grid — restyled to match the site design language
    (Epilogue type, slate/green palette, the homepage clients-wall grid). */
 import { getCollection } from 'astro:content';
+import { localeOf, t } from '../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
 const categories = (await getCollection('integrationCategories')).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -13,10 +15,7 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
   <div class="gi-int-wrap">
     <div class="gi-int-intro" data-scroll data-scroll-opacity>
       <div class="gi-int-num">139+</div>
-      <p class="gi-int-sub">
-        gotowych konektorów i&nbsp;adapterów.<br />Twoje systemy połączone w&nbsp;jedną szynę
-        danych&nbsp;—&nbsp;bez programowania.
-      </p>
+      <p class="gi-int-sub" set:html={s('int.subHtml')} />
       <div class="gi-int-badges">
         {badges.map((b) => <span class="gi-int-badge">{b}</span>)}
       </div>

@@ -201,7 +201,12 @@ function initAnnounceBar() {
  * net, not the mechanism — the markup is correct on its own, so with JS off a
  * missed docs link merely opens in the same tab rather than breaking. */
 const NEW_TAB_HOSTS = ['docs.gravity-integration.com'];
-const NEW_TAB_NOTE = ' (otwiera się w nowej karcie)';
+/* Language picked at runtime off <html lang> — this bundle is shared by both
+   trees. Must match ui.ts's a11y.newTab, which is what the section renderers
+   emit; the duplicate-detection below compares against this exact string. */
+const NEW_TAB_NOTE = document.documentElement.lang.toLowerCase().startsWith('en')
+  ? ' (opens in a new tab)'
+  : ' (otwiera się w nowej karcie)';
 function initOutboundLinks() {
   const sel = NEW_TAB_HOSTS.map((h) => `a[href*="${h}"]`).join(',');
   document.querySelectorAll(sel).forEach((a) => {

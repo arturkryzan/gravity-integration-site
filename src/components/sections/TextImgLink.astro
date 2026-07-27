@@ -11,6 +11,9 @@ interface RowOverride {
   media?: 'svg-dev' | 'svg-biz' | { video: string };
   extraLinks?: Array<{ title: string; url: string }>;
 }
+import { localeOf, t } from '../../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
+
 interface Props {
   index: number;
   rows: Array<Record<string, any>>;
@@ -57,7 +60,7 @@ const { index, rows, overrides = {} } = Astro.props;
               >
                 <span>{link.title} </span>
                 {opensNewTab(link.url, link.target) && (
-                  <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                  <span class="visually-hidden">{s('a11y.newTab')}</span>
                 )}
               </a>
             )}
@@ -70,7 +73,7 @@ const { index, rows, overrides = {} } = Astro.props;
               >
                 <span>{l.title} </span>
                 {opensNewTab(l.url) && (
-                  <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                  <span class="visually-hidden">{s('a11y.newTab')}</span>
                 )}
               </a>
             ))}

@@ -33,6 +33,8 @@
    offset the body and the header. Anything else pinned up there would either
    corrupt that measurement or sit on top of the bar. */
 import site from '../data/site.json';
+import { localeOf, t } from '../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
 ---
 
 <!-- COOKIE CONSENT -->
@@ -46,22 +48,15 @@ import site from '../data/site.json';
 >
   <div class="gi-consent-inner">
     <div class="gi-consent-copy">
-      <h2 id="gi-consent-title">Ciasteczka na tej stronie</h2>
-      <p id="gi-consent-body">
-        Niezbędne pliki cookie utrzymują działanie serwisu i&nbsp;zapamiętują tę&nbsp;decyzję. Do
-        statystyk odwiedzin i&nbsp;do&nbsp;działań reklamowych używamy narzędzi Google —
-        Google&nbsp;Analytics oraz Google&nbsp;Ads. Uruchamiamy je&nbsp;tylko wtedy, gdy wyrazisz
-        zgodę. Szczegóły znajdziesz w&nbsp;<a href="/polityka-prywatnosci/#cookies"
-          >polityce prywatności</a
-        >.
-      </p>
+      <h2 id="gi-consent-title">{s('cc.title')}</h2>
+      <p id="gi-consent-body" set:html={s('cc.bodyHtml')} />
     </div>
     <div class="gi-consent-actions">
       <button type="button" class="gi-consent-btn gi-consent-accept" data-consent="granted">
-        Akceptuję
+        {s('cc.accept')}
       </button>
       <button type="button" class="gi-consent-btn gi-consent-reject" data-consent="denied">
-        Tylko niezbędne
+        {s('cc.reject')}
       </button>
     </div>
   </div>
@@ -136,13 +131,16 @@ import site from '../data/site.json';
     text-wrap: pretty;
   }
 
-  #gi-consent a {
+  /* :global() because the paragraph is set:html — the anchor inside it never
+     receives Astro's scoping attribute, and a scoped `a` would silently stop
+     matching it. */
+  #gi-consent :global(a) {
     color: var(--gi-green, #27ea93);
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
-  #gi-consent a:hover {
+  #gi-consent :global(a:hover) {
     text-decoration-thickness: 2px;
   }
 
@@ -261,7 +259,7 @@ import site from '../data/site.json';
       opacity: 1;
     }
     .gi-consent-btn,
-    #gi-consent a {
+    #gi-consent :global(a) {
       transition: none;
     }
   }

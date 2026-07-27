@@ -1,5 +1,6 @@
 ---
 import LangSwitch from './LangSwitch.astro';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props {
   /** The page's language-neutral key, threaded down from Site.astro so the
@@ -8,6 +9,7 @@ interface Props {
 }
 const { slug } = Astro.props;
 
+const s = t(localeOf(Astro.currentLocale));
 const year = new Date().getFullYear();
 ---
 
@@ -32,9 +34,9 @@ const year = new Date().getFullYear();
               it never appears, which is correct — with JS off nothing was ever
               loaded to consent to. */}
           <button type="button" class="gi-consent-link" data-consent-open hidden>
-            Ustawienia cookies
+            {s('footer.cookieSettings')}
           </button>
-          <span class="gi-footer-copy">© Copyright {year} Caffeine Minds sp. z o.o.</span>
+          <span class="gi-footer-copy">{s('footer.copyright')} {year} Caffeine Minds sp. z o.o.</span>
         </div>
       </div>
     </div>

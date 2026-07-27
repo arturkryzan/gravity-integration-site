@@ -18,29 +18,33 @@
    fields up by that, which is why renaming the wire format didn't ripple
    through forty references below. */
 import { mlAction } from '../lib/mailerlite';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props { variant?: 'home' | 'integracje' }
 const { variant = 'home' } = Astro.props;
 
 const action = mlAction('demo');
 
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+
 const fields = [
   {
-    name: 'your-name', ml: 'name', label: 'Imię i nazwisko', type: 'text',
-    placeholder: 'Jan Kowalski', autocomplete: 'name', required: true,
+    name: 'your-name', ml: 'name', label: s('demo.field.name'), type: 'text',
+    placeholder: s('demo.field.name.ph'), autocomplete: 'name', required: true,
   },
   {
-    name: 'your-email', ml: 'email', label: 'E-mail służbowy', type: 'email',
-    placeholder: 'jan@firma.pl', autocomplete: 'email',
+    name: 'your-email', ml: 'email', label: s('demo.field.email'), type: 'email',
+    placeholder: s('demo.field.email.ph'), autocomplete: 'email',
     inputmode: 'email', required: true,
   },
   {
-    name: 'your-company', ml: 'company', label: 'Firma', type: 'text',
-    placeholder: 'Nazwa firmy', autocomplete: 'organization', required: true,
+    name: 'your-company', ml: 'company', label: s('demo.field.company'), type: 'text',
+    placeholder: s('demo.field.company.ph'), autocomplete: 'organization', required: true,
   },
   {
-    name: 'your-phone', ml: 'phone', label: 'Telefon', type: 'tel',
-    placeholder: '+48 123 456 789', autocomplete: 'tel',
+    name: 'your-phone', ml: 'phone', label: s('demo.field.phone'), type: 'tel',
+    placeholder: s('demo.field.phone.ph'), autocomplete: 'tel',
     inputmode: 'tel', required: false,
   },
 ] as const;
@@ -51,21 +55,19 @@ const fields = [
     <div class="demo-intro">
       {variant === 'integracje' ? (
         <>
-          <h2 class="demo-h2">Nie widzisz swojego systemu?</h2>
+          <h2 class="demo-h2">{s('demo.h2.integrations')}</h2>
           <p class="demo-lede">
-            Integrujemy też systemy niestandardowe, legacy i&nbsp;rozwiązania pisane
-            na&nbsp;zamówienie. Jeśli system ma API lub bazę danych&nbsp;—&nbsp;podłączymy go.
+            {s('demo.lede.integrations')}
           </p>
         </>
       ) : (
         <>
           <h2 class="demo-h2">
-            Sprawdź gravity.integration na&nbsp;żywo<br />
-            <span class="demo-h2-accent">Umów 15&#8209;minutowe demo</span>
+            {s('demo.h2.line1')}<br />
+            <span class="demo-h2-accent">{s('demo.h2.accent')}</span>
           </h2>
           <p class="demo-lede">
-            Pokaż nam swój scenariusz integracji — przygotujemy demo dopasowane
-            do&nbsp;Twoich systemów. Bez zobowiązań, bez slajdów.
+            {s('demo.lede')}
           </p>
         </>
       )}
@@ -78,13 +80,13 @@ const fields = [
         target="_blank"
         data-form="demo"
         class="demo-form"
-        aria-label="Formularz zgłoszenia na demo"
+        aria-label={s('demo.form.aria')}
       >
         {fields.map((f) => (
           <div class="demo-field" data-field={f.name}>
             <label class="demo-label" for={`demo-${f.name}`}>
               {f.label}
-              {!f.required && <> <span class="demo-optional">(opcjonalnie)</span></>}
+              {!f.required && <> <span class="demo-optional">{s('demo.optional')}</span></>}
             </label>
             <div class="demo-control">
               <input
@@ -151,8 +153,7 @@ const fields = [
               </svg>
             </span>
             <span class="demo-consent-text">
-              Zgadzam się na kontakt w celu umówienia demo. Administratorem danych
-              jest Caffeine Minds sp.&nbsp;z&nbsp;o.o.
+              {s('demo.consent')}
             </span>
           </label>
           <p class="demo-err" id="demo-consent-err" aria-live="polite" hidden></p>
@@ -160,13 +161,13 @@ const fields = [
 
         <div class="demo-field demo-field-full">
           <button type="submit" class="demo-submit">
-            <span class="demo-submit-label">Umów demo&nbsp;→</span>
+            <span class="demo-submit-label">{s('demo.submit')}</span>
             <span class="demo-submit-pending" aria-hidden="true">
               <svg class="demo-spinner" viewBox="0 0 20 20" focusable="false">
                 <circle cx="10" cy="10" r="7.5" />
                 <path d="M10 2.5a7.5 7.5 0 0 1 7.5 7.5" />
               </svg>
-              Wysyłam…
+              {s('form.sending')}
             </span>
           </button>
           <p class="demo-formerr" role="alert" hidden></p>
@@ -178,14 +179,12 @@ const fields = [
           <circle cx="22" cy="22" r="20" pathLength="1" />
           <path d="M13 22.5 19.4 28.8 31 16.5" pathLength="1" />
         </svg>
-        <h3 class="demo-done-h">Dzięki<span data-done="name"></span>.</h3>
+        <h3 class="demo-done-h">{s('demo.done.h')}<span data-done="name"></span>.</h3>
         <p class="demo-done-p">
-          Potwierdzenie poleciało na <strong data-done="email"></strong>. Odezwiemy się
-          w&nbsp;ciągu jednego dnia roboczego, żeby dobrać termin.
+          {s('demo.done.p1')}<strong data-done="email"></strong>{s('demo.done.p2')}
         </p>
         <p class="demo-done-note">
-          Demo trwa 15&nbsp;minut i&nbsp;pokazujemy na&nbsp;nim Twój scenariusz
-          integracji&nbsp;— nie slajdy.
+          {s('demo.done.note')}
         </p>
       </div>
     </div>
@@ -662,6 +661,7 @@ const fields = [
      ================================================================ */
   import { mlAction } from '../lib/mailerlite';
   import { mlSubmit, trackLead } from '../scripts/ml-forms';
+  import { pick } from '../i18n/client';
 
   type FieldName = 'your-name' | 'your-email' | 'your-company' | 'your-phone';
 
@@ -683,14 +683,44 @@ const fields = [
 
   const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
-  const messages = {
-    'your-name': 'Podaj imię i nazwisko — będziemy wiedzieć, do kogo napisać.',
-    'your-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
-    'your-email-empty': 'Bez adresu e-mail nie mamy jak odesłać terminu.',
-    'your-company': 'Podaj nazwę firmy — dobierzemy demo do Waszych systemów.',
-    'your-phone': 'Numer wygląda na za krótki. Zostaw go pusty, jeśli wolisz.',
-    'demo-consent': 'Potrzebujemy tej zgody, żeby móc się odezwać.',
-  } as const;
+  /* This bundle is shared by every page in both languages, so the copy picks
+     its language at runtime off <html lang> (src/i18n/client.ts). */
+  const messages = pick({
+    pl: {
+      'your-name': 'Podaj imię i nazwisko — będziemy wiedzieć, do kogo napisać.',
+      'your-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
+      'your-email-empty': 'Bez adresu e-mail nie mamy jak odesłać terminu.',
+      'your-company': 'Podaj nazwę firmy — dobierzemy demo do Waszych systemów.',
+      'your-phone': 'Numer wygląda na za krótki. Zostaw go pusty, jeśli wolisz.',
+      'demo-consent': 'Potrzebujemy tej zgody, żeby móc się odezwać.',
+    },
+    en: {
+      'your-name': "Tell us your name — so we know who to write to.",
+      'your-email': 'That address looks incomplete. Give it another check.',
+      'your-email-empty': "Without an e-mail address we can't send a time back to you.",
+      'your-company': "Tell us the company name — we'll match the demo to your systems.",
+      'your-phone': 'That number looks too short. Leave it empty if you prefer.',
+      'demo-consent': 'We need this consent to be able to get back to you.',
+    },
+  });
+  const freeMailHint = pick({
+    pl: 'To adres prywatny. Na służbowy dorzucimy materiały dla zespołu — ale zadziała każdy.',
+    en: "That's a personal address. A work one gets extra team materials — but any address works.",
+  });
+  const insertLabel = pick<(g: string) => string>({
+    pl: (g) => `Wstaw „${g}”`,
+    en: (g) => `Insert "${g}"`,
+  });
+  const failedHtml = pick({
+    pl:
+      'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
+      '<a href="mailto:contact@caffeine-minds.com?subject=Demo%20gravity.integration">' +
+      'contact@caffeine-minds.com</a> — odpowiemy tak samo szybko.',
+    en:
+      "The form didn't go through. Write to us directly at " +
+      '<a href="mailto:contact@caffeine-minds.com?subject=Demo%20gravity.integration">' +
+      "contact@caffeine-minds.com</a> — we'll reply just as fast.",
+  });
 
   function digits(s: string) { return s.replace(/\D/g, ''); }
 
@@ -749,7 +779,8 @@ const fields = [
 
     /* The markup keeps `required` and no `novalidate` so the browser enforces
        the form on its own with JS off. Once we're here, we own validation —
-       our messages are Polish and inline, the UA's are neither. */
+       our messages are inline and in the page's language, the UA's are
+       neither. */
     form.noValidate = true;
 
     /* anti-spam bootstrap (port of snippet 15's client side) */
@@ -860,17 +891,12 @@ const fields = [
       const domain = domainOf(v);
 
       /* Free-mail nudge. Never blocking — plenty of real leads use wp.pl. */
-      hint(
-        'your-email',
-        FREE_MAIL.has(domain)
-          ? 'To adres prywatny. Na służbowy dorzucimy materiały dla zespołu — ale zadziała każdy.'
-          : null,
-      );
+      hint('your-email', FREE_MAIL.has(domain) ? freeMailHint : null);
 
       /* Company inferred from the domain, offered rather than imposed. */
       const guess = companyFromDomain(domain);
       if (guess && !company.value.trim() && guess !== dismissed) {
-        offer('your-company', `Wstaw „${guess}”`, guess);
+        offer('your-company', insertLabel(guess), guess);
       } else {
         offer('your-company', null);
       }
@@ -1013,10 +1039,7 @@ const fields = [
       }
 
       if (formErr) {
-        formErr.innerHTML =
-          'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
-          '<a href="mailto:contact@caffeine-minds.com?subject=Demo%20gravity.integration">' +
-          'contact@caffeine-minds.com</a> — odpowiemy tak samo szybko.';
+        formErr.innerHTML = failedHtml;
         formErr.hidden = false;
       }
     });

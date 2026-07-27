@@ -1,5 +1,34 @@
 ---
-/* ROI calculator (was snippet 19) — HTML/CSS/JS ported verbatim. */
+/* ROI calculator (was snippet 19) — HTML/CSS/JS ported verbatim.
+
+   Phase 3 moved the interface strings into ui.ts. The inline script gets its
+   strings through define:vars (`R`), resolved server-side per locale — it is
+   `is:inline`, embedded per page, so there is no shared bundle to language-
+   switch at runtime. That includes the number-format locale: 2 999 in Polish,
+   2,999 in English. */
+import site from '../data/site.json';
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
+
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+
+/* The CTA was ported as an absolute URL; keep that shape, localise the path. */
+const ctaHref = new URL(await linkUrl('pobieranie', lang), site.siteUrl).href;
+
+/* Everything the inline script says. `GI`, not `R` — the ported script's
+   calc() declares `var …,R=+sl.r.value,…` (the day rate), which would shadow
+   a define:vars `R` and break every lookup inside it. */
+const GI = {
+  locale: s('roi.numberLocale'),
+  days: s('roi.days.unit'),
+  thCurrent: s('roi.th.current'),
+  thGravity: s('roi.th.gravity'),
+  thSavings: s('roi.th.savings'),
+  rows: [s('roi.row.dev'), s('roi.row.test'), s('roi.row.deploy'), s('roi.row.maint')],
+  rowTools: s('roi.row.tools'),
+  rowTotal: s('roi.row.total'),
+};
 ---
 
 <section id="scroll-calc" data-scroll data-scroll-repeat data-scroll-call="spyCalc" data-scroll-offset="100%, 50%">
@@ -70,70 +99,70 @@
 </style>
 
 <div id="gi-roi-calculator">
-  <h2>Sprawdź, ile możesz zaoszczędzić dzięki gravity.integration</h2>
-  <p style="text-align:center;color:var(--gi-text);font-size:.9rem;max-width:640px;margin:0 auto 3rem;line-height:1.7;opacity:.85;">Kalkulacja oparta jest na uśrednionych danych z realizacji projektów integracyjnych z wykorzystaniem gravity.integration. Rzeczywiste oszczędności mogą się różnić w zależności od złożoności systemów i specyfiki środowiska IT.</p>
+  <h2>{s('roi.h2')}</h2>
+  <p style="text-align:center;color:var(--gi-text);font-size:.9rem;max-width:640px;margin:0 auto 3rem;line-height:1.7;opacity:.85;">{s('roi.disclaimer')}</p>
 
   <div class="gi-calc-grid">
     <div class="gi-calc-card">
-      <h3>Parametry projektów</h3>
+      <h3>{s('roi.params.h3')}</h3>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>Projekty integracyjne / rok</span><span class="gi-slider-value" id="v-projects">3</span></div>
+        <div class="gi-slider-label"><span>{s('roi.slider.projects')}</span><span class="gi-slider-value" id="v-projects">3</span></div>
         <input type="range" class="gi-range" id="s-projects" min="1" max="20" value="3">
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>Śr. czas projektu (dni robocze)</span><span class="gi-slider-value" id="v-days">30</span></div>
+        <div class="gi-slider-label"><span>{s('roi.slider.days')}</span><span class="gi-slider-value" id="v-days">30</span></div>
         <input type="range" class="gi-range" id="s-days" min="5" max="120" value="30">
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>Wielkość zespołu</span><span class="gi-slider-value" id="v-team">2</span></div>
+        <div class="gi-slider-label"><span>{s('roi.slider.team')}</span><span class="gi-slider-value" id="v-team">2</span></div>
         <input type="range" class="gi-range" id="s-team" min="1" max="10" value="2">
       </div>
     </div>
     <div class="gi-calc-card">
-      <h3>Koszty</h3>
+      <h3>{s('roi.costs.h3')}</h3>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>Stawka dzienna (PLN netto)</span><span class="gi-slider-value" id="v-rate">1 500</span></div>
+        <div class="gi-slider-label"><span>{s('roi.slider.rate')}</span><span class="gi-slider-value" id="v-rate">1 500</span></div>
         <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value="1500">
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>Obecne narzędzia / licencje (PLN / rok)</span><span class="gi-slider-value" id="v-tool">0</span></div>
+        <div class="gi-slider-label"><span>{s('roi.slider.tools')}</span><span class="gi-slider-value" id="v-tool">0</span></div>
         <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value="0">
       </div>
     </div>
   </div>
 
   <div class="gi-kpi-row">
-    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-save">—</div><div class="gi-kpi-label">Roczna oszczędność (PLN)</div></div>
-    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-extra">—</div><div class="gi-kpi-label">Dodatkowe projekty w tym samym czasie</div></div>
-    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-roi">—</div><div class="gi-kpi-label">ROI w pierwszym roku</div></div>
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-save">—</div><div class="gi-kpi-label">{s('roi.kpi.save')}</div></div>
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-extra">—</div><div class="gi-kpi-label">{s('roi.kpi.extra')}</div></div>
+    <div class="gi-kpi"><div class="gi-kpi-value" id="kpi-roi">—</div><div class="gi-kpi-label">{s('roi.kpi.roi')}</div></div>
   </div>
 
   <div class="gi-chart-container">
-    <h3>Czas realizacji projektu (dni robocze)</h3>
+    <h3>{s('roi.chart.h3')}</h3>
     <div class="gi-bar-wrap">
-      <div class="gi-bar-label">Obecny</div>
+      <div class="gi-bar-label">{s('roi.bar.current')}</div>
       <div class="gi-bar-track"><div class="gi-bar-fill current" id="bar-current"></div></div>
     </div>
     <div class="gi-bar-wrap">
-      <div class="gi-bar-label">gravity</div>
+      <div class="gi-bar-label">{s('roi.bar.gravity')}</div>
       <div class="gi-bar-track"><div class="gi-bar-fill gravity" id="bar-gravity"></div></div>
     </div>
   </div>
 
   <table class="gi-breakdown" role="table">
-    <thead role="rowgroup"><tr role="row"><th role="columnheader">Faza</th><th role="columnheader">Obecny koszt</th><th role="columnheader">Z gravity</th><th role="columnheader">Oszczędność</th></tr></thead>
+    <thead role="rowgroup"><tr role="row"><th role="columnheader">{s('roi.th.phase')}</th><th role="columnheader">{s('roi.th.current')}</th><th role="columnheader">{s('roi.th.gravity')}</th><th role="columnheader">{s('roi.th.savings')}</th></tr></thead>
     <tbody id="gi-tbody" role="rowgroup"></tbody>
   </table>
 
   <div class="gi-cta-box">
-    <a class="btn btn-arrow btn-arrow-green" href="https://gravity-integration.com/pobieranie/"><span>Pobierz gravity.integration za darmo</span></a>
+    <a class="btn btn-arrow btn-arrow-green" href={ctaHref}><span>{s('roi.cta')}</span></a>
   </div>
 </div>
 
-<script is:inline>
+<script is:inline define:vars={{ GI }}>
 (function(){
   var LIC1=2999,LICM=7999,DR=.60,TR=.40,MR=.70,DS=.50,TS=.25,DPS=.10,MS=.15;
-  var fmt=function(n){return n.toLocaleString("pl-PL")};
+  var fmt=function(n){return n.toLocaleString(GI.locale)};
   var sl={p:document.getElementById("s-projects"),d:document.getElementById("s-days"),t:document.getElementById("s-team"),r:document.getElementById("s-rate"),tl:document.getElementById("s-tool")};
   function calc(){
     var P=+sl.p.value,D=+sl.d.value,T=+sl.t.value,R=+sl.r.value,TL=+sl.tl.value;
@@ -157,24 +186,24 @@
     document.getElementById("kpi-roi").textContent=Math.round(roi)+"%";
     var mx=Math.max(D,gDaysP,1);
     document.getElementById("bar-current").style.transform="translateX("+(D/mx*100-100)+"%)";
-    document.getElementById("bar-current").textContent=D+" dni";
+    document.getElementById("bar-current").textContent=D+GI.days;
     document.getElementById("bar-gravity").style.transform="translateX("+(gDaysP/mx*100-100)+"%)";
-    document.getElementById("bar-gravity").textContent=gDaysP+" dni";
-    var rows=[["Rozwój",cDev*P,gDev*P],["Testy",cTest*P,gTest*P],["Wdrożenie",cDep*P,gDep*P],["Utrzymanie",cMnt*P,gMnt*P],["Licencje / narzędzia",TL,gLic]];
+    document.getElementById("bar-gravity").textContent=gDaysP+GI.days;
+    var rows=[[GI.rows[0],cDev*P,gDev*P],[GI.rows[1],cTest*P,gTest*P],[GI.rows[2],cDep*P,gDep*P],[GI.rows[3],cMnt*P,gMnt*P],[GI.rowTools,TL,gLic]];
     // data-label feeds the phone card layout (::before pulls it in); role=cell/row
     // keeps the table readable to AT once the mobile CSS flattens display to block.
     function row(label, cur, grv, extra){
       var s = cur - grv;
       return "<tr role=\"row\"" + (extra || "") + ">"
         + "<td role=\"cell\">" + label + "</td>"
-        + "<td role=\"cell\" data-label=\"Obecny koszt\">" + fmt(Math.round(cur)) + " PLN</td>"
-        + "<td role=\"cell\" data-label=\"Z gravity\">" + fmt(Math.round(grv)) + " PLN</td>"
-        + "<td role=\"cell\" class=\"gi-savings\" data-label=\"Oszczędność\">" + (s > 0 ? "-" : "") + fmt(Math.round(Math.abs(s))) + " PLN</td>"
+        + "<td role=\"cell\" data-label=\"" + GI.thCurrent + "\">" + fmt(Math.round(cur)) + " PLN</td>"
+        + "<td role=\"cell\" data-label=\"" + GI.thGravity + "\">" + fmt(Math.round(grv)) + " PLN</td>"
+        + "<td role=\"cell\" class=\"gi-savings\" data-label=\"" + GI.thSavings + "\">" + (s > 0 ? "-" : "") + fmt(Math.round(Math.abs(s))) + " PLN</td>"
         + "</tr>";
     }
     var h="";
     rows.forEach(function(r){h+=row(r[0], r[1], r[2])});
-    h+=row("Razem / rok", cTot, gTot, " style=\"border-top:2px solid #464861;font-weight:700\"");
+    h+=row(GI.rowTotal, cTot, gTot, " style=\"border-top:2px solid #464861;font-weight:700\"");
     document.getElementById("gi-tbody").innerHTML=h;
   }
   Object.values(sl).forEach(function(s){s.addEventListener("input",calc)});

@@ -1,9 +1,16 @@
 ---
 /* Homepage hero (theme hero.php + snippet 24 overhaul), video re-encoded with poster. */
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
+
 interface Props {
   h1: string;
 }
 const { h1 } = Astro.props;
+
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+const downloadHref = await linkUrl('pobieranie', lang);
 ---
 
 <section class="hero bg-violet d-flex align-items-end" data-scroll-section>
@@ -31,21 +38,20 @@ const { h1 } = Astro.props;
     <div class="row pb-10">
       <div class="col-lg-7" data-scroll data-scroll-opacity>
         <p style="color:rgba(255,255,255,0.75);font-size:1.1rem;line-height:1.65;margin-bottom:1.5rem;">
-          139+ konektorów, Always&#8209;on&#8209;data, instalacja lokalna. Plany od&nbsp;2&nbsp;999
-          PLN/rok. Pobierz i&nbsp;sprawdź dziś.
+          {s('hero.sub')}
         </p>
         <div
           style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;margin-bottom:1.25rem;"
         >
-          <a class="btn btn-arrow btn-arrow-white" href="/pobieranie/"
-            ><span>Pobierz za darmo</span></a
+          <a class="btn btn-arrow btn-arrow-white" href={downloadHref}
+            ><span>{s('hero.download')}</span></a
           >
           <a class="btn btn-arrow btn-arrow-white" href="#section-demo" data-scroll-to
-            ><span>Umów 15&#8209;min demo</span></a
+            ><span>{s('hero.demo')}</span></a
           >
         </div>
         <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;line-height:1.5;margin:0;">
-          Wybierany przez Bispol, Frogum, Hewalex, Lindner i&nbsp;20+ innych firm produkcyjnych
+          {s('hero.social')}
         </p>
       </div>
     </div>

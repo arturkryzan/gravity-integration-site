@@ -17,20 +17,29 @@
    a new announcement is always seen — and once the key carries that information
    the lifetime can be honest: closed means closed, until there's actual news. */
 const campaign = 'v4';
+
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+const downloadHref = await linkUrl('pobieranie', lang);
 ---
 
 <!-- ANNOUNCEMENT BAR -->
 <div id="gi-announce-bar" data-campaign={campaign}>
-  <span class="gi-bar-msg">gravity.integration v4 już dostępna</span>
-  <a class="gi-bar-cta gi-bar-cta-primary" href="/pobieranie/">Pobierz teraz</a>
+  <span class="gi-bar-msg">{s('bar.msg')}</span>
+  <a class="gi-bar-cta gi-bar-cta-primary" href={downloadHref}>{s('bar.download')}</a>
+  {/* The changelog lives on docs.gravity-integration.com — whether those docs
+      are English is an EN-PLAN.md open question; the label translates now,
+      the destination stays until that's answered. */}
   <a
     class="gi-bar-cta gi-bar-cta-ghost"
     href="https://docs.gravity-integration.com/informacje-podstawowe/changelog"
     target="_blank"
     rel="noopener"
-    >Sprawdź zmiany<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a
+    >{s('bar.changelog')}<span class="visually-hidden">{s('a11y.newTab')}</span></a
   >
-  <button id="gi-bar-close" type="button" aria-label="Zamknij pasek z ogłoszeniem">
+  <button id="gi-bar-close" type="button" aria-label={s('bar.close')}>
     <span aria-hidden="true">&times;</span>
   </button>
 </div>

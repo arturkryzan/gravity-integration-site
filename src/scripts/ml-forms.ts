@@ -22,6 +22,8 @@
  * page and gives them a real answer.
  */
 
+import { pick } from '../i18n/client';
+
 export type MlOutcome =
   | { ok: true }
   /** MailerLite rejected the address itself — worth showing inline. */
@@ -31,8 +33,16 @@ export type MlOutcome =
 
 const TIMEOUT_MS = 15000;
 
-/** Polish copy for the one field-level error the endpoint actually returns. */
-const EMAIL_REJECTED = 'Ten adres e-mail wygląda na nieprawidłowy. Sprawdź go i spróbuj ponownie.';
+/* This module is bundled once and shared by every page in both languages, so
+   its copy picks a language at runtime off `<html lang>` — Site.astro stamps
+   'pl' or 'en' per page, and src/i18n/client.ts reads it. No build coupling,
+   one code path for both trees. */
+
+/** Copy for the one field-level error the endpoint actually returns. */
+const EMAIL_REJECTED = pick({
+  pl: 'Ten adres e-mail wygląda na nieprawidłowy. Sprawdź go i spróbuj ponownie.',
+  en: 'That e-mail address looks invalid. Check it and try again.',
+});
 
 /**
  * POST one subscription to MailerLite.
@@ -129,13 +139,24 @@ export function trackLead(event?: string) {
    The consent error therefore goes to the response output, which is visible.
 --------------------------------------------------------------------------- */
 
-const MSG = {
-  emailEmpty: 'Podaj adres e-mail.',
-  emailInvalid: 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
-  consent: 'Zaznacz zgodę, żebyśmy mogli się odezwać.',
-  failed:
-    'Nie udało się wysłać formularza. Napisz do nas na contact@caffeine-minds.com — odpowiemy tak samo szybko.',
-} as const;
+const MSG = pick({
+  pl: {
+    emailEmpty: 'Podaj adres e-mail.',
+    emailInvalid: 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
+    consent: 'Zaznacz zgodę, żebyśmy mogli się odezwać.',
+    sending: 'Wysyłam…',
+    failed:
+      'Nie udało się wysłać formularza. Napisz do nas na contact@caffeine-minds.com — odpowiemy tak samo szybko.',
+  },
+  en: {
+    emailEmpty: 'Enter your e-mail address.',
+    emailInvalid: 'That address looks incomplete. Give it another check.',
+    consent: 'Tick the consent box so we can get back to you.',
+    sending: 'Sending…',
+    failed:
+      "The form didn't go through. Write to us at contact@caffeine-minds.com — we'll reply just as fast.",
+  },
+});
 
 /* #8c1d18 clears 4.5:1 on both surfaces these forms render on
    (5.76:1 on the green contact band, 8.31:1 on the light newsletter band);
@@ -164,7 +185,7 @@ export function initMlSimpleForm(form: HTMLFormElement, opts: MlSimpleFormOption
 
   // Native validation stays on with JS off (the markup carries `required` and
   // no `novalidate`); with JS on we take over so the messages are ours and in
-  // Polish regardless of browser locale.
+  // the page's language regardless of browser locale.
   form.noValidate = true;
 
   const emailWrap = email.closest<HTMLElement>('.wpcf7-form-control-wrap');
@@ -255,7 +276,7 @@ export function initMlSimpleForm(form: HTMLFormElement, opts: MlSimpleFormOption
     submit.disabled = true;
     form.dataset.status = 'submitting';
     const original = submit.value;
-    submit.value = 'Wysyłam…';
+    submit.value = MSG.sending;
 
     const result = await mlSubmit(opts.action, payload);
 

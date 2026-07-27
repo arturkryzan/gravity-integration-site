@@ -10,22 +10,21 @@
  * "downloads" rows whose buttons only anchor-jumped to the form, and the
  * generic PageHero — the hero IS the form now. */
 import { getPage } from '../../i18n/routes';
-import { localeOf } from '../../i18n/ui';
+import { localeOf, t } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import DownloadPage from '../../components/DownloadPage.astro';
 import site from '../../data/site.json';
 
 const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
 const entry = await getPage('pobieranie', lang);
 const page = entry.data;
 
-/* TODO(Phase 3): crumb labels are interface strings, not content — they move
-   into ui.ts with the rest. */
 const crumbs = [
-  { label: 'Pobieranie', anchor: 'section0' },
-  { label: 'Jak to działa', anchor: 'section1' },
-  { label: 'Co pobierasz', anchor: 'section2' },
-  { label: 'Dokumentacja', anchor: 'section3' },
+  { label: s('nav.download'), anchor: 'section0' },
+  { label: s('dl.crumb.how'), anchor: 'section1' },
+  { label: s('dl.crumb.what'), anchor: 'section2' },
+  { label: s('nav.docs'), anchor: 'section3' },
 ];
 
 /* Rich result: the thing on this page is downloadable software with a free

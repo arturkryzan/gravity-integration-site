@@ -29,6 +29,8 @@
  * from 2 999 PLN/yr (home, cennik). */
 import Breadcrumbs from './Breadcrumbs.astro';
 import { mlAction } from '../lib/mailerlite';
+import { linkUrl } from '../i18n/routes';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props {
   crumbs?: Array<{ label: string; anchor: string }>;
@@ -37,29 +39,18 @@ const { crumbs = [] } = Astro.props;
 
 const action = mlAction('download');
 
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+const caseStudiesHref = await linkUrl('case-studies', lang);
+const homeHref = await linkUrl('home', lang);
+
 const steps = [
-  {
-    n: '1',
-    h: 'Odbierz link',
-    p: 'Wysyłamy go e‑mailem od razu po wysłaniu formularza. Bez karty, bez zobowiązań — nadawcą jest contact@gravity-integration.com.',
-  },
-  {
-    n: '2',
-    h: 'Zainstaluj w ok. 15 minut',
-    p: 'gravity.integration działa w środowisku Windows. Środowisko uruchomisz w kwadrans, z pełną dokumentacją i wsparciem technicznym premium.',
-  },
-  {
-    n: '3',
-    h: 'Integruj bez limitu czasu',
-    p: 'Testujesz pełną wersję tak długo, jak chcesz — nic nie płacisz, dopóki nie używasz środowiska poza testami. Pierwszy projekt integracyjny prowadzisz z bezpłatnym wsparciem zdalnym.',
-  },
+  { n: '1', h: s('dl.step1.h'), p: s('dl.step1.p') },
+  { n: '2', h: s('dl.step2.h'), p: s('dl.step2.p') },
+  { n: '3', h: s('dl.step3.h'), p: s('dl.step3.p') },
 ] as const;
 
-const capabilities = [
-  '<strong>139+ gotowych konektorów</strong> — wszystkie popularne ERP, BaseLinker, Saldeo i systemy dziedzinowe.',
-  '<strong>REST, SOAP, GraphQL, gRPC, MQTT i Kafka</strong> z automatycznym mapowaniem schematów XML/JSON/EDI.',
-  '<strong>Routing, retry i uwierzytelnianie</strong> (OAuth 2.0, mTLS) konfigurujesz wizualnie — bez pisania kodu.',
-] as const;
+const capabilities = [s('dl.cap1Html'), s('dl.cap2Html'), s('dl.cap3Html')] as const;
 
 const clients = [
   { src: '/media/tiptopol-case-logo.png', alt: 'TIP-TOPOL', anchor: 'section0' },
@@ -74,24 +65,22 @@ const clients = [
   <section id="section0" class="dl-hero">
     <div class="dl-wrap dl-hero-grid">
       <div class="dl-hero-copy" data-scroll data-scroll-opacity>
-        <h1 class="dl-h1">Pobierz gravity.integration za&nbsp;darmo</h1>
+        <h1 class="dl-h1">{s('dl.h1')}</h1>
         <p class="dl-lede">
-          Pełna wersja platformy ESB — bez&nbsp;ograniczeń funkcjonalnych
-          i&nbsp;bez&nbsp;limitu czasu testów. Podaj firmowy e&#8209;mail,
-          a&nbsp;link do&nbsp;pobrania najnowszej wersji wyślemy od&nbsp;razu.
+          {s('dl.lede')}
         </p>
         <ul class="dl-trust" role="list">
           <li>
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
-            Bez&nbsp;karty i&nbsp;bez&nbsp;zobowiązań
+            {s('dl.trust1')}
           </li>
           <li>
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
-            Instalacja w&nbsp;ok.&nbsp;15&nbsp;minut
+            {s('dl.trust2')}
           </li>
           <li>
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
-            Wsparcie techniczne premium w&nbsp;zestawie
+            {s('dl.trust3')}
           </li>
         </ul>
       </div>
@@ -103,12 +92,12 @@ const clients = [
           target="_blank"
           data-form="download"
           class="dl-form"
-          aria-label="Formularz pobierania gravity.integration"
+          aria-label={s('dl.form.aria')}
         >
-          <h2 class="dl-card-h">Uzyskaj link do&nbsp;pobierania</h2>
+          <h2 class="dl-card-h">{s('dl.card.h')}</h2>
 
           <div class="dl-field" data-field="dl-email">
-            <label class="dl-label" for="dl-email">E-mail służbowy</label>
+            <label class="dl-label" for="dl-email">{s('dl.field.email')}</label>
             <div class="dl-control">
               <input
                 type="email"
@@ -116,7 +105,7 @@ const clients = [
                 name="fields[email]"
                 data-key="dl-email"
                 class="dl-input"
-                placeholder="jan@firma.pl"
+                placeholder={s('dl.field.email.ph')}
                 autocomplete="email"
                 inputmode="email"
                 required
@@ -135,7 +124,7 @@ const clients = [
           </div>
 
           <div class="dl-field" data-field="dl-company">
-            <label class="dl-label" for="dl-company">Firma</label>
+            <label class="dl-label" for="dl-company">{s('dl.field.company')}</label>
             <div class="dl-control">
               <input
                 type="text"
@@ -143,7 +132,7 @@ const clients = [
                 name="fields[company]"
                 data-key="dl-company"
                 class="dl-input"
-                placeholder="Nazwa firmy"
+                placeholder={s('dl.field.company.ph')}
                 autocomplete="organization"
                 required
                 aria-required="true"
@@ -193,29 +182,26 @@ const clients = [
                 </svg>
               </span>
               <span class="dl-consent-text">
-                Zgadzam się na&nbsp;przesłanie linku do&nbsp;pobrania i&nbsp;kontakt
-                w&nbsp;sprawie gravity.integration. Administratorem danych jest
-                Caffeine Minds sp.&nbsp;z&nbsp;o.o.
+                {s('dl.consent')}
               </span>
             </label>
             <p class="dl-err" id="dl-consent-err" aria-live="polite" hidden></p>
           </div>
 
           <button type="submit" class="dl-submit">
-            <span class="dl-submit-label">Wyślij mi link do&nbsp;pobierania</span>
+            <span class="dl-submit-label">{s('dl.submit')}</span>
             <span class="dl-submit-pending" aria-hidden="true">
               <svg class="dl-spinner" viewBox="0 0 20 20" focusable="false">
                 <circle cx="10" cy="10" r="7.5" />
                 <path d="M10 2.5a7.5 7.5 0 0 1 7.5 7.5" />
               </svg>
-              Wysyłam…
+              {s('form.sending')}
             </span>
           </button>
           <p class="dl-formerr" role="alert" hidden></p>
 
           <p class="dl-micro">
-            Wiadomość przychodzi zwykle w&nbsp;ciągu minuty.
-            Nadawca: contact@gravity-integration.com.
+            {s('dl.micro')}
           </p>
         </form>
 
@@ -224,17 +210,13 @@ const clients = [
             <circle cx="22" cy="22" r="20" pathLength="1" />
             <path d="M13 22.5 19.4 28.8 31 16.5" pathLength="1" />
           </svg>
-          <h2 class="dl-done-h">Link jest w&nbsp;drodze</h2>
+          <h2 class="dl-done-h">{s('dl.done.h')}</h2>
           <p class="dl-done-p">
-            Wysłaliśmy go na&nbsp;<strong data-done="email"></strong>. Szukaj
-            wiadomości <strong>„Witaj w&nbsp;gravity.integration”</strong>{' '}
-            od&nbsp;contact@gravity-integration.com.
+            {s('dl.done.p1')}<strong data-done="email"></strong>{s('dl.done.p2')}<strong>{s('dl.done.msg')}</strong>{s('dl.done.p3')}
           </p>
           <p class="dl-done-note">
-            Nie widzisz jej po&nbsp;kilku minutach? Zajrzyj do&nbsp;folderu
-            Oferty lub Spam. W&nbsp;międzyczasie możesz przejrzeć{' '}
-            <a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">
-              dokumentację online<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a>.
+            {s('dl.done.note1')}<a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">
+              {s('dl.done.docsLink')}<span class="visually-hidden">{s('a11y.newTab')}</span></a>.
           </p>
         </div>
       </div>
@@ -248,7 +230,7 @@ const clients = [
   {/* ============================== 3 steps ============================== */}
   <section id="section1" class="dl-steps" data-scroll data-scroll-opacity>
     <div class="dl-wrap">
-      <h2 class="dl-h2">Od&nbsp;formularza do&nbsp;działającej integracji</h2>
+      <h2 class="dl-h2">{s('dl.steps.h2')}</h2>
       <ol class="dl-steps-list" role="list">
         {steps.map((s) => (
           <li class="dl-step">
@@ -265,7 +247,7 @@ const clients = [
   <section id="section2" class="dl-proof">
     <div class="dl-wrap dl-proof-grid">
       <div class="dl-proof-copy" data-scroll data-scroll-opacity>
-        <h2 class="dl-h2">To, co&nbsp;pobierasz, to&nbsp;pełne środowisko integracyjne</h2>
+        <h2 class="dl-h2">{s('dl.proof.h2')}</h2>
         <ul class="dl-caps" role="list">
           {capabilities.map((c) => (
             <li>
@@ -275,14 +257,13 @@ const clients = [
           ))}
         </ul>
         <p class="dl-spec">
-          Wersja&nbsp;4 · Windows · licencja komercyjna od&nbsp;2&nbsp;999&nbsp;PLN/rok
-          dopiero, gdy&nbsp;wychodzisz poza&nbsp;testy.
+          {s('dl.spec')}
         </p>
       </div>
       <figure class="dl-shot" data-scroll data-scroll-opacity>
         <img
           src="/media/kapitan-navi-gravity-integration-etl.png"
-          alt="Wizualny edytor przepływów gravity.integration — projekt integracji RCP z bazą PostgreSQL"
+          alt={s('dl.shot.alt')}
           width="1920"
           height="1039"
           loading="lazy"
@@ -291,17 +272,17 @@ const clients = [
       </figure>
     </div>
     <div class="dl-wrap dl-clients" data-scroll data-scroll-opacity>
-      <p class="dl-clients-h">Pracuje już m.in.&nbsp;w:</p>
+      <p class="dl-clients-h">{s('dl.clients.h')}</p>
       <ul class="dl-logos" role="list">
         {clients.map((c) => (
           <li>
-            <a href={`/case-studies/#${c.anchor}`} aria-label={`Case study: ${c.alt}`}>
+            <a href={`${caseStudiesHref}#${c.anchor}`} aria-label={`${s('dl.caseAria')}${c.alt}`}>
               <img src={c.src} alt={c.alt} width="800" height="400" loading="lazy" decoding="async" />
             </a>
           </li>
         ))}
       </ul>
-      <a class="dl-cases-link" href="/case-studies/">Zobacz case studies&nbsp;→</a>
+      <a class="dl-cases-link" href={caseStudiesHref}>{s('dl.casesLink')}</a>
     </div>
   </section>
 
@@ -309,13 +290,8 @@ const clients = [
   <section id="section3" class="dl-docs">
     <div class="dl-wrap dl-docs-grid">
       <div class="dl-docs-copy" data-scroll data-scroll-opacity>
-        <h2 class="dl-h2">Wolisz najpierw poczytać?</h2>
-        <p class="dl-docs-p">
-          Interaktywna dokumentacja oprogramowania jest dostępna pod&nbsp;adresem
-          docs.gravity-integration.com. Jeśli potrzebujesz wersji offline,
-          pobierz podręcznik PDF — miej jednak na&nbsp;uwadze,
-          że&nbsp;jest to&nbsp;wersja z&nbsp;<strong>2024</strong>&nbsp;roku.
-        </p>
+        <h2 class="dl-h2">{s('dl.docs.h2')}</h2>
+        <p class="dl-docs-p" set:html={s('dl.docs.pHtml')} />
         <div class="dl-docs-actions">
           <a
             class="dl-btn dl-btn-solid"
@@ -323,20 +299,20 @@ const clients = [
             target="_blank"
             rel="noopener"
           >
-            Otwórz dokumentację<span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+            {s('dl.docs.open')}<span class="visually-hidden">{s('a11y.newTab')}</span>
           </a>
           <a
             class="dl-btn dl-btn-ghost"
             href="https://gravityintegration.com/manual/gravity_podrecznik_pl.pdf"
           >
-            Pobierz podręcznik PDF&nbsp;(2024)
+            {s('dl.docs.pdf')}
           </a>
         </div>
       </div>
       <img
         class="dl-docs-img"
         src="/media/manual_mockup.jpg"
-        alt="Podręcznik gravity.integration — wizualizacja okładki"
+        alt={s('dl.manual.alt')}
         width="672"
         height="378"
         loading="lazy"
@@ -351,11 +327,9 @@ const clients = [
   <section class="dl-demo" data-scroll data-scroll-opacity>
     <div class="dl-wrap dl-demo-grid">
       <p class="dl-demo-p">
-        Chcesz zobaczyć produkt na&nbsp;żywo?{' '}
-        <strong>Umów 15-minutowe demo</strong>&nbsp;— pokażemy Twój scenariusz
-        integracji, nie&nbsp;slajdy.
+        {s('dl.band.p1')}<strong>{s('dl.band.strong')}</strong>{s('dl.band.p2')}
       </p>
-      <a class="dl-btn dl-btn-solid" href="/#section-demo">Umów demo</a>
+      <a class="dl-btn dl-btn-solid" href={`${homeHref}#section-demo`}>{s('dl.band.cta')}</a>
     </div>
   </section>
 </div>
@@ -1228,6 +1202,7 @@ const clients = [
      out — this layer keeps the visitor on the page and answers them. */
   import { mlAction } from '../lib/mailerlite';
   import { mlSubmit, trackLead } from '../scripts/ml-forms';
+  import { pick } from '../i18n/client';
 
   const FREE_MAIL = new Set([
     'gmail.com', 'googlemail.com', 'wp.pl', 'o2.pl', 'onet.pl', 'onet.eu',
@@ -1244,12 +1219,40 @@ const clients = [
   ]);
   const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
-  const messages = {
-    'dl-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
-    'dl-email-empty': 'Bez adresu e-mail nie mamy jak wysłać linku.',
-    'dl-company': 'Podaj nazwę firmy — przygotujemy się do ewentualnych pytań o Wasze systemy.',
-    'dl-consent': 'Potrzebujemy tej zgody, żeby móc wysłać link.',
-  } as const;
+  /* This bundle is shared by both language trees, so the copy picks its
+     language at runtime off <html lang> (src/i18n/client.ts). */
+  const messages = pick({
+    pl: {
+      'dl-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
+      'dl-email-empty': 'Bez adresu e-mail nie mamy jak wysłać linku.',
+      'dl-company': 'Podaj nazwę firmy — przygotujemy się do ewentualnych pytań o Wasze systemy.',
+      'dl-consent': 'Potrzebujemy tej zgody, żeby móc wysłać link.',
+    },
+    en: {
+      'dl-email': 'That address looks incomplete. Give it another check.',
+      'dl-email-empty': 'Without an e-mail address we have nowhere to send the link.',
+      'dl-company': "Tell us the company name — we'll be ready for any questions about your systems.",
+      'dl-consent': 'We need this consent to be able to send the link.',
+    },
+  });
+  const freeMailHint = pick({
+    pl: 'To adres prywatny. Link zadziała, ale na służbowy dorzucimy materiały dla zespołu.',
+    en: "That's a personal address. The link will work, but a work one gets extra team materials.",
+  });
+  const insertLabel = pick<(g: string) => string>({
+    pl: (g) => `Wstaw „${g}”`,
+    en: (g) => `Insert "${g}"`,
+  });
+  const failedHtml = pick({
+    pl:
+      'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
+      '<a href="mailto:contact@caffeine-minds.com?subject=Pobieranie%20gravity.integration">' +
+      'contact@caffeine-minds.com</a> — wyślemy link ręcznie.',
+    en:
+      "The form didn't go through. Write to us directly at " +
+      '<a href="mailto:contact@caffeine-minds.com?subject=Pobieranie%20gravity.integration">' +
+      "contact@caffeine-minds.com</a> — we'll send the link by hand.",
+  });
 
   function domainOf(email: string): string {
     const at = email.lastIndexOf('@');
@@ -1377,15 +1380,10 @@ const clients = [
         return;
       }
       const domain = domainOf(v);
-      hint(
-        'dl-email',
-        FREE_MAIL.has(domain)
-          ? 'To adres prywatny. Link zadziała, ale na służbowy dorzucimy materiały dla zespołu.'
-          : null,
-      );
+      hint('dl-email', FREE_MAIL.has(domain) ? freeMailHint : null);
       const guess = companyFromDomain(domain);
       if (guess && !company.value.trim() && guess !== dismissed) {
-        offer('dl-company', `Wstaw „${guess}”`, guess);
+        offer('dl-company', insertLabel(guess), guess);
       } else {
         offer('dl-company', null);
       }
@@ -1500,10 +1498,7 @@ const clients = [
       }
 
       if (formErr) {
-        formErr.innerHTML =
-          'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
-          '<a href="mailto:contact@caffeine-minds.com?subject=Pobieranie%20gravity.integration">' +
-          'contact@caffeine-minds.com</a> — wyślemy link ręcznie.';
+        formErr.innerHTML = failedHtml;
         formErr.hidden = false;
       }
     });

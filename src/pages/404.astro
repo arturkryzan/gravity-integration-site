@@ -4,11 +4,13 @@
    noindex: the page returns a real 404 status at the server level, but the
    meta keeps any mirror/proxy serving it with a 200 out of the index too. */
 import Site from '../layouts/Site.astro';
+import { localeOf, t } from '../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
 ---
 
 <Site
-  title="Nie znaleziono strony (404) — gravity.integration"
-  description="Ta strona nie istnieje albo zmieniła adres."
+  title={s('nf.title')}
+  description={s('nf.desc')}
   path="/404.html"
   bodyClass="page page-404"
   robots="noindex,follow"
@@ -16,18 +18,13 @@ import Site from '../layouts/Site.astro';
   <section class="nf">
     <div class="nf-wrap">
       <p class="nf-code" aria-hidden="true">4<span class="nf-dot"></span>4</p>
-      <h1 class="nf-h">Ta strona nie istnieje albo zmieniła adres</h1>
-      <p class="nf-p">
-        Adres mógł się zmienić przy&nbsp;przebudowie serwisu. Poniżej znajdziesz
-        wszystko, czego ludzie szukają najczęściej — a&nbsp;jeśli trafiłeś tu
-        z&nbsp;linku na&nbsp;naszej stronie,{' '}
-        <a href="/kontakt/">daj nam znać</a>, poprawimy go.
-      </p>
-      <nav class="nf-links" aria-label="Najczęściej odwiedzane strony">
-        <a class="nf-btn nf-btn-solid" href="/pobieranie/">Pobierz gravity.integration</a>
-        <a class="nf-btn nf-btn-ghost" href="/">Strona główna</a>
-        <a class="nf-btn nf-btn-ghost" href="/case-studies/">Case studies</a>
-        <a class="nf-btn nf-btn-ghost" href="/kontakt/">Kontakt</a>
+      <h1 class="nf-h">{s('nf.h')}</h1>
+      <p class="nf-p" set:html={s('nf.pHtml')} />
+      <nav class="nf-links" aria-label={s('nf.nav.aria')}>
+        <a class="nf-btn nf-btn-solid" href="/pobieranie/">{s('nf.download')}</a>
+        <a class="nf-btn nf-btn-ghost" href="/">{s('nav.home')}</a>
+        <a class="nf-btn nf-btn-ghost" href="/case-studies/">{s('nf.cases')}</a>
+        <a class="nf-btn nf-btn-ghost" href="/kontakt/">{s('nav.contact')}</a>
       </nav>
     </div>
   </section>
@@ -83,7 +80,9 @@ import Site from '../layouts/Site.astro';
     max-width: 32rem;
     text-wrap: pretty;
   }
-  .nf-p a {
+  /* :global() because the paragraph is set:html — its anchor carries no
+     scoping attribute. */
+  .nf-p :global(a) {
     color: var(--gi-green, #27ea93);
     text-decoration: underline;
     text-underline-offset: 2px;

@@ -7,24 +7,27 @@
    MailerLite endpoint and the input is named `fields[email]`, so the no-JS
    path works on its own and src/scripts/ml-forms.ts only improves it. */
 import { mlAction } from '../lib/mailerlite';
+import { LOCALE_TAG, localeOf, t } from '../i18n/ui';
 const action = mlAction('newsletter');
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
 ---
 <section class="newsletter bg-light" id="section" data-scroll data-scroll-repeat data-scroll-call="spy">
 	<div class="container-fluid pb-10 pt-8">
 		<div class="row my-10">
-			<div class="col-lg-8 offset-lg-1 mb-10 pb-6 paragraph hover-underline" data-scroll data-scroll-opacity><h2>Bądź na&nbsp;bieżąco, zapisz się na&nbsp;newsletter.</h2>
-<p>Co miesiąc dostarczymy Ci&nbsp;wartościowe artykuły oraz&nbsp;pokażemy nowe zastosowania gravity.integration</p>
+			<div class="col-lg-8 offset-lg-1 mb-10 pb-6 paragraph hover-underline" data-scroll data-scroll-opacity><h2>{s('nl.h2')}</h2>
+<p>{s('nl.p')}</p>
 </div>
 			<div class="col-lg-8 offset-lg-1" data-scroll data-scroll-opacity>
-<div class="wpcf7" lang="pl-PL" dir="ltr" data-wpcf7-id="48">
+<div class="wpcf7" lang={LOCALE_TAG[lang]} dir="ltr" data-wpcf7-id="48">
 <div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
-<form action={action} data-form="newsletter" method="post" target="_blank" class="wpcf7-form init" aria-label="Formularz zapisu na newsletter" data-status="init">
+<form action={action} data-form="newsletter" method="post" target="_blank" class="wpcf7-form init" aria-label={s('nl.form.aria')} data-status="init">
 
-<div class="form-row mb-5"><label for="nemaiil">Podaj swój adres e-mail</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" name="fields[email]" /></span></div>
-<div class="form-row mb-5 form-row-checkbox"><span class="wpcf7-form-control-wrap" data-name="acceptance-513"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-513" value="1" required data-ml-consent aria-invalid="false" /><span class="wpcf7-list-item-label">Zgadzam się na używanie mojego adresu e-mail przez spółkę Caffeine Minds sp. z o.o. z siedzibą w Poznaniu przy ulicy Jasielskiej 16 w celu marketingu oprogramowania gravity.integration oraz przyszłych produktów spółki.</span></label></span></span></span></div>
+<div class="form-row mb-5"><label for="nemaiil">{s('form.emailLabel')}</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" name="fields[email]" /></span></div>
+<div class="form-row mb-5 form-row-checkbox"><span class="wpcf7-form-control-wrap" data-name="acceptance-513"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-513" value="1" required data-ml-consent aria-invalid="false" /><span class="wpcf7-list-item-label">{s('nl.consent')}</span></label></span></span></span></div>
 <input type="hidden" name="ml-submit" value="1" />
 <input type="hidden" name="anticsrf" value="true" />
-<div class="form-row btn-arrow btn-arrow-submit"><input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value="Zapisz się" /></div><div class="wpcf7-response-output" role="status" aria-live="polite" hidden></div>
+<div class="form-row btn-arrow btn-arrow-submit"><input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value={s('nl.submit')} /></div><div class="wpcf7-response-output" role="status" aria-live="polite" hidden></div>
 </form>
 </div>
 </div>
@@ -35,11 +38,15 @@ const action = mlAction('newsletter');
 <script>
   import { mlAction } from '../lib/mailerlite';
   import { initMlSimpleForm } from '../scripts/ml-forms';
+  import { pick } from '../i18n/client';
 
   document.querySelectorAll<HTMLFormElement>('form[data-form="newsletter"]').forEach((form) =>
     initMlSimpleForm(form, {
       action: mlAction('newsletter'),
-      success: 'Jesteś na liście. Do zobaczenia w skrzynce raz w miesiącu.',
+      success: pick({
+        pl: 'Jesteś na liście. Do zobaczenia w skrzynce raz w miesiącu.',
+        en: "You're on the list. See you in your inbox once a month.",
+      }),
       event: 'newsletter_subscribed',
     }),
   );

@@ -3,6 +3,9 @@
 import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 
+import { localeOf, t } from '../../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
+
 interface Props {
   index: number;
   text?: string;
@@ -76,7 +79,7 @@ const { index, text = '', boxes } = Astro.props;
                         >
                           <span>{link.title}</span>
                           {opensNewTab(link.url, link.target) && (
-                            <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                            <span class="visually-hidden">{s('a11y.newTab')}</span>
                           )}
                         </a>
                       )}

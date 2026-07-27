@@ -140,7 +140,7 @@ const lang = localeOf(Astro.currentLocale);
          The function names stay analytics-flavoured because the choice they
          serve is still binary: one bar, one answer, both tags. Splitting them
          would imply a granularity the UI doesn't offer. -->
-    <script is:inline define:vars={{ ga4: site.ga4, ads: site.googleAds }}>
+    <script is:inline define:vars={{ ga4: site.ga4, ads: site.googleAds, pageLang: lang }}>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -149,6 +149,15 @@ const lang = localeOf(Astro.currentLocale);
       /* Read by the form handlers so `generate_lead` can be addressed at the
          GA4 property explicitly rather than fanning out to every configured id. */
       window.giGa4Id = ga4;
+
+      /* Which language the visitor is actually reading, as opposed to the
+         `language` GA4 collects on its own — that one is the browser's setting,
+         which says nothing about whether someone landed on /en/ or /. Set
+         before any config so it rides along with every event, page_view
+         included. To use it as a breakdown you register a custom dimension in
+         GA4 Admin → Custom definitions with the event parameter `page_language`;
+         nothing here needs to change when you do. */
+      gtag('set', { page_language: pageLang });
 
       /* Consent Mode v2 defaults. These must be queued before the tag loads —
          belt and braces behind the fact that we don't load it at all yet. */

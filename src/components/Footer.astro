@@ -10,9 +10,80 @@ const year = new Date().getFullYear();
           <img src="/theme/static/logo-dark.svg" alt="gravity.integration" width="222" height="48" />
         </a>
       </div>
-      <div class="col-7 col-sm-6 text-end text-epi fs-10 text-nowrap">
-        © Copyright {year} Caffeine Minds sp. z o.o.
+      <div class="col-7 col-sm-6 text-end text-epi fs-10">
+        <div class="gi-footer-meta">
+          {/* Withdrawing consent has to be as easy as giving it, so the way back
+              to the cookie bar lives in the footer of every page. It's a real
+              <button>: it performs an action, it doesn't navigate. With JS off
+              it never appears, which is correct — with JS off nothing was ever
+              loaded to consent to. */}
+          <button type="button" class="gi-consent-link" data-consent-open hidden>
+            Ustawienia cookies
+          </button>
+          <span class="gi-footer-copy">© Copyright {year} Caffeine Minds sp. z o.o.</span>
+        </div>
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  /* The row is laid out by the wrapper, never by `display` on the button
+     itself. Astro scopes *every* compound selector, so a rule like
+     `.col-7 .gi-consent-link` emits as `.col-7[data-astro-cid-x]
+     .gi-consent-link[data-astro-cid-x]` — specificity (0,4,0), which silently
+     outranks `.gi-consent-link[data-astro-cid-x][hidden]` at (0,3,0) and kills
+     the `hidden` attribute. Keeping display off the button entirely is what
+     makes `hidden` the single source of truth for whether it shows. */
+  .gi-footer-meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .gi-consent-link[hidden] {
+    display: none;
+  }
+
+  .gi-consent-link {
+    /* 44px of target without 44px of visual weight: the padding is vertical
+       breathing room, the negative margin keeps the baseline where the
+       copyright expects it. */
+    padding: 0.9rem 0;
+    margin-block: -0.9rem;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: var(--gi-text-on-light, #1a1a2e);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+    cursor: pointer;
+  }
+  .gi-consent-link:hover {
+    text-decoration-thickness: 2px;
+  }
+  .gi-consent-link:focus-visible {
+    outline: 2px solid var(--gi-green-deep, #097a53);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 575.98px) {
+    .gi-footer-meta {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.35rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  /* Rendered `hidden` so the no-JS footer doesn't offer a control that can't
+     work — CookieConsent.astro is what actually reopens the bar. */
+  document.querySelectorAll('.gi-consent-link[data-consent-open]').forEach(function (el) {
+    el.hidden = false;
+  });
+</script>

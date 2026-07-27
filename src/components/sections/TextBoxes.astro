@@ -1,6 +1,7 @@
 ---
 /* ACF layout: text_boxes (theme inc/sections/text_boxes.php) */
-import { mediaSrc, mediaAlt } from '../../lib/media';
+import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
+import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 
 interface Props {
   index: number;
@@ -29,7 +30,7 @@ const { index, text = '', boxes } = Astro.props;
             data-scroll-speed="-1"
             style=" --bs-aspect-ratio: 84%;"
           >
-            <img src="/theme/static/lines.svg" alt="" loading="lazy" class="lazyload" />
+            <img src="/theme/static/lines.svg" alt="" width="279" height="235" loading="lazy" class="lazyload" />
           </div>
         </>
       )}
@@ -44,7 +45,7 @@ const { index, text = '', boxes } = Astro.props;
           data-scroll-delay=".1"
           data-scroll-speed="-1"
         >
-          <img src="/theme/content/img.jpg" alt="" loading="lazy" class="lazyload" />
+          <img src="/theme/content/img.jpg" alt="" width="1360" height="814" loading="lazy" class="lazyload" />
         </div>
       </div>
       {boxes?.length > 0 && (
@@ -62,13 +63,21 @@ const { index, text = '', boxes } = Astro.props;
                     <div data-scroll data-scroll-opacity>
                       {icon && mediaSrc(icon) && (
                         <div class="ratio bg-gray mb-4" style="height:  24px; --bs-aspect-ratio: 100%;">
-                          <img src={mediaSrc(icon)} alt={mediaAlt(icon)} loading="lazy" class="lazyload" />
+                          <img src={mediaSrc(icon)} alt={mediaAlt(icon)} loading="lazy" class="lazyload" {...(mediaDims(icon) ?? {})} />
                         </div>
                       )}
                       <Fragment set:html={box.text ?? ''} />
                       {link && (
-                        <a class="btn btn-text" href={link.url} target={link.target || '_self'}>
+                        <a
+                          class="btn btn-text"
+                          href={link.url}
+                          target={linkTarget(link.url, link.target)}
+                          rel={linkRel(linkTarget(link.url, link.target))}
+                        >
                           <span>{link.title}</span>
+                          {opensNewTab(link.url, link.target) && (
+                            <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                          )}
                         </a>
                       )}
                     </div>

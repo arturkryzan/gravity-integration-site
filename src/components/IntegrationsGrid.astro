@@ -52,7 +52,7 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
     --body: #464861;
     --muted: #6b6d84;
     --green: #27ea93;
-    --green-deep: #0d9e6d;
+    --green-deep: #097a53;
     --line: #e4e5ef;
     font-family: Epilogue, system-ui, sans-serif;
     background: #fff;
@@ -70,10 +70,13 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
     max-width: 640px;
     margin: 0 auto clamp(3rem, 6vw, 4.5rem);
   }
+  /* The count is the page's headline fact, so it has to be readable, not just
+     bright: #27ea93 on white measures 1.58:1, under the 3:1 large-text floor.
+     DESIGN.md's own rule — green on light is always the deep green — applies. */
   .gi-int-num {
     font-size: clamp(3rem, 7vw, 4.25rem);
     font-weight: 800;
-    color: var(--green);
+    color: var(--green-deep);
     line-height: 1;
     letter-spacing: -0.02em;
   }

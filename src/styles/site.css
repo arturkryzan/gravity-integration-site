@@ -19,14 +19,20 @@ html:not(.js) [data-scroll-opacity] {
 
 /* Locomotive leftovers neutralized (native scrolling everywhere).
    The theme sets html,body{overflow:hidden;height:100%} at ≥1400px because LS
-   scrolled via transforms — snippet 31 shipped this exact override per-page. */
+   scrolled via transforms — snippet 31 shipped this exact override per-page.
+   `overflow-x: clip` (not `hidden`) is deliberate: it clamps the decorative
+   `.circle`/`.hero-decorative` bleed without creating a scroll container, so
+   position:sticky/fixed (header, announcement bar) keep working. `clip` also
+   legally pairs with `visible` on the other axis — `hidden` would force it
+   to `auto` and reintroduce the LS-era clipping bug. */
 html,
 body {
-  overflow: visible !important;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
   height: auto !important;
 }
 /* scroll-lock when the fullscreen menu is open — class specificity beats the
-   `html, body { overflow: visible !important }` rule above (both !important). */
+   `html, body` rule above (both !important). */
 html.nav-lock,
 html.nav-lock body {
   overflow: hidden !important;
@@ -159,34 +165,44 @@ body.nav-open .col-pull .img-lines {
   }
 }
 
-/* ---- announcement bar (snippet 16, componentized) ---- */
-:root {
-  --gi-bar-h: 44px;
-}
+/* ---- announcement bar plumbing ----
+   The bar's own styling lives in AnnouncementBar.astro (scoped, no !important).
+   Only the layout consequences are here: everything below the bar offsets from
+   --gi-bar-h, which main.js measures from the live element (it wraps to two rows
+   on phones, so the 44px seed in tokens.css is a starting value, not the truth). */
 body {
   margin-top: var(--gi-bar-h) !important;
 }
 header {
   top: var(--gi-bar-h) !important;
 }
-#gi-announce-bar a:hover {
-  opacity: 0.85;
-}
 
-/* ---- cookie notice: not ported (was force-hidden on live) ---- */
+/* ---- cookie notice ----
+   The WP plugin's notice was force-hidden on live, which meant GA4 ran on every
+   visitor with no consent recorded anywhere. Replaced by CookieConsent.astro,
+   which pins to the *bottom* edge — the top belongs to the announcement bar and
+   its measured --gi-bar-h, and a second fixed element up there would either
+   cover the bar or corrupt that measurement. All of its styling is scoped to
+   the component; nothing about it needs to live here. */
+
+/* Anchored headings (e.g. the cookie bar's link to
+   /polityka-prywatnosci/#cookies) otherwise land underneath the fixed header. */
+:target {
+  scroll-margin-top: calc(var(--gi-bar-h, 44px) + 7rem);
+}
 
 /* ---- forms: CF7-equivalent feedback styles ---- */
 .wpcf7-response-output {
   margin: 1.5em 0;
   padding: 0.6em 1em;
-  border: 2px solid #27ea93;
+  border: 2px solid var(--gi-green);
   font-size: 0.9rem;
 }
 .form-status[hidden] {
   display: none;
 }
 .wpcf7-not-valid-tip {
-  color: #dc3232;
+  color: var(--gi-red-deep);
   font-size: 0.85rem;
   display: block;
   margin-top: 0.25rem;
@@ -203,4 +219,102 @@ img.lazyload {
   height: 100%;
   object-fit: cover;
   border-radius: 4px;
+}
+
+/* ---- subpage hero H1: fluid scale (adapt pass) ----
+   legacy.css ships a flat `.h1,h1{font-size:4rem}`; only the homepage hero has
+   responsive overrides. Long subpage titles ("Integracje gravity.integration")
+   therefore blew ~206px past a 390px viewport. Scale fluidly instead, and keep
+   break-word as a never-fires-unless-needed backstop for the longest token. */
+.hero h1,
+.hero .h1 {
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1.12;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+/* The decorative outline circle rides the inline-block wrapper and overhangs it
+   by 6%; at small widths that reads as a clipped stray arc, so retire it below
+   the tablet breakpoint (the heading is the point, not the flourish). */
+@media (max-width: 767.98px) {
+  .hero .hero-text-circle::after {
+    display: none;
+  }
+}
+
+/* ---- z-index scale applied to the ported theme (polish pass) ----
+   legacy.css hard-codes 4 / 20 / 9999 with no relationship between them. The
+   values below come from tokens.css and preserve the existing stacking order,
+   with one real fix: the fullscreen menu was z-index 4, *below* the breadcrumb
+   bar's z-index 10, so the white breadcrumb strip punched through the overlay.
+   Menu now sits at 15 — above the breadcrumbs, still below the header, which
+   has to keep the logo and CLOSE control reachable while the menu is open. */
+.nav-main {
+  z-index: var(--gi-z-menu);
+}
+header {
+  z-index: var(--gi-z-header);
+}
+.hamburger {
+  z-index: var(--gi-z-raised);
+}
+.breadcrumbs,
+.breadcrumbs > .container-xxl {
+  z-index: var(--gi-z-sticky);
+}
+
+/* ---- pricing: currency unit ----
+   The theme sets the currency span to #9b9cae, which is 2.71:1 on white — under
+   the 3:1 large-text floor even at the 64px it renders at, and it isn't a token.
+   Use the documented muted token (#6b6d84, 5.07:1): still a clear step down from
+   the #464861 figure it follows, but actually readable. */
+.price-item-value span:last-of-type {
+  color: #6b6d84;
+}
+
+/* ---- privacy-policy hero lede ----
+   Its CMS hero field is a full sentence, which the WP theme rendered as an <h2>
+   and shipped with no H1 at all. The page now leads with a real "Polityka
+   prywatności" H1 and demotes that sentence to the lede it always was. */
+.hero .hero-lede {
+  max-width: 42rem;
+  margin: 0.75rem 0 0;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.82);
+}
+
+/* ---- visually-hidden ----
+   The theme's Bootstrap build didn't include this utility. It carries the
+   "opens in a new tab" note on outbound links: WCAG 3.2.2 wants the change of
+   context announced, but a visible marker on every docs link would clutter a
+   nav whose type is the whole design. `clip-path` rather than the legacy
+   `clip`, and `white-space: nowrap` so the text can't reflow the line box. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- breadcrumbs: real touch targets ----
+   The theme put 1.5rem of padding on the <li> but left the anchor itself a
+   14px-tall text sliver. Move the vertical padding onto the link so the hit
+   area is the ~54px it already looks like, and re-anchor the hover underline
+   (positioned against the link box) back under the text. */
+.breadcrumbs li {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.breadcrumbs a {
+  display: inline-block;
+  padding: 1.25rem 0;
+}
+.breadcrumbs a:before {
+  top: calc(50% + 0.85em);
 }

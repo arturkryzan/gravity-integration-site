@@ -12,15 +12,15 @@ const { index, pricing } = Astro.props;
     <div class="pricing-lines d-none d-lg-block" data-scroll data-scroll-opacity>
       <div class="circle" data-scroll data-scroll-delay=".2" data-scroll-speed="1"></div>
       <div class="circle" data-scroll data-scroll-delay=".1" data-scroll-speed="1"></div>
-      <img src="/theme/static/linespricing0.svg" alt="" data-scroll data-scroll-delay=".5" data-scroll-speed="-1" />
-      <img src="/theme/static/linespricing1.svg" alt="" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
+      <img src="/theme/static/linespricing0.svg" alt="" width="217" height="40" data-scroll data-scroll-delay=".5" data-scroll-speed="-1" />
+      <img src="/theme/static/linespricing1.svg" alt="" width="193" height="49" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
     </div>
 
     <div class="row pt-10" id={`section${index}`}>
       {pricing.map((item) => (
         <div class="col-lg-4 py-8 price-item">
           <div class="bg-white pt-10 px-10 pb-8 text-center h-100 d-flex flex-column" data-scroll data-scroll-opacity>
-            <img src="/theme/static/logo_small.svg" alt="gravity.integration" class="mx-auto mb-6" />
+            <img src="/theme/static/logo_small.svg" alt="gravity.integration" width="111" height="24" class="mx-auto mb-6" />
             <h2 class="h3 ff-main lh-1-2 mb-6" set:html={item.name} />
             <div class="paragraph mb-5">
               <Fragment set:html={item.text ?? ''} />

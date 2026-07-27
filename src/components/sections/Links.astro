@@ -1,5 +1,6 @@
 ---
 /* ACF layout: links — grid of labeled links (verified against live /kontakt/ markup) */
+import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 interface Props {
   index: number;
   text?: string;
@@ -27,8 +28,16 @@ const { index, text = '', links } = Astro.props;
             >
               <strong set:html={l.title} />
               <br />
-              <a class="btn btn-text mt-4 d-inline-block" href={link.url} target={link.target || '_self'}>
+              <a
+                class="btn btn-text mt-4 d-inline-block"
+                href={link.url}
+                target={linkTarget(link.url, link.target)}
+                rel={linkRel(linkTarget(link.url, link.target))}
+              >
                 <span>{link.title || link.url}</span>
+                {opensNewTab(link.url, link.target) && (
+                  <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                )}
               </a>
             </div>
           )

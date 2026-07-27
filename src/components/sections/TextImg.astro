@@ -1,6 +1,6 @@
 ---
 /* ACF layout: text_img (theme inc/sections/text_img.php). Also used as spacer sections. */
-import { mediaSrc, mediaAlt, mediaRatio } from '../../lib/media';
+import { mediaSrc, mediaAlt, mediaDims, mediaRatio } from '../../lib/media';
 
 interface Props {
   index: number;
@@ -34,7 +34,7 @@ const textClass = img_placement !== 'left' ? ' order-2 mt-5 mt-lg-0' : '';
             data-scroll-delay=".1"
             data-scroll-speed="1"
           >
-            <img src={mediaSrc(image)} alt={mediaAlt(image)} loading="lazy" class="lazyload" />
+            <img src={mediaSrc(image)} alt={mediaAlt(image)} loading="lazy" class="lazyload" {...(mediaDims(image) ?? {})} />
           </div>
         </div>
       )}

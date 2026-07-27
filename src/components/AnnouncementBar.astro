@@ -1,13 +1,160 @@
 ---
-/* Top announcement bar (was snippet 16). Close button + cookie handled in main.js. */
+/* Top announcement bar (was snippet 16). Close button + measured height in main.js.
+
+   Contrast note: this bar shipped white-on-green (1.57:1 — fails WCAG 1.4.3 at
+   every size) with a white pill whose green label was the same 1.57:1. Green is
+   the brand's loudest surface, so it stays; the text flips to ink (#0a0a12 on
+   #27ea93 = 12.5:1) and the primary CTA becomes a solid dark pill (white on ink
+   = 19.7:1). Same identity, legible. */
+
+/* The dismissal is scoped to the announcement, not to the bar.
+   It used to write a generic `gi_bar_hidden` cookie, which had two consequences
+   nobody wanted: dismissing *this* message also pre-dismissed the *next* one, so
+   a v5 launch would land silently for anyone who had closed the v4 bar in the
+   last day; and the only reason the cookie expired after 24h was to work around
+   exactly that, which meant a deliberate dismissal came back the next morning.
+   Keying on the campaign fixes both — a new `campaign` value is a new cookie, so
+   a new announcement is always seen — and once the key carries that information
+   the lifetime can be honest: closed means closed, until there's actual news. */
+const campaign = 'v4';
 ---
+
 <!-- ANNOUNCEMENT BAR -->
-<div id="gi-announce-bar" style="background:rgb(1,236,144);padding:0.6rem 1rem;text-align:center;position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;height:44px;box-sizing:border-box;">
-  <span style="color:#fff;font-size:0.95rem;font-weight:600;letter-spacing:0.01em;">gravity.integration v4 już dostępna</span>
-  <a href="/pobieranie" style="background:#fff;color:rgb(1,236,144);font-size:0.8rem;font-weight:700;padding:0 1.1rem;border-radius:2rem;text-decoration:none;letter-spacing:0.02em;transition:opacity 0.2s;display:inline-flex;align-items:center;height:28px;line-height:1;box-sizing:border-box;border:2px solid #fff;">Pobierz teraz</a>
-  <a href="https://docs.gravity-integration.com/informacje-podstawowe/changelog" target="_blank" rel="noopener" style="background:transparent;color:#fff;font-size:0.8rem;font-weight:700;padding:0 1.1rem;border-radius:2rem;text-decoration:none;letter-spacing:0.02em;border:2px solid #fff;transition:opacity 0.2s;display:inline-flex;align-items:center;height:28px;line-height:1;box-sizing:border-box;">Sprawdź zmiany</a>
-  <button id="gi-bar-close" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1;padding:0.2rem 0.4rem;opacity:0.8;" aria-label="Zamknij">&times;</button>
+<div id="gi-announce-bar" data-campaign={campaign}>
+  <span class="gi-bar-msg">gravity.integration v4 już dostępna</span>
+  <a class="gi-bar-cta gi-bar-cta-primary" href="/pobieranie/">Pobierz teraz</a>
+  <a
+    class="gi-bar-cta gi-bar-cta-ghost"
+    href="https://docs.gravity-integration.com/informacje-podstawowe/changelog"
+    target="_blank"
+    rel="noopener"
+    >Sprawdź zmiany<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a
+  >
+  <button id="gi-bar-close" type="button" aria-label="Zamknij pasek z ogłoszeniem">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
-
-
 <!-- END ANNOUNCEMENT BAR -->
+
+<style>
+  #gi-announce-bar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--gi-z-bar, 30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    row-gap: 0.4rem;
+    min-height: var(--gi-bar-h, 44px);
+    /* the close control is absolutely positioned at the right edge — reserve
+       its width on both sides so the centered content stays optically centred */
+    padding: 0.6rem 3rem;
+    box-sizing: border-box;
+    background: var(--gi-green, #27ea93);
+    color: var(--gi-bg-dark, #0a0a12);
+    font-family: Epilogue, system-ui, sans-serif;
+    text-align: center;
+  }
+
+  .gi-bar-msg {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .gi-bar-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0.15rem 1.1rem;
+    border-radius: 2rem;
+    border: 2px solid var(--gi-bg-dark, #0a0a12);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .gi-bar-cta-primary {
+    background: var(--gi-bg-dark, #0a0a12);
+    color: #fff;
+  }
+  .gi-bar-cta-primary:hover,
+  .gi-bar-cta-primary:focus-visible {
+    background: #23243a; /* lifts on hover without dropping below 4.5:1 on white text */
+    color: #fff;
+  }
+  .gi-bar-cta-ghost {
+    background: transparent;
+    color: var(--gi-bg-dark, #0a0a12);
+  }
+  .gi-bar-cta-ghost:hover,
+  .gi-bar-cta-ghost:focus-visible {
+    background: var(--gi-bg-dark, #0a0a12);
+    color: #fff;
+  }
+
+  #gi-bar-close {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    /* 26×26 as drawn is under the 24px floor once the glyph's own bounds are
+       measured — give it a real 44×44 target without changing how the × reads */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--gi-bg-dark, #0a0a12);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  #gi-bar-close:hover,
+  #gi-bar-close:focus-visible {
+    background: rgba(10, 10, 18, 0.12);
+  }
+
+  /* keyboard focus must be visible on a saturated surface — ink ring, not the
+     UA default blue that all but disappears on green */
+  #gi-announce-bar :focus-visible {
+    outline: 2px solid var(--gi-bg-dark, #0a0a12);
+    outline-offset: 2px;
+  }
+
+  /* Phones: the message + two pills can't share one 44px line at ≤600px, so let
+     it wrap to a second row. main.js measures the resulting height into
+     --gi-bar-h, which drives the body margin and the fixed header's top. */
+  @media (max-width: 600px) {
+    #gi-announce-bar {
+      padding: 0.5rem 2.75rem 0.5rem 1rem;
+      gap: 0.5rem;
+    }
+    .gi-bar-msg {
+      font-size: 0.85rem;
+      flex-basis: 100%;
+    }
+    .gi-bar-cta {
+      padding: 0.15rem 0.8rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gi-bar-cta,
+    #gi-bar-close {
+      transition: none;
+    }
+  }
+</style>

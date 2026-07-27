@@ -19,9 +19,14 @@ export async function getStaticPaths() {
   return pages
     .filter(
       (p) =>
-        !['/', '/integracje/', '/kalkulator/', '/pobieranie/', '/czym-jest-esb/'].includes(
-          p.data.url,
-        ),
+        ![
+          '/',
+          '/integracje/',
+          '/kalkulator/',
+          '/pobieranie/',
+          '/czym-jest-esb/',
+          '/case-studies/',
+        ].includes(p.data.url),
     )
     .map((p) => ({
       params: { slug: p.data.url.replace(/^\/|\/$/g, '') },

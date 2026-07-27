@@ -7,8 +7,12 @@
     <div class="row">
       <div class="col-12" data-scroll data-scroll-opacity>
 
-<style>
-#gi-roi-calculator{--gi-green:#01EC90;--gi-dark:#1a1b2e;--gi-card:#242538;--gi-border:#464861;--gi-text:#c8cad0;--gi-white:#fff;font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--gi-text)}
+<!-- is:global is required, not incidental: the breakdown rows are injected by the
+     inline script below, so they never carry Astro's scoping attribute. Scoped,
+     every `.gi-breakdown tr/td` rule silently missed the generated rows. Every
+     selector here is namespaced under #gi-roi-calculator / .gi-*. -->
+<style is:global>
+#gi-roi-calculator{--gi-green:#27ea93;--gi-dark:#1a1b2e;--gi-card:#242538;--gi-border:#464861;--gi-text:#c8cad0;--gi-white:#fff;font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--gi-text)}
 #gi-roi-calculator h2{color:var(--gi-white);font-size:2rem;font-weight:700;text-align:center;margin:2rem 0 3rem}
 .gi-calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem}
 @media(max-width:768px){.gi-calc-grid{grid-template-columns:1fr}}
@@ -17,9 +21,15 @@
 .gi-slider-group{margin-bottom:1.5rem}
 .gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--gi-text)}
 .gi-slider-value{font-weight:700;color:var(--gi-green);font-size:1rem;min-width:80px;text-align:right}
-.gi-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--gi-border);outline:none;cursor:pointer}
-.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
+/* The input is 32px tall (the real touch target); the visible 6px track is
+   drawn by the track pseudo-elements. Thumb offset centres it on the track. */
+.gi-range{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;outline:none;cursor:pointer}
+.gi-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--gi-border)}
+.gi-range::-moz-range-track{height:6px;border-radius:3px;background:var(--gi-border)}
+.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
 .gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
+.gi-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
+.gi-range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
 .gi-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
 @media(max-width:768px){.gi-kpi-row{grid-template-columns:1fr}}
 .gi-kpi{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:1.5rem;text-align:center}
@@ -30,8 +40,12 @@
 .gi-bar-wrap{display:flex;align-items:center;margin-bottom:1rem;gap:1rem}
 .gi-bar-label{width:100px;font-size:.8rem;color:var(--gi-text);text-align:right;flex-shrink:0}
 .gi-bar-track{flex:1;background:var(--gi-border);border-radius:6px;height:32px;position:relative;overflow:hidden}
-.gi-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.75rem;font-weight:700;color:var(--gi-dark);transition:width .5s ease}
-.gi-bar-fill.current{background:#ef4444}
+/* Bar labels sit *inside* the fill, so they inherit whichever bar they're on.
+   --gi-dark (#1a1b2e) on the red bar measures exactly 4.500:1 — passing on paper
+   with zero headroom, and 12px bold is not "large text". Use the darkest ink
+   token instead: 5.24:1 on red, 12.5:1 on green. Same near-black reading. */
+.gi-bar-fill{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.75rem;font-weight:700;color:var(--gi-bg-dark,#0a0a12);transform:translateX(-100%);transition:transform .5s ease}
+.gi-bar-fill.current{background:var(--gi-red,#ef4444)}
 .gi-bar-fill.gravity{background:var(--gi-green)}
 .gi-breakdown{width:100%;border-collapse:collapse;margin-bottom:2rem}
 .gi-breakdown th,.gi-breakdown td{padding:.75rem 1rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--gi-border)}
@@ -39,6 +53,20 @@
 .gi-breakdown td{color:var(--gi-white)}
 .gi-breakdown .gi-savings{color:var(--gi-green);font-weight:700}
 .gi-cta-box{text-align:center;padding:2rem 0 1rem}
+/* Phone: a four-column money table can't fit ~310px of usable width, so restack
+   each row as a card — phase as the card title, the three figures as labelled
+   rows. ARIA roles are set in the markup/JS so the table semantics survive the
+   display:block flattening for screen readers. */
+@media(prefers-reduced-motion:reduce){.gi-bar-fill{transition:none}}
+@media(max-width:600px){
+  .gi-breakdown,.gi-breakdown thead,.gi-breakdown tbody,.gi-breakdown tr,.gi-breakdown th,.gi-breakdown td{display:block}
+  .gi-breakdown{border-collapse:separate}
+  .gi-breakdown thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .gi-breakdown tr{border:1px solid var(--gi-border);border-radius:.75rem;padding:.15rem .9rem .5rem;margin-bottom:.75rem}
+  .gi-breakdown td{border-bottom:none;padding:.4rem 0;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;text-align:right}
+  .gi-breakdown td:first-child{font-weight:700;color:var(--gi-white);text-align:left;border-bottom:1px solid var(--gi-border);padding-bottom:.5rem;margin-bottom:.15rem}
+  .gi-breakdown td[data-label]::before{content:attr(data-label);color:var(--gi-text);font-weight:600;font-size:.78rem;text-align:left}
+}
 </style>
 
 <div id="gi-roi-calculator">
@@ -92,9 +120,9 @@
     </div>
   </div>
 
-  <table class="gi-breakdown">
-    <thead><tr><th>Faza</th><th>Obecny koszt</th><th>Z gravity</th><th>Oszczędność</th></tr></thead>
-    <tbody id="gi-tbody"></tbody>
+  <table class="gi-breakdown" role="table">
+    <thead role="rowgroup"><tr role="row"><th role="columnheader">Faza</th><th role="columnheader">Obecny koszt</th><th role="columnheader">Z gravity</th><th role="columnheader">Oszczędność</th></tr></thead>
+    <tbody id="gi-tbody" role="rowgroup"></tbody>
   </table>
 
   <div class="gi-cta-box">
@@ -128,14 +156,25 @@
     document.getElementById("kpi-extra").textContent="+"+extra;
     document.getElementById("kpi-roi").textContent=Math.round(roi)+"%";
     var mx=Math.max(D,gDaysP,1);
-    document.getElementById("bar-current").style.width=(D/mx*100)+"%";
+    document.getElementById("bar-current").style.transform="translateX("+(D/mx*100-100)+"%)";
     document.getElementById("bar-current").textContent=D+" dni";
-    document.getElementById("bar-gravity").style.width=(gDaysP/mx*100)+"%";
+    document.getElementById("bar-gravity").style.transform="translateX("+(gDaysP/mx*100-100)+"%)";
     document.getElementById("bar-gravity").textContent=gDaysP+" dni";
     var rows=[["Rozwój",cDev*P,gDev*P],["Testy",cTest*P,gTest*P],["Wdrożenie",cDep*P,gDep*P],["Utrzymanie",cMnt*P,gMnt*P],["Licencje / narzędzia",TL,gLic]];
+    // data-label feeds the phone card layout (::before pulls it in); role=cell/row
+    // keeps the table readable to AT once the mobile CSS flattens display to block.
+    function row(label, cur, grv, extra){
+      var s = cur - grv;
+      return "<tr role=\"row\"" + (extra || "") + ">"
+        + "<td role=\"cell\">" + label + "</td>"
+        + "<td role=\"cell\" data-label=\"Obecny koszt\">" + fmt(Math.round(cur)) + " PLN</td>"
+        + "<td role=\"cell\" data-label=\"Z gravity\">" + fmt(Math.round(grv)) + " PLN</td>"
+        + "<td role=\"cell\" class=\"gi-savings\" data-label=\"Oszczędność\">" + (s > 0 ? "-" : "") + fmt(Math.round(Math.abs(s))) + " PLN</td>"
+        + "</tr>";
+    }
     var h="";
-    rows.forEach(function(r){var s=r[1]-r[2];h+="<tr><td>"+r[0]+"</td><td>"+fmt(Math.round(r[1]))+" PLN</td><td>"+fmt(Math.round(r[2]))+" PLN</td><td class=\"gi-savings\">"+(s>0?"-":"")+fmt(Math.round(Math.abs(s)))+" PLN</td></tr>"});
-    h+="<tr style=\"border-top:2px solid #464861;font-weight:700\"><td>Razem / rok</td><td>"+fmt(Math.round(cTot))+" PLN</td><td>"+fmt(Math.round(gTot))+" PLN</td><td class=\"gi-savings\">"+(sav>0?"-":"")+fmt(Math.round(Math.abs(sav)))+" PLN</td></tr>";
+    rows.forEach(function(r){h+=row(r[0], r[1], r[2])});
+    h+=row("Razem / rok", cTot, gTot, " style=\"border-top:2px solid #464861;font-weight:700\"");
     document.getElementById("gi-tbody").innerHTML=h;
   }
   Object.values(sl).forEach(function(s){s.addEventListener("input",calc)});

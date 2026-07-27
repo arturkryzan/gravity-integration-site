@@ -1,6 +1,7 @@
 ---
 /* ACF layout: downloads (theme inc/sections/downloads.php) */
-import { mediaSrc, mediaAlt, mediaRatio } from '../../lib/media';
+import { mediaSrc, mediaAlt, mediaRatio, mediaDims } from '../../lib/media';
+import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 
 interface Props {
   index: number;
@@ -20,6 +21,8 @@ const { index, downloads } = Astro.props;
     <img
       src="/theme/static/linesdownload.svg"
       alt=""
+      width="295"
+      height="823"
       class="download-img"
       data-scroll
       data-scroll-delay=".1"
@@ -60,15 +63,27 @@ const { index, downloads } = Astro.props;
                     class="btn btn-arrow btn-download mt-6 me-10"
                     href={file.url}
                     target={file.url?.startsWith('#') ? '_self' : '_blank'}
+                    rel={file.url?.startsWith('#') ? undefined : 'noopener'}
                     data-scroll-to={file.url?.startsWith('#') ? true : undefined}
                   >
                     <span>Pobierz</span>
+                    {!file.url?.startsWith('#') && (
+                      <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                    )}
                   </a>
                 )}
                 {contact && (
                   <div class="hover-underline mt-6">
-                    <a class="btn btn-text me-10" href={contact.url} target={contact.target || '_self'}>
+                    <a
+                      class="btn btn-text me-10"
+                      href={contact.url}
+                      target={linkTarget(contact.url, contact.target)}
+                      rel={linkRel(linkTarget(contact.url, contact.target))}
+                    >
                       <span>{contact.title}</span>
+                      {opensNewTab(contact.url, contact.target) && (
+                        <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+                      )}
                     </a>
                   </div>
                 )}
@@ -79,7 +94,7 @@ const { index, downloads } = Astro.props;
           <div class={`col-md-6 mb-5 mb-lg-0${i % 2 === 0 ? ' offset-lg-1' : ''}`}>
             {img && mediaSrc(img) && (
               <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}`}>
-                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
+                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" {...(mediaDims(img) ?? {})} />
               </div>
             )}
           </div>

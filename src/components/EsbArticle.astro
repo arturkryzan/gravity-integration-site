@@ -115,7 +115,7 @@ const NH = 17; // node box half-height
           {esb.why.benefits.map((b) => (
             <li>
               <svg viewBox="0 0 20 20" aria-hidden="true" class="esb-check">
-                <path d="M5 10.5l3.2 3.2L15 6.5" fill="none" stroke="#0d9e6d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M5 10.5l3.2 3.2L15 6.5" fill="none" stroke="#097a53" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               <span set:html={b} />
             </li>
@@ -193,7 +193,7 @@ const NH = 17; // node box half-height
     --body: #464861;
     --muted: #6b6d84;
     --green: #27ea93;
-    --green-deep: #0d9e6d;
+    --green-deep: #097a53;
     --tint: #f3f4fb;
     --line: #e4e5ef;
     font-family: Epilogue, system-ui, sans-serif;
@@ -274,9 +274,13 @@ const NH = 17; // node box half-height
     padding: 0.28rem 0.85rem;
     border-radius: 20px;
   }
+  /* The "before" pill was two invented values (#8a8ca3 on #eef0f6 = 2.90:1, well
+     under AA at 12.8px). It reads as the muted counterpart to the green .esb-tag--ok
+     pill, so use the documented muted ink on the documented light surface instead:
+     #6b6d84 on #f3f4fb = 4.62:1, same "quieter option" tone, actually readable. */
   .esb-tag--warn {
-    color: #8a8ca3;
-    background: #eef0f6;
+    color: #6b6d84;
+    background: #f3f4fb;
   }
   .esb-tag--ok {
     color: var(--green-deep);
@@ -295,9 +299,15 @@ const NH = 17; // node box half-height
     font: 800 17px Epilogue, sans-serif;
     fill: #0a0a12;
   }
+  /* The hub's second line is 9.5px in a 380-unit viewBox — it renders *below*
+     9.5px on any panel narrower than that, so it is normal text and owes 4.5:1.
+     At 0.6 alpha over the green hub it measured 4.53:1: passing on paper with
+     no headroom, at the smallest type on the page. 0.75 is the alpha the muted
+     text tokens already use (--gi-text-muted-on-dark), lands at 7.18:1, and is
+     still a clear tonal step below the solid-ink "ESB" above it. */
   .esb-hub-s {
     font: 600 9.5px Epilogue, sans-serif;
-    fill: rgba(10, 10, 18, 0.6);
+    fill: rgba(10, 10, 18, 0.75);
     letter-spacing: 0.02em;
   }
 

@@ -1,0 +1,102 @@
+{
+  "intro": [
+    "An Enterprise Service Bus (ESB) is a layer of middleware that connects the IT systems in an organisation. Instead of building a separate connection between every pair of applications — which quickly descends into chaos — an ESB centralises communication and offers one place all the data flows through.",
+    "Picture a company running an ERP system, a WMS, an e‑commerce platform and a handful of smaller tools at the same time. Without an integration bus, every change in one system has to be carried over to the others by hand or through point-to-point links. An ESB eliminates that problem, automating the flow of information and keeping data consistent across the whole organisation."
+  ],
+  "quote": "Good integration is not about connecting systems — it is about connecting business processes.",
+  "how": {
+    "heading": "How does an integration bus work?",
+    "paras": [
+      "An ESB acts as a central communication hub. Every system connected to the bus sends and receives data in a standardised way, regardless of the technology it was built in. The bus takes care of translating formats, routing messages and orchestrating processes.",
+      "In practice this means that when an invoice is issued in the ERP system, the bus automatically passes the relevant data to the accounting system, updates stock levels in the WMS and sends a notification to the e‑commerce platform — all without human intervention.",
+      "The key mechanisms of an ESB are adapters (connectors to specific systems), data transformation (converting XML, JSON, CSV and other formats), routing (intelligent message delivery) and monitoring (a real-time view of the data flowing through)."
+    ]
+  },
+  "why": {
+    "heading": "Why implement an ESB?",
+    "paras": [
+      "The greatest advantage of an integration bus is that it eliminates point-to-point integration — direct connections between systems. In a company with 5 systems that is already 10 potential connections to maintain. With 10 systems — as many as 45. An ESB reduces that complexity to a single, central point of management.",
+      "The bus also brings scalability — adding a new system doesn't require changing any existing connections; you simply plug it into the bus. That means faster roll-outs and lower IT maintenance costs."
+    ],
+    "listLabel": "The concrete benefits:",
+    "benefits": [
+      "Automated data flow between ERP, WMS, MES, CRM and e‑commerce systems",
+      "No more manual data transfers — and no more of the errors that come with them",
+      "Central management of every integration from a single panel",
+      "Real-time monitoring and debugging of data flows",
+      "Easier compliance thanks to full event logging",
+      "New systems brought online in days rather than weeks"
+    ]
+  },
+  "when": {
+    "heading": "When does a company need an integration bus?",
+    "paras": [
+      "Not every organisation needs an ESB from day one. If you run a single system and a single sales platform, a plain API is entirely sufficient. But the moment the number of systems grows and data has to flow in many directions, an integration bus becomes a necessity."
+    ],
+    "listLabel": "The typical signs your company needs an ESB:",
+    "signals": [
+      "The IT team spends more and more time maintaining existing integrations instead of building new ones",
+      "Data is inconsistent or delayed between systems",
+      "Adding a new system takes weeks of developer time",
+      "One failed connection sets off a domino effect across the organisation",
+      "There is no central view of what data flows between which systems"
+    ]
+  },
+  "alt": {
+    "heading": "ESB vs other integration approaches",
+    "paras": [
+      "ESBs are often compared with microservice architectures and iPaaS (Integration Platform as a Service) offerings. Microservices work well when you are building a system from scratch and your own team writes every component. In reality, though, most companies integrate off-the-shelf software — ERPs, WMSs, logistics systems — whose architecture they don't control.",
+      "In that environment an ESB is the most sensible choice, because it connects systems without touching their source code. The bus's adapters can talk to any API, database or even a flat file, creating a single, uniform ecosystem for exchanging data.",
+      "iPaaS products (cloud integration platforms) can be attractive for smaller companies, but with large data volumes and strict security requirements — particularly in manufacturing, logistics and trade — an on-premises ESB gives you full control over your data and lower costs in the long run.",
+      "<strong>gravity.integration</strong> is a Polish-built ESB that combines the strengths of a traditional integration bus with modern technology. In-house mechanisms like Always-on-data, IntelliChain and firstSIGNAL make gravity more than a classic ESB — <a href=\"/en/technology/\">explore our technologies</a>."
+    ]
+  },
+  "faq": [
+    {
+      "q": "Is an ESB the same thing as ETL?",
+      "a": "<p>Not quite. ETL (Extract, Transform, Load) is a mechanism for moving and transforming data, often in batches. An ESB is the broader concept — it covers ETL, but also real-time message routing, process orchestration and API management. gravity.integration offers both ETL features and the full capabilities of an integration bus.</p>\n"
+    },
+    {
+      "q": "How much does an ESB implementation cost?",
+      "a": "<p>The cost depends on the scale of the roll-out and the number of systems being integrated. With gravity.integration, licensing starts from 2,999 PLN net per year (approx. €700) per instance — many times less than the competition. You'll find the details on the <a href=\"/en/pricing/\">pricing page</a>.</p>\n"
+    },
+    {
+      "q": "How long does it take to implement an integration bus?",
+      "a": "<p>Simple integrations (say, connecting an ERP to an e-commerce platform) can be up and running within a few days. More complex projects spanning many systems and custom processes usually take 2 to 8 weeks. gravity.integration shortens that considerably thanks to its IntelliChain technology and ready-made adapters.</p>\n"
+    },
+    {
+      "q": "Can I try an ESB before buying?",
+      "a": "<p>Yes. gravity.integration is <a href=\"/en/download/\">free to download</a> and can be used without restriction for testing and training. A commercial licence is only required once you put it to production use.</p>\n"
+    },
+    {
+      "q": "Does an ESB work with cloud systems?",
+      "a": "<p>Yes — modern integration buses handle both on-premise installations and cloud services. gravity.integration talks to any system over REST APIs, SOAP, database connections, flat files and many other protocols.</p>\n"
+    }
+  ],
+  "nav": [
+    {
+      "label": "What is an ESB?",
+      "anchor": "section0"
+    },
+    {
+      "label": "How an ESB works",
+      "anchor": "section2"
+    },
+    {
+      "label": "Benefits of an ESB",
+      "anchor": "section3"
+    },
+    {
+      "label": "When to choose an ESB",
+      "anchor": "section4"
+    },
+    {
+      "label": "ESB vs alternatives",
+      "anchor": "section5"
+    },
+    {
+      "label": "FAQ",
+      "anchor": "section6"
+    }
+  ]
+}

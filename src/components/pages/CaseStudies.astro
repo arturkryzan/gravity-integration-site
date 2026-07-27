@@ -19,6 +19,7 @@ const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('case-studies', lang);
 const page = entry.data;
 const hero = (heroes as Record<string, any>)['case-studies'] ?? {};
+const heroAlt = lang === 'en' ? (hero.alt_en ?? hero.alt) : hero.alt;
 const studies = parseCaseStudies(page.sections as any[]);
 const crumbs = studies
   .map((s) => ({ label: s.nav, anchor: s.anchor }))
@@ -33,7 +34,7 @@ const crumbs = studies
   draft={page.draft}
   bodyClass={`page page-id-${page.wpId}`}
 >
-  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <PageHero h1={page.h1} img={hero.local} alt={heroAlt} circle={hero.circle} />
   <Breadcrumbs items={crumbs} />
   <CaseStudyList studies={studies} />
   {page.newsletter && <Newsletter />}

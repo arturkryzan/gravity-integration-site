@@ -4,7 +4,8 @@
     "alt": "gravity.integration ESB - grafika produktowa",
     "h1": "<h1><span style=\"text-decoration: underline;\">Więcej</span> niż ESB</h1>",
     "circle": true,
-    "local": "/uploads/etl-scaled.jpg"
+    "local": "/uploads/etl-scaled.jpg",
+    "alt_en": "gravity.integration ESB — product artwork"
   },
   "polityka-prywatnosci": {
     "img": null,
@@ -17,21 +18,24 @@
     "alt": "Kontakt - ilustracja sekcji kontaktowej",
     "h1": "<h1>Kontakt</h1>",
     "circle": false,
-    "local": "/uploads/contact.png"
+    "local": "/uploads/contact.png",
+    "alt_en": "Contact — contact section illustration"
   },
   "pobieranie": {
     "img": "https://gravity-integration.com/wp-content/uploads/2022/06/pobieranie-1.png",
     "alt": "Pobieranie gravity.integration - ilustracja",
     "h1": "<h1>Pobieranie</h1>",
     "circle": false,
-    "local": "/uploads/pobieranie-1.png"
+    "local": "/uploads/pobieranie-1.png",
+    "alt_en": "Downloading gravity.integration — illustration"
   },
   "cennik": {
     "img": "https://gravity-integration.com/wp-content/uploads/2022/07/heropricing.jpg",
     "alt": "Sekcja cennik - obraz nagłówkowy",
     "h1": "<h1>Cennik</h1>",
     "circle": false,
-    "local": "/uploads/heropricing.jpg"
+    "local": "/uploads/heropricing.jpg",
+    "alt_en": "Pricing section — header image"
   },
   "case-studies": {
     "img": null,
@@ -44,14 +48,16 @@
     "alt": "Sekcja cennik - obraz nagłówkowy",
     "h1": "<h1>Kalkulator <span style=\"text-decoration: underline;\">ROI</span></h1>",
     "circle": true,
-    "local": "/uploads/heropricing.jpg"
+    "local": "/uploads/heropricing.jpg",
+    "alt_en": "Pricing section — header image"
   },
   "czym-jest-esb": {
     "img": "https://gravity-integration.com/wp-content/uploads/2022/07/heropricing.jpg",
     "alt": "Sekcja cennik - obraz nagłówkowy",
     "h1": "<h1><span style=\"text-decoration: underline;\">Czym</span> jest ESB?</h1>",
     "circle": true,
-    "local": "/uploads/heropricing.jpg"
+    "local": "/uploads/heropricing.jpg",
+    "alt_en": "Pricing section — header image"
   },
   "integracje": {
     "img": null,

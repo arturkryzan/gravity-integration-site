@@ -122,6 +122,19 @@ const pl = {
   /* Home page CTA (row override on section 0) --------------------------- */
   'home.roiCta': 'Policz korzyści',
 
+  /* The two animated SVG heroes on the home page — their lines are SVG <text>
+     nodes, so they never showed up in the markup sweeps until a rendered
+     English page still greeted readers in Polish. Line lengths matter: the
+     text is centred in an 800-unit viewBox and sized to fit these words. */
+  'svg.dev.l1': 'Dla programistów,',
+  'svg.dev.l2': 'wdrożeniowców,',
+  'svg.dev.l3': 'buntowników',
+  'svg.dev.l4': "i software house'ów",
+  'svg.biz.l1': 'Dla biznesu,',
+  'svg.biz.l2': 'przedsiębiorstw,',
+  'svg.biz.l3': 'rewolucjonistów,',
+  'svg.biz.l4': 'myślicieli i działów IT',
+
   /* Demo section --------------------------------------------------------- */
   'demo.h2.line1': 'Sprawdź gravity.integration na\u00A0żywo',
   'demo.h2.accent': 'Umów 15\u2011minutowe demo',
@@ -372,6 +385,16 @@ const en: Partial<Record<UiKey, string>> = {
 
   /* Home page CTA -------------------------------------------------------- */
   'home.roiCta': 'Calculate your savings',
+
+  /* SVG home heroes ------------------------------------------------------- */
+  'svg.dev.l1': 'For developers,',
+  'svg.dev.l2': 'implementers,',
+  'svg.dev.l3': 'rebels',
+  'svg.dev.l4': 'and software houses',
+  'svg.biz.l1': 'For business,',
+  'svg.biz.l2': 'enterprises,',
+  'svg.biz.l3': 'revolutionaries,',
+  'svg.biz.l4': 'thinkers and IT teams',
 
   /* Demo section --------------------------------------------------------- */
   'demo.h2.line1': 'See gravity.integration live',

@@ -23,6 +23,7 @@ const { page } = Astro.props;
 const DEMO_PAGES = ['technologia', 'cennik', 'case-studies', 'czym-jest-esb'];
 
 const hero = (heroes as Record<string, any>)[page.slug] ?? {};
+const heroAlt = page.lang === 'en' ? (hero.alt_en ?? hero.alt) : hero.alt;
 const crumbs = page.sections
   .map((s: any, i: number) => ({ label: s.nav_li, anchor: `section${i}` }))
   .filter((c: any) => c.label);
@@ -36,7 +37,7 @@ const crumbs = page.sections
   draft={page.draft}
   bodyClass={`page page-id-${page.wpId}`}
 >
-  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <PageHero h1={page.h1} img={hero.local} alt={heroAlt} circle={hero.circle} />
   <Breadcrumbs items={crumbs} />
   <SectionRenderer sections={page.sections} />
   {page.newsletter && <Newsletter />}

@@ -14,6 +14,7 @@ const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('kalkulator', lang);
 const page = entry.data;
 const hero = (heroes as Record<string, any>)['kalkulator'];
+const heroAlt = lang === 'en' ? (hero.alt_en ?? hero.alt) : hero.alt;
 /* calculator sits between text_columns (section0) and faq (section1) — snippet 19's insertion point */
 
 /* TODO(Phase 4): the FAQ rich result is Polish Q&A. An English page carrying it
@@ -32,7 +33,7 @@ const hero = (heroes as Record<string, any>)['kalkulator'];
   <Fragment slot="head">
     <script type="application/ld+json" set:html={faqJsonLd} />
   </Fragment>
-  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <PageHero h1={page.h1} img={hero.local} alt={heroAlt} circle={hero.circle} />
   <SectionRenderer sections={page.sections.slice(0, 1)} />
   <RoiCalculator />
   <SectionRenderer sections={page.sections.slice(1)} startIndex={1} />

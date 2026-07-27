@@ -1,4 +1,6 @@
 ---
+import { localeOf, t } from '../i18n/ui';
+const s = t(localeOf(Astro.currentLocale));
 /* Animated hero SVG — developers section (extracted from snippet 30, self-contained). */
 ---
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" style="width:100%;height:100%;background:#0a0a12;border-radius:12px;overflow:hidden">
@@ -119,9 +121,9 @@
   <rect x="150" y="160" width="500" height="240" rx="16" fill="none" stroke="#27EA93" stroke-width=".4" opacity=".15"/>
   <!-- text with drop shadow -->
   <g class="gtf" filter="url(#ts)">
-    <text x="400" y="220" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">Dla programist&#xF3;w,</text>
-    <text x="400" y="278" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">wdro&#x17C;eniowc&#xF3;w,</text>
-    <text x="400" y="336" text-anchor="middle" fill="#27EA93" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" letter-spacing="1" filter="url(#glow)">buntownik&#xF3;w</text>
-    <text x="400" y="385" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="44" font-weight="400" letter-spacing=".6" opacity=".85">i software house&#x27;&#xF3;w</text>
+    <text x="400" y="220" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">{s('svg.dev.l1')}</text>
+    <text x="400" y="278" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="600" letter-spacing="1">{s('svg.dev.l2')}</text>
+    <text x="400" y="336" text-anchor="middle" fill="#27EA93" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" letter-spacing="1" filter="url(#glow)">{s('svg.dev.l3')}</text>
+    <text x="400" y="385" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,system-ui,-apple-system,sans-serif" font-size="44" font-weight="400" letter-spacing=".6" opacity=".85">{s('svg.dev.l4')}</text>
   </g>
 </svg>

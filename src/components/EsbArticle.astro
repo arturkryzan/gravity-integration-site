@@ -3,10 +3,15 @@
    Copy is pulled VERBATIM from esb-content.json (extracted from the CMS content,
    not rewritten). Only presentation changes: real hierarchy, designed lists,
    a meaningful point-to-point-vs-ESB diagram, a distinct pull-quote, cleaner FAQ. */
-import esb from '../data/esb-content.json';
+/* One content file per language, picked off the URL's locale — same shape,
+   same renderer. WhatIsEsb.astro makes the same choice for the breadcrumbs. */
+import esbPl from '../data/esb-content.json';
+import esbEn from '../data/esb-content.en.json';
 import { localeOf, t } from '../i18n/ui';
 
-const s = t(localeOf(Astro.currentLocale));
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+const esb = lang === 'en' ? esbEn : esbPl;
 
 /* ---- diagram geometry: 6 systems in a hexagon ---- */
 const R = 132;

@@ -80,7 +80,10 @@ for (const [url, back] of PAIRS) {
      there, it just isn't English. Polish diacritics in visible text are the
      giveaway, minus the proper nouns that stay Polish on purpose. */
   const stray = await page.evaluate(() => {
-    const KEEP = /Bielsko|Biała|Graffiti|Caffeine|Kryzan|Śląsk|Poznań|Wrocław|Kraków|Gdańsk|Łódź|sp\. z o\.o\./;
+    /* Proper nouns stay Polish by policy — company names, product names,
+       client names, place names. Every entry here was a hit that turned out
+       to be correct; the list grew by triage, not by guessing in advance. */
+    const KEEP = /Bielsko|Biała|Graffiti|Caffeine|Kryzan|Śląsk|Pozna[nń]|POZNA[NŃ]|Wrocław|Kraków|Gdańsk|Łódź|Prestiż|Trzebiatów|sp\. z o\.o\./i;
     return document.body.innerText
       .split('\n')
       .map((l) => l.trim())

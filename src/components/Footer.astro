@@ -27,7 +27,7 @@ const year = new Date().getFullYear();
               it before the consent control and the copyright. The flex parent
               handles the gap, so when the switcher renders nothing the row
               simply has one fewer item — no empty slot to collapse. */}
-          <LangSwitch slug={slug} />
+          <LangSwitch slug={slug} class="gi-lang-row" />
           {/* Withdrawing consent has to be as easy as giving it, so the way back
               to the cookie bar lives in the footer of every page. It's a real
               <button>: it performs an action, it doesn't navigate. With JS off

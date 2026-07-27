@@ -75,6 +75,17 @@ const s = t(lang);
   .gi-lang:hover {
     text-decoration-thickness: 2px;
   }
+  /* The footer row is 10px type, so the switcher's own box is 10px tall — fine
+     to read, not a target. `.gi-lang-row` borrows the trick the consent link
+     beside it already uses (see Footer.astro): vertical padding for the target,
+     an equal negative margin so nothing on the row moves. Deliberately NOT
+     applied in the nav panel, where the switcher is a block item in a stack and
+     the padding would push the links under it down. */
+  .gi-lang-row {
+    display: inline-block;
+    padding: 0.9rem 0;
+    margin-block: -0.9rem;
+  }
   .gi-lang:focus-visible {
     outline: 2px solid var(--gi-green-deep, #097a53);
     outline-offset: 3px;

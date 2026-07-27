@@ -54,7 +54,7 @@
         {
           "cat": "Podręcznik",
           "file": "",
-          "text": "<h2>Zapoznaj się z&nbsp;produktem</h2>\n<p>Zapraszamy do&nbsp;zapoznania się z&nbsp;interaktywną dokumentacją oprogramowania pod&nbsp;adresem <a href=\"http://docs.gravity-integration.com\">docs.gravity-integration.com</a>.</p>\n<p>Jeśli z&nbsp;jakiegoś powodu potrzebujesz dokumentacji offline, możesz pobrać plik PDF z&nbsp;linku poniżej, jednak miej na&nbsp;uwadze, że&nbsp;jest to&nbsp;wersja z&nbsp;<strong>2024</strong> roku.</p>\n",
+          "text": "<h2>Zapoznaj się z&nbsp;produktem</h2>\n<p>Zapraszamy do&nbsp;zapoznania się z&nbsp;interaktywną dokumentacją oprogramowania pod&nbsp;adresem <a href=\"https://docs.gravity-integration.com\" target=\"_blank\" rel=\"noopener\">docs.gravity-integration.com<span class=\"visually-hidden\"> (otwiera się w nowej karcie)</span></a>.</p>\n<p>Jeśli z&nbsp;jakiegoś powodu potrzebujesz dokumentacji offline, możesz pobrać plik PDF z&nbsp;linku poniżej, jednak miej na&nbsp;uwadze, że&nbsp;jest to&nbsp;wersja z&nbsp;<strong>2024</strong> roku.</p>\n",
           "img": {
             "file": "media/manual_mockup.jpg",
             "url": null,

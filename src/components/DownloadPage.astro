@@ -1,0 +1,1521 @@
+---
+/* /pobieranie/ — the conversion page.
+ *
+ * The WordPress layout buried the only action three screens down: two
+ * decorative "downloads" rows whose Pobierz buttons merely anchor-jumped to a
+ * MailerLite embed at the bottom of the page, styled by fighting the embed's
+ * own markup with !important. Baseline conversion of that funnel: 3.69%
+ * (29/785, MailerLite form gAV0lr).
+ *
+ * This page puts the form in the hero and tells the visitor exactly what
+ * happens after submit. Delivery mechanics (verified in MailerLite, not
+ * assumed): the form feeds group GRAVITY with double opt-in OFF, and the
+ * "Prosta wiadomość powitalna" automation sends the download-link e-mail
+ * immediately — subject "Witaj w gravity.integration", sender
+ * contact@gravity-integration.com. The success panel repeats those two
+ * facts because they are what gets a visitor from "submitted" to "installed".
+ *
+ * Submission uses the site's native MailerLite pattern (src/scripts/ml-forms.ts)
+ * instead of the universal.js embed: same endpoint, same group, same
+ * automation trigger, but no third-party script on the page's critical path.
+ * With JS off the form POSTs natively to the same endpoint.
+ *
+ * Every claim in the copy exists elsewhere on the site or in verified account
+ * data: 15-minute install (home, kalkulator FAQ), full version with no
+ * functional limits and unlimited testing (kalkulator FAQ), free remote
+ * support for the first project (kalkulator FAQ), 139+ connectors and the
+ * protocol list (home), Windows (this page's own SEO description), premium
+ * technical support included (this page's previous copy), commercial plans
+ * from 2 999 PLN/yr (home, cennik). */
+import Breadcrumbs from './Breadcrumbs.astro';
+import { mlAction } from '../lib/mailerlite';
+
+interface Props {
+  crumbs?: Array<{ label: string; anchor: string }>;
+}
+const { crumbs = [] } = Astro.props;
+
+const action = mlAction('download');
+
+const steps = [
+  {
+    n: '1',
+    h: 'Odbierz link',
+    p: 'Wysyłamy go e‑mailem od razu po wysłaniu formularza. Bez karty, bez zobowiązań — nadawcą jest contact@gravity-integration.com.',
+  },
+  {
+    n: '2',
+    h: 'Zainstaluj w ok. 15 minut',
+    p: 'gravity.integration działa w środowisku Windows. Środowisko uruchomisz w kwadrans, z pełną dokumentacją i wsparciem technicznym premium.',
+  },
+  {
+    n: '3',
+    h: 'Integruj bez limitu czasu',
+    p: 'Testujesz pełną wersję tak długo, jak chcesz — nic nie płacisz, dopóki nie używasz środowiska poza testami. Pierwszy projekt integracyjny prowadzisz z bezpłatnym wsparciem zdalnym.',
+  },
+] as const;
+
+const capabilities = [
+  '<strong>139+ gotowych konektorów</strong> — wszystkie popularne ERP, BaseLinker, Saldeo i systemy dziedzinowe.',
+  '<strong>REST, SOAP, GraphQL, gRPC, MQTT i Kafka</strong> z automatycznym mapowaniem schematów XML/JSON/EDI.',
+  '<strong>Routing, retry i uwierzytelnianie</strong> (OAuth 2.0, mTLS) konfigurujesz wizualnie — bez pisania kodu.',
+] as const;
+
+const clients = [
+  { src: '/media/tiptopol-case-logo.png', alt: 'TIP-TOPOL', anchor: 'section0' },
+  { src: '/media/kapitan-navi-logo-hires.png', alt: 'Kapitan Navi', anchor: 'section2' },
+  { src: '/media/elmet-poznan-logo.png', alt: 'ELMET Poznań S.A.', anchor: 'section4' },
+  { src: '/media/nac-logo.png', alt: 'NAC — New American Concept', anchor: 'section6' },
+] as const;
+---
+
+<div class="dl">
+  {/* ============================== hero + form ============================== */}
+  <section id="section0" class="dl-hero">
+    <div class="dl-wrap dl-hero-grid">
+      <div class="dl-hero-copy" data-scroll data-scroll-opacity>
+        <h1 class="dl-h1">Pobierz gravity.integration za&nbsp;darmo</h1>
+        <p class="dl-lede">
+          Pełna wersja platformy ESB — bez&nbsp;ograniczeń funkcjonalnych
+          i&nbsp;bez&nbsp;limitu czasu testów. Podaj firmowy e&#8209;mail,
+          a&nbsp;link do&nbsp;pobrania najnowszej wersji wyślemy od&nbsp;razu.
+        </p>
+        <ul class="dl-trust" role="list">
+          <li>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            Bez&nbsp;karty i&nbsp;bez&nbsp;zobowiązań
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            Instalacja w&nbsp;ok.&nbsp;15&nbsp;minut
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            Wsparcie techniczne premium w&nbsp;zestawie
+          </li>
+        </ul>
+      </div>
+
+      <div class="dl-card" data-scroll data-scroll-opacity>
+        <form
+          action={action}
+          method="post"
+          target="_blank"
+          data-form="download"
+          class="dl-form"
+          aria-label="Formularz pobierania gravity.integration"
+        >
+          <h2 class="dl-card-h">Uzyskaj link do&nbsp;pobierania</h2>
+
+          <div class="dl-field" data-field="dl-email">
+            <label class="dl-label" for="dl-email">E-mail służbowy</label>
+            <div class="dl-control">
+              <input
+                type="email"
+                id="dl-email"
+                name="fields[email]"
+                data-key="dl-email"
+                class="dl-input"
+                placeholder="jan@firma.pl"
+                autocomplete="email"
+                inputmode="email"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="dl-email-err dl-email-note"
+              />
+              <svg class="dl-tick" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M4.5 10.5 8.4 14.3 15.6 6.4" pathLength="1" />
+              </svg>
+            </div>
+            <p class="dl-err" id="dl-email-err" aria-live="polite" hidden></p>
+            <div class="dl-note" id="dl-email-note" aria-live="polite">
+              <p class="dl-hint" hidden></p>
+            </div>
+          </div>
+
+          <div class="dl-field" data-field="dl-company">
+            <label class="dl-label" for="dl-company">Firma</label>
+            <div class="dl-control">
+              <input
+                type="text"
+                id="dl-company"
+                name="fields[company]"
+                data-key="dl-company"
+                class="dl-input"
+                placeholder="Nazwa firmy"
+                autocomplete="organization"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="dl-company-err dl-company-note"
+              />
+              <svg class="dl-tick" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M4.5 10.5 8.4 14.3 15.6 6.4" pathLength="1" />
+              </svg>
+            </div>
+            <p class="dl-err" id="dl-company-err" aria-live="polite" hidden></p>
+            <div class="dl-note" id="dl-company-note" aria-live="polite">
+              <p class="dl-hint" hidden></p>
+              <button type="button" class="dl-fill" hidden>
+                <span class="dl-fill-text"></span>
+              </button>
+            </div>
+          </div>
+
+          {/* Honeypot + fill-time trap: a bot that fills the hidden field or
+              submits within two seconds is shown success and never reaches
+              MailerLite. Same tripwires as the demo form. */}
+          <div class="dl-hp" aria-hidden="true">
+            <label for="dl-website-url">Leave this field empty</label>
+            <input type="text" id="dl-website-url" name="website_url" value="" autocomplete="off" tabindex="-1" />
+          </div>
+          <input type="hidden" data-key="_dl_ts" value="" />
+          <input type="hidden" name="ml-submit" value="1" />
+          <input type="hidden" name="anticsrf" value="true" />
+
+          <div class="dl-field" data-field="dl-consent">
+            <label class="dl-consent" for="dl-consent">
+              <input
+                type="checkbox"
+                id="dl-consent"
+                name="dl-consent"
+                data-key="dl-consent"
+                value="1"
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="dl-consent-err"
+              />
+              <span class="dl-check" aria-hidden="true">
+                <svg viewBox="0 0 20 20" focusable="false">
+                  <path d="M4.5 10.4 8.3 14.1 15.5 6.5" pathLength="1" />
+                </svg>
+              </span>
+              <span class="dl-consent-text">
+                Zgadzam się na&nbsp;przesłanie linku do&nbsp;pobrania i&nbsp;kontakt
+                w&nbsp;sprawie gravity.integration. Administratorem danych jest
+                Caffeine Minds sp.&nbsp;z&nbsp;o.o.
+              </span>
+            </label>
+            <p class="dl-err" id="dl-consent-err" aria-live="polite" hidden></p>
+          </div>
+
+          <button type="submit" class="dl-submit">
+            <span class="dl-submit-label">Wyślij mi link do&nbsp;pobierania</span>
+            <span class="dl-submit-pending" aria-hidden="true">
+              <svg class="dl-spinner" viewBox="0 0 20 20" focusable="false">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="M10 2.5a7.5 7.5 0 0 1 7.5 7.5" />
+              </svg>
+              Wysyłam…
+            </span>
+          </button>
+          <p class="dl-formerr" role="alert" hidden></p>
+
+          <p class="dl-micro">
+            Wiadomość przychodzi zwykle w&nbsp;ciągu minuty.
+            Nadawca: contact@gravity-integration.com.
+          </p>
+        </form>
+
+        <div class="dl-done" hidden>
+          <svg class="dl-done-tick" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+            <circle cx="22" cy="22" r="20" pathLength="1" />
+            <path d="M13 22.5 19.4 28.8 31 16.5" pathLength="1" />
+          </svg>
+          <h2 class="dl-done-h">Link jest w&nbsp;drodze</h2>
+          <p class="dl-done-p">
+            Wysłaliśmy go na&nbsp;<strong data-done="email"></strong>. Szukaj
+            wiadomości <strong>„Witaj w&nbsp;gravity.integration”</strong>{' '}
+            od&nbsp;contact@gravity-integration.com.
+          </p>
+          <p class="dl-done-note">
+            Nie widzisz jej po&nbsp;kilku minutach? Zajrzyj do&nbsp;folderu
+            Oferty lub Spam. W&nbsp;międzyczasie możesz przejrzeć{' '}
+            <a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">
+              dokumentację online<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Breadcrumbs sit between the dark hero and the light content, exactly
+      where every other subpage puts them. */}
+  {crumbs.length > 0 && <Breadcrumbs items={crumbs} />}
+
+  {/* ============================== 3 steps ============================== */}
+  <section id="section1" class="dl-steps" data-scroll data-scroll-opacity>
+    <div class="dl-wrap">
+      <h2 class="dl-h2">Od&nbsp;formularza do&nbsp;działającej integracji</h2>
+      <ol class="dl-steps-list" role="list">
+        {steps.map((s) => (
+          <li class="dl-step">
+            <span class="dl-step-n" aria-hidden="true">{s.n}</span>
+            <h3 class="dl-step-h">{s.h}</h3>
+            <p class="dl-step-p">{s.p}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* ========================= what you download ========================= */}
+  <section id="section2" class="dl-proof">
+    <div class="dl-wrap dl-proof-grid">
+      <div class="dl-proof-copy" data-scroll data-scroll-opacity>
+        <h2 class="dl-h2">To, co&nbsp;pobierasz, to&nbsp;pełne środowisko integracyjne</h2>
+        <ul class="dl-caps" role="list">
+          {capabilities.map((c) => (
+            <li>
+              <span class="dl-dot" aria-hidden="true"></span>
+              <span set:html={c} />
+            </li>
+          ))}
+        </ul>
+        <p class="dl-spec">
+          Wersja&nbsp;4 · Windows · licencja komercyjna od&nbsp;2&nbsp;999&nbsp;PLN/rok
+          dopiero, gdy&nbsp;wychodzisz poza&nbsp;testy.
+        </p>
+      </div>
+      <figure class="dl-shot" data-scroll data-scroll-opacity>
+        <img
+          src="/media/kapitan-navi-gravity-integration-etl.png"
+          alt="Wizualny edytor przepływów gravity.integration — projekt integracji RCP z bazą PostgreSQL"
+          width="1920"
+          height="1039"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+    <div class="dl-wrap dl-clients" data-scroll data-scroll-opacity>
+      <p class="dl-clients-h">Pracuje już m.in.&nbsp;w:</p>
+      <ul class="dl-logos" role="list">
+        {clients.map((c) => (
+          <li>
+            <a href={`/case-studies/#${c.anchor}`} aria-label={`Case study: ${c.alt}`}>
+              <img src={c.src} alt={c.alt} width="800" height="400" loading="lazy" decoding="async" />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class="dl-cases-link" href="/case-studies/">Zobacz case studies&nbsp;→</a>
+    </div>
+  </section>
+
+  {/* ============================ documentation ============================ */}
+  <section id="section3" class="dl-docs">
+    <div class="dl-wrap dl-docs-grid">
+      <div class="dl-docs-copy" data-scroll data-scroll-opacity>
+        <h2 class="dl-h2">Wolisz najpierw poczytać?</h2>
+        <p class="dl-docs-p">
+          Interaktywna dokumentacja oprogramowania jest dostępna pod&nbsp;adresem
+          docs.gravity-integration.com. Jeśli potrzebujesz wersji offline,
+          pobierz podręcznik PDF — miej jednak na&nbsp;uwadze,
+          że&nbsp;jest to&nbsp;wersja z&nbsp;<strong>2024</strong>&nbsp;roku.
+        </p>
+        <div class="dl-docs-actions">
+          <a
+            class="dl-btn dl-btn-solid"
+            href="https://docs.gravity-integration.com"
+            target="_blank"
+            rel="noopener"
+          >
+            Otwórz dokumentację<span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+          </a>
+          <a
+            class="dl-btn dl-btn-ghost"
+            href="https://gravityintegration.com/manual/gravity_podrecznik_pl.pdf"
+          >
+            Pobierz podręcznik PDF&nbsp;(2024)
+          </a>
+        </div>
+      </div>
+      <img
+        class="dl-docs-img"
+        src="/media/manual_mockup.jpg"
+        alt="Podręcznik gravity.integration — wizualizacja okładki"
+        width="672"
+        height="378"
+        loading="lazy"
+        decoding="async"
+        data-scroll
+        data-scroll-opacity
+      />
+    </div>
+  </section>
+
+  {/* ============================= demo band ============================= */}
+  <section class="dl-demo" data-scroll data-scroll-opacity>
+    <div class="dl-wrap dl-demo-grid">
+      <p class="dl-demo-p">
+        Chcesz zobaczyć produkt na&nbsp;żywo?{' '}
+        <strong>Umów 15-minutowe demo</strong>&nbsp;— pokażemy Twój scenariusz
+        integracji, nie&nbsp;slajdy.
+      </p>
+      <a class="dl-btn dl-btn-solid" href="/#section-demo">Umów demo</a>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Palette: the site's own tokens on two surfaces.
+     Measured contrast (WCAG):
+       hero lede  rgba(#fff,.84) on #0a0a12  → 13.5:1
+       trust      rgba(#fff,.92) on #0a0a12  → 16.2:1
+       card label rgba(#fff,.80) on #242538  → 8.6:1
+       input ink  #fff           on #16171f  → 18.9:1
+       placeholder rgba(#fff,.60) on #16171f → 11.3:1
+       micro      rgba(#fff,.72) on #242538  → 7.0:1
+       err        #ffc2c2        on #242538  → 8.0:1
+       button ink #0a0a12        on #27ea93  → 12.5:1
+       body       #464861        on #fff     → 8.9:1
+       spec       #5f6178        on #fff     → 6.0:1
+       green line #27ea93        on #242538  → 7.4:1 (non-text ok, text no) */
+  .dl {
+    --ink: #14152a;
+    --body: #464861;
+    --muted: #5f6178;
+    --green: var(--gi-green, #27ea93);
+    --green-deep: var(--gi-green-deep, #097a53);
+    --dark: var(--gi-bg-dark, #0a0a12);
+    --card: var(--gi-bg-card-dark, #242538);
+    --well: #16171f;
+    --well-focus: #1c1d29;
+    --line-dark: rgb(255 255 255 / 0.55);
+    --tint: #f3f4fb;
+    --line: #e4e5ef;
+    --err-text: #ffc2c2;
+    --err-line: #ff8f8f;
+    --hint: #ffd166;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: Epilogue, system-ui, sans-serif;
+    color: var(--body);
+  }
+  .dl-wrap {
+    max-width: var(--gi-container, 1140px);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .dl-h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: balance;
+    max-width: 34rem;
+  }
+
+  /* `hidden` vs. Astro's compounded scoped specificity — make it explicit. */
+  .dl [hidden] {
+    display: none !important;
+  }
+
+  /* ------------------------------- hero ------------------------------- */
+  .dl-hero {
+    background: var(--dark);
+    color: #fff;
+    padding: calc(var(--gi-bar-h, 44px) + clamp(6rem, 11vw, 8.5rem)) 0 clamp(3rem, 6vw, 4.5rem);
+  }
+  .dl-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(21rem, 27rem);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .dl-h1 {
+    margin: 0 0 1.1rem;
+    font-size: clamp(2rem, 4.6vw, 3.1rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #fff;
+    text-wrap: balance;
+    max-width: 32rem;
+  }
+  .dl-lede {
+    margin: 0 0 1.75rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.65;
+    color: rgb(255 255 255 / 0.84);
+    max-width: 30rem;
+    text-wrap: pretty;
+  }
+  .dl-trust {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .dl-trust li {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 0.7rem;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.92);
+  }
+  .dl-trust svg {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgb(39 234 147 / 0.16);
+    padding: 3px;
+    box-sizing: border-box;
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ------------------------------- form ------------------------------- */
+  .dl-card {
+    background: var(--card);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: var(--gi-radius-lg, 16px);
+    padding: clamp(1.5rem, 3vw, 2rem);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+  }
+  .dl-form {
+    /* legacy.css ships a blanket `form{max-width:26.5625rem}` */
+    max-width: none;
+    display: grid;
+    gap: 1.1rem;
+  }
+  .dl-card-h {
+    margin: 0 0 0.25rem;
+    font-size: 1.3rem;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .dl-label {
+    display: block;
+    color: rgb(255 255 255 / 0.8);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.4rem;
+  }
+  .dl-control {
+    position: relative;
+  }
+  .dl-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--well);
+    border: 1px solid var(--line-dark);
+    border-radius: 0.5rem;
+    padding: 0.7rem 2.4rem 0.7rem 1rem;
+    min-height: 2.9rem;
+    max-height: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem; /* ≥16px — smaller zooms the viewport on iOS */
+    line-height: 1.4;
+    transition:
+      border-color 0.18s var(--ease),
+      background-color 0.18s var(--ease),
+      box-shadow 0.18s var(--ease);
+  }
+  .dl-input::placeholder {
+    color: rgb(255 255 255 / 0.6);
+    opacity: 1;
+  }
+  .dl-input:hover {
+    background: var(--well-focus);
+  }
+  .dl-input:focus {
+    outline: none;
+  }
+  .dl-input:focus-visible {
+    background: var(--well-focus);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+  }
+  .dl-input:-webkit-autofill,
+  .dl-input:-webkit-autofill:hover,
+  .dl-input:-webkit-autofill:focus {
+    -webkit-box-shadow: inset 0 0 0 40px var(--well-focus) !important;
+    -webkit-text-fill-color: #fff !important;
+    caret-color: #fff;
+  }
+  .dl-field[data-state='invalid'] .dl-input {
+    border-color: var(--err-line);
+  }
+  .dl-field[data-state='invalid'] .dl-input:focus-visible {
+    box-shadow: 0 0 0 3px rgb(255 143 143 / 0.3);
+  }
+  .dl-field[data-state='valid'] .dl-input {
+    border-color: rgb(39 234 147 / 0.6);
+  }
+  .dl-tick {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: -0.55rem;
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .dl-tick path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .dl-field[data-state='valid'] .dl-tick {
+    opacity: 1;
+  }
+  .dl-field[data-state='valid'] .dl-tick path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.32s var(--ease);
+  }
+  .dl-err {
+    color: var(--err-text);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0.35rem 0 0;
+  }
+  .dl-hint {
+    color: var(--hint);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin: 0.35rem 0 0;
+  }
+  .dl-fill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: 0.35rem;
+    background: rgb(10 10 18 / 0.5);
+    color: var(--green);
+    border: 1px solid rgb(39 234 147 / 0.45);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    transition:
+      background-color 0.18s var(--ease),
+      border-color 0.18s var(--ease);
+  }
+  .dl-fill:hover {
+    background: rgb(10 10 18 / 0.72);
+    border-color: var(--green);
+  }
+  .dl-fill:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  .dl-consent {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.65rem;
+    cursor: pointer;
+    padding: 0.35rem 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: inherit;
+  }
+  .dl-consent input {
+    position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    opacity: 0;
+  }
+  .dl-check {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+    border: 1px solid var(--line-dark);
+    border-radius: 0.3rem;
+    background: var(--well);
+    display: grid;
+    place-items: center;
+    margin-top: 0.05rem;
+    transition:
+      background-color 0.18s var(--ease),
+      border-color 0.18s var(--ease),
+      box-shadow 0.18s var(--ease);
+  }
+  .dl-check svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: none;
+    stroke: #0a0a12;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .dl-check svg path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .dl-consent input:checked + .dl-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .dl-consent input:checked + .dl-check svg path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.3s var(--ease) 0.04s;
+  }
+  .dl-consent input:focus-visible + .dl-check {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+  }
+  .dl-field[data-state='invalid'] .dl-check {
+    border-color: var(--err-line);
+  }
+  .dl-consent-text {
+    color: rgb(255 255 255 / 0.8);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .dl-submit {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 3.25rem;
+    background: var(--green);
+    color: #0a0a12;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.9rem 1.5rem;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    text-indent: 0;
+    cursor: pointer;
+    transition:
+      background-color 0.18s var(--ease),
+      transform 0.18s var(--ease);
+  }
+  .dl-submit:hover {
+    background: #4ff0a8;
+  }
+  .dl-submit:active {
+    transform: translateY(1px);
+  }
+  .dl-submit:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+  .dl-submit-label,
+  .dl-submit-pending {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    transition: opacity 0.16s var(--ease);
+  }
+  .dl-submit-pending {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .dl-submit[data-busy] {
+    cursor: progress;
+  }
+  .dl-submit[data-busy] .dl-submit-label {
+    opacity: 0;
+  }
+  .dl-submit[data-busy] .dl-submit-pending {
+    opacity: 1;
+  }
+  .dl-spinner {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    animation: dl-spin 0.75s linear infinite;
+  }
+  .dl-spinner circle {
+    stroke: rgb(10 10 18 / 0.25);
+  }
+  .dl-spinner path {
+    stroke: #0a0a12;
+  }
+  @keyframes dl-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .dl-formerr {
+    color: var(--err-text);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .dl-formerr :global(a) {
+    color: var(--err-text);
+    text-decoration: underline;
+  }
+  .dl-micro {
+    margin: 0;
+    color: rgb(255 255 255 / 0.72);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .dl-hp {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ----------------------------- success ----------------------------- */
+  .dl-done {
+    text-align: center;
+    padding: 0.5rem 0 0.25rem;
+  }
+  .dl-done:focus {
+    outline: none;
+  }
+  .dl-done:focus-visible {
+    outline: 2px solid rgb(39 234 147 / 0.7);
+    outline-offset: 8px;
+    border-radius: 14px;
+  }
+  .dl-done-tick {
+    width: 3.25rem;
+    height: 3.25rem;
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 1rem;
+  }
+  .dl-done-tick circle,
+  .dl-done-tick path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .dl-done[data-in] .dl-done-tick circle {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.6s var(--ease);
+  }
+  .dl-done[data-in] .dl-done-tick path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.35s var(--ease) 0.34s;
+  }
+  .dl-done-h {
+    color: #fff;
+    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+    font-weight: 700;
+    margin: 0 0 0.6rem;
+  }
+  .dl-done-p {
+    color: rgb(255 255 255 / 0.86);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 auto 0.75rem;
+    max-width: 24rem;
+  }
+  .dl-done-p strong {
+    color: #fff;
+    font-weight: 600;
+    word-break: break-word;
+  }
+  .dl-done-note {
+    color: rgb(255 255 255 / 0.72);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0 auto;
+    max-width: 24rem;
+  }
+  .dl-done-note a {
+    color: var(--green);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .dl-done[data-in] .dl-done-h,
+  .dl-done[data-in] .dl-done-p,
+  .dl-done[data-in] .dl-done-note {
+    animation: dl-rise 0.5s var(--ease) both;
+  }
+  .dl-done[data-in] .dl-done-p {
+    animation-delay: 0.07s;
+  }
+  .dl-done[data-in] .dl-done-note {
+    animation-delay: 0.14s;
+  }
+  @keyframes dl-rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ------------------------------- steps ------------------------------- */
+  .dl-steps {
+    padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+  }
+  .dl-steps-list {
+    list-style: none;
+    margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3.5vw, 2.75rem);
+    counter-reset: none;
+  }
+  .dl-step {
+    position: relative;
+  }
+  .dl-step-n {
+    display: inline-grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: rgb(39 234 147 / 0.15);
+    color: var(--green-deep);
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 0.9rem;
+  }
+  /* connector between the numbers — the sequence is the point */
+  .dl-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 1.2rem;
+    left: 3.2rem;
+    right: -1.4rem;
+    height: 1px;
+    background: var(--line);
+  }
+  .dl-step-h {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.008em;
+  }
+  .dl-step-p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--body);
+    text-wrap: pretty;
+  }
+
+  /* ------------------------------- proof ------------------------------- */
+  .dl-proof {
+    background: var(--tint);
+    padding: clamp(3rem, 6vw, 4.5rem) 0;
+  }
+  .dl-proof-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: clamp(2rem, 4.5vw, 4rem);
+    align-items: center;
+  }
+  .dl-caps {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .dl-caps li {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--body);
+  }
+  .dl-caps :global(strong) {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .dl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-top: 0.62rem;
+    box-shadow: 0 0 0 4px rgb(39 234 147 / 0.15);
+  }
+  .dl-spec {
+    margin: 1.5rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .dl-shot {
+    margin: 0;
+  }
+  .dl-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
+  }
+  .dl-clients {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+  .dl-clients-h {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .dl-logos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  .dl-logos a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    min-height: 44px;
+    transition: border-color 0.18s var(--ease);
+  }
+  .dl-logos a:hover {
+    border-color: var(--green);
+  }
+  .dl-logos a:focus-visible {
+    outline: 2px solid var(--green-deep);
+    outline-offset: 2px;
+  }
+  .dl-logos img {
+    display: block;
+    width: auto;
+    height: 34px;
+  }
+  .dl-cases-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--green-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .dl-cases-link:focus-visible {
+    outline: 2px solid var(--green-deep);
+    outline-offset: 3px;
+  }
+
+  /* ------------------------------- docs ------------------------------- */
+  .dl-docs {
+    padding: clamp(3rem, 6vw, 4.5rem) 0;
+  }
+  .dl-docs-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    gap: clamp(2rem, 4.5vw, 4rem);
+    align-items: center;
+  }
+  .dl-docs-p {
+    margin: 1.1rem 0 1.6rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--body);
+    max-width: 34rem;
+    text-wrap: pretty;
+  }
+  .dl-docs-p :global(strong) {
+    color: var(--ink);
+  }
+  .dl-docs-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .dl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0;
+    transition:
+      background-color 0.18s var(--ease),
+      border-color 0.18s var(--ease),
+      transform 0.18s var(--ease);
+  }
+  .dl-btn:active {
+    transform: translateY(1px);
+  }
+  .dl-btn-solid {
+    background: var(--green);
+    color: #0a0a12;
+  }
+  .dl-btn-solid:hover {
+    background: #4ff0a8;
+    color: #0a0a12;
+  }
+  .dl-btn-ghost {
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+  }
+  .dl-btn-ghost:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+  .dl-btn:focus-visible {
+    outline: 2px solid var(--green-deep);
+    outline-offset: 3px;
+  }
+  .dl-docs-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+  }
+
+  /* ----------------------------- demo band ----------------------------- */
+  .dl-demo {
+    background: var(--dark);
+    padding: clamp(2.25rem, 4.5vw, 3.25rem) 0;
+  }
+  .dl-demo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+  }
+  .dl-demo-p {
+    margin: 0;
+    color: rgb(255 255 255 / 0.86);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 38rem;
+    text-wrap: pretty;
+  }
+  .dl-demo-p strong {
+    color: #fff;
+  }
+  .dl-demo .dl-btn:focus-visible {
+    outline-color: var(--green);
+  }
+
+  /* ------------------------------ reveal ------------------------------ */
+  .dl [data-scroll-opacity] {
+    transform: translateY(14px);
+    transition: transform 0.7s var(--ease);
+  }
+  .dl :global(.is-inview)[data-scroll-opacity] {
+    transform: none;
+  }
+  :global(html:not(.js)) .dl [data-scroll-opacity] {
+    transform: none;
+  }
+
+  /* ---------------------------- responsive ---------------------------- */
+  @media (max-width: 980px) {
+    .dl-hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .dl-card {
+      max-width: 34rem;
+    }
+    .dl-steps-list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.75rem;
+      max-width: 34rem;
+    }
+    .dl-step:not(:last-child)::before {
+      display: none;
+    }
+    .dl-proof-grid,
+    .dl-docs-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .dl-docs-img {
+      max-width: 24rem;
+    }
+  }
+  @media (max-width: 560px) {
+    .dl-docs-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .dl-btn {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .dl-demo-grid {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .dl-logos {
+      width: 100%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dl *,
+    .dl *::before,
+    .dl *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+    .dl-spinner {
+      animation: dl-spin 2.4s linear infinite !important;
+    }
+    .dl-tick path,
+    .dl-check svg path,
+    .dl-done-tick circle,
+    .dl-done-tick path {
+      stroke-dashoffset: 0 !important;
+    }
+    .dl [data-scroll-opacity] {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  /* Same "smart & instant" runtime as the demo form, reduced to two fields.
+     With JS off the form POSTs natively to MailerLite and the link still goes
+     out — this layer keeps the visitor on the page and answers them. */
+  import { mlAction } from '../lib/mailerlite';
+  import { mlSubmit, trackLead } from '../scripts/ml-forms';
+
+  const FREE_MAIL = new Set([
+    'gmail.com', 'googlemail.com', 'wp.pl', 'o2.pl', 'onet.pl', 'onet.eu',
+    'poczta.onet.pl', 'interia.pl', 'interia.eu', 'op.pl', 'vp.pl', 'tlen.pl',
+    'go2.pl', 'autograf.pl', 'buziaczek.pl', 'poczta.fm', 'gazeta.pl',
+    'yahoo.com', 'yahoo.pl', 'outlook.com', 'outlook.pl', 'hotmail.com',
+    'hotmail.pl', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com',
+    'aol.com', 'gmx.com', 'gmx.net', 'gmx.de', 'proton.me', 'protonmail.com',
+    'pm.me', 'zoho.com', 'yandex.ru', 'mail.ru',
+  ]);
+  const MULTI_TLD = new Set([
+    'com.pl', 'net.pl', 'org.pl', 'edu.pl', 'gov.pl', 'info.pl', 'biz.pl',
+    'waw.pl', 'co.uk', 'org.uk', 'com.de', 'co.jp', 'com.au',
+  ]);
+  const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+
+  const messages = {
+    'dl-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
+    'dl-email-empty': 'Bez adresu e-mail nie mamy jak wysłać linku.',
+    'dl-company': 'Podaj nazwę firmy — przygotujemy się do ewentualnych pytań o Wasze systemy.',
+    'dl-consent': 'Potrzebujemy tej zgody, żeby móc wysłać link.',
+  } as const;
+
+  function domainOf(email: string): string {
+    const at = email.lastIndexOf('@');
+    return at === -1 ? '' : email.slice(at + 1).trim().toLowerCase();
+  }
+
+  function companyFromDomain(domain: string): string {
+    if (!domain || FREE_MAIL.has(domain)) return '';
+    const parts = domain.replace(/^www\./, '').split('.');
+    if (parts.length < 2) return '';
+    const last2 = parts.slice(-2).join('.');
+    const core = MULTI_TLD.has(last2) ? parts.slice(0, -2) : parts.slice(0, -1);
+    let label = core[core.length - 1] || '';
+    if (['mail', 'poczta', 'smtp', 'email', 'grupa'].includes(label) && core.length > 1) {
+      label = core[core.length - 2];
+    }
+    if (!label || label.length < 2 || /^\d+$/.test(label)) return '';
+    return label
+      .split(/[-_]+/)
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+  }
+
+  function initDownloadForm(form: HTMLFormElement) {
+    const card = form.closest('.dl-card') as HTMLElement | null;
+    const done = card?.querySelector('.dl-done') as HTMLElement | null;
+    const formErr = form.querySelector('.dl-formerr') as HTMLElement | null;
+    const submit = form.querySelector('.dl-submit') as HTMLButtonElement | null;
+    if (!card || !submit) return;
+
+    form.noValidate = true;
+
+    const ts = form.querySelector<HTMLInputElement>('[data-key="_dl_ts"]');
+    if (ts) ts.value = String(Date.now());
+
+    const wrap = (name: string) =>
+      form.querySelector<HTMLElement>(`.dl-field[data-field="${name}"]`);
+    const input = (name: string) =>
+      form.querySelector<HTMLInputElement>(`[data-key="${name}"]`);
+
+    const touched = new Set<string>();
+
+    function setError(name: string, msg: string | null) {
+      const w = wrap(name);
+      const el = w?.querySelector<HTMLElement>('.dl-err');
+      const ctl = input(name);
+      if (!w || !el || !ctl) return;
+      if (msg) {
+        el.textContent = msg;
+        el.hidden = false;
+        w.dataset.state = 'invalid';
+        ctl.setAttribute('aria-invalid', 'true');
+      } else {
+        el.textContent = '';
+        el.hidden = true;
+        ctl.setAttribute('aria-invalid', 'false');
+        delete w.dataset.state;
+      }
+    }
+
+    function setValid(name: string, ok: boolean) {
+      const w = wrap(name);
+      if (!w) return;
+      if (ok) w.dataset.state = 'valid';
+      else if (w.dataset.state === 'valid') delete w.dataset.state;
+    }
+
+    function hint(name: string, text: string | null) {
+      const el = wrap(name)?.querySelector<HTMLElement>('.dl-hint');
+      if (!el) return;
+      el.textContent = text || '';
+      el.hidden = !text;
+    }
+
+    function offer(name: string, text: string | null, value = '') {
+      const btn = wrap(name)?.querySelector<HTMLButtonElement>('.dl-fill');
+      if (!btn) return;
+      const label = btn.querySelector<HTMLElement>('.dl-fill-text');
+      if (label) label.textContent = text || '';
+      btn.dataset.fill = value;
+      btn.hidden = !text;
+    }
+
+    function check(name: string, opts: { silent?: boolean } = {}): boolean {
+      const ctl = input(name);
+      if (!ctl) return true;
+
+      if (name === 'dl-consent') {
+        const ok = (ctl as HTMLInputElement).checked;
+        if (!ok && !opts.silent) setError(name, messages['dl-consent']);
+        else setError(name, null);
+        return ok;
+      }
+
+      const v = ctl.value.trim();
+      if (!v) {
+        setValid(name, false);
+        if (!opts.silent) {
+          setError(
+            name,
+            name === 'dl-email' ? messages['dl-email-empty'] : messages['dl-company'],
+          );
+        }
+        return false;
+      }
+
+      let ok = v.length >= 2;
+      if (name === 'dl-email') ok = EMAIL_RE.test(v);
+      setError(name, ok || opts.silent ? null : messages[name as 'dl-email' | 'dl-company']);
+      setValid(name, ok);
+      return ok;
+    }
+
+    let dismissed = '';
+
+    function reactToEmail() {
+      const email = input('dl-email');
+      const company = input('dl-company');
+      if (!email || !company) return;
+      const v = email.value.trim();
+      if (!EMAIL_RE.test(v)) {
+        hint('dl-email', null);
+        offer('dl-company', null);
+        return;
+      }
+      const domain = domainOf(v);
+      hint(
+        'dl-email',
+        FREE_MAIL.has(domain)
+          ? 'To adres prywatny. Link zadziała, ale na służbowy dorzucimy materiały dla zespołu.'
+          : null,
+      );
+      const guess = companyFromDomain(domain);
+      if (guess && !company.value.trim() && guess !== dismissed) {
+        offer('dl-company', `Wstaw „${guess}”`, guess);
+      } else {
+        offer('dl-company', null);
+      }
+    }
+
+    form.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.dl-fill');
+      if (!btn) return;
+      const company = input('dl-company');
+      if (!company) return;
+      dismissed = btn.dataset.fill || '';
+      company.value = dismissed;
+      offer('dl-company', null);
+      touched.add('dl-company');
+      check('dl-company');
+      company.focus();
+    });
+
+    (['dl-email', 'dl-company'] as const).forEach((name) => {
+      const ctl = input(name);
+      if (!ctl) return;
+      ctl.addEventListener('blur', () => {
+        touched.add(name);
+        check(name);
+        if (name === 'dl-email') reactToEmail();
+      });
+      ctl.addEventListener('input', () => {
+        if (touched.has(name)) {
+          check(name, { silent: wrap(name)?.dataset.state !== 'invalid' });
+        } else {
+          check(name, { silent: true });
+        }
+        if (name === 'dl-email') reactToEmail();
+      });
+    });
+
+    const consent = input('dl-consent');
+    consent?.addEventListener('change', () => {
+      touched.add('dl-consent');
+      check('dl-consent');
+    });
+
+    const ORDER = ['dl-email', 'dl-company', 'dl-consent'];
+
+    function showDone(email: string) {
+      if (!done) return;
+      const mailEl = done.querySelector<HTMLElement>('[data-done="email"]');
+      if (mailEl) mailEl.textContent = email;
+      const h = card!.offsetHeight;
+      form.hidden = true;
+      done.hidden = false;
+      card!.style.minHeight = `${h}px`;
+      requestAnimationFrame(() => {
+        done.dataset.in = '';
+        window.setTimeout(() => {
+          card!.style.minHeight = '';
+        }, 500);
+      });
+      done.setAttribute('tabindex', '-1');
+      done.focus({ preventScroll: true });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submit.dataset.busy !== undefined) return;
+
+      ORDER.forEach((n) => touched.add(n));
+      const bad = ORDER.filter((n) => !check(n));
+      if (formErr) {
+        formErr.hidden = true;
+        formErr.textContent = '';
+      }
+      if (bad.length) {
+        const first = input(bad[0]);
+        first?.focus();
+        first?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+
+      const email = input('dl-email')?.value.trim() || '';
+
+      const hp = form.querySelector<HTMLInputElement>('input[name="website_url"]');
+      const startedAt = Number(ts?.value || 0);
+      const tooFast = startedAt > 0 && Date.now() - startedAt < 2000;
+      if (hp?.value.trim() || tooFast) {
+        showDone(email);
+        return;
+      }
+
+      submit.dataset.busy = '';
+      submit.setAttribute('aria-busy', 'true');
+
+      const result = await mlSubmit(mlAction('download'), {
+        email,
+        company: input('dl-company')?.value.trim(),
+      });
+
+      delete submit.dataset.busy;
+      submit.removeAttribute('aria-busy');
+
+      if (result.ok) {
+        showDone(email);
+        trackLead('download_link_requested');
+        return;
+      }
+
+      if (result.kind === 'email') {
+        touched.add('dl-email');
+        setError('dl-email', result.message);
+        input('dl-email')?.focus();
+        return;
+      }
+
+      if (formErr) {
+        formErr.innerHTML =
+          'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
+          '<a href="mailto:contact@caffeine-minds.com?subject=Pobieranie%20gravity.integration">' +
+          'contact@caffeine-minds.com</a> — wyślemy link ręcznie.';
+        formErr.hidden = false;
+      }
+    });
+
+    /* Dev affordance: /pobieranie/?dl-preview=success renders the post-submit
+       state without sending a real subscription to MailerLite. */
+    if (new URLSearchParams(location.search).get('dl-preview') === 'success') {
+      showDone('jan@firma.pl');
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLFormElement>('form[data-form="download"]')
+    .forEach(initDownloadForm);
+</script>

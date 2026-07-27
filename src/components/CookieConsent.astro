@@ -1,0 +1,351 @@
+---
+/* Cookie consent bar.
+
+   The site sets two non-essential cookie families, both Google and both loaded
+   by the same tag: Analytics 4 (`_ga*`, property G-EWVWPJGYVM) and Ads
+   (`_gcl*`, AW-11029031415). Everything else it writes is first-party and
+   functional — `gi_bar_hidden_*` remembers a dismissed announcement, `gi_consent`
+   remembers this very choice.
+
+   The control stays binary even so, because the two arrive together: one
+   gtag.js request configures both ids, so there is no state in which analytics
+   runs and advertising doesn't. Offering separate switches would be describing
+   an architecture we don't have. What the second tag does change is the copy —
+   the paragraph has to say "advertising", not just "statistics", or the answer
+   isn't informed. A three-tier "manage preferences" drawer over a single real
+   decision would be theatre, and theatre is what makes people click Accept
+   without reading.
+
+   Two rules drive the implementation:
+
+   1. Nothing loads before the answer. The GA4 script tag is not in the document
+      — Site.astro publishes `window.giEnableAnalytics()` and this component (or
+      a stored `gi_consent=granted`) calls it. Before consent there is no request
+      to googletagmanager.com at all, which is a stronger position than Consent
+      Mode's cookieless pings. Consent Mode v2 defaults are still declared, so
+      the tag behaves correctly the moment it does load.
+   2. Refusing is exactly as easy as accepting. Same size, same shape, same row,
+      one click each — the only difference is fill colour. There is no × that
+      quietly means "ask me again on every page", and no pre-ticked anything.
+
+   Placement is the bottom edge on purpose: the announcement bar owns the top,
+   is `position: fixed`, and main.js measures its height into `--gi-bar-h` to
+   offset the body and the header. Anything else pinned up there would either
+   corrupt that measurement or sit on top of the bar. */
+import site from '../data/site.json';
+---
+
+<!-- COOKIE CONSENT -->
+<aside
+  id="gi-consent"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="gi-consent-title"
+  aria-describedby="gi-consent-body"
+  hidden
+>
+  <div class="gi-consent-inner">
+    <div class="gi-consent-copy">
+      <h2 id="gi-consent-title">Ciasteczka na tej stronie</h2>
+      <p id="gi-consent-body">
+        Niezbędne pliki cookie utrzymują działanie serwisu i&nbsp;zapamiętują tę&nbsp;decyzję. Do
+        statystyk odwiedzin i&nbsp;do&nbsp;działań reklamowych używamy narzędzi Google —
+        Google&nbsp;Analytics oraz Google&nbsp;Ads. Uruchamiamy je&nbsp;tylko wtedy, gdy wyrazisz
+        zgodę. Szczegóły znajdziesz w&nbsp;<a href="/polityka-prywatnosci/#cookies"
+          >polityce prywatności</a
+        >.
+      </p>
+    </div>
+    <div class="gi-consent-actions">
+      <button type="button" class="gi-consent-btn gi-consent-accept" data-consent="granted">
+        Akceptuję
+      </button>
+      <button type="button" class="gi-consent-btn gi-consent-reject" data-consent="denied">
+        Tylko niezbędne
+      </button>
+    </div>
+  </div>
+</aside>
+<!-- END COOKIE CONSENT -->
+
+<style>
+  /* legacy.css carries the old theme's HTML5 reset, which includes
+     `aside{display:block}` — an author rule, so it outranks the UA's
+     `[hidden]{display:none}` and the `hidden` attribute silently stops working.
+     Restore it explicitly; the whole no-flash story depends on it. */
+  #gi-consent[hidden] {
+    display: none;
+  }
+
+  #gi-consent {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: var(--gi-z-consent, 35);
+    background: var(--gi-bg-dark, #0a0a12);
+    color: var(--gi-text-on-dark, #fff);
+    border-top: 1px solid rgb(var(--gi-green-rgb, 39 234 147) / 0.4);
+    box-shadow: 0 -18px 44px rgb(0 0 0 / 0.38);
+    font-family: var(--gi-font-heading, Epilogue, system-ui, sans-serif);
+  }
+
+  /* The reveal is a state class, not the default: with JS off nothing shows
+     (and nothing loads either), and for anyone who already answered the bar
+     never paints at all rather than flashing in and out. */
+  #gi-consent {
+    transform: translateY(100%);
+    opacity: 0;
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.35s ease-out;
+  }
+  #gi-consent.is-in {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .gi-consent-inner {
+    max-width: var(--gi-container, 1140px);
+    margin: 0 auto;
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .gi-consent-copy {
+    flex: 1 1 auto;
+    /* keeps the paragraph inside the 65–75ch band on wide screens */
+    max-width: 68ch;
+  }
+
+  #gi-consent h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--gi-text-on-dark, #fff);
+  }
+
+  #gi-consent p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    /* 75% white on #0a0a12 measures ~11.4:1 — muted without going washed out */
+    color: var(--gi-text-muted-on-dark, rgb(255 255 255 / 0.75));
+    text-wrap: pretty;
+  }
+
+  #gi-consent a {
+    color: var(--gi-green, #27ea93);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  #gi-consent a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .gi-consent-actions {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.65rem;
+  }
+
+  /* Both actions are filled buttons of identical geometry. Rejecting must cost
+     the same click and read at the same weight as accepting; only the surface
+     tells them apart. */
+  .gi-consent-btn {
+    min-height: 44px;
+    min-width: 10.5rem;
+    padding: 0.7rem 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 2rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .gi-consent-accept {
+    background: var(--gi-green, #27ea93);
+    color: var(--gi-bg-dark, #0a0a12); /* 12.5:1 */
+  }
+  .gi-consent-accept:hover,
+  .gi-consent-accept:focus-visible {
+    background: #4df0a9;
+  }
+
+  .gi-consent-reject {
+    background: var(--gi-bg-card-dark, #242538);
+    color: var(--gi-text-on-dark, #fff); /* 14.6:1 */
+    border-color: rgb(255 255 255 / 0.28);
+  }
+  .gi-consent-reject:hover,
+  .gi-consent-reject:focus-visible {
+    background: #32334a;
+    border-color: rgb(255 255 255 / 0.5);
+  }
+
+  /* The UA's blue ring all but vanishes on #0a0a12 — use the brand green. */
+  #gi-consent :focus-visible {
+    outline: 2px solid var(--gi-green, #27ea93);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 860px) {
+    .gi-consent-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.1rem;
+      padding: 1.15rem 1.25rem calc(1.15rem + env(safe-area-inset-bottom, 0px));
+    }
+    .gi-consent-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .gi-consent-btn {
+      min-width: 0;
+      padding: 0.7rem 0.75rem;
+    }
+  }
+
+  /* A phone-height budget, not just a phone-width one. Stacked, this bar was
+     eating ~34% of a 375×812 screen — at which point it stops being a bar and
+     starts being a wall, and a wall is what trains people to hit the green
+     button without reading. Tightening the leading, the gaps and the padding
+     (and keeping the two actions side by side, which they fit at this width)
+     brings it under a third with no words removed: the paragraph is the legal
+     substance, so it shrinks, it doesn't get truncated. */
+  @media (max-width: 575.98px) {
+    .gi-consent-inner {
+      gap: 0.85rem;
+      padding: 1rem 1.1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+    #gi-consent h2 {
+      margin-bottom: 0.2rem;
+      font-size: 0.9375rem;
+    }
+    #gi-consent p {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+    .gi-consent-actions {
+      gap: 0.5rem;
+    }
+    .gi-consent-btn {
+      padding: 0.7rem 0.5rem;
+      font-size: 0.8125rem;
+      letter-spacing: 0;
+    }
+  }
+
+  /* Below ~340px two columns would break "Tylko niezbędne" across lines, which
+     costs more height than stacking does. */
+  @media (max-width: 340px) {
+    .gi-consent-actions {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #gi-consent {
+      transition: none;
+      transform: none;
+      opacity: 1;
+    }
+    .gi-consent-btn,
+    #gi-consent a {
+      transition: none;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ ga4: site.ga4 }}>
+  (function () {
+    var bar = document.getElementById('gi-consent');
+    if (!bar) return;
+
+    var KEY = 'gi_consent';
+    /* Six months, not a year: consent is supposed to be revisited, and half a
+       year is the span most EU regulators treat as still-current. */
+    var MAX_AGE = 60 * 60 * 24 * 182;
+
+    function read() {
+      var m = document.cookie.match(/(?:^|;\s*)gi_consent=(granted|denied)/);
+      return m ? m[1] : null;
+    }
+
+    function show() {
+      bar.hidden = false;
+      /* two frames so the initial translated state actually paints before the
+         class flips — otherwise the browser collapses it into no transition */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          bar.classList.add('is-in');
+        });
+      });
+    }
+
+    function hide() {
+      bar.classList.remove('is-in');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        bar.hidden = true;
+        return;
+      }
+      window.setTimeout(function () {
+        bar.hidden = true;
+      }, 500);
+    }
+
+    function decide(value) {
+      document.cookie = KEY + '=' + value + ';path=/;max-age=' + MAX_AGE + ';samesite=lax';
+      if (value === 'granted') {
+        if (window.giEnableAnalytics) window.giEnableAnalytics();
+      } else if (window.giDisableAnalytics) {
+        window.giDisableAnalytics();
+      }
+      hide();
+    }
+
+    bar.querySelectorAll('[data-consent]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        decide(btn.getAttribute('data-consent'));
+      });
+    });
+
+    /* Withdrawing has to be as easy as granting, so anything on the page can
+       reopen this — the footer link is the one that ships. Reopening clears the
+       stored answer *and* turns analytics back off, so an unanswered bar never
+       means "still tracking". */
+    window.giOpenConsent = function () {
+      document.cookie = KEY + '=;path=/;max-age=0;samesite=lax';
+      if (window.giDisableAnalytics) window.giDisableAnalytics();
+      show();
+      var first = bar.querySelector('.gi-consent-btn');
+      if (first) first.focus();
+    };
+    document.querySelectorAll('[data-consent-open]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.giOpenConsent();
+      });
+    });
+
+    if (!read()) {
+      /* Let the page settle first — arriving on a hero and being handed a legal
+         question in the same frame is how banners get dismissed unread. */
+      window.setTimeout(show, 700);
+    }
+
+    /* `ga4` is read by Site.astro's loader; referenced here so the define:vars
+       binding stays honest if that ever moves. */
+    void ga4;
+  })();
+</script>

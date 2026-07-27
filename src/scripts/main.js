@@ -151,25 +151,78 @@ function initParallax() {
   update();
 }
 
-/* ---- announcement bar close ---- */
+/* ---- announcement bar: close + measured height ---- */
 function initAnnounceBar() {
   const bar = document.getElementById('gi-announce-bar');
   if (!bar) return;
+  let hidden = false;
+
+  // The bar's content wraps to two lines on phones, so its height isn't the
+  // 44px the CSS assumes; body margin and the fixed header both offset from
+  // --gi-bar-h, so measure the real height and keep it in sync on resize.
+  const sync = () => {
+    if (hidden) return;
+    const h = Math.round(bar.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--gi-bar-h', h + 'px');
+  };
   const hide = () => {
+    hidden = true;
     bar.style.display = 'none';
     document.documentElement.style.setProperty('--gi-bar-h', '0px');
   };
-  if (document.cookie.includes('gi_bar_hidden=1')) hide();
+
+  // Scoped to the announcement (see AnnouncementBar.astro): dismissing v4 must
+  // not silence v5. A missing data-campaign falls back to a shared key rather
+  // than to "never dismissible".
+  const key = `gi_bar_hidden_${bar.dataset.campaign || 'x'}`;
+
+  if (document.cookie.includes(`${key}=1`)) hide();
+  else {
+    sync();
+    if ('ResizeObserver' in window) new ResizeObserver(sync).observe(bar);
+    else window.addEventListener('resize', sync, { passive: true });
+  }
+
   const close = document.getElementById('gi-bar-close');
   if (close)
     close.addEventListener('click', () => {
       hide();
-      document.cookie = 'gi_bar_hidden=1;path=/;max-age=86400';
+      // A year, not a day. The key is per-campaign now, so the next
+      // announcement shows regardless of what was dismissed for this one.
+      document.cookie = `${key}=1;path=/;max-age=31536000;samesite=lax`;
     });
+}
+
+/* Safety net for the new-tab rule.
+ *
+ * Every link the section renderers emit already goes through lib/links.ts, but
+ * a chunk of the site's copy is raw HTML inside the content JSON, where an <a>
+ * is hand-written and nothing enforces the policy. This catches those. It is a
+ * net, not the mechanism — the markup is correct on its own, so with JS off a
+ * missed docs link merely opens in the same tab rather than breaking. */
+const NEW_TAB_HOSTS = ['docs.gravity-integration.com'];
+const NEW_TAB_NOTE = ' (otwiera się w nowej karcie)';
+function initOutboundLinks() {
+  const sel = NEW_TAB_HOSTS.map((h) => `a[href*="${h}"]`).join(',');
+  document.querySelectorAll(sel).forEach((a) => {
+    a.target = '_blank';
+    if (!/noopener/.test(a.rel)) a.rel = a.rel ? `${a.rel} noopener` : 'noopener';
+    /* The note is checked separately from the target: a hand-written link in the
+       content JSON may carry `target="_blank"` and still say nothing to a screen
+       reader, and an aria-label carries its own announcement already. */
+    const announced = a.hasAttribute('aria-label') || a.textContent.includes(NEW_TAB_NOTE);
+    if (!announced) {
+      const note = document.createElement('span');
+      note.className = 'visually-hidden';
+      note.textContent = NEW_TAB_NOTE;
+      a.appendChild(note);
+    }
+  });
 }
 
 document.documentElement.classList.add('js');
 document.addEventListener('DOMContentLoaded', () => {
+  initOutboundLinks();
   initAnnounceBar();
   initReveal();
   initHeader();

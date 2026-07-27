@@ -8,6 +8,7 @@ import '../styles/legacy.css';
 import '../styles/site.css';
 import site from '../data/site.json';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -17,8 +18,17 @@ interface Props {
   path: string;
   bodyClass?: string;
   ogImage?: string;
+  /** override for special pages — the 404 sets `noindex,follow` */
+  robots?: string;
 }
-const { title, description = '', path, bodyClass = '', ogImage = '/og-homehero.png' } = Astro.props;
+const {
+  title,
+  description = '',
+  path,
+  bodyClass = '',
+  ogImage = '/og-homehero.png',
+  robots = 'index,follow',
+} = Astro.props;
 const canonical = new URL(path, site.siteUrl).href;
 ---
 
@@ -33,7 +43,7 @@ const canonical = new URL(path, site.siteUrl).href;
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content={robots} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.siteName} />
@@ -72,15 +82,86 @@ const canonical = new URL(path, site.siteUrl).href;
       })}
     />
 
-    <!-- GA4 — same property as the WP site for data continuity -->
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4}`}></script>
-    <script is:inline define:vars={{ ga4: site.ga4 }}>
+    <!-- GA4 + Google Ads — the same two properties the WP site ran
+         (G-EWVWPJGYVM from Code Snippets, AW-11029031415 from the Head & Footer
+         plugin), but consent-gated instead of unconditional.
+
+         The tag is deliberately NOT a <script src> here: until someone accepts,
+         no request to googletagmanager.com is made at all. CookieConsent.astro
+         calls giEnableAnalytics() on accept; on a return visit the stored
+         `gi_consent=granted` cookie calls it below, before first paint, so
+         nothing is lost for people who already said yes.
+
+         One library, two configs. gtag.js is fetched once with the GA4 id and
+         both properties are then `config`-ed against it — that is how Google
+         intends multiple ids to share a page, and it keeps the "exactly one
+         network request after consent" property the harness asserts.
+
+         The function names stay analytics-flavoured because the choice they
+         serve is still binary: one bar, one answer, both tags. Splitting them
+         would imply a granularity the UI doesn't offer. -->
+    <script is:inline define:vars={{ ga4: site.ga4, ads: site.googleAds }}>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag('js', new Date());
-      gtag('config', ga4);
+      window.gtag = gtag;
+      /* Read by the form handlers so `generate_lead` can be addressed at the
+         GA4 property explicitly rather than fanning out to every configured id. */
+      window.giGa4Id = ga4;
+
+      /* Consent Mode v2 defaults. These must be queued before the tag loads —
+         belt and braces behind the fact that we don't load it at all yet. */
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+      });
+
+      var giGaLoaded = false;
+      window.giEnableAnalytics = function () {
+        gtag('consent', 'update', {
+          analytics_storage: 'granted',
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+        });
+        if (giGaLoaded) return;
+        giGaLoaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
+        document.head.appendChild(s);
+        gtag('js', new Date());
+        gtag('config', ga4, { anonymize_ip: true });
+        if (ads) gtag('config', ads);
+      };
+
+      window.giDisableAnalytics = function () {
+        gtag('consent', 'update', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+        });
+        /* Consent Mode stops new writes; it doesn't clear what a previous
+           "accept" already stored. Withdrawal that leaves `_ga` or `_gcl` on the
+           device isn't withdrawal — `_gcl*` is the Ads click-id family, so it
+           goes the same way as the analytics pair. */
+        document.cookie.split(';').forEach(function (c) {
+          var name = c.split('=')[0].trim();
+          if (name.indexOf('_ga') !== 0 && name.indexOf('_gcl') !== 0) return;
+          var host = location.hostname;
+          document.cookie = name + '=;path=/;max-age=0';
+          document.cookie = name + '=;path=/;domain=' + host + ';max-age=0';
+          document.cookie = name + '=;path=/;domain=.' + host + ';max-age=0';
+        });
+      };
+
+      if (/(?:^|;\s*)gi_consent=granted/.test(document.cookie)) window.giEnableAnalytics();
     </script>
     <slot name="head" />
   </head>
@@ -93,6 +174,7 @@ const canonical = new URL(path, site.siteUrl).href;
       </main>
       <Footer />
     </div>
+    <CookieConsent />
     <script src="../scripts/main.js"></script>
   </body>
 </html>

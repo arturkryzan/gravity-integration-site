@@ -1,0 +1,71 @@
+# gravity-integration.com — static Astro build (Apache)
+# Ships inside dist/ (Astro copies public/ verbatim). Requires AllowOverride All
+# (or at least FileInfo Indexes) in the vhost. Every module block is wrapped in
+# <IfModule>, so a missing module degrades silently instead of 500-ing the site.
+
+Options -Indexes
+AddDefaultCharset utf-8
+
+# MIME types Apache sometimes lacks out of the box
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg
+AddType application/manifest+json .webmanifest
+
+# ---------------------------------------------------------------- errors ----
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------- canonical host + redirects ----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Legacy WordPress URLs (were WP snippet 6 — MUST survive the rebuild).
+  # These run BEFORE the canonical-host rule so /atomy/ resolves in one hop;
+  # the relative target picks up scheme+host from the current request.
+  RewriteRule ^atomy/?$ /technologia/ [R=301,L]
+  RewriteRule ^atomy-wiedzy/?$ /technologia/ [R=301,L]
+  RewriteRule ^wiecej-niz-etl/?$ /technologia/ [R=301,L]
+
+  # WordPress leftovers crawlers keep requesting — send feeds home,
+  # let /wp-admin, /wp-login.php etc. fall through to the 404
+  RewriteRule ^feed/?$ / [R=301,L]
+
+  # one canonical origin: https, no www
+  # (localhost/127.* excluded so a local preview of dist/ stays browsable;
+  #  conditions read as: host-not-local AND (plain-http OR www-host))
+  RewriteCond %{HTTP_HOST} !^(localhost|127\.) [NC]
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://gravity-integration.com%{REQUEST_URI} [R=301,L,NE]
+</IfModule>
+
+# -------------------------------------------------------------- caching ----
+<IfModule mod_headers.c>
+  # hashed build assets — the filename changes when the content does
+  SetEnvIf Request_URI "^/_assets/" GI_IMMUTABLE
+  Header set Cache-Control "public, max-age=31536000, immutable" env=GI_IMMUTABLE
+
+  # stable media (images, fonts, video, favicons) — a month, revalidate after
+  SetEnvIf Request_URI "^/(media|uploads|theme|video|favicons|fonts)/" GI_MEDIA
+  Header set Cache-Control "public, max-age=2592000" env=GI_MEDIA
+
+  # HTML + sitemaps — always revalidate, so a deploy is visible immediately
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  # ------------------------------------------------------ security headers ----
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # HSTS — browsers ignore it over plain http, so setting it unconditionally is safe
+  Header set Strict-Transport-Security "max-age=31536000"
+</IfModule>
+
+# ---------------------------------------------------------- compression ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>

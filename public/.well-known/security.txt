@@ -1,0 +1,4 @@
+Contact: mailto:contact@caffeine-minds.com
+Expires: 2027-07-31T00:00:00.000Z
+Preferred-Languages: pl, en
+Canonical: https://gravity-integration.com/.well-known/security.txt

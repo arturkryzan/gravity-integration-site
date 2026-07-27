@@ -6,7 +6,18 @@
   /* brand */
   --gi-green: #27ea93;            /* primary accent (unified) */
   --gi-green-rgb: 39 234 147;
-  --gi-green-deep: #0d9e6d;       /* darker green for text on light bg */
+  /* Green text on light. #0d9e6d measured 3.43:1 on #fff — large-text-only, but
+     it ships on 12–13px links and badges. Darkened to clear 4.5:1 on BOTH light
+     surfaces (5.36:1 on #fff, 4.88:1 on #f3f4fb) at the same hue. */
+  --gi-green-deep: #097a53;
+
+  /* Negative / "before" counterpart to the green. Two roles, because one value
+     can't do both: --gi-red is a *surface* (the calculator's current-state bar,
+     which carries near-black labels), --gi-red-deep is red *text on light*
+     (form validation). The theme's #dc3232 measured 4.21:1 on #f3f4fb — fine on
+     pure white, failing on the light-section background it also renders over. */
+  --gi-red: #ef4444;
+  --gi-red-deep: #c62828;
 
   /* surfaces */
   --gi-bg-dark: #0a0a12;          /* darkest (hero, SVG scenes) */
@@ -33,4 +44,19 @@
 
   /* announcement bar */
   --gi-bar-h: 44px;
+
+  /* ---- z-index scale ----------------------------------------------------
+     Semantic, ordered, and matched to the layers the ported theme already
+     established (decor 1–6, breadcrumbs 10, header 20) so nothing restacks.
+     The fullscreen menu sits *below* the header on purpose: the header owns
+     the logo and the CLOSE control, which must stay visible over the menu. */
+  --gi-z-decor: 2;      /* circles, line art, section backdrops */
+  --gi-z-raised: 4;     /* content lifted above its own decoration */
+  --gi-z-sticky: 10;    /* breadcrumbs / per-page section nav */
+  --gi-z-menu: 15;      /* fullscreen nav overlay */
+  --gi-z-header: 20;    /* fixed site header */
+  --gi-z-bar: 30;       /* announcement bar — pinned above the header */
+  --gi-z-consent: 35;   /* cookie bar — over the page, under a real modal */
+  --gi-z-modal: 40;
+  --gi-z-toast: 50;
 }

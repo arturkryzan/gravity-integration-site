@@ -49,10 +49,20 @@ html.nav-lock body {
 header {
   transition:
     transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
+    background-color 0.3s ease,
     top 0.2s ease;
 }
 body.header-hidden header:not(.nav-is-open) {
   transform: translateY(calc(-100% - var(--gi-bar-h, 44px)));
+}
+/* Solid dark background once scrolled off the hero — otherwise the header
+   reappears transparent over light page content on scroll-up (white logo/menu
+   invisible, overlapping the content). Transparent at the top over the hero.
+   Suppressed while the fullscreen menu is open (menu owns the backdrop). */
+body.header-solid:not(.nav-open) header {
+  background: #0a0a12;
+  padding-bottom: 1.25rem; /* balance the bar without moving the logo (no jump) */
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* ---- full-screen nav (CSS transitions replacing GSAP timeline) ---- */

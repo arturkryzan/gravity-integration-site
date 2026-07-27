@@ -35,6 +35,9 @@ function initHeader() {
         const y = window.scrollY;
         if (y > 120 && y > lastY + 4) document.body.classList.add('header-hidden');
         else if (y < lastY - 4 || y < 120) document.body.classList.remove('header-hidden');
+        /* solid background once scrolled off the (dark) hero, so the header
+           doesn't reappear transparent over light content on scroll-up */
+        document.body.classList.toggle('header-solid', y > 80);
         lastY = y;
         ticking = false;
       });

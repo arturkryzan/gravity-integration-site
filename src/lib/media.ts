@@ -18,13 +18,15 @@ export function mediaAlt(ref?: MediaRef | string | null): string {
   return ref.alt || '';
 }
 
-/** aspect-ratio percentage like the theme's getRatio(): height/width*100 */
+/** aspect-ratio for Bootstrap `.ratio` (height/width*100), WITH the % unit —
+   Bootstrap's `padding-top: var(--bs-aspect-ratio)` is invalid (0 height)
+   without it. Always includes '%' so callers must not append their own. */
 export function mediaRatio(ref?: MediaRef | string | null, fallback = 56.25): string {
-  if (!ref || typeof ref === 'string') return fallback.toFixed(2);
+  if (!ref || typeof ref === 'string') return fallback.toFixed(2) + '%';
   const r = ref as any;
-  if (r.width > 0 && r.height > 0) return ((r.height / r.width) * 100).toFixed(2);
+  if (r.width > 0 && r.height > 0) return ((r.height / r.width) * 100).toFixed(2) + '%';
   const name = ref.file?.replace(/^media\//, '');
   const d = name ? (dims as Record<string, [number, number]>)[name] : undefined;
-  if (!d) return fallback.toFixed(2);
-  return ((d[1] / d[0]) * 100).toFixed(2);
+  if (!d) return fallback.toFixed(2) + '%';
+  return ((d[1] / d[0]) * 100).toFixed(2) + '%';
 }

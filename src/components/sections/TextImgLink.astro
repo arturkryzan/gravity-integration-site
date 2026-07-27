@@ -82,7 +82,7 @@ const { index, rows, overrides = {} } = Astro.props;
                 </video>
               </div>
             ) : img && mediaSrc(img) ? (
-              <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}%`}>
+              <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}`}>
                 <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" />
               </div>
             ) : null}

@@ -50,14 +50,23 @@ Everything the server needs is in there:
 
 ## Path B — rebuild from source (only when the site changes)
 
-Extract the tarball first, then work **inside** the extracted folder. The
-`cd` is the part that matters.
+Get the source, then work **inside** the project folder. The `cd` is the part
+that matters.
 
 ```bash
+# from GitHub (preferred — you get history and can commit changes back)
+git clone https://github.com/arturkryzan/gravity-integration-site.git
+cd gravity-integration-site
+
+# or, offline, from the tarball on your Desktop
 cd ~/Desktop/GRAVITY.nosync
 tar -xzf gravity-site-code-predeploy.tar.gz     # → creates gravity-site/
 cd gravity-site                                 # ← npm only works from here
+```
 
+Then, from inside whichever folder you ended up in:
+
+```bash
 npm ci                                          # needs Node 22.12+ (Astro 7)
 npm run build                                   # → dist/
 ```

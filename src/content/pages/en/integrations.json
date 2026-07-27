@@ -5,11 +5,11 @@
   "slug": "integracje",
   "url": "/en/integrations/",
   "seo": {
-    "title": "Integracje gravity.integration — 139+ konektorów ERP, CRM, WMS | ESB",
-    "description": "Pełna lista integracji gravity.integration: systemy ERP (SAP, Comarch, enova), CRM, WMS, e-commerce, marketplace, bazy danych, kurierzy i więcej. 139+ gotowych konektorów.",
-    "focusKeyword": "integracje ESB"
+    "title": "gravity.integration integrations — 139+ connectors for ERP, CRM, WMS | ESB",
+    "description": "All gravity.integration integrations: ERP systems (SAP, Comarch, enova), CRM, WMS, e-commerce, marketplaces, databases, couriers and more. 139+ connectors.",
+    "focusKeyword": "ESB integrations"
   },
-  "h1": "<h1><span style=\"text-decoration: underline;\">Integracje</span> gravity.integration</h1>\n",
+  "h1": "<h1>gravity.integration <span style=\"text-decoration: underline;\">integrations</span></h1>\n",
   "decorative": true,
   "newsletter": false,
   "sections": []

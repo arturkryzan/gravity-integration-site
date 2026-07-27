@@ -5,22 +5,22 @@
   "slug": "kontakt",
   "url": "/en/contact/",
   "seo": {
-    "title": "Kontakt — gravity.integration",
-    "description": "Skontaktuj się z zespołem gravity.integration. Zapytaj o wdrożenie, wsparcie techniczne lub partnerstwo. Caffeine Minds sp. z o.o., Bielsko-Biała.",
-    "focusKeyword": "kontakt GRAVITY.integration"
+    "title": "Contact — gravity.integration",
+    "description": "Get in touch with the gravity.integration team. Ask about deployment, technical support or partnership. Caffeine Minds sp. z o.o., Poland.",
+    "focusKeyword": "contact gravity.integration"
   },
-  "h1": "<h1>Kontakt</h1>",
+  "h1": "<h1>Contact</h1>",
   "decorative": false,
   "newsletter": false,
   "sections": [
     {
       "acf_fc_layout": "text_img",
       "nav_li": null,
-      "text": "<h2>O&nbsp;nas</h2>\n<p>Caffeine Minds sp. z&nbsp;o.o. jest częścią grupy kapitałowej DM Investments, która&nbsp;od&nbsp;ponad 20 lat rozwija w&nbsp;Polsce systemy informatyczne oraz&nbsp;wspiera innowacje.</p>\n<p>Kluczowa dla DM Investments spółka Graffiti ERP S.A, od&nbsp;ponad 20 lat wytwarza autorskie oprogramowanie ERP dla średnich oraz&nbsp;dużych przedsiębiorstw produkcyjnych.</p>\n<p>Caffeine Minds jest inkubatorem najbardziej innowacyjnych pomysłów i&nbsp;technologii, które na&nbsp;codzień wytwarza nasz zespół.</p>\n<p>&nbsp;</p>\n\n<div style=\"margin-top:2rem;padding:1.5rem 2rem;background:rgba(0,0,0,0.03);border-radius:0.75rem;font-size:0.95rem;line-height:1.7;\">\n<p style=\"font-weight:700;margin-bottom:0.75rem;font-size:1.05rem;\">Dane rejestrowe</p>\n<p style=\"margin:0;\">Caffeine Minds sp.&nbsp;z&nbsp;o.o.<br>\nul.&nbsp;Jasielska 16, 60-476 Poznań<br>\nKRS: 0000500700 &nbsp;|&nbsp; NIP: 7811898493 &nbsp;|&nbsp; REGON: 302741139<br>\nKapitał zakładowy: 100&nbsp;000&nbsp;PLN<br>\nSąd Rejonowy Poznań — Nowe Miasto i&nbsp;Wilda w&nbsp;Poznaniu,<br>VIII Wydział Gospodarczy KRS</p>\n<p style=\"margin-top:0.5rem;margin-bottom:0;\">Część grupy kapitałowej DM&nbsp;Investments sp.&nbsp;z&nbsp;o.o.</p>\n</div>",
+      "text": "<h2>About us</h2>\n<p>Caffeine Minds sp. z o.o. is part of the DM Investments capital group, which has been building IT systems and backing innovation in Poland for more than 20 years.</p>\n<p>The group's key company, Graffiti ERP S.A., has been producing its own ERP software for mid-sized and large manufacturing companies for over 20 years.</p>\n<p>Caffeine Minds is the incubator for the most innovative ideas and technologies our team creates day to day.</p>\n<p>&nbsp;</p>\n\n<div style=\"margin-top:2rem;padding:1.5rem 2rem;background:rgba(0,0,0,0.03);border-radius:0.75rem;font-size:0.95rem;line-height:1.7;\">\n<p style=\"font-weight:700;margin-bottom:0.75rem;font-size:1.05rem;\">Company details</p>\n<p style=\"margin:0;\">Caffeine Minds sp.&nbsp;z&nbsp;o.o.<br>\nul.&nbsp;Jasielska 16, 60-476 Poznań, Poland<br>\nKRS: 0000500700 &nbsp;|&nbsp; NIP (VAT ID): 7811898493 &nbsp;|&nbsp; REGON: 302741139<br>\nShare capital: 100,000&nbsp;PLN<br>\nDistrict Court Poznań — Nowe Miasto i&nbsp;Wilda in Poznań,<br>8th Commercial Division of the National Court Register</p>\n<p style=\"margin-top:0.5rem;margin-bottom:0;\">Part of the DM&nbsp;Investments sp.&nbsp;z&nbsp;o.o. capital group</p>\n</div>",
       "img": {
         "file": "media/CM_CLAIM.png",
         "url": null,
-        "alt": "gravity.integration - hasło reklamowe",
+        "alt": "gravity.integration — advertising claim",
         "width": 434,
         "height": 555,
         "wpId": 210
@@ -30,12 +30,12 @@
     {
       "acf_fc_layout": "contact_form",
       "nav_li": null,
-      "title": "Wyślij zapytanie"
+      "title": "Send an enquiry"
     },
     {
       "acf_fc_layout": "links",
       "nav_li": null,
-      "text": "<h2>Przydatne linki</h2>\n<p>Zapraszamy do&nbsp;bezpośredniego kontaktu oraz&nbsp;sprawdzenia pozostałych przedsięwzięć DM Investments.</p>\n",
+      "text": "<h2>Useful links</h2>\n<p>Feel free to contact us directly, and take a look at DM Investments' other ventures.</p>\n",
       "links": [
         {
           "title": "Graffiti ERP S.A.",
@@ -62,7 +62,7 @@
           }
         },
         {
-          "title": "Napisz do&nbsp;nas",
+          "title": "Write to us",
           "link": {
             "title": "contact@caffeine-minds.com",
             "url": "mailto:contact@caffeine-minds.com",

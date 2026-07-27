@@ -105,7 +105,9 @@
           "name": "Vendo ERP",
           "sub": "CFI"
         }
-      ]
+      ],
+      "title_en": "ERP systems",
+      "description_en": "Integration with the most popular ERP systems on the Polish and international market. Automatic synchronisation of documents, business partners, stock levels and finance."
     },
     {
       "id": "crm",
@@ -150,7 +152,9 @@
           "name": "monday CRM",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "CRM systems",
+      "description_en": "Two-way synchronisation of contacts, sales opportunities, interaction history and pipelines. Connect your CRM to your ERP and automate the entire sales funnel."
     },
     {
       "id": "wms",
@@ -203,7 +207,9 @@
           "name": "vector.wms",
           "sub": "Caffeine Minds"
         }
-      ]
+      ],
+      "title_en": "WMS systems",
+      "description_en": "Integration with warehouse management systems — real-time synchronisation of stock, locations, batches, picking orders and warehouse documents."
     },
     {
       "id": "ecommerce",
@@ -268,7 +274,9 @@
           "name": "cStore",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "E-commerce platforms",
+      "description_en": "Synchronisation of products, orders, prices and stock levels with the leading online store platforms."
     },
     {
       "id": "marketplace",
@@ -309,7 +317,9 @@
           "name": "Wayfair",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "Marketplaces",
+      "description_en": "Multichannel sales automation — listings, orders, stock and customer communication on the biggest marketplaces."
     },
     {
       "id": "oms",
@@ -346,7 +356,9 @@
           "name": "PlentyMarkets",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "OMS systems",
+      "description_en": "Integration with order managers — centralised multichannel handling and automatic document creation in the ERP."
     },
     {
       "id": "db",
@@ -391,7 +403,9 @@
           "name": "Redis",
           "sub": "Cache / Pub-Sub"
         }
-      ]
+      ],
+      "title_en": "Databases",
+      "description_en": "Native connectors for the popular database engines. Reading, writing and synchronising tables, views and stored procedures."
     },
     {
       "id": "pim",
@@ -420,7 +434,9 @@
           "name": "Salsify",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "PIM systems",
+      "description_en": "Central product data management — synchronising descriptions, attributes, images and specifications between the PIM and the sales channels."
     },
     {
       "id": "courier",
@@ -477,7 +493,9 @@
           "name": "Apaczka",
           "sub": "Broker"
         }
-      ]
+      ],
+      "title_en": "Couriers and logistics",
+      "description_en": "Automatic waybill generation, shipment tracking, integration with courier brokers."
     },
     {
       "id": "invoice",
@@ -506,7 +524,9 @@
           "name": "InFakt",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "Invoicing and KSeF",
+      "description_en": "Automatic exchange of electronic invoices, integration with Poland's National e-Invoicing System (KSeF) and popular online invoicing platforms."
     },
     {
       "id": "file",
@@ -551,7 +571,9 @@
           "name": "DBF",
           "sub": "dBASE"
         }
-      ]
+      ],
+      "title_en": "File formats and EDI",
+      "description_en": "Import and export data in any format. Field mapping, schema validation, automatic conversion between formats."
     },
     {
       "id": "protocol",
@@ -616,7 +638,9 @@
           "name": "SMTP",
           "sub": "E-mail"
         }
-      ]
+      ],
+      "title_en": "Protocols and APIs",
+      "description_en": "Ready-made communication adapters — connect any system that exposes a programming interface or file transfer."
     },
     {
       "id": "other",
@@ -663,7 +687,8 @@
         },
         {
           "name": "RCP / Roger",
-          "sub": "Kontrola dostępu"
+          "sub": "Kontrola dostępu",
+          "sub_en": "Access control"
         },
         {
           "name": "Slack / Teams",
@@ -673,7 +698,9 @@
           "name": "Jira / Azure DevOps",
           "sub": ""
         }
-      ]
+      ],
+      "title_en": "Other systems",
+      "description_en": "Integrations with HR, BI, communication and industrial-automation systems, and other business tools."
     }
   ]
 }

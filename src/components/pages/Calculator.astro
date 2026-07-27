@@ -8,18 +8,18 @@ import SectionRenderer from '../../components/SectionRenderer.astro';
 import RoiCalculator from '../../components/RoiCalculator.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import heroes from '../../data/page_heroes.json';
-import faqJsonLd from '../../data/kalkulator-faq-jsonld.json?raw';
+/* One FAQ rich result per language — a page must only claim answers it
+   actually shows, so each locale carries its own condensed Q&A. */
+import faqJsonLdPl from '../../data/kalkulator-faq-jsonld.json?raw';
+import faqJsonLdEn from '../../data/kalkulator-faq-jsonld.en.json?raw';
 
 const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('kalkulator', lang);
 const page = entry.data;
 const hero = (heroes as Record<string, any>)['kalkulator'];
 const heroAlt = lang === 'en' ? (hero.alt_en ?? hero.alt) : hero.alt;
+const faqJsonLd = lang === 'en' ? faqJsonLdEn : faqJsonLdPl;
 /* calculator sits between text_columns (section0) and faq (section1) — snippet 19's insertion point */
-
-/* TODO(Phase 4): the FAQ rich result is Polish Q&A. An English page carrying it
-   would be claiming answers it doesn't show, so the English twin needs its own
-   translated JSON-LD before it comes out of draft. */
 ---
 
 <Site

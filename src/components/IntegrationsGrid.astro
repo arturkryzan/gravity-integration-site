@@ -3,11 +3,22 @@
    (Epilogue type, slate/green palette, the homepage clients-wall grid). */
 import { getCollection } from 'astro:content';
 import { localeOf, t } from '../i18n/ui';
-const s = t(localeOf(Astro.currentLocale));
-const categories = (await getCollection('integrationCategories')).sort(
-  (a, b) => a.data.order - b.data.order,
-);
-const total = categories.reduce((n, c) => n + c.data.items.length, 0);
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
+const categories = (await getCollection('integrationCategories'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((c) => ({
+    id: c.id,
+    items: c.data.items.map((it) => ({
+      name: it.name,
+      sub: lang === 'en' ? (it.sub_en ?? it.sub) : it.sub,
+    })),
+    /* The *_en fields fall back to Polish so an untranslated category is
+       visibly Polish rather than invisibly missing. */
+    title: lang === 'en' ? (c.data.title_en ?? c.data.title) : c.data.title,
+    description: lang === 'en' ? (c.data.description_en ?? c.data.description) : c.data.description,
+  }));
+const total = categories.reduce((n, c) => n + c.items.length, 0);
 const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', 'Kafka', 'MQTT', 'EDI'];
 ---
 
@@ -25,12 +36,12 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
       categories.map((cat) => (
         <div class="gi-int-cat" data-scroll data-scroll-opacity>
           <div class="gi-int-cat-head" id={cat.id}>
-            <h2>{cat.data.title}</h2>
-            <span class="gi-int-count">{cat.data.items.length}</span>
+            <h2>{cat.title}</h2>
+            <span class="gi-int-count">{cat.items.length}</span>
           </div>
-          <p class="gi-int-desc" set:html={cat.data.description} />
+          <p class="gi-int-desc" set:html={cat.description} />
           <div class="gi-int-grid">
-            {cat.data.items.map((item) => (
+            {cat.items.map((item) => (
               <div class="gi-int-tile">
                 <span class="gi-int-name">{item.name}</span>
                 {item.sub && <span class="gi-int-tag">{item.sub}</span>}

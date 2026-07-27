@@ -30,10 +30,11 @@ const crumbs = [
 /* Rich result: the thing on this page is downloadable software with a free
    offer. Claims mirror the visible copy (Windows, free for testing), and `url`
    is derived from the entry so the English twin describes its own URL rather
-   than pointing search engines back at the Polish one.
-
-   TODO(Phase 4): `offers.description` is Polish prose inside structured data —
-   it has to be translated with the page, not left behind. */
+   than pointing search engines back at the Polish one. */
+const offerDescription =
+  lang === 'en'
+    ? 'Free full version for testing and training purposes'
+    : 'Bezpłatna pełna wersja do celów testowych i szkoleniowych';
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -45,7 +46,7 @@ const jsonLd = JSON.stringify({
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'PLN',
-    description: 'Bezpłatna pełna wersja do celów testowych i szkoleniowych',
+    description: offerDescription,
   },
   url: new URL(page.url, site.siteUrl).href,
 });

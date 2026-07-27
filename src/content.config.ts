@@ -112,9 +112,16 @@ const integrationCategories = defineCollection({
     icon: z.string(),
     title: z.string(),
     description: z.string(),
+    /** English halves, written beside the Polish in the same file — category
+     *  copy is a fixed, small set, so a parallel per-locale file would be more
+     *  ceremony than content. Item names are product names and don't localise. */
+    title_en: z.string().optional(),
+    description_en: z.string().optional(),
     count: z.number(),
     order: z.number(),
-    items: z.array(z.object({ name: z.string(), sub: z.string() })),
+    items: z.array(
+      z.object({ name: z.string(), sub: z.string(), sub_en: z.string().optional() }),
+    ),
   }),
 });
 

@@ -5,47 +5,47 @@
   "slug": "kalkulator",
   "url": "/en/roi-calculator/",
   "seo": {
-    "title": "Kalkulator ROI integracji danych - gravity.integration",
-    "description": "Oblicz, ile zaoszczędzisz na projektach integracyjnych z gravity.integration. Interaktywny kalkulator ROI — sprawdź redukcję kosztów, czasu wdrożenia i liczbę dodatkowych projektów.",
-    "focusKeyword": "kalkulator ROI integracja,ESB korzyści,ROI inwestycji"
+    "title": "Data integration ROI calculator — gravity.integration",
+    "description": "Calculate what you'd save on integration projects with gravity.integration. An interactive ROI calculator — cost reduction, delivery time, extra projects.",
+    "focusKeyword": "integration ROI calculator, ESB benefits, integration ROI"
   },
-  "h1": "<h1>Kalkulator <span style=\"text-decoration: underline;\">ROI</span></h1>\n",
+  "h1": "<h1><span style=\"text-decoration: underline;\">ROI</span> calculator</h1>\n",
   "decorative": true,
   "newsletter": true,
   "sections": [
     {
       "acf_fc_layout": "text_columns",
       "nav_li": null,
-      "text0": "<p>Każdy projekt integracyjny to&nbsp;tygodnie kodowania, testów i wdrożeń. Skrypty SQL, pliki CSV, jednorazowe połączenia —&nbsp;rosną szybciej niż zespół, który ma je utrzymać. Im więcej systemów, tym więcej chaosu. A każdy chaos kosztuje.</p>\n",
-      "text1": "<p>gravity.integration zastępuje dziesiątki skryptów jedną platformą. Gotowe atomy integracyjne, wizualny edytor przepływów i technologie takie jak Always‑on‑data czy IntelliChain skracają czas realizacji nawet o 60%. Sprawdź poniżej, ile to oznacza dla Twojego budżetu.</p>\n"
+      "text0": "<p>Every integration project means weeks of coding, testing and deployment. SQL scripts, CSV files, one-off connections — they grow faster than the team meant to maintain them. The more systems, the more chaos. And chaos always costs.</p>\n",
+      "text1": "<p>gravity.integration replaces dozens of scripts with a single platform. Ready-made integration atoms, a visual flow editor and technologies like Always‑on‑data and IntelliChain cut delivery time by up to 60%. See below what that means for your budget.</p>\n"
     },
     {
       "acf_fc_layout": "faq",
       "nav_li": null,
       "faq": [
         {
-          "que": "Skąd wynikają różnice w&nbsp;czasie realizacji z&nbsp;gravity.integration?",
-          "ans": "<p>gravity.integration zastępuje ręczne kodowanie połączeń wizualnym edytorem przepływów i&nbsp;gotowymi atomami integracyjnymi. Technologia IntelliChain pozwala budować złożone integracje w&nbsp;minuty zamiast dni, a&nbsp;Always‑on‑data eliminuje potrzebę pisania skryptów monitorujących. W&nbsp;efekcie faza developmentu skraca się nawet o&nbsp;60%, a&nbsp;czas testów —&nbsp;o&nbsp;40%, ponieważ platforma automatycznie waliduje przepływy danych.</p>\n"
+          "que": "Where do the delivery-time differences with gravity.integration come from?",
+          "ans": "<p>gravity.integration replaces hand-coded connections with a visual flow editor and ready-made integration atoms. The IntelliChain technology lets you build complex integrations in minutes rather than days, and Always‑on‑data removes the need to write monitoring scripts. As a result the development phase shrinks by up to 60% and testing time by 40%, because the platform validates data flows automatically.</p>\n"
         },
         {
-          "que": "Ile kosztuje gravity.integration?",
-          "ans": "<p>Oprogramowanie jest darmowe do&nbsp;celów testowych i&nbsp;szkoleniowych —&nbsp;bez&nbsp;ograniczeń czasowych ani funkcjonalnych. Licencja komercyjna to&nbsp;2 999 PLN netto rocznie za&nbsp;pojedyncze zastosowanie lub 7 999 PLN netto rocznie za&nbsp;nielimitowaną liczbę połączeń na&nbsp;instancję. To&nbsp;ułamek ceny konkurencyjnych rozwiązań ESB na&nbsp;rynku.</p>\n"
+          "que": "How much does gravity.integration cost?",
+          "ans": "<p>The software is free for testing and training — with no time or feature limits. A commercial licence is 2,999 PLN net per year (approx. €700) for a single use case, or 7,999 PLN net per year (approx. €1,870) for an unlimited number of connections per instance. That is a fraction of the price of competing ESB solutions on the market.</p>\n"
         },
         {
-          "que": "Czy&nbsp;mogę przetestować gravity za&nbsp;darmo?",
-          "ans": "<p><strong>Tak</strong>. Pobierasz pełną wersję oprogramowania bez&nbsp;żadnych ograniczeń funkcjonalnych. Możesz testować dowolnie długo —&nbsp;nie&nbsp;ma&nbsp;limitu czasu ani przesyłu danych. Licencja komercyjna jest potrzebna dopiero w&nbsp;momencie, gdy&nbsp;zdecydujesz się na&nbsp;zastosowanie produkcyjne.</p>\n"
+          "que": "Can I test gravity for free?",
+          "ans": "<p><strong>Yes</strong>. You download the full version of the software with no functional restrictions. You can test for as long as you like — there is no time limit and no data cap. A commercial licence is only needed once you decide on production use.</p>\n"
         },
         {
-          "que": "Jak szybko mogę wdrożyć gravity w&nbsp;moim zespole?",
-          "ans": "<p>Instalacja zajmuje około 15 minut. Pełne wdrożenie pierwszego połączenia integracyjnego to&nbsp;zazwyczaj 1–4 dni robocze, w&nbsp;zależności od&nbsp;złożoności systemów źródłowych. <strong>Dodatkowo oferujemy bezpłatne wsparcie zdalne dla pierwszego projektu integracyjnego. </strong></p>\n"
+          "que": "How quickly can my team get gravity running?",
+          "ans": "<p>Installation takes about 15 minutes. Fully deploying your first integration connection usually takes 1–4 working days, depending on the complexity of the source systems. <strong>On top of that, we offer free remote support for your first integration project. </strong></p>\n"
         },
         {
-          "que": "Czy&nbsp;gravity.integration integruje się z&nbsp;moim ERP, MES lub WMS?",
-          "ans": "<p>gravity.integration łączy się z&nbsp;dowolnym systemem, który&nbsp;udostępnia API, bazę danych, pliki lub protokoły komunikacyjne. Wspieramy integracje z&nbsp;systemami ERP, MES, WMS, CRM, platformami e‑commerce oraz&nbsp;narzędziami własnymi. Jeśli Twój&nbsp;system wymienia dane —&nbsp;gravity potrafi je&nbsp;przetworzyć.</p>\n"
+          "que": "Does gravity.integration integrate with my ERP, MES or WMS?",
+          "ans": "<p>gravity.integration connects to any system that exposes an API, a database, files or communication protocols. We support integrations with ERP, MES, WMS and CRM systems, e‑commerce platforms and in-house tools. If your system exchanges data — gravity can process it.</p>\n"
         },
         {
-          "que": "Co&nbsp;jeśli potrzebuję więcej niż jedną instancję?",
-          "ans": "<p>Każda licencja obejmuje jedną instancję z&nbsp;<strong>nielimitowaną liczbą użytkowników</strong>. Jeśli planujesz uruchomić gravity na&nbsp;kilku serwerach lub w&nbsp;kilku środowiskach (np.&nbsp;produkcja + staging), potrzebujesz osobnej licencji dla każdej instancji. Skontaktuj się z&nbsp;nami —&nbsp;przygotujemy indywidualną ofertę.</p>\n"
+          "que": "What if I need more than one instance?",
+          "ans": "<p>Every licence covers one instance with an <strong>unlimited number of users</strong>. If you plan to run gravity on several servers or in several environments (production + staging, say), you need a separate licence for each instance. Contact us — we'll prepare an individual offer.</p>\n"
         }
       ]
     }

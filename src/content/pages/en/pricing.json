@@ -5,55 +5,55 @@
   "slug": "cennik",
   "url": "/en/pricing/",
   "seo": {
-    "title": "Cennik gravity.integration — od wersji darmowej do Enterprise",
-    "description": "Cennik platformy ESB gravity.integration. Darmowa wersja Community, plany Professional i Enterprise. Korzystne ceny, polski producent, pełne wsparcie.",
-    "focusKeyword": "cennik ETL, platforma ETL cena"
+    "title": "gravity.integration pricing — from a free version to Enterprise",
+    "description": "Pricing for the gravity.integration ESB platform. Free for testing, commercial plans from 2,999 PLN/year (approx. €700). One simple rate, full support.",
+    "focusKeyword": "ESB pricing, integration platform price"
   },
-  "h1": "<h1>Cennik</h1>",
+  "h1": "<h1>Pricing</h1>",
   "decorative": false,
   "newsletter": false,
   "sections": [
     {
       "acf_fc_layout": "text_columns",
       "nav_li": null,
-      "text0": "<p>gravity.integration jest produktem w&nbsp;fazie ciągłego rozwoju, który&nbsp;współtworzymy razem z&nbsp;Wami. Dlatego postawiliśmy na&nbsp;niespotykaną nigdzie indziej politykę cenową wśród narzędzi tej&nbsp;klasy. Po&nbsp;pierwsze, możesz pobrać <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration całkowicie za&nbsp;darmo</a>, a&nbsp;następnie używać bez&nbsp;ograniczeń dotyczących przesyłu danych a&nbsp;także przez&nbsp;14 dni używać oprogramowania komercyjnie.</p>\n",
-      "text1": "<p>Po&nbsp;drugie, jeśli zdecydujesz się na&nbsp;zastosowanie komercyjne, obowiązuje tylko&nbsp;dwie, proste ceny: 2999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za&nbsp;instancję. Nie&nbsp;obowiązują Cię żadne ograniczenia w&nbsp;budowaniu środowiska integracyjnego, a&nbsp;<a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na&nbsp;rynku</a>! Porównaj sam gravity z&nbsp;konkurencją, gwarantujemy, że&nbsp;wrócisz!</p>\n"
+      "text0": "<p>gravity.integration is a product in constant development — one we build together with you. That's why we've adopted a pricing policy unheard of among tools of this class. First, you can download <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration completely free of charge</a>, use it with no limits on data throughput, and even use it commercially for 14 days.</p>\n",
+      "text1": "<p>Second, if you decide on commercial use, there are just two simple prices: 2,999 PLN a year (approx. €700) for a single use case, or 7,999 PLN a year (approx. €1,870) per instance for an unlimited number of connections. There are no restrictions on how you build your integration environment, and <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">the price is unheard of on this market</a>! Compare gravity with the competition yourself — we guarantee you'll come back!</p>\n"
     },
     {
       "acf_fc_layout": "pricing",
       "nav_li": null,
       "pricing": [
         {
-          "name": "Do&nbsp;celów szkoleniowych <br />\r\noraz testowych",
-          "text": "<ul>\n<li>Za&nbsp;darmo, z&nbsp;pełnym wsparciem.</li>\n<li>Możliwość przejścia na&nbsp;wersję komercyjną w&nbsp;każdej chwili.</li>\n</ul>\n",
+          "name": "For training <br />\r\nand testing",
+          "text": "<ul>\n<li>Free, with full support.</li>\n<li>Switch to the commercial version at any time.</li>\n</ul>\n",
           "price": "0",
           "currency": "PLN",
-          "btn": "Pobierz",
-          "btn_link": "/pobieranie/"
+          "btn": "Download",
+          "btn_link": "/en/download/"
         },
         {
-          "name": "Pojedyncze zastosowanie komercyjne",
-          "text": "<ul>\n<li>Jedno połączenie wykorzystywane komercyjnie.</li>\n<li>Pełne wsparcie.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
-          "price": "2999",
+          "name": "A single commercial use case",
+          "text": "<ul>\n<li>One connection used commercially.</li>\n<li>Full support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
+          "price": "2,999",
           "currency": "PLN",
-          "btn": "Kup licencję",
+          "btn": "Buy a licence",
           "btn_link": "https://buy.stripe.com/14A8wP2aB9NSeFtdtZ38402"
         },
         {
-          "name": "Do&nbsp;zastosowań <br />\r\nkomercyjnych",
-          "text": "<ul>\n<li>Jedna, prosta stawka.</li>\n<li>Nielimitowana liczba projektów.</li>\n<li>Pełne wsparcie priorytetowe.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
-          "price": "7999",
+          "name": "For commercial <br />\r\nuse",
+          "text": "<ul>\n<li>One simple rate.</li>\n<li>An unlimited number of projects.</li>\n<li>Full priority support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
+          "price": "7,999",
           "currency": "PLN",
-          "btn": "Kup licencję",
+          "btn": "Buy a licence",
           "btn_link": "https://buy.stripe.com/00w14n3eF9NSbth9dJ38401"
         },
         {
-          "name": "Wdrożenie środowiska <br />\r\nintegracyjnego",
-          "text": "<p>Zapytaj już dziś, jak możemy zmienić architekturę IT w&nbsp;Twojej&nbsp;firmie.</p>\n",
+          "name": "Integration environment <br />\r\nimplementation",
+          "text": "<p>Ask us today how we can change the IT architecture of your company.</p>\n",
           "price": "",
           "currency": null,
-          "btn": "Zamów kontakt",
-          "btn_link": "/kontakt"
+          "btn": "Request contact",
+          "btn_link": "/en/contact/"
         }
       ]
     },
@@ -62,28 +62,28 @@
       "nav_li": null,
       "faq": [
         {
-          "que": "Czy&nbsp;wersje gravity.integration czymś się różnią?",
-          "ans": "<p>Nie. Zawsze pobierasz ten sam instalator. Możesz dowolnie, bezpłatnie i&nbsp;bez&nbsp;ograniczeń korzystać ze&nbsp;wszystkich funkcji oprogramowania tak&nbsp;długo, jak sam nie&nbsp;odnosisz z&nbsp;tego wykorzystania korzyści.</p>\n"
+          "que": "Do the gravity.integration versions differ in any way?",
+          "ans": "<p>No. You always download the same installer. You can use every feature of the software freely, free of charge and without limits — for as long as you don't derive commercial benefit from that use.</p>\n"
         },
         {
-          "que": "Kiedy należy zakupić wersję komercyjną i&nbsp;jak to&nbsp;zrobić?",
-          "ans": "<p>Możesz bez&nbsp;problemów testować środowisko swoje lub swoich klientów tak&nbsp;długo, jak potrzebujesz. W&nbsp;momencie, w&nbsp;którym&nbsp;zdecydujesz się opuścić środowisko testowe, konieczny jest zakup licencji. Jeśli planujesz wykorzystać gravity.integration tylko&nbsp;do&nbsp;jednego zastosowania, np.&nbsp;połączenie systemu ERP z&nbsp;dostawcami usług logistycznych możesz skorzystać ze&nbsp;specjalnej, promocyjnej licencji. Dla wielu zastosowań wykup pełną licencję i&nbsp;twórz bez&nbsp;ograniczeń dowolną liczbę połączeń.<br />\nMożesz to&nbsp;łatwo zrobić z&nbsp;poziomu oprogramowania lub skontaktować się z&nbsp;nami <a href=\"/kontakt/\">tutaj</a>.</p>\n"
+          "que": "When do I need to buy the commercial version, and how?",
+          "ans": "<p>You can test your own or your clients' environments for as long as you need. The moment you decide to leave the testing stage, a licence purchase is required. If you plan to use gravity.integration for a single purpose — say, connecting an ERP system to logistics providers — you can use the special promotional licence. For multiple use cases, buy the full licence and build any number of connections without limits.<br />\nYou can do it straight from the software, or contact us <a href=\"/en/contact/\">here</a>.</p>\n"
         },
         {
-          "que": "Czy&nbsp;z&nbsp;jednej licencji gravity.integration może korzystać wielu użytkowników?",
-          "ans": "<p>Tak, pojedyncza licencja jest ograniczona do&nbsp;jednej instancji (instalacji na&nbsp;jednym fizycznym urządzeniu) i&nbsp;nie&nbsp;ma&nbsp;limitu użytkowników. Kolejne licencje będą Ci&nbsp;potrzebne, jeśli zdecydujesz się uruchomić więcej instancji.</p>\n"
+          "que": "Can multiple users work under one gravity.integration licence?",
+          "ans": "<p>Yes — a single licence is limited to one instance (an installation on one physical machine) and has no user limit. You'll only need further licences if you decide to run more instances.</p>\n"
         },
         {
-          "que": "Na&nbsp;czym polega priorytetowe wsparcie?",
-          "ans": "<p>Zapytania dotyczące działających instancji komercyjnych będą przez&nbsp;nas podejmowane priorytetowo. Jednak nawet wersja darmowa jest objęta maksymalnie 72 godzinnym czasem odpowiedzi na&nbsp;zapytania.</p>\n"
+          "que": "What does priority support mean?",
+          "ans": "<p>Enquiries about running commercial instances are picked up by us with priority. But even the free version comes with a response time of at most 72 hours.</p>\n"
         },
         {
-          "que": "Dlaczego cena gravity.integration jest tak&nbsp;korzystna?",
-          "ans": "<p>Oprogramowanie jest wynikiem naszych doświadczeń na&nbsp;rynku oprogramowania korporacyjnego. Zdecydowaliśmy się stworzyć gravity ze&nbsp;względu na&nbsp;bardzo wysoki koszt rozwiązań ESB innych firm oraz&nbsp;niechęć do&nbsp;łączenia wszystkiego ze&nbsp;wszystkim przy pomocy komend SQL. Wierzymy, że&nbsp;przygotowane przez&nbsp;nas software zmieni sposób projektowania systemów IT. Stąd bardzo duży nacisk na&nbsp;współpracę z&nbsp;Wami oraz&nbsp;atrakcyjną cenę, dzięki czemu chcemy popularyzować dobre praktyki.</p>\n"
+          "que": "Why is gravity.integration priced so favourably?",
+          "ans": "<p>The software is the product of our experience in the enterprise software market. We decided to build gravity because of the very high cost of other companies' ESB solutions — and a distaste for wiring everything to everything with SQL commands. We believe the software we've built will change the way IT systems are designed. Hence the strong emphasis on working with you, and on an attractive price — that is how we want to spread good practice.</p>\n"
         },
         {
-          "que": "Jak realizowana jest płatność?",
-          "ans": "<p>Korzystamy z&nbsp;bezpiecznego rozwiązania Stripe. Podana cena jest ceną netto za&nbsp;rok / za&nbsp;instancję. Na&nbsp;ekranie płatności możesz wybrać ilość instancji. Płatność będzie odnawiana co&nbsp;rok, ale&nbsp;nie&nbsp;martw się &#8211; przypomnimy Ci&nbsp;o&nbsp;tym! Jeśli z&nbsp;jakiegoś powodu chcesz, abyśmy wystawili Ci&nbsp;dokument ręcznie, skontaktuj się z&nbsp;nami używając formularza.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n"
+          "que": "How is payment handled?",
+          "ans": "<p>We use Stripe, a secure payment provider. The price shown is a net price per year, per instance. You can choose the number of instances on the payment screen. The payment renews every year — but don't worry, we'll remind you! If for any reason you'd like us to issue the paperwork manually, contact us using the form.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n"
         }
       ]
     }

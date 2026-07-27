@@ -72,9 +72,21 @@ async function allPages(): Promise<PageEntry[]> {
   return pages;
 }
 
-/** Every page in one language, for `getStaticPaths`. */
+/** Every page in one language, for `getStaticPaths`. Drafts included — they
+ *  have to build in order to be reviewed; what they don't get is an index
+ *  entry, a sitemap row, an hreflang claim or a switcher link. */
 export async function pagesIn(lang: Lang): Promise<PageEntry[]> {
   return (await allPages()).filter((p) => p.data.lang === lang);
+}
+
+/**
+ * The `[...slug]` param for a page, i.e. its url minus the locale prefix and
+ * the surrounding slashes. `/en/what-is-esb/` under `src/pages/en/[...slug]/`
+ * is the param `what-is-esb`, because the `/en/` is already in the file path.
+ */
+export function pathParam(url: string, lang: Lang): string {
+  const withoutPrefix = lang === DEFAULT_LOCALE ? url : url.replace(new RegExp(`^/${lang}/`), '/');
+  return withoutPrefix.replace(/^\/|\/$/g, '');
 }
 
 /**
@@ -99,7 +111,9 @@ export async function getPage(slug: string, lang: Lang = DEFAULT_LOCALE): Promis
  * yet. The language switcher's whole logic.
  */
 export async function translationUrl(slug: string, to: Lang): Promise<string | null> {
-  const hit = (await allPages()).find((p) => p.data.slug === slug && p.data.lang === to);
+  const hit = (await allPages()).find(
+    (p) => p.data.slug === slug && p.data.lang === to && !p.data.draft,
+  );
   return hit?.data.url ?? null;
 }
 
@@ -117,7 +131,7 @@ export async function alternates(slug: string): Promise<Array<{ lang: Lang; url:
   const found: Array<{ lang: Lang; url: string }> = [];
 
   for (const lang of LOCALES) {
-    const hit = pages.find((p) => p.data.slug === slug && p.data.lang === lang);
+    const hit = pages.find((p) => p.data.slug === slug && p.data.lang === lang && !p.data.draft);
     if (!hit) return [];
     found.push({ lang, url: hit.data.url });
   }

@@ -1,6 +1,15 @@
 ---
 /* Site header: logo + hamburger + full-screen nav.
    Markup ported 1:1 from the live theme (nav.php + rendered output). */
+import LangSwitch from './LangSwitch.astro';
+
+interface Props {
+  /** Passed through to the language switcher so it can offer *this* page in the
+   *  other language rather than dumping the reader on a home page. Site.astro
+   *  supplies it; the 404 doesn't have one. */
+  slug?: string;
+}
+const { slug } = Astro.props;
 ---
 <header data-scroll-section>
 	<div class="container-fluid pb-lg-0">
@@ -65,6 +74,10 @@
 						</ul>
 					</div>	
 					<div class="nav-small paragraph hover-underline py-10 d-none d-md-block">
+						{/* The switcher carries its own `d-block`, so when it renders nothing
+						    (no published translation) it leaves no gap and no stray <br> —
+						    unlike the privacy link below, which is glued to one. */}
+						<LangSwitch slug={slug} class="mb-4 d-block" />
 						<a href="/polityka-prywatnosci/" class="mb-4 d-inline-block">Polityka prywatności</a><br>
 						© Copyright 2026 gravity.integration					</div>		
 				</div>
@@ -85,6 +98,9 @@
 		</li>
 	</ul>		
 				<div class="nav-small paragraph hover-underline pt-5 d-block d-md-none">
+					{/* The mobile twin of the block above — the nav's two columns collapse
+					    at md, and each keeps its own copy rather than one moving. */}
+					<LangSwitch slug={slug} class="mb-4 d-block" />
 					<a href="/polityka-prywatnosci/" class="mb-4 d-inline-block">Polityka prywatności</a><br>
 					© Copyright 2026 gravity.integration				</div>
 			</div>

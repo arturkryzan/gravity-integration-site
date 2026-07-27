@@ -25,8 +25,19 @@ const section = z
  *  no edit — the field only has to be written in the English ones. */
 const lang = z.enum(['pl', 'en']).default('pl');
 
+/* The glob loader's default id is the file path — EXCEPT that it hands the
+ * `slug` field priority if the entry has one, and ours does. Since `slug` is
+ * deliberately identical across languages (that pairing is what links a page to
+ * its translation), the default would give pl/home.json and en/home.json the
+ * same id and one would silently overwrite the other. Deriving the id from the
+ * path restores the property ids are supposed to have: uniqueness.
+ *
+ * Nothing reads ids directly — pages are resolved by (slug, lang) through
+ * src/i18n/routes.ts — so the shape of this string is free. */
+const idFromPath = ({ entry }: { entry: string }) => entry.replace(/\.json$/, '');
+
 const pages = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/pages' }),
+  loader: glob({ pattern: '**/*.json', base: './src/content/pages', generateId: idFromPath }),
   schema: z.object({
     wpId: z.number(),
     lang,
@@ -34,6 +45,12 @@ const pages = defineCollection({
      *  localised path. That pairing is what links a page to its translation. */
     slug: z.string(),
     url: z.string(),
+    /** Scaffolded but not yet translated. The page still builds — that's the
+     *  point, it's how a translation gets reviewed — but it carries `noindex`,
+     *  stays out of the sitemap, and is not offered by the language switcher or
+     *  claimed by hreflang. Flipping one file to `false` is what "ship the
+     *  English homepage first" means in practice. */
+    draft: z.boolean().default(false),
     seo: z.object({
       title: z.string(),
       description: z.string(),
@@ -48,7 +65,11 @@ const pages = defineCollection({
 });
 
 const caseStudies = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/case-studies' }),
+  loader: glob({
+    pattern: '**/*.json',
+    base: './src/content/case-studies',
+    generateId: idFromPath,
+  }),
   schema: z.object({
     order: z.number(),
     lang,

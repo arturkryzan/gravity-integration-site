@@ -1,0 +1,22 @@
+---
+/* English pages with no route of their own: technology, pricing, contact.
+   Mirror of the Polish catch-all — same OWN_ROUTE set (it is keyed by the
+   language-neutral slug precisely so this file can import it unchanged), same
+   body, different locale. `pathParam` strips the /en/ that this file's own
+   path already supplies. */
+import { pagesIn, OWN_ROUTE, pathParam } from '../../../i18n/routes';
+import Generic from '../../../components/pages/Generic.astro';
+
+export async function getStaticPaths() {
+  const pages = await pagesIn('en');
+  return pages
+    .filter((p) => !OWN_ROUTE.has(p.data.slug))
+    .map((p) => ({
+      params: { slug: pathParam(p.data.url, 'en') },
+      props: { page: p.data },
+    }));
+}
+const { page } = Astro.props;
+---
+
+<Generic page={page} />

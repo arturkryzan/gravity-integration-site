@@ -1,0 +1,8 @@
+---
+/* /en/ — English home. Same body as /, different content entry: Home.astro
+   resolves its page through `Astro.currentLocale`, which reads the /en/ off
+   this file's own path. */
+import Home from '../../components/pages/Home.astro';
+---
+
+<Home />

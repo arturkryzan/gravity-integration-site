@@ -1,0 +1,439 @@
+{
+  "wpId": 2,
+  "lang": "en",
+  "draft": true,
+  "slug": "home",
+  "url": "/en/",
+  "seo": {
+    "title": "gravity.integration — polska szyna ESB nowej generacji | Zintegruj ERP, CRM i WMS",
+    "description": "gravity.integration to szyna danych ESB nowej generacji. Pobierz za darmo, zainstaluj w 15 minut i zintegruj ERP, CRM, WMS. Always-on-data, AI, 139+ konektorów.",
+    "focusKeyword": "platforma ETL, integracja danych ERP, szyna danych"
+  },
+  "h1": "Polska szyna ESB nowej generacji —&nbsp;zintegruj ERP, CRM i WMS w 15 minut",
+  "decorative": true,
+  "newsletter": false,
+  "sections": [
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": null,
+      "rows": [
+        {
+          "text": "<h2>Pobierz, zainstaluj, integruj —&nbsp;w&nbsp;15 minut</h2>\n<p>gravity.integration to&nbsp;szyna ESB z&nbsp;brokerem wiadomości, silnikiem ESB i&nbsp;orkiestracją przepływów —&nbsp;darmowa dla deweloperów, bez&nbsp;limitu konektorów. Obsługuje REST, SOAP, GraphQL, gRPC, MQTT i&nbsp;Kafka z&nbsp;automatycznym mapowaniem schematów XML/JSON/EDI. Routing, retry i&nbsp;uwierzytelnianie (OAuth 2.0, mTLS) konfigurujesz wizualnie —&nbsp;bez&nbsp;pisania kodu.</p>\n",
+          "img": {
+            "file": "media/home0.png",
+            "url": null,
+            "alt": "Strona główna - sekcja dla deweloperów",
+            "width": 555,
+            "height": 362,
+            "wpId": 152
+          },
+          "link": {
+            "title": "Dokumentacja",
+            "url": "https://docs.gravity-integration.com/",
+            "target": "_blank"
+          }
+        },
+        {
+          "text": "<h2>Zastąp konsultantów i&nbsp;skrypty SQL jedną platformą</h2>\n<p>Zintegruj ERP, CRM, WMS i&nbsp;dowolne systemy dziedzinowe bez&nbsp;budowania połączeń od&nbsp;zera. Platforma obsługuje wszystkie popularne ERP, BaseLinker, Saldeo i&nbsp;ponad 139 innych systemów —&nbsp;z&nbsp;gotowymi konektorami, które konfigurujesz wizualnie, bez&nbsp;programowania. Instalacja jest bezpłatna do&nbsp;celów testowych i&nbsp;szkoleniowych —&nbsp;uruchomisz środowisko w&nbsp;15 minut, z&nbsp;pełną dokumentacją i&nbsp;wsparciem technicznym. Gdy&nbsp;będziesz gotowy na&nbsp;produkcję, plany komercyjne już od&nbsp;2 999 PLN/rok, z&nbsp;SLA, dedykowanym opiekunem i&nbsp;nielimitowaną liczbą przepływów.</p>\n",
+          "img": {
+            "file": "media/home1.png",
+            "url": null,
+            "alt": "Strona główna - sekcja dla architektów IT",
+            "width": 555,
+            "height": 362,
+            "wpId": 153
+          },
+          "link": {
+            "title": "Sprawdź ",
+            "url": "/cennik/",
+            "target": ""
+          }
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "icons",
+      "nav_li": null,
+      "text": "<h2 style=\"text-align: center;\">Technologie, których&nbsp;nie&nbsp;znajdziesz u&nbsp;konkurencji</h2>\n<p style=\"text-align: center;\">Autorskie rozwiązania, które wyróżniają gravity.integration na&nbsp;tle każdej szyny ESB na&nbsp;rynku.</p>\n",
+      "bg": "#27EA93",
+      "icons": [
+        {
+          "icon": {
+            "file": "media/ic_247-1.svg",
+            "url": null,
+            "alt": "Ikona technologii Always-on-data",
+            "width": 0,
+            "height": 0,
+            "wpId": 79
+          },
+          "title": "Always-on-data",
+          "text": "<p>Szyna danych pracuje 24/7 —&nbsp;nawet gdy&nbsp;Twoje&nbsp;systemy źródłowe są&nbsp;niedostępne. Zero przestojów, zero utraconych danych.</p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/Union.svg",
+            "url": null,
+            "alt": "Ikona technologii firstSIGNAL",
+            "width": 0,
+            "height": 0,
+            "wpId": 82
+          },
+          "title": "firstSIGNAL",
+          "text": "<p>Otrzymuj powiadomienia o&nbsp;zdarzeniach w&nbsp;czasie rzeczywistym, zanim dane dotrą do&nbsp;celu. Reaguj natychmiast, nie&nbsp;po&nbsp;fakcie.</p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/ic_IntelliChain.svg",
+            "url": null,
+            "alt": "Ikona technologii IntelliChain",
+            "width": 0,
+            "height": 0,
+            "wpId": 80
+          },
+          "title": "IntelliChain",
+          "text": "<p>Buduj złożone integracje w&nbsp;minuty. Powielaj, modyfikuj i&nbsp;skaluj szyny danych jednym kliknięciem.</p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/icon-1.svg",
+            "url": null,
+            "alt": "Ikona technologii Powers AI",
+            "width": 0,
+            "height": 0,
+            "wpId": 81
+          },
+          "title": "Powers AI, AI powered",
+          "text": "<p>Dostarczaj dane najwyższej jakości do&nbsp;modeli AI i&nbsp;automatycznie wykorzystuj pozyskane z&nbsp;nich informacje.</p>\n"
+        }
+      ],
+      "link": ""
+    },
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": null,
+      "rows": [
+        {
+          "text": "<h2 style=\"font-weight: 400;\"><strong>Jedno narzędzie zamiast dziesiątek skryptów</strong></h2>\n<p style=\"font-weight: 400;\">Przestań budować jednorazowe połączenia między systemami. gravity.integration zastępuje skrypty SQL, pliki CSV i&nbsp;ręczne eksporty jedną, zarządzalną szyną danych. Mniej kodu, mniej błędów, pełna kontrola.</p>\n",
+          "img": {
+            "file": "media/use1-scaled.png",
+            "url": null,
+            "alt": "",
+            "width": 2560,
+            "height": 1429,
+            "wpId": 411
+          },
+          "link": ""
+        },
+        {
+          "text": "<h2 style=\"font-weight: 400;\"><strong>Połącz każdy system —&nbsp;ERP, CRM, WMS i&nbsp;więcej</strong></h2>\n<p style=\"font-weight: 400;\">Comarch, Subiekt GT, Enova, SAP, systemy dziedzinowe, bazy danych, API —&nbsp;nie&nbsp;ma&nbsp;znaczenia, co&nbsp;integrujesz. gravity.integration łączy dowolne systemy wewnętrzne i&nbsp;zewnętrzne, eliminując silosy danych raz na&nbsp;zawsze.</p>\n",
+          "img": {
+            "file": "media/Gravitti_FILM_02.jpg",
+            "url": null,
+            "alt": "gravity.integration - prezentacja wideo, kadr 2",
+            "width": 1920,
+            "height": 1080,
+            "wpId": 259
+          },
+          "link": ""
+        },
+        {
+          "text": "<h2 style=\"font-weight: 400;\"><strong>Integracja z&nbsp;partnerami i&nbsp;dostawcami w&nbsp;godziny, nie&nbsp;miesiące</strong></h2>\n<p style=\"font-weight: 400;\">Wymiana danych z&nbsp;kontrahentami nie&nbsp;musi trwać tygodniami. Podłącz systemy dostawców i&nbsp;odbiorców do&nbsp;swojej szyny danych i&nbsp;automatyzuj przepływ informacji —&nbsp;zamówienia, faktury, stany magazynowe —&nbsp;na&nbsp;bieżąco.</p>\n",
+          "img": {
+            "file": "media/Gravitti_FILM_03.jpg",
+            "url": null,
+            "alt": "gravity.integration - prezentacja wideo, kadr 3",
+            "width": 1920,
+            "height": 1080,
+            "wpId": 260
+          },
+          "link": ""
+        },
+        {
+          "text": "<h2 style=\"font-weight: 400;\"><strong>Pełna widoczność i&nbsp;kontrola nad&nbsp;przepływem danych</strong></h2>\n<p style=\"font-weight: 400;\">Koniec z&nbsp;zagubionymi połączeniami i&nbsp;zapomnianymi skryptami. W&nbsp;gravity.integration widzisz każdą integrację, każdy przepływ danych i&nbsp;każdy błąd. Bezpiecznie aktualizuj, wymieniaj lub wyłączaj systemy bez&nbsp;ryzyka.</p>\n",
+          "img": {
+            "file": "media/Gravitti_FILM_05.jpg",
+            "url": null,
+            "alt": "gravity.integration - prezentacja wideo, kadr 5",
+            "width": 1920,
+            "height": 1080,
+            "wpId": 261
+          },
+          "link": ""
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "icons",
+      "nav_li": null,
+      "text": "<h2 style=\"text-align: center;\">Zaufali nam liderzy polskiego rynku</h2>\n<p style=\"text-align: center;\">gravity.integration wspiera integrację danych w&nbsp;firmach z&nbsp;branży FMCG, motoryzacyjnej, chemicznej i&nbsp;wielu innych. Dołącz do&nbsp;nich.</p>\n",
+      "bg": "",
+      "icons": [
+        {
+          "icon": {
+            "file": "media/bispol-logo-1.png",
+            "url": null,
+            "alt": "Logo firmy Bispol",
+            "width": 400,
+            "height": 200,
+            "wpId": 359
+          },
+          "title": "Bispol",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/consorfrut-logo.png",
+            "url": null,
+            "alt": "Logo firmy Consorfrut",
+            "width": 200,
+            "height": 100,
+            "wpId": 360
+          },
+          "title": "Consorfrut",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/fideli-logo.png",
+            "url": null,
+            "alt": "Logo firmy Fideli",
+            "width": 200,
+            "height": 100,
+            "wpId": 361
+          },
+          "title": "Fideli",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/witamina-logo.png",
+            "url": null,
+            "alt": "Logo firmy Witamina",
+            "width": 200,
+            "height": 100,
+            "wpId": 362
+          },
+          "title": "Witamina",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/gelg-logo.png",
+            "url": null,
+            "alt": "Logo firmy Gelg",
+            "width": 200,
+            "height": 100,
+            "wpId": 363
+          },
+          "title": "Gelg",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/kapitan-navi-logo.png",
+            "url": null,
+            "alt": "Logo firmy Kapitan Navi",
+            "width": 200,
+            "height": 100,
+            "wpId": 364
+          },
+          "title": "Kapitan Navi",
+          "text": "<p><a href=\"/case-studies/\">Zobacz case study →</a></p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/frogum-logo.png",
+            "url": null,
+            "alt": "Logo firmy Frogum",
+            "width": 200,
+            "height": 100,
+            "wpId": 365
+          },
+          "title": "Frogum",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/nac-logo.png",
+            "url": null,
+            "alt": "Logo firmy NAC — New American Concept",
+            "width": 800,
+            "height": 400,
+            "wpId": 366
+          },
+          "title": "NAC",
+          "text": "<p><a href=\"/case-studies/#section6\">Zobacz case study →</a></p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/henmar-logo.png",
+            "url": null,
+            "alt": "Logo firmy HENMAR",
+            "width": 200,
+            "height": 100,
+            "wpId": 367
+          },
+          "title": "HENMAR",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/maxpol-logo.png",
+            "url": null,
+            "alt": "Logo firmy MAXPOL",
+            "width": 200,
+            "height": 100,
+            "wpId": 368
+          },
+          "title": "MAXPOL",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/tia-logo.png",
+            "url": null,
+            "alt": "Logo firmy TiA",
+            "width": 200,
+            "height": 100,
+            "wpId": 369
+          },
+          "title": "TiA",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/hewalex-logo.png",
+            "url": null,
+            "alt": "Logo firmy Hewalex",
+            "width": 200,
+            "height": 100,
+            "wpId": 370
+          },
+          "title": "Hewalex",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/serix-logo.png",
+            "url": null,
+            "alt": "Logo firmy SERIX",
+            "width": 200,
+            "height": 100,
+            "wpId": 371
+          },
+          "title": "SERIX",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/lindner-logo.png",
+            "url": null,
+            "alt": "Logo firmy Lindner",
+            "width": 200,
+            "height": 100,
+            "wpId": 372
+          },
+          "title": "Lindner",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/metaltech-logo.png",
+            "url": null,
+            "alt": "Logo firmy Metaltech",
+            "width": 200,
+            "height": 100,
+            "wpId": 373
+          },
+          "title": "Metaltech",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/mtm-logo.png",
+            "url": null,
+            "alt": "Logo firmy MTM",
+            "width": 200,
+            "height": 100,
+            "wpId": 374
+          },
+          "title": "MTM",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/wze-logo.png",
+            "url": null,
+            "alt": "Logo firmy WZE",
+            "width": 200,
+            "height": 100,
+            "wpId": 375
+          },
+          "title": "WZE",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/biall-logo.png",
+            "url": null,
+            "alt": "Logo firmy Biall",
+            "width": 200,
+            "height": 100,
+            "wpId": 376
+          },
+          "title": "Biall",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/zniczplast-logo.png",
+            "url": null,
+            "alt": "Logo firmy Zniczplast",
+            "width": 200,
+            "height": 100,
+            "wpId": 377
+          },
+          "title": "Zniczplast",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/tiptopol-logo.png",
+            "url": null,
+            "alt": "Logo firmy Tiptopol",
+            "width": 200,
+            "height": 100,
+            "wpId": 378
+          },
+          "title": "Tiptopol",
+          "text": "<p><a href=\"/case-studies/\">Zobacz case study →</a></p>\n"
+        },
+        {
+          "icon": {
+            "file": "media/ezt-logo.png",
+            "url": null,
+            "alt": "Logo firmy EZT",
+            "width": 200,
+            "height": 100,
+            "wpId": 379
+          },
+          "title": "EZT",
+          "text": ""
+        },
+        {
+          "icon": {
+            "file": "media/elmet-poznan-logo.png",
+            "url": null,
+            "alt": "",
+            "width": 800,
+            "height": 400,
+            "wpId": 447
+          },
+          "title": "ELMET Poznań",
+          "text": "<p><a href=\"/case-studies/#section4\">Zobacz case study →</a></p>\n"
+        }
+      ],
+      "link": ""
+    }
+  ]
+}

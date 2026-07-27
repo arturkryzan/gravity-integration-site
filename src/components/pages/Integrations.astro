@@ -1,0 +1,26 @@
+---
+/* Shared body for /integracje/ and /en/integrations/. */
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
+import Site from '../../layouts/Site.astro';
+import PageHero from '../../components/PageHero.astro';
+import IntegrationsGrid from '../../components/IntegrationsGrid.astro';
+import DemoSection from '../../components/DemoSection.astro';
+
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('integracje', lang);
+const page = entry.data;
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  slug={page.slug}
+  draft={page.draft}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <PageHero h1={page.h1} circle={true} />
+  <IntegrationsGrid />
+  <DemoSection variant="integracje" />
+</Site>

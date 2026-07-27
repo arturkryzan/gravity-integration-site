@@ -1,4 +1,13 @@
 ---
+import LangSwitch from './LangSwitch.astro';
+
+interface Props {
+  /** The page's language-neutral key, threaded down from Site.astro so the
+   *  switcher can offer this same page in the other language. */
+  slug?: string;
+}
+const { slug } = Astro.props;
+
 const year = new Date().getFullYear();
 ---
 
@@ -12,6 +21,11 @@ const year = new Date().getFullYear();
       </div>
       <div class="col-7 col-sm-6 text-end text-epi fs-10">
         <div class="gi-footer-meta">
+          {/* First in the row, so the reader who wants the other language finds
+              it before the consent control and the copyright. The flex parent
+              handles the gap, so when the switcher renders nothing the row
+              simply has one fewer item — no empty slot to collapse. */}
+          <LangSwitch slug={slug} />
           {/* Withdrawing consent has to be as easy as giving it, so the way back
               to the cookie bar lives in the footer of every page. It's a real
               <button>: it performs an action, it doesn't navigate. With JS off

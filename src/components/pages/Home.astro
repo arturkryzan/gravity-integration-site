@@ -1,0 +1,51 @@
+---
+/* The home page body, shared by / and /en/.
+ *
+ * Route files under src/pages/ are now two lines each: a URL is a location, not
+ * a page. Everything a page actually IS lives here, and both locales render the
+ * same structure over their own content — `getPage('home', lang)` picks the
+ * language off the URL, so there is nothing to keep in sync by hand. */
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
+import Site from '../../layouts/Site.astro';
+import HomeHero from '../../components/HomeHero.astro';
+import SectionRenderer from '../../components/SectionRenderer.astro';
+import DemoSection from '../../components/DemoSection.astro';
+
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('home', lang);
+const page = entry.data;
+
+/* live-site row overrides (was snippets 30 + 12):
+   section0 row0 → developers SVG animation, row1 → business SVG + extra CTA
+   section2 rows → use-case videos
+
+   TODO(Phase 3): the CTA label and href are hard-coded Polish. They move into
+   ui.ts alongside the rest of the interface strings. */
+const overrides = {
+  0: {
+    0: { media: 'svg-dev' },
+    1: { media: 'svg-biz', extraLinks: [{ title: 'Policz korzyści', url: '/kalkulator/' }] },
+  },
+  2: {
+    0: { media: { video: 'use_01' } },
+    1: { media: { video: 'use_02' } },
+    2: { media: { video: 'use_03' } },
+    3: { media: { video: 'use_04' } },
+  },
+};
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  slug={page.slug}
+  draft={page.draft}
+  bodyClass="home"
+>
+  <HomeHero h1={page.h1} />
+  <SectionRenderer sections={page.sections.slice(0, 3)} overrides={overrides} />
+  <DemoSection />
+  <SectionRenderer sections={page.sections.slice(3)} startIndex={3} logoSections={[3]} />
+</Site>

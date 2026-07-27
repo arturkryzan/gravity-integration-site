@@ -7,7 +7,8 @@ import '../styles/tokens.css';
 import '../styles/legacy.css';
 import '../styles/site.css';
 import site from '../data/site.json';
-import { localeOf, LOCALE_TAG, OG_LOCALE } from '../i18n/ui';
+import { localeOf, LOCALE_TAG, OG_LOCALE, DEFAULT_LOCALE } from '../i18n/ui';
+import { alternates } from '../i18n/routes';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 import Header from '../components/Header.astro';
@@ -17,6 +18,12 @@ interface Props {
   title: string;
   description?: string;
   path: string;
+  /** The page's language-neutral key. Supplying it turns on hreflang and the
+   *  language switcher; the 404, which belongs to no page, leaves it unset. */
+  slug?: string;
+  /** Scaffolded but not yet translated. Indexing one of these would put Polish
+   *  prose on an English URL in Google's results. */
+  draft?: boolean;
   bodyClass?: string;
   ogImage?: string;
   /** override for special pages — the 404 sets `noindex,follow` */
@@ -26,11 +33,24 @@ const {
   title,
   description = '',
   path,
+  slug,
+  draft = false,
   bodyClass = '',
   ogImage = '/og-homehero.png',
-  robots = 'index,follow',
+  robots = draft ? 'noindex,follow' : 'index,follow',
 } = Astro.props;
 const canonical = new URL(path, site.siteUrl).href;
+
+/* hreflang. `alternates` returns nothing unless the page genuinely exists,
+   published, in every locale — a draft fails its own check, so a scaffolded
+   English page neither claims nor is claimed. See src/i18n/routes.ts for why a
+   partial set is worse than none.
+
+   The tags are bare language subtags, not the pl-PL / en-US regional pairs used
+   for og:locale and JSON-LD. `en-US` would tell Google this page is for readers
+   in the United States specifically; it is for anyone who reads English. */
+const alts = slug ? await alternates(slug) : [];
+const xDefault = alts.find((a) => a.lang === DEFAULT_LOCALE);
 
 /* `Astro.currentLocale` reads the locale off the URL — /en/… is English, every
    other path is the unprefixed default. Nothing needs a `lang` prop threaded
@@ -50,6 +70,20 @@ const lang = localeOf(Astro.currentLocale);
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
+    {
+      alts.map((a) => (
+        <link rel="alternate" hreflang={a.lang} href={new URL(a.url, site.siteUrl).href} />
+      ))
+    }
+    {
+      xDefault && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(xDefault.url, site.siteUrl).href}
+        />
+      )
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.siteName} />
@@ -174,11 +208,11 @@ const lang = localeOf(Astro.currentLocale);
   <body class={bodyClass}>
     <AnnouncementBar />
     <div class="page-container">
-      <Header />
+      <Header slug={slug} />
       <main data-scroll-section>
         <slot />
       </main>
-      <Footer />
+      <Footer slug={slug} />
     </div>
     <CookieConsent />
     <script src="../scripts/main.js"></script>

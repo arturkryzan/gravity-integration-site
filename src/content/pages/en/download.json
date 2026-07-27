@@ -1,0 +1,91 @@
+{
+  "wpId": 125,
+  "lang": "en",
+  "draft": true,
+  "slug": "pobieranie",
+  "url": "/en/download/",
+  "seo": {
+    "title": "Pobierz gravity.integration za darmo — instalacja w 15 minut",
+    "description": "Pobierz gravity.integration za darmo. Platforma ESB dla Windows z instalacją w 15 minut. Bez zobowiązań, bez karty — pobierz, zainstaluj i integruj.",
+    "focusKeyword": "pobierz ETL za darmo, darmowe oprogramowanie ETL"
+  },
+  "h1": "<h1>Pobieranie</h1>",
+  "decorative": false,
+  "newsletter": false,
+  "sections": [
+    {
+      "acf_fc_layout": "downloads",
+      "nav_li": "Pobieranie",
+      "downloads": [
+        {
+          "cat": "Dla programistów",
+          "file": {
+            "title": "",
+            "url": "#section1",
+            "target": "_self"
+          },
+          "text": "<h2>Myśl o&nbsp;przyszłości swoich klientów</h2>\n<p>Instaluj, buduj, testuj, ale&nbsp;przede wszystkim &#8211; rozmawiaj z&nbsp;nami! Ciągle rozwijamy technologię gravity i&nbsp;chcemy to&nbsp;robić razem z&nbsp;Tobą!</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n",
+          "img": {
+            "file": "media/download0.png",
+            "url": null,
+            "alt": "Strona pobierania - ilustracja 0",
+            "width": 672,
+            "height": 378,
+            "wpId": 136
+          },
+          "contact": ""
+        },
+        {
+          "cat": "Dla przedsiębiorców",
+          "file": {
+            "title": "",
+            "url": "#section1",
+            "target": "_self"
+          },
+          "text": "<h2>Uporządkuj raz.<br />\nCzerp korzyści zawsze.</h2>\n<p>Pożegnaj architekturę chaosu w&nbsp;Twojej&nbsp;firmie &#8211; zacznij budować infrastrukturę danych wokół gravity. Tak&nbsp;długo, jak nie&nbsp;zaczniesz stosować naszego środowiska integracyjnego poza testami &#8211; nic nie&nbsp;płacisz!</p>\n<p>Jeśli masz pytanie, skontaktuj się z&nbsp;naszymi ekspertami i&nbsp;poznaj wszystkie zalety gravity.integration</p>\n",
+          "img": {
+            "file": "media/download1.png",
+            "url": null,
+            "alt": "Strona pobierania - ilustracja 1",
+            "width": 672,
+            "height": 378,
+            "wpId": 137
+          },
+          "contact": ""
+        },
+        {
+          "cat": "Podręcznik",
+          "file": "",
+          "text": "<h2>Zapoznaj się z&nbsp;produktem</h2>\n<p>Zapraszamy do&nbsp;zapoznania się z&nbsp;interaktywną dokumentacją oprogramowania pod&nbsp;adresem <a href=\"https://docs.gravity-integration.com\" target=\"_blank\" rel=\"noopener\">docs.gravity-integration.com<span class=\"visually-hidden\"> (otwiera się w nowej karcie)</span></a>.</p>\n<p>Jeśli z&nbsp;jakiegoś powodu potrzebujesz dokumentacji offline, możesz pobrać plik PDF z&nbsp;linku poniżej, jednak miej na&nbsp;uwadze, że&nbsp;jest to&nbsp;wersja z&nbsp;<strong>2024</strong> roku.</p>\n",
+          "img": {
+            "file": "media/manual_mockup.jpg",
+            "url": null,
+            "alt": "Podręcznik gravity.integration - wizualizacja okładki",
+            "width": 672,
+            "height": 378,
+            "wpId": 203
+          },
+          "contact": {
+            "title": "POBIERZ",
+            "url": "https://gravityintegration.com/manual/gravity_podrecznik_pl.pdf",
+            "target": ""
+          }
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": "Czas na&nbsp;gravity",
+      "text": "<h2>Pobierz gravity.integration za&nbsp;darmo</h2>\n<p>Podaj firmowy adres e-mail i&nbsp;nazwę firmy, a&nbsp;wyślemy Ci&nbsp;link do&nbsp;pobrania najnowszej wersji gravity.integration. Bezpłatnie, bez&nbsp;zobowiązań, z&nbsp;dołączonym wsparciem technicznym premium.</p>\n                <div class=\"ml-embedded\" data-form=\"gAV0lr\"></div>\n            \n<style>\n.ml-form-embedSubmit { position:absolute !important;left:-9999px !important;opacity:0 !important;pointer-events:none !important; }\n.ml-form-embedBody input[type=\"email\"],\n.ml-form-embedBody input[type=\"text\"] {\n  border:1px solid #464861 !important; border-radius:2rem !important;\n  height:3.5rem !important; padding:0 1.5rem !important;\n  font-family:Epilogue,sans-serif !important; font-size:.75rem !important;\n  background:transparent !important;\n}\n</style>\n<div style=\"margin-top:1.5rem;\">\n<a href=\"#\" id=\"gravity-ml-submit\" class=\"btn btn-text btn-arrow btn-download\"><span>Uzyskaj link do&nbsp;pobierania</span></a>\n</div>\n<p><script>\n(function(){\n  function init(){\n    var ourBtn=document.getElementById(\"gravity-ml-submit\");\n    if(ourBtn && !ourBtn.dataset.wired){\n      ourBtn.dataset.wired=\"1\";\n      ourBtn.addEventListener(\"click\",function(e){\n        e.preventDefault();\n        var mlBtn=document.querySelector(\".ml-form-embedSubmit button\");\n        if(mlBtn) mlBtn.click();\n      });\n    }\n  }\n  if(document.readyState===\"loading\"){\n    document.addEventListener(\"DOMContentLoaded\",init);\n  } else { setTimeout(init, 600); }\n})();\n</script></p>\n",
+      "img": {
+        "file": "media/img.png",
+        "url": null,
+        "alt": "gravity.integration - ilustracja produktu",
+        "width": 434,
+        "height": 555,
+        "wpId": 126
+      },
+      "img_placement": "right"
+    }
+  ]
+}

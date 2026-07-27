@@ -1,0 +1,67 @@
+---
+/* Shared body for /pobieranie/ and /en/download/.
+ *
+ * Rebuilt as a conversion page (see DownloadPage.astro for the funnel mechanics
+ * and where every claim in the copy comes from).
+ *
+ * Gone from the old version: the MailerLite universal.js embed and its loader
+ * (the form now posts to the same endpoint through the site's own runtime, so
+ * no third-party script sits on the critical path), the two decorative
+ * "downloads" rows whose buttons only anchor-jumped to the form, and the
+ * generic PageHero — the hero IS the form now. */
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
+import Site from '../../layouts/Site.astro';
+import DownloadPage from '../../components/DownloadPage.astro';
+import site from '../../data/site.json';
+
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('pobieranie', lang);
+const page = entry.data;
+
+/* TODO(Phase 3): crumb labels are interface strings, not content — they move
+   into ui.ts with the rest. */
+const crumbs = [
+  { label: 'Pobieranie', anchor: 'section0' },
+  { label: 'Jak to działa', anchor: 'section1' },
+  { label: 'Co pobierasz', anchor: 'section2' },
+  { label: 'Dokumentacja', anchor: 'section3' },
+];
+
+/* Rich result: the thing on this page is downloadable software with a free
+   offer. Claims mirror the visible copy (Windows, free for testing), and `url`
+   is derived from the entry so the English twin describes its own URL rather
+   than pointing search engines back at the Polish one.
+
+   TODO(Phase 4): `offers.description` is Polish prose inside structured data —
+   it has to be translated with the page, not left behind. */
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'gravity.integration',
+  operatingSystem: 'Windows',
+  applicationCategory: 'BusinessApplication',
+  softwareVersion: '4',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'PLN',
+    description: 'Bezpłatna pełna wersja do celów testowych i szkoleniowych',
+  },
+  url: new URL(page.url, site.siteUrl).href,
+});
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  slug={page.slug}
+  draft={page.draft}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+  <DownloadPage crumbs={crumbs} />
+</Site>

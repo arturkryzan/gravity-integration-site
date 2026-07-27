@@ -1,0 +1,83 @@
+{
+  "wpId": 87,
+  "lang": "en",
+  "draft": true,
+  "slug": "kontakt",
+  "url": "/en/contact/",
+  "seo": {
+    "title": "Kontakt — gravity.integration",
+    "description": "Skontaktuj się z zespołem gravity.integration. Zapytaj o wdrożenie, wsparcie techniczne lub partnerstwo. Caffeine Minds sp. z o.o., Bielsko-Biała.",
+    "focusKeyword": "kontakt GRAVITY.integration"
+  },
+  "h1": "<h1>Kontakt</h1>",
+  "decorative": false,
+  "newsletter": false,
+  "sections": [
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": null,
+      "text": "<h2>O&nbsp;nas</h2>\n<p>Caffeine Minds sp. z&nbsp;o.o. jest częścią grupy kapitałowej DM Investments, która&nbsp;od&nbsp;ponad 20 lat rozwija w&nbsp;Polsce systemy informatyczne oraz&nbsp;wspiera innowacje.</p>\n<p>Kluczowa dla DM Investments spółka Graffiti ERP S.A, od&nbsp;ponad 20 lat wytwarza autorskie oprogramowanie ERP dla średnich oraz&nbsp;dużych przedsiębiorstw produkcyjnych.</p>\n<p>Caffeine Minds jest inkubatorem najbardziej innowacyjnych pomysłów i&nbsp;technologii, które na&nbsp;codzień wytwarza nasz zespół.</p>\n<p>&nbsp;</p>\n\n<div style=\"margin-top:2rem;padding:1.5rem 2rem;background:rgba(0,0,0,0.03);border-radius:0.75rem;font-size:0.95rem;line-height:1.7;\">\n<p style=\"font-weight:700;margin-bottom:0.75rem;font-size:1.05rem;\">Dane rejestrowe</p>\n<p style=\"margin:0;\">Caffeine Minds sp.&nbsp;z&nbsp;o.o.<br>\nul.&nbsp;Jasielska 16, 60-476 Poznań<br>\nKRS: 0000500700 &nbsp;|&nbsp; NIP: 7811898493 &nbsp;|&nbsp; REGON: 302741139<br>\nKapitał zakładowy: 100&nbsp;000&nbsp;PLN<br>\nSąd Rejonowy Poznań — Nowe Miasto i&nbsp;Wilda w&nbsp;Poznaniu,<br>VIII Wydział Gospodarczy KRS</p>\n<p style=\"margin-top:0.5rem;margin-bottom:0;\">Część grupy kapitałowej DM&nbsp;Investments sp.&nbsp;z&nbsp;o.o.</p>\n</div>",
+      "img": {
+        "file": "media/CM_CLAIM.png",
+        "url": null,
+        "alt": "gravity.integration - hasło reklamowe",
+        "width": 434,
+        "height": 555,
+        "wpId": 210
+      },
+      "img_placement": "right"
+    },
+    {
+      "acf_fc_layout": "contact_form",
+      "nav_li": null,
+      "title": "Wyślij zapytanie"
+    },
+    {
+      "acf_fc_layout": "links",
+      "nav_li": null,
+      "text": "<h2>Przydatne linki</h2>\n<p>Zapraszamy do&nbsp;bezpośredniego kontaktu oraz&nbsp;sprawdzenia pozostałych przedsięwzięć DM Investments.</p>\n",
+      "links": [
+        {
+          "title": "Graffiti ERP S.A.",
+          "link": {
+            "title": "https://graffiti-erp.pl",
+            "url": "https://graffiti-erp.pl",
+            "target": "_blank"
+          }
+        },
+        {
+          "title": "Caffeine Minds",
+          "link": {
+            "title": "https://caffeine-minds.com/",
+            "url": "https://caffeine-minds.com/",
+            "target": "_blank"
+          }
+        },
+        {
+          "title": "DM Investments",
+          "link": {
+            "title": "https://dminvestments.pl/",
+            "url": "https://dminvestments.pl/",
+            "target": ""
+          }
+        },
+        {
+          "title": "Napisz do&nbsp;nas",
+          "link": {
+            "title": "contact@caffeine-minds.com",
+            "url": "mailto:contact@caffeine-minds.com",
+            "target": ""
+          }
+        },
+        {
+          "title": "Polityka prywatności",
+          "link": {
+            "title": "Polityka prywatności",
+            "url": "/polityka-prywatnosci/",
+            "target": ""
+          }
+        }
+      ]
+    }
+  ]
+}

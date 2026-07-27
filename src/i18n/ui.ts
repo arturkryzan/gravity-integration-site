@@ -76,7 +76,12 @@ const pl = {
   'footer.cookieSettings': 'Ustawienia cookies',
   'footer.copyright': '© Copyright',
 
-  /* Language switcher -------------------------------------------------- */
+  /* Language switcher --------------------------------------------------
+     Names the target language outright rather than saying "change language",
+     because a screen-reader user hears the accessible name without the visible
+     endonym next to it. With exactly two locales the target is always the other
+     one, so each locale's string can name it directly. A third locale would
+     turn this into a template with the language interpolated. */
   'lang.switchTo': 'Zmień język na angielski',
 } as const;
 
@@ -84,7 +89,14 @@ export type UiKey = keyof typeof pl;
 
 const en: Partial<Record<UiKey, string>> = {
   /* Filled in during Phase 3, alongside the extraction. Until then every
-     lookup falls back to `pl` — the English shell renders, in Polish words. */
+     lookup falls back to `pl` — the English shell renders, in Polish words.
+
+     This one key is the exception, translated in Phase 2 rather than Phase 3,
+     because falling back would be worse than untranslated: on an English page
+     the Polish string announces a link to English while the link goes to
+     Polish. A control that misnames its own destination is broken, not
+     pending. */
+  'lang.switchTo': 'Switch language to Polish',
 };
 
 export const ui: { pl: Record<UiKey, string>; en: Partial<Record<UiKey, string>> } = { pl, en };

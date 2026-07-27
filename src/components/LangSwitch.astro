@@ -1,0 +1,82 @@
+---
+/* The language switcher.
+ *
+ * There is no auto-redirect anywhere on this site: a Polish reader who lands on
+ * an English URL, or the reverse, changes language by choosing to. This is that
+ * choice, and it appears in the two places people look for it — the full-screen
+ * nav and the footer.
+ *
+ * Three states, in order of preference:
+ *
+ *   1. the same page in the other language           → link to it
+ *   2. no translation of THIS page, but the other    → link to that home page.
+ *      language has a published home                   Landing one click away
+ *                                                      from where you were
+ *                                                      beats a dead end.
+ *   3. the other language has nothing published yet  → render nothing
+ *
+ * State 3 is not hypothetical: every English page is `draft: true` until it has
+ * actually been translated, so during the build-out the Polish site shows no
+ * switcher at all. That is the correct behaviour — offering a language that
+ * turns out to be Polish text under an /en/ URL would be worse than not
+ * offering it.
+ *
+ * Rendering nothing keeps the Polish *markup* untouched, but not the Polish
+ * build: the scoped styles below are bundled into the shared layout stylesheet
+ * because Header and Footer *import* this component, whether or not it emits an
+ * element. That inserts 286 bytes into the chunk, which changes its content hash
+ * and so the stylesheet href on every Polish page. Verified byte-for-byte to be
+ * an insertion and nothing else — no existing rule altered, dropped or
+ * reordered — so the cost is one extra stylesheet fetch for returning visitors,
+ * once.
+ */
+import { translationUrl } from '../i18n/routes';
+import { LOCALES, LOCALE_NAME, localeOf, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  /** The current page's language-neutral key. Absent on the 404, which has no
+   *  translation to point at — it falls through to the home-page case. */
+  slug?: string;
+  class?: string;
+}
+const { slug, class: className = '' } = Astro.props;
+
+const lang = localeOf(Astro.currentLocale);
+/* Two locales, so "the other one" is unambiguous. If a third is ever added this
+   becomes a list and the component grows a <ul> — the data model already
+   supports it; only this line assumes the pair. */
+const other = LOCALES.find((l) => l !== lang) as Lang;
+
+const href = (slug ? await translationUrl(slug, other) : null) ?? (await translationUrl('home', other));
+
+/* Phrased as "switch to the other language", so the Polish value reads "…na
+   angielski" and the English one "…to Polish". Correct for exactly two locales;
+   a third would need the target language interpolated. */
+const s = t(lang);
+---
+
+{
+  href && (
+    <a href={href} hreflang={other} aria-label={s('lang.switchTo')} class:list={['gi-lang', className]}>
+      <span lang={other}>{LOCALE_NAME[other]}</span>
+    </a>
+  )
+}
+
+<style>
+  /* Deliberately inherits colour and size from wherever it is placed — the nav
+     panel is white-on-dark, the footer dark-on-light, and the switcher is the
+     same small link in both. */
+  .gi-lang {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .gi-lang:hover {
+    text-decoration-thickness: 2px;
+  }
+  .gi-lang:focus-visible {
+    outline: 2px solid var(--gi-green-deep, #097a53);
+    outline-offset: 3px;
+  }
+</style>

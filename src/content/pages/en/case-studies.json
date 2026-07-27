@@ -1,0 +1,219 @@
+{
+  "wpId": 354,
+  "lang": "en",
+  "draft": true,
+  "slug": "case-studies",
+  "url": "/en/case-studies/",
+  "seo": {
+    "title": "Case Studies — wdrożenia gravity.integration w polskich firmach",
+    "description": "Case studies gravity.integration — jak TIP-TOPOL, Kapitan Navi, ELMET Poznań i NAC zautomatyzowały integrację danych. Realne efekty wdrożeń ESB w polskich firmach.",
+    "focusKeyword": "case study integracja ERP, wdrożenie ETL"
+  },
+  "h1": "<h1>Case Studies</h1>\n",
+  "decorative": true,
+  "newsletter": true,
+  "sections": [
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": "Tip-topol",
+      "rows": [
+        {
+          "text": "<h2><strong>TIP-TOPOL  </strong><br />\nAutomatyzacja logistyki w branży motoryzacyjnej</h2>\n<p><strong>Firma:</strong> TIP-TOPOL Sp. z o.o. | Pobiedziska, Wielkopolska<br />\n<strong>Branża:</strong> Motoryzacja — produkcja i dystrybucja wyposażenia warsztatowego, membran pneumatycznych, ciężarków do wyważania<br />\n<strong>Zatrudnienie:</strong> 200–500 pracowników<br />\n<strong>System ERP:</strong> Graffiti.ERP</p>\n<h3>Wyzwanie</h3>\n<p>TIP-TOPOL jako największy polski producent ciężarków do wyważania kół i membran do zawieszeń pneumatycznych realizuje dziennie setki wysyłek do klientów w całej Polsce i Europie. Obsługa zamówień wymagała ręcznego logowania się do paneli operatorów kurierskich — DPD, InPost, GLS — kopiowania danych adresowych, generowania listów przewozowych i śledzenia statusów przesyłek w osobnych systemach. Przy skali działalności TIP-TOPOL oznaczało to godziny pracy administracyjnej dziennie, ryzyko pomyłek i opóźnień w informowaniu klientów o statusie dostawy.</p>\n",
+          "img": {
+            "file": "media/tiptopol-case-logo.png",
+            "url": null,
+            "alt": "Logo firmy Tiptopol",
+            "width": 800,
+            "height": 400,
+            "wpId": 384
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Rozwiązanie</h3>\n<p>Dzięki gravity.integration połączyliśmy system Graffiti.ERP firmy TIP-TOPOL bezpośrednio z API operatorów logistycznych. Szyna danych ESB automatyzuje cały proces:</p>\n<p>• <strong>Automatyczne generowanie listów przewozowych</strong> — dane z zamówienia w ERP trafiają bezpośrednio do systemu kuriera, bez przepisywania<br />\n• <strong>Aktualizacja statusów w czasie rzeczywistym</strong> — informacje o nadaniu, doręczeniu i problemach wracają do ERP automatycznie<br />\n• <strong>Obsługa wielu operatorów z jednego miejsca</strong> — DPD, InPost, GLS i Allegro podłączone przez jednolity interfejs REST API<br />\n• <strong>Drukowanie etykiet z poziomu ERP</strong> — pracownik magazynu nie opuszcza systemu, w którym pracuje</p>\n<p>Wdrożenie zajęło kilka dni i nie wymagało zmian w istniejącej infrastrukturze IT firmy.</p>\n",
+          "img": {
+            "file": "media/tiptopol-dpd-integration.gif",
+            "url": null,
+            "alt": "Animacja integracji gravity.integration z systemem DPD",
+            "width": 1911,
+            "height": 982,
+            "wpId": 383
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Rezultaty</h3>\n<p>• Eliminacja ręcznego wprowadzania danych do paneli kurierskich<br />\n• Redukcja pomyłek w adresach i danych przesyłek<br />\n• Szybsza obsługa zamówień — od złożenia do wysyłki<br />\n• Pełna widoczność statusów wszystkich przesyłek w jednym systemie<br />\n• Możliwość podłączenia kolejnych operatorów bez dodatkowych kosztów integracji</p>\n",
+          "img": {
+            "file": "media/logistics-operators-logos.png",
+            "url": null,
+            "alt": "Loga operatorów logistycznych — DPD, InPost, DHL, UPS, FedEx",
+            "width": 800,
+            "height": 400,
+            "wpId": 385
+          },
+          "link": ""
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": null,
+      "text": "<style>#section1 .container-fluid { padding-top: 1rem !important; padding-bottom: 0 !important; } #section1 .row { padding-top: 0 !important; } #section1 { padding-top: 2rem !important; padding-bottom: 2rem !important; }</style>\n<p>&nbsp;</p>\n",
+      "img": null,
+      "img_placement": "left"
+    },
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": "Kapitan Navi",
+      "rows": [
+        {
+          "text": "<h2><strong>KAPITAN NAVI</strong><br />\nAutomatyzacja rejestracji czasu pracy z systemem RCP Roger</h2>\n<p><strong>Firma:</strong> Kapitan Navi | Trzebiatów, Zachodniopomorskie<br />\n<strong>Branża:</strong> Przetwórstwo rybne — producent śledzi marynowanych<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>System RCP:</strong> Roger (baza MSSQL)</p>\n",
+          "img": {
+            "file": "media/kapitan-navi-logo-hires.png",
+            "url": null,
+            "alt": "Logo firmy Kapitan Navi",
+            "width": 800,
+            "height": 400,
+            "wpId": 393
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Wyzwanie</h3>\n<p>Kapitan Navi korzysta z systemu kontroli dostępu Roger do rejestrowania wejść i wyjść pracowników przez bramki RCP (kołowroty i śluzy) w strefach produkcyjnych. Dane z systemu Roger gromadzone były w bazie MSSQL, ale ich analiza wymagała ręcznego eksportowania, obróbki w arkuszach kalkulacyjnych i porównywania z ewidencją w systemie ERP. Kierownicy produkcji nie mieli szybkiego wglądu w rzeczywisty czas pracy, długość przerw ani poprawność odbijania się pracowników na wyznaczonych bramkach.</p>\n",
+          "img": null,
+          "link": ""
+        },
+        {
+          "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration połączył bazę MSSQL systemu Roger z bazą PostgreSQL systemu Graffiti.ERP za pomocą dwóch projektów ESB:</p>\n<p>• <strong>Migracja danych RCP w czasie rzeczywistym</strong> — surowe dane z czytników Roger pobierane są cyklicznie co 1 minutę, filtrowane po wybranych bramkach (kołowrotach i śluzach) i zapisywane do bazy Graffiti<br />\n• <strong>Automatyczna obróbka algorytmem SQL</strong> — funkcja SQL przetwarza surowe odczyty według wytycznych klienta: klasyfikuje okresy pracy i przerw, identyfikuje bramki wejścia/wyjścia, oblicza sumy czasów<br />\n• <strong>Wizualizacja w module Grafbuilder</strong> — przetworzone dane trafiają do panelu analitycznego, w którym kontrolujący widzi wszystko w jednym miejscu<br />\n• <strong>Generowanie raportów</strong> — raporty dzienne i szczegółowe RCP dostępne natychmiast, z możliwością eksportu do formatu Excel</p>\n",
+          "img": {
+            "file": "media/roger-rcp-logo.png",
+            "url": null,
+            "alt": "Logo systemu Roger RCP",
+            "width": 800,
+            "height": 400,
+            "wpId": 394
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Rezultaty</h3>\n<p>• Pełna automatyzacja przepływu danych RCP — z czytników Roger prosto do Graffiti.ERP bez ręcznej interwencji<br />\n• Aktualizacja danych co 1 minutę — kierownik produkcji widzi aktualny stan w czasie rzeczywistym<br />\n• Szczegółowa analiza czasu pracy: czas w strefie produkcyjnej, czas przerw, poprawność odbijania na bramkach<br />\n• Gotowe raporty RCP — dzienne i szczegółowe — generowane jednym kliknięciem z poziomu Graffiti.ERP<br />\n• Eliminacja ręcznego eksportu i obróbki danych w arkuszach kalkulacyjnych</p>\n",
+          "img": {
+            "file": "media/kapitan-navi-gravity-integration-etl.png",
+            "url": null,
+            "alt": "Diagram przepływu danych w gravity.integration ETL",
+            "width": 1920,
+            "height": 1039,
+            "wpId": 388
+          },
+          "link": ""
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": null,
+      "text": "<style>#section3 .container-fluid { padding-top: 1rem !important; padding-bottom: 0 !important; } #section3 .row { padding-top: 0 !important; } #section3 { padding-top: 2rem !important; padding-bottom: 2rem !important; }</style>\n<p>&nbsp;</p>\n",
+      "img": null,
+      "img_placement": "left"
+    },
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": "ELMET Poznań",
+      "rows": [
+        {
+          "text": "<h2><strong>ELMET Poznań S.A.</strong><br />\nIntegracja sprzedaży wielokanałowej BaseLinker z Graffiti.ERP</h2>\n<p><strong>Firma:</strong> ELMET Poznań S.A. | Poznań, Wielkopolska<br />\n<strong>Branża:</strong> Elektrotechnika —&nbsp;dystrybucja materiałów i urządzeń elektrycznych<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>Platforma OMS:</strong> BaseLinker</p>\n",
+          "img": {
+            "file": "media/elmet-poznan-logo.png",
+            "url": null,
+            "alt": "",
+            "width": 800,
+            "height": 400,
+            "wpId": 447
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Wyzwanie</h3>\n<p>ELMET Poznań realizuje sprzedaż wielokanałową —&nbsp;zamówienia napływają jednocześnie z platformy BaseLinker, obsługującej marketplace’y i sklepy internetowe, oraz&nbsp;bezpośrednio z systemu Graffiti.ERP. Brak automatycznej synchronizacji oznaczał ręczne przepisywanie zamówień, niezgodności w stanach magazynowych, problemy z parowania metod wysyłki i płatności między systemami oraz&nbsp;opóźnienia w informowaniu klientów o statusie realizacji. Przy rosnącej liczbie kanałów sprzedaży i zróżnicowanych metodach dostawy —&nbsp;od&nbsp;kuriera po&nbsp;odbiór osobisty —&nbsp;ręczna obsługa stawała się wąskim gardłem całego procesu.</p>\n",
+          "img": {
+            "file": "media/baselinker-case-logo.png",
+            "url": null,
+            "alt": "",
+            "width": 800,
+            "height": 400,
+            "wpId": 448
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration komunikuje się z API BaseLinker, pobierając zamówienia, dane klientów i metody dostawy, a następnie przetwarza je&nbsp;i zapisuje w Graffiti.ERP. Cały proces działa w pełni automatycznie:</p>\n<p>• <strong>Automatyczne pobieranie zamówień z BaseLinker</strong> —&nbsp;projekty gravity.integration odpytują API BaseLinker, pobierają nowe zamówienia wraz z pozycjami, danymi adresowymi i metodą wysyłki<br />\n• <strong>Inteligentne mapowanie wysyłek</strong> —&nbsp;moduł Grafbuilder paruje metody wysyłki BaseLinker z odpowiednikami w Graffiti.ERP i WMS; brakujące metody tworzone są&nbsp;automatycznie<br />\n• <strong>Automatyczne uzupełnianie słowników</strong> —&nbsp;gdy&nbsp;brakuje kontrahenta w Graffiti, gravity.integration pobiera dane z białej księgi (walidacja NIP przez&nbsp;DLL Graffiti) i zakłada nową kartotekę<br />\n• <strong>Parowanie metod płatności</strong> —&nbsp;automatyczne tworzenie brakujących metod płatności w Graffiti tak, aby były zgodne z fakturą<br />\n• <strong>Informacja zwrotna o realizacji</strong> —&nbsp;status zamówienia z Graffiti (etap kompletacji, wysyłki, fakturowania) wraca do BaseLinker w czasie rzeczywistym</p>\n",
+          "img": null,
+          "link": ""
+        },
+        {
+          "text": "<h3>Rezultaty</h3>\n<p>• Pełna automatyzacja przepływu zamówień z BaseLinker do Graffiti.ERP —&nbsp;bez&nbsp;ręcznego przepisywania<br />\n• Automatyczne tworzenie brakujących kontrahentów z walidacją danych z białej księgi<br />\n• Spójne metody wysyłki i płatności między systemami —&nbsp;parowanie i automatyczne tworzenie brakujących pozycji<br />\n• Klient na&nbsp;bieżąco widzi aktualny status zamówienia dzięki informacji zwrotnej z Graffiti<br />\n• Skalowalność —&nbsp;podłączenie kolejnych marketplace’ów i kanałów sprzedaży bez&nbsp;dodatkowej pracy integracyjnej</p>\n",
+          "img": null,
+          "link": ""
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": null,
+      "text": "<style>#section5 .container-fluid { padding-top: 1rem !important; padding-bottom: 0 !important; } #section5 .row { padding-top: 0 !important; } #section5 { padding-top: 2rem !important; padding-bottom: 2rem !important; }</style>\n<p>&nbsp;</p>\n",
+      "img": null,
+      "img_placement": "left"
+    },
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": "NAC",
+      "rows": [
+        {
+          "text": "<h2><strong>NAC</strong><br />\nIntegracja platformy e-commerce cStore z Graffiti.ERP</h2>\n<p><strong>Firma:</strong> NAC<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>Platforma e-commerce:</strong> cStore (B2B/B2C)</p>\n",
+          "img": {
+            "file": "media/nac-logo.png",
+            "url": null,
+            "alt": "Logo firmy NAC — New American Concept",
+            "width": 800,
+            "height": 400,
+            "wpId": 366
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Wyzwanie</h3>\n<p>Sprzedaż wielokanałowa prowadzona na platformie cStore wymaga stałej, spójnej wymiany danych z systemem Graffiti.ERP. Zamówienia, stany magazynowe, cenniki, indeksy i dane kontrahentów muszą być zgodne po obu stronach —&nbsp;w przeciwnym razie pojawiają się rozbieżności w dostępności towaru, nieaktualne ceny dla poszczególnych grup cennikowych oraz&nbsp;konieczność ręcznego przepisywania zamówień. Dodatkową złożoność wprowadza obsługa klientów B2B: każda grupa cennikowa ma&nbsp;własne warunki, część asortymentu wymaga rezerwacji określonych ilości pod konkretnych kontrahentów, a klient korzystający z platformy oczekuje pełnej historii swoich zamówień —&nbsp;niezależnie od kanału, w którym powstały. Przy rosnącej liczbie kontrahentów i pozycji asortymentowych ręczna synchronizacja stawała się wąskim gardłem procesu sprzedaży.</p>\n",
+          "img": {
+            "file": "media/cstore-logo.png",
+            "url": null,
+            "alt": "Logo platformy e-commerce cStore",
+            "width": 800,
+            "height": 400,
+            "wpId": 449
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration udostępnia gotowy webservice (API) wystawiony na zewnątrz —&nbsp;z zestawem metod, które platforma cStore wywołuje bezpośrednio. To&nbsp;system zewnętrzny odpytuje API gravity.integration za każdym razem, gdy&nbsp;chce przesłać lub pobrać dane z Graffiti.ERP, dzięki czemu wymiana pozostaje spójna i kontrolowana. Synchronizacja obejmuje (→ do cStore, ↔ dwukierunkowo):</p>\n<p>• <strong>Zamówienia klienta (↔)</strong> —&nbsp;dodawanie nagłówka wraz z pozycjami; zwrotnie cStore pobiera wszystkie zamówienia kontrahenta niezależnie od kanału (także wprowadzone poza platformą), aby prezentować kompletną informację w oparciu o grupy cennikowe (filtr: lista kontrahentów B2B)<br />\n• <strong>Kartoteki magazynowe —&nbsp;stany (→)</strong> —&nbsp;plany sprzedażowe wg grup cennikowych: obliczanie ilości rezerwacyjnej dla klientów B2B pod daną grupę oraz&nbsp;wolnych ilości dostępnych dla wszystkich (B2B/B2C)<br />\n• <strong>Cenniki (→)</strong> —&nbsp;grupy cennikowe skorelowane z kartotekami kontrahenckimi i indeksami</p>\n",
+          "img": {
+            "file": "media/cstore-pozycje-cennika-graffiti.png",
+            "url": null,
+            "alt": "cStore — panel administracyjny: Pozycje cennika produktu (grupy cennikowe) zsynchronizowane z Graffiti.ERP przez gravity.integration",
+            "width": 1900,
+            "height": 910,
+            "wpId": 450
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Moduł Grafbuilder</h3>\n<p>Pozostałe dane oraz&nbsp;orkiestrację całego procesu obsługuje autorski moduł Grafbuilder. Zakres synchronizacji uzupełniają:</p>\n<p>• <strong>Indeksy i kontrahenci (→)</strong> —&nbsp;przesyłani do cStore jako podstawa katalogu i uprawnień cenowych<br />\n• <strong>Faktury sprzedażowe (←)</strong> —&nbsp;informacja o fakturach z możliwością pobrania PDF na żądanie z poziomu platformy; wydruk generowany jest w wariancie zgodnym z Graffiti.ERP (przez&nbsp;DLL)<br />\n• <strong>Dokumenty magazynowe (←)</strong> —&nbsp;przekazywane z Graffiti.ERP do cStore</p>\n<p>Po otrzymaniu zamówienia z cStore i obróbce danych zamówienia trafiają do Graffiti.ERP. Grafbuilder buduje plany sprzedażowe dla kontrahentów B2B —&nbsp;wraz z widokami, wyzwalaczami i funkcjami SQL (m.in.&nbsp;badanie limitów magazynowych oraz&nbsp;priorytety rezerwacyjne dla zamówień).</p>\n",
+          "img": null,
+          "link": ""
+        },
+        {
+          "text": "<h3>Rezultaty</h3>\n<p>• Pełna automatyzacja wymiany danych między cStore a Graffiti.ERP —&nbsp;bez&nbsp;ręcznego przepisywania zamówień i dokumentów<br />\n• Stany i ceny zgodne w czasie rzeczywistym, z uwzględnieniem grup cennikowych i ilości rezerwacyjnych dla klientów B2B<br />\n• Jeden, kompletny widok zamówień kontrahenta na platformie —&nbsp;niezależnie od kanału sprzedaży<br />\n• Faktury (PDF w wariancie Graffiti) i dokumenty magazynowe dostępne dla klienta na żądanie<br />\n• Skalowalność —&nbsp;obsługa rosnącej liczby kontrahentów B2B i indeksów bez zwiększania nakładu pracy</p>\n",
+          "img": null,
+          "link": ""
+        }
+      ]
+    }
+  ]
+}

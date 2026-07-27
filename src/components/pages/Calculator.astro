@@ -1,0 +1,40 @@
+---
+/* Shared body for /kalkulator/ and /en/roi-calculator/. */
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
+import Site from '../../layouts/Site.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionRenderer from '../../components/SectionRenderer.astro';
+import RoiCalculator from '../../components/RoiCalculator.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import heroes from '../../data/page_heroes.json';
+import faqJsonLd from '../../data/kalkulator-faq-jsonld.json?raw';
+
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('kalkulator', lang);
+const page = entry.data;
+const hero = (heroes as Record<string, any>)['kalkulator'];
+/* calculator sits between text_columns (section0) and faq (section1) — snippet 19's insertion point */
+
+/* TODO(Phase 4): the FAQ rich result is Polish Q&A. An English page carrying it
+   would be claiming answers it doesn't show, so the English twin needs its own
+   translated JSON-LD before it comes out of draft. */
+---
+
+<Site
+  title={page.seo.title}
+  description={page.seo.description}
+  path={page.url}
+  slug={page.slug}
+  draft={page.draft}
+  bodyClass={`page page-id-${page.wpId}`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={faqJsonLd} />
+  </Fragment>
+  <PageHero h1={page.h1} img={hero.local} alt={hero.alt} circle={hero.circle} />
+  <SectionRenderer sections={page.sections.slice(0, 1)} />
+  <RoiCalculator />
+  <SectionRenderer sections={page.sections.slice(1)} startIndex={1} />
+  <Newsletter />
+</Site>

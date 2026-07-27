@@ -2,7 +2,7 @@
 /* Generic subpages: technologia, czym-jest-esb, cennik, polityka-prywatnosci,
    kontakt, case-studies. Special pages (integracje, kalkulator, pobieranie)
    have their own routes. */
-import { getCollection } from 'astro:content';
+import { pagesIn, OWN_ROUTE } from '../../i18n/routes';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
@@ -15,19 +15,9 @@ import heroes from '../../data/page_heroes.json';
 const DEMO_PAGES = ['technologia', 'cennik', 'case-studies', 'czym-jest-esb'];
 
 export async function getStaticPaths() {
-  const pages = await getCollection('pages');
+  const pages = await pagesIn('pl');
   return pages
-    .filter(
-      (p) =>
-        ![
-          '/',
-          '/integracje/',
-          '/kalkulator/',
-          '/pobieranie/',
-          '/czym-jest-esb/',
-          '/case-studies/',
-        ].includes(p.data.url),
-    )
+    .filter((p) => !OWN_ROUTE.has(p.data.slug))
     .map((p) => ({
       params: { slug: p.data.url.replace(/^\/|\/$/g, '') },
       props: { page: p.data },

@@ -21,10 +21,17 @@ const section = z
   })
   .passthrough();
 
+/** Locale of a content entry. Defaults to 'pl' so the original Polish files need
+ *  no edit — the field only has to be written in the English ones. */
+const lang = z.enum(['pl', 'en']).default('pl');
+
 const pages = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/pages' }),
+  loader: glob({ pattern: '**/*.json', base: './src/content/pages' }),
   schema: z.object({
     wpId: z.number(),
+    lang,
+    /** Language-neutral key: the SAME string in both languages. `url` carries the
+     *  localised path. That pairing is what links a page to its translation. */
     slug: z.string(),
     url: z.string(),
     seo: z.object({
@@ -41,9 +48,10 @@ const pages = defineCollection({
 });
 
 const caseStudies = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/case-studies' }),
+  loader: glob({ pattern: '**/*.json', base: './src/content/case-studies' }),
   schema: z.object({
     order: z.number(),
+    lang,
     anchor: z.string(), // preserved WP anchor: section0/2/4/6
     slug: z.string(),
     company: z.string(),

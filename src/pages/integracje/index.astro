@@ -1,11 +1,14 @@
 ---
-import { getEntry } from 'astro:content';
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
 import IntegrationsGrid from '../../components/IntegrationsGrid.astro';
 import DemoSection from '../../components/DemoSection.astro';
 
-const page = (await getEntry('pages', 'integracje'))!.data;
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('integracje', lang);
+const page = entry.data;
 ---
 
 <Site

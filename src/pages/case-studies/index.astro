@@ -4,7 +4,8 @@
    TextImgLink, which was the WordPress theme's only option: a 33%-wide text
    column zigzagging left/right beside a half-empty image column. The copy is
    unchanged — it is parsed out of the same JSON and laid out properly. */
-import { getEntry } from 'astro:content';
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
@@ -14,7 +15,9 @@ import DemoSection from '../../components/DemoSection.astro';
 import heroes from '../../data/page_heroes.json';
 import { parseCaseStudies } from '../../lib/case-studies';
 
-const page = (await getEntry('pages', 'case-studies'))!.data;
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('case-studies', lang);
+const page = entry.data;
 const hero = (heroes as Record<string, any>)['case-studies'] ?? {};
 const studies = parseCaseStudies(page.sections as any[]);
 const crumbs = studies

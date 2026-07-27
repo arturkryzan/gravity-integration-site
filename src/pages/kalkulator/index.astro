@@ -1,5 +1,6 @@
 ---
-import { getEntry } from 'astro:content';
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
 import SectionRenderer from '../../components/SectionRenderer.astro';
@@ -8,7 +9,9 @@ import Newsletter from '../../components/Newsletter.astro';
 import heroes from '../../data/page_heroes.json';
 import faqJsonLd from '../../data/kalkulator-faq-jsonld.json?raw';
 
-const page = (await getEntry('pages', 'kalkulator'))!.data;
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('kalkulator', lang);
+const page = entry.data;
 const hero = (heroes as Record<string, any>)['kalkulator'];
 /* calculator sits between text_columns (section0) and faq (section1) — snippet 19's insertion point */
 ---

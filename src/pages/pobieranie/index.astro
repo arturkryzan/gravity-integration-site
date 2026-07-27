@@ -7,11 +7,14 @@
    no third-party script sits on the critical path), the two decorative
    "downloads" rows whose buttons only anchor-jumped to the form, and the
    generic PageHero — the hero IS the form now. */
-import { getEntry } from 'astro:content';
+import { getPage } from '../../i18n/routes';
+import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import DownloadPage from '../../components/DownloadPage.astro';
 
-const page = (await getEntry('pages', 'pobieranie'))!.data;
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('pobieranie', lang);
+const page = entry.data;
 
 const crumbs = [
   { label: 'Pobieranie', anchor: 'section0' },

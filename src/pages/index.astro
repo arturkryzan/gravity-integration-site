@@ -1,11 +1,14 @@
 ---
-import { getEntry } from 'astro:content';
+import { getPage } from '../i18n/routes';
+import { localeOf } from '../i18n/ui';
 import Site from '../layouts/Site.astro';
 import HomeHero from '../components/HomeHero.astro';
 import SectionRenderer from '../components/SectionRenderer.astro';
 import DemoSection from '../components/DemoSection.astro';
 
-const page = (await getEntry('pages', 'home'))!.data;
+const lang = localeOf(Astro.currentLocale);
+const entry = await getPage('home', lang);
+const page = entry.data;
 
 /* live-site row overrides (was snippets 30 + 12):
    section0 row0 → developers SVG animation, row1 → business SVG + extra CTA

@@ -19,6 +19,25 @@ const ctaHref = new URL(await linkUrl('pobieranie', lang), site.siteUrl).href;
 /* Everything the inline script says. `GI`, not `R` — the ported script's
    calc() declares `var …,R=+sl.r.value,…` (the day rate), which would shadow
    a define:vars `R` and break every lookup inside it. */
+/* The sliders' starting positions. These were inline literals in the ported
+   markup, in two places each: the <input value> and the number rendered beside
+   it. The rendered one was hard-coded "1 500" with a non-breaking space, which
+   was wrong twice over.
+
+   On the English page it was Polish grouping, corrected on the first script
+   tick and never corrected at all with JS off.
+
+   On the Polish page it disagreed with the calculator's own output. CLDR gives
+   Polish minimumGroupingDigits 2, so four-digit numbers are not grouped at all:
+   (1500).toLocaleString('pl-PL') is "1500", and "12 000" only starts grouping
+   at five digits. The static markup said 1 500; the moment you touched the
+   slider the same span said 1500. Formatting both defaults through the same
+   locale the script uses settles it, and naming them once stops the <input>
+   value and its label drifting apart later. */
+const RATE_DEFAULT = 1500;
+const TOOLS_DEFAULT = 0;
+const nf = new Intl.NumberFormat(s('roi.numberLocale'));
+
 const GI = {
   locale: s('roi.numberLocale'),
   days: s('roi.days.unit'),
@@ -121,12 +140,12 @@ const GI = {
     <div class="gi-calc-card">
       <h3>{s('roi.costs.h3')}</h3>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.rate')}</span><span class="gi-slider-value" id="v-rate">1 500</span></div>
-        <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value="1500">
+        <div class="gi-slider-label"><span>{s('roi.slider.rate')}</span><span class="gi-slider-value" id="v-rate">{nf.format(RATE_DEFAULT)}</span></div>
+        <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value={RATE_DEFAULT}>
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.tools')}</span><span class="gi-slider-value" id="v-tool">0</span></div>
-        <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value="0">
+        <div class="gi-slider-label"><span>{s('roi.slider.tools')}</span><span class="gi-slider-value" id="v-tool">{nf.format(TOOLS_DEFAULT)}</span></div>
+        <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value={TOOLS_DEFAULT}>
       </div>
     </div>
   </div>

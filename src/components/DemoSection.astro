@@ -1,178 +1,1034 @@
 ---
 /* "Umów 15-minutowe demo" section (was snippet 13 + CF7 form 414).
    variant="integracje" swaps the heading (was snippet 31's replacement).
-   POST endpoint /api/demo-request lands in Phase 3. */
+
+   Rebuilt in the overdrive pass. The CF7 class scaffolding is gone — it only
+   existed to satisfy WordPress, and every `!important` in the old file was
+   fighting theme rules scoped to `form .form-row …`, which this form never
+   matched.
+
+   Submission goes straight to MailerLite — form "gravity.integration — Demo
+   (www)", feeding the GRAVITY group. There is no server in this build, so the
+   `action` is the MailerLite endpoint and the inputs are named after
+   MailerLite's own field keys: with JS off the browser posts natively and the
+   lead still lands. The script below upgrades that to fetch + inline result.
+
+   `name` (the wire format) and `key` (what the script calls the field) are now
+   two different things, so every input carries `data-key`. The script looks
+   fields up by that, which is why renaming the wire format didn't ripple
+   through forty references below. */
+import { mlAction } from '../lib/mailerlite';
+
 interface Props { variant?: 'home' | 'integracje' }
 const { variant = 'home' } = Astro.props;
+
+const action = mlAction('demo');
+
+const fields = [
+  {
+    name: 'your-name', ml: 'name', label: 'Imię i nazwisko', type: 'text',
+    placeholder: 'Jan Kowalski', autocomplete: 'name', required: true,
+  },
+  {
+    name: 'your-email', ml: 'email', label: 'E-mail służbowy', type: 'email',
+    placeholder: 'jan@firma.pl', autocomplete: 'email',
+    inputmode: 'email', required: true,
+  },
+  {
+    name: 'your-company', ml: 'company', label: 'Firma', type: 'text',
+    placeholder: 'Nazwa firmy', autocomplete: 'organization', required: true,
+  },
+  {
+    name: 'your-phone', ml: 'phone', label: 'Telefon', type: 'tel',
+    placeholder: '+48 123 456 789', autocomplete: 'tel',
+    inputmode: 'tel', required: false,
+  },
+] as const;
 ---
-<style>
-/* Reset ALL theme form styles inside demo wrapper */
-#demo-form-wrapper .wpcf7-form{
-  display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;
-}
-#demo-form-wrapper .hidden-fields-container{display:none!important;}
-#demo-form-wrapper .demo-field{position:static!important;}
-#demo-form-wrapper .demo-field-full{grid-column:1/-1;}
-#demo-form-wrapper .demo-field label{
-  position:static!important;
-  color:rgba(255,255,255,0.65)!important;
-  font-size:0.85rem!important;
-  font-weight:400!important;
-  letter-spacing:0!important;
-  text-transform:none!important;
-  display:block!important;
-  margin-bottom:0.35rem!important;
-  font-family:inherit!important;
-}
-#demo-form-wrapper .demo-field input[type="text"],
-#demo-form-wrapper .demo-field input[type="email"],
-#demo-form-wrapper .demo-field input[type="tel"]{
-  width:100%!important;
-  background:rgba(255,255,255,0.1)!important;
-  border:1px solid rgba(255,255,255,0.15)!important;
-  border-radius:0.5rem!important;
-  padding:0.7rem 1rem!important;
-  color:#fff!important;
-  font-size:0.95rem!important;
-  max-height:none!important;
-  transition:border-color 0.2s!important;
-  box-sizing:border-box!important;
-}
-#demo-form-wrapper .demo-field input[type="text"]:focus,
-#demo-form-wrapper .demo-field input[type="email"]:focus,
-#demo-form-wrapper .demo-field input[type="tel"]:focus{
-  border-color:#27EA93!important;outline:none!important;background:rgba(255,255,255,0.13)!important;
-}
-#demo-form-wrapper input::placeholder{color:rgba(255,255,255,0.35)!important;}
-#demo-form-wrapper .wpcf7-acceptance label{
-  display:flex!important;align-items:flex-start!important;gap:0.5rem!important;cursor:pointer;
-  position:static!important;text-transform:none!important;letter-spacing:0!important;font-size:inherit!important;
-}
-#demo-form-wrapper .wpcf7-acceptance input[type="checkbox"]{
-  -webkit-appearance:checkbox!important;-moz-appearance:checkbox!important;appearance:checkbox!important;
-  position:static!important;margin-top:3px!important;accent-color:#27EA93;flex-shrink:0;
-  width:16px!important;height:16px!important;min-width:16px!important;min-height:16px!important;
-  opacity:1!important;visibility:visible!important;display:inline-block!important;
-  border:1px solid rgba(255,255,255,0.4)!important;cursor:pointer!important;
-}
-#demo-form-wrapper .wpcf7-acceptance .wpcf7-list-item-label{
-  color:rgba(255,255,255,0.55);font-size:0.78rem;line-height:1.4;
-}
-#demo-form-wrapper .wpcf7-list-item{margin-left:0!important;}
-#demo-form-wrapper .demo-submit-btn{
-  display:block!important;
-  position:static!important;
-  width:100%!important;
-  background:#27EA93!important;
-  color:#464861!important;
-  border:none!important;
-  border-radius:0.5rem!important;
-  padding:0.85rem 2rem!important;
-  font-size:1rem!important;
-  font-weight:600!important;
-  cursor:pointer!important;
-  transition:background 0.2s,transform 0.1s!important;
-  letter-spacing:0!important;
-  text-transform:none!important;
-  text-indent:0!important;
-  font-family:inherit!important;
-}
-#demo-form-wrapper .demo-submit-btn:hover{background:#20d484!important;transform:translateY(-1px)!important;}
-#demo-form-wrapper .wpcf7-response-output{
-  grid-column:1/-1;color:#27EA93!important;border:none!important;padding:0.5rem 0!important;font-size:0.9rem;
-}
-#demo-form-wrapper .wpcf7-not-valid-tip{
-  color:#ff6b6b!important;font-size:0.75rem!important;margin-top:0.3rem!important;
-  position:static!important;display:block!important;
-  text-transform:none!important;letter-spacing:0!important;
-  font-weight:400!important;font-family:inherit!important;
-  padding:0!important;text-align:left!important;
-}
-#demo-form-wrapper .wpcf7-form-control-wrap{position:relative!important;display:block!important;}
-#demo-form-wrapper .wpcf7-form p{margin:0!important;}
-@media(max-width:767px){
-  #demo-form-wrapper .wpcf7-form{grid-template-columns:1fr!important;}
-  #demo-form-wrapper{padding:1.5rem 1.25rem!important;}
-  #section-demo{padding:3rem 0!important;}
-}
-</style>
-<section id="section-demo" style="background-color:#464861;padding:5rem 0;position:relative;overflow:hidden;">
+
+<section id="section-demo" class="demo-section">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-6 mx-auto text-center" style="margin-bottom:2.5rem;">
-        {variant === 'integracje' ? (
+    <div class="demo-intro">
+      {variant === 'integracje' ? (
         <>
-        <h2 style="color:#fff;font-size:2.2rem;font-weight:700;margin-bottom:0.5rem;line-height:1.3;">
-          Nie widzisz swojego systemu?
-        </h2>
-        <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;line-height:1.6;max-width:540px;margin:0 auto;">
-          Integrujemy też systemy niestandardowe, legacy i&nbsp;rozwiązania pisane na&nbsp;zamówienie. Jeśli system ma API lub bazę danych&nbsp;—&nbsp;podłączymy go.
-        </p>
+          <h2 class="demo-h2">Nie widzisz swojego systemu?</h2>
+          <p class="demo-lede">
+            Integrujemy też systemy niestandardowe, legacy i&nbsp;rozwiązania pisane
+            na&nbsp;zamówienie. Jeśli system ma API lub bazę danych&nbsp;—&nbsp;podłączymy go.
+          </p>
         </>
       ) : (
         <>
-        <h2 style="color:#fff;font-size:2.2rem;font-weight:700;margin-bottom:1rem;line-height:1.3;">
-          Sprawdź gravity.integration na&nbsp;żywo<br>
-          <span style="color:#27EA93;">Umów 15&#8209;minutowe demo</span>
-        </h2>
-        <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;line-height:1.6;max-width:540px;margin:0 auto;">
-          Pokaż nam swój scenariusz integracji — przygotujemy demo dopasowane do&nbsp;Twoich systemów. Bez zobowiązań, bez slajdów.
-        </p>
+          <h2 class="demo-h2">
+            Sprawdź gravity.integration na&nbsp;żywo<br />
+            <span class="demo-h2-accent">Umów 15&#8209;minutowe demo</span>
+          </h2>
+          <p class="demo-lede">
+            Pokaż nam swój scenariusz integracji — przygotujemy demo dopasowane
+            do&nbsp;Twoich systemów. Bez zobowiązań, bez slajdów.
+          </p>
         </>
       )}
-      </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-xl-6">
-        <div id="demo-form-wrapper" style="background:rgba(255,255,255,0.07);border-radius:1rem;padding:2rem 2.5rem;backdrop-filter:blur(6px);">
-          
-<div class="wpcf7" lang="pl-PL" dir="ltr">
-<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p><ul></ul></div>
-<form action="/api/demo-request" data-form="demo" method="post" class="wpcf7-form init" aria-label="Formularz demo" novalidate="novalidate" data-status="init">
 
-<div class="demo-field">
-<label>Imię i nazwisko</label>
-<span class="wpcf7-form-control-wrap" data-name="your-name"><input type="text" name="your-name" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Jan Kowalski" value="" /></span>
-</div>
-<div class="demo-field">
-<label>E-mail służbowy</label>
-<span class="wpcf7-form-control-wrap" data-name="your-email"><input type="email" name="your-email" size="40" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="jan@firma.pl" value="" /></span>
-</div>
-<div class="demo-field">
-<label>Firma</label>
-<span class="wpcf7-form-control-wrap" data-name="your-company"><input type="text" name="your-company" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false" placeholder="Nazwa firmy" value="" /></span>
-</div>
-<div class="demo-field">
-<label>Telefon <span style="opacity:0.5">(opcjonalnie)</span></label>
-<span class="wpcf7-form-control-wrap" data-name="your-phone"><input type="tel" name="your-phone" size="40" class="wpcf7-form-control wpcf7-tel wpcf7-text" aria-invalid="false" placeholder="+48 123 456 789" value="" /></span>
-</div>
-<div class="demo-field demo-field-full" style="position:absolute!important;left:-9999px!important;top:-9999px!important;height:0!important;width:0!important;overflow:hidden!important;" aria-hidden="true" tabindex="-1">
-<label>Leave empty</label>
-<input type="text" name="website_url" value="" autocomplete="off" tabindex="-1" />
-</div>
-<input type="hidden" name="_demo_ts" value="" />
-<input type="hidden" name="_demo_token" value="" />
-<div class="demo-field demo-field-full">
-<span class="wpcf7-form-control-wrap" data-name="demo-consent"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="demo-consent" value="1" aria-invalid="false" /><span class="wpcf7-list-item-label">Zgadzam się na kontakt w celu umówienia demo. Administratorem danych jest Caffeine Minds sp.&nbsp;z&nbsp;o.o.</span></label></span></span></span>
-</div>
-<div class="demo-field demo-field-full demo-field-submit">
-<button type="submit" class="demo-submit-btn">Umów demo →</button>
-</div>
-<div class="wpcf7-response-output" aria-hidden="true"></div>
-</form>
-</div>
+    <div id="demo-form-wrapper" class="demo-card">
+      <form
+        action={action}
+        method="post"
+        target="_blank"
+        data-form="demo"
+        class="demo-form"
+        aria-label="Formularz zgłoszenia na demo"
+      >
+        {fields.map((f) => (
+          <div class="demo-field" data-field={f.name}>
+            <label class="demo-label" for={`demo-${f.name}`}>
+              {f.label}
+              {!f.required && <> <span class="demo-optional">(opcjonalnie)</span></>}
+            </label>
+            <div class="demo-control">
+              <input
+                type={f.type}
+                id={`demo-${f.name}`}
+                name={`fields[${f.ml}]`}
+                data-key={f.name}
+                class="demo-input"
+                placeholder={f.placeholder}
+                autocomplete={f.autocomplete}
+                inputmode={'inputmode' in f ? (f as any).inputmode : undefined}
+                required={f.required || undefined}
+                aria-required={f.required ? 'true' : undefined}
+                aria-invalid="false"
+                aria-describedby={`demo-${f.name}-err demo-${f.name}-note`}
+              />
+              <svg class="demo-tick" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M4.5 10.5 8.4 14.3 15.6 6.4" pathLength="1" />
+              </svg>
+            </div>
+            <p class="demo-err" id={`demo-${f.name}-err`} aria-live="polite" hidden></p>
+            {/* Hints live in the markup rather than being injected, so Astro's
+                scoped styles actually reach them. */}
+            <div class="demo-note" id={`demo-${f.name}-note`} aria-live="polite">
+              <p class="demo-hint" hidden></p>
+              {f.name === 'your-company' && (
+                <button type="button" class="demo-fill" hidden>
+                  <span class="demo-fill-text"></span>
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+
+        {/* Honeypot + fill-time trap. There is no server to verify these any
+            more, so they're checked in the browser before the request goes out:
+            a bot that fills the hidden field or submits within two seconds is
+            shown the success state and never reaches MailerLite. That stops the
+            junk that scripts a real form; it isn't a claim of security. */}
+        <div class="demo-hp" aria-hidden="true">
+          <label for="demo-website-url">Leave this field empty</label>
+          <input type="text" id="demo-website-url" name="website_url" value="" autocomplete="off" tabindex="-1" />
         </div>
+        <input type="hidden" data-key="_demo_ts" value="" />
+        <input type="hidden" name="ml-submit" value="1" />
+        <input type="hidden" name="anticsrf" value="true" />
+
+        <div class="demo-field demo-field-full" data-field="demo-consent">
+          <label class="demo-consent" for="demo-consent">
+            <input
+              type="checkbox"
+              id="demo-consent"
+              name="demo-consent"
+              data-key="demo-consent"
+              value="1"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="demo-consent-err"
+            />
+            <span class="demo-check" aria-hidden="true">
+              <svg viewBox="0 0 20 20" focusable="false">
+                <path d="M4.5 10.4 8.3 14.1 15.5 6.5" pathLength="1" />
+              </svg>
+            </span>
+            <span class="demo-consent-text">
+              Zgadzam się na kontakt w celu umówienia demo. Administratorem danych
+              jest Caffeine Minds sp.&nbsp;z&nbsp;o.o.
+            </span>
+          </label>
+          <p class="demo-err" id="demo-consent-err" aria-live="polite" hidden></p>
+        </div>
+
+        <div class="demo-field demo-field-full">
+          <button type="submit" class="demo-submit">
+            <span class="demo-submit-label">Umów demo&nbsp;→</span>
+            <span class="demo-submit-pending" aria-hidden="true">
+              <svg class="demo-spinner" viewBox="0 0 20 20" focusable="false">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="M10 2.5a7.5 7.5 0 0 1 7.5 7.5" />
+              </svg>
+              Wysyłam…
+            </span>
+          </button>
+          <p class="demo-formerr" role="alert" hidden></p>
+        </div>
+      </form>
+
+      <div class="demo-done" hidden>
+        <svg class="demo-done-tick" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+          <circle cx="22" cy="22" r="20" pathLength="1" />
+          <path d="M13 22.5 19.4 28.8 31 16.5" pathLength="1" />
+        </svg>
+        <h3 class="demo-done-h">Dzięki<span data-done="name"></span>.</h3>
+        <p class="demo-done-p">
+          Potwierdzenie poleciało na <strong data-done="email"></strong>. Odezwiemy się
+          w&nbsp;ciągu jednego dnia roboczego, żeby dobrać termin.
+        </p>
+        <p class="demo-done-note">
+          Demo trwa 15&nbsp;minut i&nbsp;pokazujemy na&nbsp;nim Twój scenariusz
+          integracji&nbsp;— nie slajdy.
+        </p>
       </div>
     </div>
-
   </div>
 </section>
+
+<style>
+  /* ---------------------------------------------------------------
+     Palette. Every value below was measured against the surface it
+     actually renders on, not guessed:
+
+       section  #464861            card  #535568            well  #393b4d
+       label      rgba(#fff,.80) on card → 5.38:1
+       consent    rgba(#fff,.80) on card → 5.38:1
+       optional   rgba(#fff,.65) on card → 4.18:1
+       placeholder rgba(#fff,.60) on well → 5.15:1
+       input ink  #ffffff        on well → 11.05:1
+       error text #ffc2c2        on card → 4.77:1
+       error line #ff8f8f        on card → 3.32:1  (non-text, 3:1 floor)
+       hint       #ffd166        on card → 5.06:1
+       green line #27ea93        on card → 4.61:1
+       button ink #0a0a12        on green → 12.47:1 (the house rule)
+
+     The old file's well was rgba(#fff,.10), i.e. *lighter* than the card.
+     No white-alpha placeholder can clear 4.5:1 on it (0.70 alpha tops out at
+     3.70 and by then it no longer reads as placeholder). Darkening the well
+     instead of lightening the text fixes the placeholder, the error red and
+     the green focus accent in one move — and a recessed well is the more
+     honest affordance anyway. --------------------------------------------- */
+  .demo-section {
+    --f-surface: #464861;
+    --f-card: #535568;
+    --f-well: #393b4d;
+    --f-well-focus: #3f4155;
+    --f-line: rgb(255 255 255 / 0.55);
+    --f-ink: #ffffff;
+    --f-label: rgb(255 255 255 / 0.8);
+    --f-optional: rgb(255 255 255 / 0.65);
+    --f-placeholder: rgb(255 255 255 / 0.6);
+    --f-err-text: #ffc2c2;
+    --f-err-line: #ff8f8f;
+    --f-hint: #ffd166;
+    --f-green: #27ea93;
+    --f-ink-on-green: #0a0a12;
+    --f-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    background-color: var(--f-surface);
+    padding: clamp(3rem, 7vw, 5rem) 0;
+    position: relative;
+    overflow: clip;
+  }
+
+  .demo-intro {
+    max-width: 40rem;
+    margin: 0 auto clamp(1.75rem, 4vw, 2.5rem);
+    text-align: center;
+  }
+  .demo-h2 {
+    color: #fff;
+    font-size: clamp(1.6rem, 4.2vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 0.75rem;
+    text-wrap: balance;
+  }
+  .demo-h2-accent { color: var(--f-green); }
+  .demo-lede {
+    color: rgb(255 255 255 / 0.82);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .demo-card {
+    background: var(--f-card);
+    border-radius: var(--gi-radius-lg, 16px);
+    padding: clamp(1.5rem, 4vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
+    max-width: 40rem;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* The `hidden` attribute is only a UA-stylesheet `display:none`, so any
+     author rule that sets `display` on the same element silently outranks it.
+     Half this component is toggled with `hidden` — the form itself on success,
+     the inferred-company pill, the field hints — so the reset has to be
+     explicit and has to win. Without it the success panel rendered *under* a
+     still-visible form and an empty pill sat below Firma at rest. */
+  .demo-section [hidden] { display: none !important; }
+
+  /* ---- grid ---- */
+  .demo-form {
+    /* legacy.css ships a blanket `form{max-width:26.5625rem}` for the theme's
+       own narrow contact form. It was silently squeezing this one to 425px
+       inside a 640px card — the dead gutter on the right in the screenshot. */
+    max-width: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.25rem;
+    align-items: start;
+  }
+  .demo-field-full { grid-column: 1 / -1; }
+  @media (max-width: 640px) {
+    .demo-form { grid-template-columns: 1fr; }
+  }
+
+  /* ---- labels ---- */
+  .demo-label {
+    display: block;
+    color: var(--f-label);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 0.4rem;
+  }
+  .demo-optional {
+    color: var(--f-optional);
+    font-weight: 400;
+    margin-left: 0.3em;
+  }
+
+  /* ---- inputs ---- */
+  .demo-control { position: relative; }
+  .demo-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--f-well);
+    border: 1px solid var(--f-line);
+    /* legacy.css: input,textarea{border-radius:0} */
+    border-radius: 0.5rem;
+    padding: 0.7rem 2.4rem 0.7rem 1rem;
+    min-height: 2.9rem;
+    max-height: none;
+    color: var(--f-ink);
+    font-family: inherit;
+    font-size: 1rem; /* ≥16px — anything smaller zooms the viewport on iOS */
+    line-height: 1.4;
+    transition:
+      border-color 0.18s var(--f-ease),
+      background-color 0.18s var(--f-ease),
+      box-shadow 0.18s var(--f-ease);
+  }
+  .demo-input::placeholder { color: var(--f-placeholder); opacity: 1; }
+  .demo-input:hover { background: var(--f-well-focus); }
+  .demo-input:focus { outline: none; }
+  .demo-input:focus-visible {
+    background: var(--f-well-focus);
+    border-color: var(--f-green);
+    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+  }
+  /* Chrome/Safari autofill paints an opaque #fff plate over the field, which on
+     a dark form means white text on white. There is no non-!important way to
+     beat the UA stylesheet here. */
+  .demo-input:-webkit-autofill,
+  .demo-input:-webkit-autofill:hover,
+  .demo-input:-webkit-autofill:focus {
+    -webkit-box-shadow: inset 0 0 0 40px var(--f-well-focus) !important;
+    -webkit-text-fill-color: var(--f-ink) !important;
+    caret-color: var(--f-ink);
+  }
+
+  .demo-field[data-state='invalid'] .demo-input {
+    border-color: var(--f-err-line);
+  }
+  .demo-field[data-state='invalid'] .demo-input:focus-visible {
+    box-shadow: 0 0 0 3px rgb(255 143 143 / 0.3);
+  }
+  .demo-field[data-state='valid'] .demo-input { border-color: rgb(39 234 147 / 0.6); }
+
+  /* ---- the tick: draws itself, never bounces ---- */
+  .demo-tick {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: -0.55rem;
+    fill: none;
+    stroke: var(--f-green);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .demo-tick path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .demo-field[data-state='valid'] .demo-tick { opacity: 1; }
+  .demo-field[data-state='valid'] .demo-tick path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.32s var(--f-ease);
+  }
+
+  /* ---- messages ---- */
+  .demo-err {
+    color: var(--f-err-text);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0.35rem 0 0;
+  }
+  .demo-hint {
+    color: var(--f-hint);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin: 0.35rem 0 0;
+  }
+  /* the inferred-company offer is a real button, not a div with a click handler */
+  .demo-fill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: 0.35rem;
+    background: rgb(10 10 18 / 0.5);
+    color: var(--f-green);
+    border: 1px solid rgb(39 234 147 / 0.45);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    transition:
+      background-color 0.18s var(--f-ease),
+      border-color 0.18s var(--f-ease);
+  }
+  .demo-fill:hover { background: rgb(10 10 18 / 0.72); border-color: var(--f-green); }
+  .demo-fill:focus-visible {
+    outline: 2px solid var(--f-green);
+    outline-offset: 2px;
+  }
+
+  /* ---- consent ---- */
+  .demo-consent {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.65rem;
+    cursor: pointer;
+    /* min 44px tap height without a 44px-tall checkbox */
+    padding: 0.35rem 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: inherit;
+  }
+  .demo-consent input {
+    /* real checkbox, visually replaced — still focusable, still in the a11y tree */
+    position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    opacity: 0;
+  }
+  .demo-check {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+    border: 1px solid var(--f-line);
+    border-radius: 0.3rem;
+    background: var(--f-well);
+    display: grid;
+    place-items: center;
+    margin-top: 0.05rem;
+    transition:
+      background-color 0.18s var(--f-ease),
+      border-color 0.18s var(--f-ease),
+      box-shadow 0.18s var(--f-ease);
+  }
+  .demo-check svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: none;
+    stroke: var(--f-ink-on-green);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .demo-check svg path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .demo-consent input:checked + .demo-check {
+    background: var(--f-green);
+    border-color: var(--f-green);
+  }
+  .demo-consent input:checked + .demo-check svg path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.3s var(--f-ease) 0.04s;
+  }
+  .demo-consent input:focus-visible + .demo-check {
+    border-color: var(--f-green);
+    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+  }
+  .demo-field[data-state='invalid'] .demo-check { border-color: var(--f-err-line); }
+  .demo-consent-text {
+    color: var(--f-label);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  /* ---- submit ---- */
+  .demo-submit {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    background: var(--f-green);
+    color: var(--f-ink-on-green);
+    border: none;
+    border-radius: 0.5rem; /* legacy.css: button{border-radius:0} */
+    padding: 0.85rem 2rem;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    text-indent: 0;
+    cursor: pointer;
+    transition:
+      background-color 0.18s var(--f-ease),
+      transform 0.18s var(--f-ease);
+  }
+  .demo-submit:hover { background: #4ff0a8; }
+  .demo-submit:active { transform: translateY(1px); }
+  .demo-submit:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+  .demo-submit-label,
+  .demo-submit-pending {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    transition: opacity 0.16s var(--f-ease);
+  }
+  .demo-submit-pending {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .demo-submit[data-busy] { cursor: progress; }
+  .demo-submit[data-busy] .demo-submit-label { opacity: 0; }
+  .demo-submit[data-busy] .demo-submit-pending { opacity: 1; }
+  .demo-spinner {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    animation: demo-spin 0.75s linear infinite;
+  }
+  .demo-spinner circle { stroke: rgb(10 10 18 / 0.25); }
+  .demo-spinner path { stroke: var(--f-ink-on-green); }
+  @keyframes demo-spin { to { transform: rotate(360deg); } }
+
+  .demo-formerr {
+    color: var(--f-err-text);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0.75rem 0 0;
+  }
+  .demo-formerr a { color: var(--f-err-text); text-decoration: underline; }
+
+  /* ---- success ---- */
+  .demo-done { text-align: center; padding: 0.5rem 0 0.25rem; }
+  /* The panel is focused programmatically so a screen reader lands on the
+     confirmation instead of on whatever followed the vanished form. It is a
+     region, not a control, so the UA's stark white ring overstates it — a soft
+     green one, and only for keyboard. */
+  .demo-done:focus { outline: none; }
+  .demo-done:focus-visible {
+    outline: 2px solid rgb(39 234 147 / 0.7);
+    outline-offset: 8px;
+    border-radius: 14px;
+  }
+  .demo-done-tick {
+    width: 3.25rem;
+    height: 3.25rem;
+    fill: none;
+    stroke: var(--f-green);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 1rem;
+  }
+  .demo-done-tick circle,
+  .demo-done-tick path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .demo-done[data-in] .demo-done-tick circle {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.6s var(--f-ease);
+  }
+  .demo-done[data-in] .demo-done-tick path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.35s var(--f-ease) 0.34s;
+  }
+  .demo-done-h {
+    color: #fff;
+    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+    font-weight: 700;
+    margin: 0 0 0.6rem;
+  }
+  .demo-done-p {
+    color: rgb(255 255 255 / 0.86);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 auto 0.75rem;
+    max-width: 30rem;
+  }
+  .demo-done-p strong { color: #fff; font-weight: 600; word-break: break-word; }
+  .demo-done-note {
+    color: var(--f-optional);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0 auto;
+    max-width: 30rem;
+  }
+  .demo-done[data-in] .demo-done-h,
+  .demo-done[data-in] .demo-done-p,
+  .demo-done[data-in] .demo-done-note { animation: demo-rise 0.5s var(--f-ease) both; }
+  .demo-done[data-in] .demo-done-p { animation-delay: 0.07s; }
+  .demo-done[data-in] .demo-done-note { animation-delay: 0.14s; }
+  @keyframes demo-rise {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ---- honeypot ---- */
+  .demo-hp {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo-section *,
+    .demo-section *::before,
+    .demo-section *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+    /* the spinner is the one exception — it communicates "still working",
+       so it keeps turning, just slowly and without the whip. */
+    .demo-spinner { animation: demo-spin 2.4s linear infinite !important; }
+    .demo-tick path,
+    .demo-check svg path,
+    .demo-done-tick circle,
+    .demo-done-tick path { stroke-dashoffset: 0 !important; }
+  }
+</style>
+
 <script>
-  /* anti-spam bootstrap (port of snippet 15's client side) */
-  document.querySelectorAll('form[data-form="demo"]').forEach((f) => {
-    const ts = f.querySelector('input[name="_demo_ts"]');
+  /* ================================================================
+     "Smart & instant" — the form should feel like it already knows what
+     you mean. Validation resolves inline instead of scolding on submit,
+     the work address is nudged rather than blocked, the company name is
+     offered from the email domain, the phone formats itself, and the
+     button morphs in place through pending into a result.
+
+     Everything here is an upgrade on top of markup that already works:
+     with JS off the form does a plain POST to MailerLite and the lead lands
+     regardless. This layer keeps the user on the page and answers them.
+     ================================================================ */
+  import { mlAction } from '../lib/mailerlite';
+  import { mlSubmit, trackLead } from '../scripts/ml-forms';
+
+  type FieldName = 'your-name' | 'your-email' | 'your-company' | 'your-phone';
+
+  const FREE_MAIL = new Set([
+    'gmail.com', 'googlemail.com', 'wp.pl', 'o2.pl', 'onet.pl', 'onet.eu',
+    'poczta.onet.pl', 'interia.pl', 'interia.eu', 'op.pl', 'vp.pl', 'tlen.pl',
+    'go2.pl', 'autograf.pl', 'buziaczek.pl', 'poczta.fm', 'gazeta.pl',
+    'yahoo.com', 'yahoo.pl', 'outlook.com', 'outlook.pl', 'hotmail.com',
+    'hotmail.pl', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com',
+    'aol.com', 'gmx.com', 'gmx.net', 'gmx.de', 'proton.me', 'protonmail.com',
+    'pm.me', 'zoho.com', 'yandex.ru', 'mail.ru',
+  ]);
+
+  /* Public suffixes we must not mistake for a company name. */
+  const MULTI_TLD = new Set([
+    'com.pl', 'net.pl', 'org.pl', 'edu.pl', 'gov.pl', 'info.pl', 'biz.pl',
+    'waw.pl', 'co.uk', 'org.uk', 'com.de', 'co.jp', 'com.au',
+  ]);
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+
+  const messages = {
+    'your-name': 'Podaj imię i nazwisko — będziemy wiedzieć, do kogo napisać.',
+    'your-email': 'Ten adres wygląda na niepełny. Sprawdź go jeszcze raz.',
+    'your-email-empty': 'Bez adresu e-mail nie mamy jak odesłać terminu.',
+    'your-company': 'Podaj nazwę firmy — dobierzemy demo do Waszych systemów.',
+    'your-phone': 'Numer wygląda na za krótki. Zostaw go pusty, jeśli wolisz.',
+    'demo-consent': 'Potrzebujemy tej zgody, żeby móc się odezwać.',
+  } as const;
+
+  function digits(s: string) { return s.replace(/\D/g, ''); }
+
+  /** Polish numbers become +48 123 456 789. A number the user explicitly
+   *  marked as foreign (a leading + with any prefix other than 48) is left
+   *  exactly as typed.
+   *
+   *  The subtlety: this runs on every keystroke over its own output, so it has
+   *  to strip the "+48 " it just wrote before re-reading the digits. Matching
+   *  on the raw prefix rather than on the digit string is what makes that
+   *  idempotent — digits alone can't tell the country code from the number. */
+  function formatPhone(raw: string): string {
+    const t = raw.trim();
+    if (!t) return '';
+    if (t.startsWith('+') && !/^\+\s*48/.test(t)) return raw;
+    let d = digits(t.replace(/^\+?\s*48[\s-]*/, ''));
+    if (d.startsWith('0048')) d = d.slice(4);
+    d = d.replace(/^0+/, '');
+    d = d.slice(0, 9);
+    if (!d) return raw;
+    const groups = [d.slice(0, 3), d.slice(3, 6), d.slice(6, 9)].filter(Boolean);
+    return '+48 ' + groups.join(' ');
+  }
+
+  function domainOf(email: string): string {
+    const at = email.lastIndexOf('@');
+    return at === -1 ? '' : email.slice(at + 1).trim().toLowerCase();
+  }
+
+  /** "zamowienia@acme-polska.com.pl" → "Acme Polska" */
+  function companyFromDomain(domain: string): string {
+    if (!domain || FREE_MAIL.has(domain)) return '';
+    const parts = domain.replace(/^www\./, '').split('.');
+    if (parts.length < 2) return '';
+    const last2 = parts.slice(-2).join('.');
+    const core = MULTI_TLD.has(last2) ? parts.slice(0, -2) : parts.slice(0, -1);
+    let label = core[core.length - 1] || '';
+    if (['mail', 'poczta', 'smtp', 'email', 'grupa'].includes(label) && core.length > 1) {
+      label = core[core.length - 2];
+    }
+    if (!label || label.length < 2 || /^\d+$/.test(label)) return '';
+    return label
+      .split(/[-_]+/)
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+  }
+
+  function initDemoForm(form: HTMLFormElement) {
+    const section = form.closest('.demo-section') as HTMLElement | null;
+    const card = form.closest('.demo-card') as HTMLElement | null;
+    const done = card?.querySelector('.demo-done') as HTMLElement | null;
+    const formErr = form.querySelector('.demo-formerr') as HTMLElement | null;
+    const submit = form.querySelector('.demo-submit') as HTMLButtonElement | null;
+    if (!section || !card || !submit) return;
+
+    /* The markup keeps `required` and no `novalidate` so the browser enforces
+       the form on its own with JS off. Once we're here, we own validation —
+       our messages are Polish and inline, the UA's are neither. */
+    form.noValidate = true;
+
+    /* anti-spam bootstrap (port of snippet 15's client side) */
+    const ts = form.querySelector<HTMLInputElement>('[data-key="_demo_ts"]');
     if (ts) ts.value = String(Date.now());
-    const tok = f.querySelector('input[name="_demo_token"]');
-    if (tok) tok.value = btoa('grvty' + Math.random().toString(36).slice(2));
-  });
+
+    const wrap = (name: string) =>
+      form.querySelector<HTMLElement>(`.demo-field[data-field="${name}"]`);
+    /* Fields are addressed by `data-key`, not `name`: `name` is the MailerLite
+       wire format (`fields[company]`) and shouldn't leak into forty lookups. */
+    const input = (name: string) =>
+      form.querySelector<HTMLInputElement>(`[data-key="${name}"]`);
+
+    const touched = new Set<string>();
+
+    function setError(name: string, msg: string | null) {
+      const w = wrap(name);
+      const el = w?.querySelector<HTMLElement>('.demo-err');
+      const ctl = input(name);
+      if (!w || !el || !ctl) return;
+      if (msg) {
+        el.textContent = msg;
+        el.hidden = false;
+        w.dataset.state = 'invalid';
+        ctl.setAttribute('aria-invalid', 'true');
+      } else {
+        el.textContent = '';
+        el.hidden = true;
+        ctl.setAttribute('aria-invalid', 'false');
+        delete w.dataset.state;
+      }
+    }
+
+    function setValid(name: string, ok: boolean) {
+      const w = wrap(name);
+      if (!w) return;
+      if (ok) w.dataset.state = 'valid';
+      else if (w.dataset.state === 'valid') delete w.dataset.state;
+    }
+
+    function hint(name: string, text: string | null) {
+      const el = wrap(name)?.querySelector<HTMLElement>('.demo-hint');
+      if (!el) return;
+      el.textContent = text || '';
+      el.hidden = !text;
+    }
+
+    function offer(name: string, text: string | null, value = '') {
+      const btn = wrap(name)?.querySelector<HTMLButtonElement>('.demo-fill');
+      if (!btn) return;
+      const label = btn.querySelector<HTMLElement>('.demo-fill-text');
+      if (label) label.textContent = text || '';
+      btn.dataset.fill = value;
+      btn.hidden = !text;
+    }
+
+    /* ---- per-field rules ---- */
+    function check(name: string, opts: { silent?: boolean } = {}): boolean {
+      const ctl = input(name);
+      if (!ctl) return true;
+
+      if (name === 'demo-consent') {
+        const ok = (ctl as HTMLInputElement).checked;
+        if (!ok && !opts.silent) setError(name, messages['demo-consent']);
+        else setError(name, null);
+        return ok;
+      }
+
+      const v = ctl.value.trim();
+
+      if (name === 'your-phone') {
+        if (!v) { setError(name, null); setValid(name, false); return true; }
+        const ok = digits(v).length >= 9;
+        setError(name, ok || opts.silent ? null : messages['your-phone']);
+        setValid(name, ok);
+        return ok;
+      }
+
+      if (!v) {
+        setValid(name, false);
+        if (!opts.silent) {
+          setError(
+            name,
+            name === 'your-email'
+              ? messages['your-email-empty']
+              : messages[name as keyof typeof messages],
+          );
+        }
+        return false;
+      }
+
+      let ok = v.length >= 2;
+      if (name === 'your-email') ok = EMAIL_RE.test(v);
+      setError(name, ok || opts.silent ? null : messages[name as keyof typeof messages]);
+      setValid(name, ok);
+      return ok;
+    }
+
+    /* ---- the two "it already knows" moves ---- */
+    let dismissed = '';
+
+    function reactToEmail() {
+      const email = input('your-email');
+      const company = input('your-company');
+      if (!email || !company) return;
+      const v = email.value.trim();
+      if (!EMAIL_RE.test(v)) { hint('your-email', null); offer('your-company', null); return; }
+      const domain = domainOf(v);
+
+      /* Free-mail nudge. Never blocking — plenty of real leads use wp.pl. */
+      hint(
+        'your-email',
+        FREE_MAIL.has(domain)
+          ? 'To adres prywatny. Na służbowy dorzucimy materiały dla zespołu — ale zadziała każdy.'
+          : null,
+      );
+
+      /* Company inferred from the domain, offered rather than imposed. */
+      const guess = companyFromDomain(domain);
+      if (guess && !company.value.trim() && guess !== dismissed) {
+        offer('your-company', `Wstaw „${guess}”`, guess);
+      } else {
+        offer('your-company', null);
+      }
+    }
+
+    form.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.demo-fill');
+      if (!btn) return;
+      const company = input('your-company');
+      if (!company) return;
+      dismissed = btn.dataset.fill || '';
+      company.value = dismissed;
+      offer('your-company', null);
+      touched.add('your-company');
+      check('your-company');
+      company.focus();
+    });
+
+    /* ---- wiring ---- */
+    (['your-name', 'your-email', 'your-company', 'your-phone'] as FieldName[]).forEach((name) => {
+      const ctl = input(name);
+      if (!ctl) return;
+
+      ctl.addEventListener('blur', () => {
+        touched.add(name);
+        if (name === 'your-phone' && ctl.value.trim()) ctl.value = formatPhone(ctl.value);
+        check(name);
+        if (name === 'your-email') reactToEmail();
+      });
+
+      ctl.addEventListener('input', () => {
+        if (name === 'your-phone') {
+          /* only reformat while typing at the end, so the caret never jumps */
+          const atEnd = ctl.selectionStart === ctl.value.length;
+          if (atEnd) {
+            const next = formatPhone(ctl.value);
+            if (next !== ctl.value) {
+              ctl.value = next;
+              ctl.setSelectionRange(next.length, next.length);
+            }
+          }
+        }
+        /* Resolve as you type once the field has been visited — but never
+           start scolding a field the user is still filling in for the first
+           time. That asymmetry is the whole trick. */
+        if (touched.has(name)) check(name, { silent: !wrapInvalid(name) });
+        else check(name, { silent: true });
+        if (name === 'your-email') reactToEmail();
+      });
+    });
+
+    function wrapInvalid(name: string) {
+      return wrap(name)?.dataset.state === 'invalid';
+    }
+
+    const consent = input('demo-consent');
+    consent?.addEventListener('change', () => {
+      touched.add('demo-consent');
+      check('demo-consent');
+    });
+
+    /* ---- submit ---- */
+    const ORDER = ['your-name', 'your-email', 'your-company', 'your-phone', 'demo-consent'];
+
+    function showDone(name: string, email: string) {
+      if (!done) return;
+      const first = (name.trim().split(/\s+/)[0] || '').replace(/[^\p{L}\p{M}'-]/gu, '');
+      const nameEl = done.querySelector<HTMLElement>('[data-done="name"]');
+      const mailEl = done.querySelector<HTMLElement>('[data-done="email"]');
+      if (nameEl) nameEl.textContent = first ? `, ${first}` : '';
+      if (mailEl) mailEl.textContent = email;
+      const h = card.offsetHeight;
+      form.hidden = true;
+      done.hidden = false;
+      /* hold the card's height for a beat so the page doesn't jump under
+         the user's cursor at the exact moment they get good news */
+      card.style.minHeight = `${h}px`;
+      requestAnimationFrame(() => {
+        done.dataset.in = '';
+        window.setTimeout(() => { card.style.minHeight = ''; }, 500);
+      });
+      done.setAttribute('tabindex', '-1');
+      done.focus({ preventScroll: true });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submit.dataset.busy !== undefined) return;
+
+      ORDER.forEach((n) => touched.add(n));
+      const bad = ORDER.filter((n) => !check(n));
+      if (formErr) { formErr.hidden = true; formErr.textContent = ''; }
+      if (bad.length) {
+        const first = input(bad[0]);
+        first?.focus();
+        first?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+
+      const name = input('your-name')?.value.trim() || '';
+      const email = input('your-email')?.value.trim() || '';
+
+      /* Bot checks, client-side now that there's no endpoint to run them.
+         Both fail *silently into success*: telling a script exactly which
+         tripwire it hit is how it learns to avoid the tripwire. */
+      const hp = form.querySelector<HTMLInputElement>('input[name="website_url"]');
+      const startedAt = Number(ts?.value || 0);
+      const tooFast = startedAt > 0 && Date.now() - startedAt < 2000;
+      if (hp?.value.trim() || tooFast) {
+        showDone(name, email);
+        return;
+      }
+
+      submit.dataset.busy = '';
+      submit.setAttribute('aria-busy', 'true');
+
+      const result = await mlSubmit(mlAction('demo'), {
+        name,
+        email,
+        company: input('your-company')?.value.trim(),
+        phone: input('your-phone')?.value.trim(),
+      });
+
+      delete submit.dataset.busy;
+      submit.removeAttribute('aria-busy');
+
+      if (result.ok) {
+        showDone(name, email);
+        trackLead('demo_request_submitted');
+        return;
+      }
+
+      if (result.kind === 'email') {
+        /* MailerLite rejected the address itself — that belongs on the field,
+           not in a form-level "something went wrong". */
+        touched.add('your-email');
+        setError('your-email', result.message);
+        input('your-email')?.focus();
+        return;
+      }
+
+      if (formErr) {
+        formErr.innerHTML =
+          'Nie udało się wysłać formularza. Napisz prosto do nas na ' +
+          '<a href="mailto:contact@caffeine-minds.com?subject=Demo%20gravity.integration">' +
+          'contact@caffeine-minds.com</a> — odpowiemy tak samo szybko.';
+        formErr.hidden = false;
+      }
+    });
+
+    /* Dev affordance: /?demo-preview=success renders the post-submit state so
+       it can be reviewed without sending a real lead to MailerLite. */
+    if (new URLSearchParams(location.search).get('demo-preview') === 'success') {
+      showDone('Jan Kowalski', 'jan@firma.pl');
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLFormElement>('form[data-form="demo"]')
+    .forEach(initDemoForm);
 </script>

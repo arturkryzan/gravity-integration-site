@@ -5,3 +5,9 @@ dist/
 *.log
 .env
 .env.*
+
+# tooling state, not project source
+.impeccable/
+
+# scratch output from scripts/
+shots/

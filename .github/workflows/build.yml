@@ -1,0 +1,55 @@
+name: build
+
+# Build-only CI: proves the tree still compiles and hands back the exact folder
+# that would be uploaded. It deliberately does NOT deploy — the server upload
+# stays a manual, reviewed step (see DEPLOY.md).
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Astro 7 requires >=22.12.0; pinning the major keeps CI honest about
+          # the same floor DEPLOY.md tells a human to check with `node -v`.
+          node-version: '22'
+          cache: npm
+
+      - name: Install (from the lockfile, exactly)
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check the deploy files survived into dist/
+        # Astro copies public/ verbatim, but dotfiles are exactly the thing that
+        # goes missing in a packaging change — fail loudly here rather than
+        # discovering it after an upload.
+        run: |
+          set -e
+          for f in .htaccess 404.html robots.txt .well-known/security.txt \
+                   sitemap-index.xml index.html; do
+            if [ ! -f "dist/$f" ]; then
+              echo "::error::dist/$f is missing from the build output"
+              exit 1
+            fi
+          done
+          echo "All deploy files present."
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          include-hidden-files: true
+          retention-days: 14

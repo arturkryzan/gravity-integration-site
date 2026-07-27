@@ -43,9 +43,10 @@ Everything the server needs is in there:
 | File | Purpose |
 |---|---|
 | `.htaccess` | Apache: https+www canonicalization, legacy WP 301s, caching, security headers, gzip, 404 wiring |
-| `404.html` | Branded 404 page (`ErrorDocument` points here) |
+| `404.html` | Branded 404 page, Polish (`ErrorDocument` points here) |
+| `en/404.html` | The same page in English, served for anything under `/en/` |
 | `robots.txt` | Allows everything, points at the sitemap |
-| `sitemap-index.xml` + `sitemap-0.xml` | Regenerated on every build |
+| `sitemap-index.xml` + `sitemap-0.xml` | Regenerated on every build — 19 URLs, both languages |
 | `.well-known/security.txt` | Security contact (expires 2027-07-31 — bump it then) |
 
 ## Path B — rebuild from source (only when the site changes)
@@ -88,6 +89,38 @@ Astro copies `public/` verbatim.
 
 ---
 
+## What's in the docroot — two languages, one build
+
+The site ships 19 pages. There is no second deploy and no second server: the
+English site is a subtree of the same build output.
+
+| Polish | English |
+|---|---|
+| `/` | `/en/` |
+| `/czym-jest-esb/` | `/en/what-is-esb/` |
+| `/technologia/` | `/en/technology/` |
+| `/integracje/` | `/en/integrations/` |
+| `/cennik/` | `/en/pricing/` |
+| `/kalkulator/` | `/en/roi-calculator/` |
+| `/case-studies/` | `/en/case-studies/` |
+| `/kontakt/` | `/en/contact/` |
+| `/pobieranie/` | `/en/download/` |
+| `/polityka-prywatnosci/` | *(none — Polish only, by decision)* |
+| `/404.html` | `/en/404.html` |
+
+The English slugs are translated, not transliterated, so the two trees do not
+mirror each other path-for-path. What pairs them is a language-neutral key in
+the content files, which is also what drives the switcher, the `hreflang` tags
+and the sitemap. Renaming a URL means changing the `url` field; it does **not**
+mean changing the key, and changing the key by accident is what silently breaks
+a pair.
+
+Prices stay in PLN on both sites, with an approximate euro figure alongside on
+the English pages. That is deliberate: one currency to invoice in, one number
+to keep up to date.
+
+---
+
 ## Server configuration
 
 **Apache** (current TurnKey/OVH setup): the vhost must allow `.htaccess` to
@@ -108,6 +141,13 @@ behavior:
 ```bash
 a2enmod rewrite headers deflate && systemctl reload apache2
 ```
+
+One block in `.htaccess` is deliberately **not** wrapped in `<IfModule>` — the
+`<If "%{REQUEST_URI} =~ m#^/en/#">` that points `ErrorDocument` at the English
+404. `<If>` is Apache 2.4 core, not a module, so there is nothing to test for;
+on 2.4 it works, and on anything older Apache refuses the config outright. That
+refusal is the failure you want. The alternative — a silently ignored block —
+means English visitors land on a Polish 404 and nobody notices for months.
 
 **nginx** (if the box runs nginx instead): use `deploy/nginx-gravity.conf` from
 the source tarball — it mirrors the `.htaccess` 1:1. `.htaccess` is then inert
@@ -131,11 +171,22 @@ curl -sI https://gravity-integration.com/feed/           | grep -i location   # 
 curl -sI http://gravity-integration.com/                 | grep -i location   # → https://
 curl -sI https://www.gravity-integration.com/            | grep -i location   # → apex
 curl -sI https://gravity-integration.com/nie-ma-takiej/  | head -1            # → 404
+
+# and the English 404 must be English, not the Polish one
+curl -s  https://gravity-integration.com/en/no-such-page/ | grep -o 'lang="[a-z]*"' | head -1   # → lang="en"
 ```
 
-All 10 page URLs are byte-identical with the WordPress site, so no further
-redirect map is needed. Anchors in active use elsewhere (ads, e-mails):
-`/case-studies/#section0…#section6`, `/#section-demo`.
+The ten Polish page URLs are byte-identical with the WordPress site, so no
+further redirect map is needed. The nine English URLs are new — nothing ever
+lived at `/en/`, so there is nothing to redirect from. Anchors in active use
+elsewhere (ads, e-mails): `/case-studies/#section0…#section6`,
+`/#section-demo`.
+
+Nothing auto-redirects by language. A visitor who lands on a Polish URL stays
+on it; the switcher in the header and footer is the only way across, and
+`hreflang` is what tells Google the pair exists. If you ever add an
+`Accept-Language` redirect, it will fight the `hreflang` and Google will index
+one language for both.
 
 If the three legacy redirects return the 404 page instead of a `Location`
 header, `AllowOverride` is not `All` — `.htaccess` is being ignored.
@@ -144,19 +195,34 @@ header, `AllowOverride` is not `All` — `.htaccess` is being ignored.
 
 ## Post-deploy checklist
 
-1. Click through all 10 pages on the live domain (nav, menu overlay, footer).
-2. Submit each form once for real — demo, kontakt, newsletter, pobieranie — and
+1. Click through all 19 pages on the live domain — 10 Polish, 9 English (nav,
+   menu overlay, footer). The privacy policy is Polish-only by decision, which
+   is why the counts differ by one.
+2. Use the language switcher on every page that has a pair. It sits in the
+   header menu and in the footer, and it should land you on the *same* page in
+   the other language, not on the home page. If it drops you on the home page,
+   that page's `slug` doesn't match its counterpart's.
+3. Submit each form once for real — demo, kontakt, newsletter, pobieranie — and
    confirm the subscriber lands in MailerLite group GRAVITY as **active**.
    Reminder: double opt-in is still ON for Demo/Kontakt/Newsletter — switch it
    off in the MailerLite dashboard or those subscribers stay *unconfirmed* and
    never receive anything.
-3. Watch GA4 Realtime while clicking; confirm `generate_lead` fires on a form
-   submit (with consent accepted).
-4. Google Search Console: submit
-   `https://gravity-integration.com/sitemap-index.xml`.
-5. Lighthouse the homepage and `/pobieranie/` on the live server (target: green
+4. Submit one English form too. It posts to the **same** MailerLite form IDs as
+   the Polish one and lands in the **same** GRAVITY group — the English pages
+   translate the labels, not the wiring. The `typ_zapytania` values stay Polish
+   on the wire on purpose, so the CRM sees one vocabulary rather than two.
+5. Watch GA4 Realtime while clicking; confirm `generate_lead` fires on a form
+   submit (with consent accepted), and that the `page_language` parameter reads
+   `pl` on Polish pages and `en` on English ones.
+6. Google Search Console: submit
+   `https://gravity-integration.com/sitemap-index.xml`. Then check
+   International Targeting for `hreflang` errors — every English page must name
+   its Polish counterpart and be named back by it. One-directional tags are
+   ignored wholesale, so a single missing return tag silently disables the
+   pairing for that page.
+7. Lighthouse the homepage and `/pobieranie/` on the live server (target: green
    Core Web Vitals).
-6. Keep the WordPress export/backup until GSC traffic looks normal for 2–3
+8. Keep the WordPress export/backup until GSC traffic looks normal for 2–3
    weeks; the old hosting can be decommissioned after that.
 
 ## Rollback

@@ -1,5 +1,20 @@
 ---
-/* Shared body for /kalkulator/ and /en/roi-calculator/. */
+/* The body of /kalkulator/.
+ *
+ * It rendered /en/roi-calculator/ too until that page was removed: the
+ * calculator quotes PLN and its sliders are scaled to Polish contractor day
+ * rates, so it answered an English visitor's question in the wrong currency at
+ * the wrong scale. The reasoning is written out at NOT_OFFERED in routes.ts.
+ *
+ * What stayed is the locale-awareness below — the English FAQ rich result, the
+ * English hero alt text, `getPage` keyed on `lang`. None of it runs today,
+ * because the only route pointing here is Polish. It is left wired because
+ * bringing the page back is a content decision (euro defaults and ranges for
+ * the two sliders, plus a euro pass over the runtime JS in RoiCalculator.astro,
+ * which hard-codes " PLN"), and there is no reason to make that decision also
+ * be a rewrite of this file. Adding src/content/pages/en/roi-calculator.json
+ * and a two-line route under src/pages/en/, then dropping 'kalkulator' from
+ * NOT_OFFERED, is the whole of the way back. */
 import { getPage } from '../../i18n/routes';
 import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';

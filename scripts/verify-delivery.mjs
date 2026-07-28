@@ -25,11 +25,21 @@ const PAIRS = [
   ['/en/technology/', '/technologia/'],
   ['/en/integrations/', '/integracje/'],
   ['/en/pricing/', '/cennik/'],
-  ['/en/roi-calculator/', '/kalkulator/'],
   ['/en/case-studies/', '/case-studies/'],
   ['/en/contact/', '/kontakt/'],
   ['/en/download/', '/pobieranie/'],
 ];
+
+/* Polish pages that must NOT have an English twin, and must not advertise one.
+ *
+ * Eight pairs above, not the nine this site used to have: the ROI calculator
+ * is Polish-only on purpose (NOT_OFFERED in src/i18n/routes.ts), and the
+ * privacy policy always was. Deleting a row from PAIRS records that the
+ * English page is gone, but proves nothing about what replaced it — a stale
+ * switcher link or a nav item still pointing at /en/roi-calculator/ would sail
+ * through, because nothing here would visit it. So the absence gets asserted
+ * as its own condition rather than left as a gap in a list. */
+const NO_TWIN = ['/kalkulator/', '/polityka-prywatnosci/'];
 
 const problems = [];
 const note = (url, msg) => problems.push(`${url}  ${msg}`);
@@ -76,6 +86,20 @@ for (const [url, back] of PAIRS) {
   const backHref = await page.locator('footer a.gi-lang').first().getAttribute('href');
   if (backHref !== back) note(url, `switcher returns to ${backHref ?? 'nothing'}, expected ${back}`);
 
+  /* No English page may link to a page English doesn't have. The nav is one
+     piece of shared markup, so a single missed guard puts the same dead link
+     on all eight pages — which is the argument for checking every page rather
+     than one. The privacy policy is exempt and isn't matched here: it is
+     Polish-only too, but linking to it is the decision, labelled "(in Polish)"
+     and carrying hreflang="pl". */
+  const orphans = await page.evaluate(() =>
+    [...new Set(
+      [...document.querySelectorAll('a[href]')]
+        .map((a) => a.getAttribute('href'))
+        .filter((h) => h && /(^|\/)en\/roi-calculator\/|^\/kalkulator\//.test(h)),
+    )]);
+  for (const h of orphans) note(url, `links to ${h}, which English doesn't have`);
+
   /* Untranslated copy is the failure that looks like success — the page is
      there, it just isn't English. Polish diacritics in visible text are the
      giveaway, minus the proper nouns that stay Polish on purpose. */
@@ -92,6 +116,44 @@ for (const [url, back] of PAIRS) {
   for (const line of stray.slice(0, 4)) note(url, `Polish text left in: "${line.slice(0, 90)}"`);
 }
 
+/* The Polish half of the same rule.
+ *
+ * "No twin" does not mean "no switcher". LangSwitch has three states, and the
+ * middle one is the whole point of it: a page with no translation still offers
+ * the other language, pointing at its home page, because landing one click from
+ * where you were beats a dead end. The privacy policy has behaved that way since
+ * English went live and it is correct; the calculator now joins it.
+ *
+ * What must not happen is the switcher pointing at a page-specific English URL —
+ * /en/roi-calculator/ would be the failure, and so would the Polish page
+ * advertising hreflang="en", because `alternates()` returns [] as soon as one
+ * locale is missing the page. That the tags disappear on their own is a claim
+ * about the code; this is the line that turns it into an observation about the
+ * archive. */
+for (const url of NO_TWIN) {
+  const res = await page.goto(ORIGIN + url, { waitUntil: 'networkidle' });
+  if (!res || res.status() !== 200) {
+    note(url, `HTTP ${res ? res.status() : 'no response'}`);
+    continue;
+  }
+  const sw = await page.locator('footer a.gi-lang').first().getAttribute('href').catch(() => null);
+  if (sw && sw !== '/en/') {
+    note(url, `switcher points at ${sw}; with no English twin it may only offer /en/`);
+  }
+  const claimed = await page.evaluate(
+    () => document.querySelector('link[rel="alternate"][hreflang="en"]')?.getAttribute('href') ?? null,
+  );
+  if (claimed) note(url, `claims hreflang="en" → ${claimed}`);
+}
+
+/* Unlinked is not the same as gone. A page still sitting in the archive is one
+   Google can still find and one a stale bookmark still opens, so the check is
+   that the URL is dead, not merely unreferenced. */
+const stale = await page.goto(ORIGIN + '/en/roi-calculator/', { waitUntil: 'domcontentloaded' });
+if (stale && stale.status() === 200) {
+  note('/en/roi-calculator/', 'still in the archive — removing it from the nav is not removing it');
+}
+
 /* The English 404 is a plain file, not a route — the server maps it. Over a
    dumb static server it can only be checked directly, which is still worth
    doing: it proves the file survived packaging and renders. */
@@ -101,5 +163,11 @@ else if ((await page.locator('html').getAttribute('lang')) !== 'en') note('/en/4
 
 await browser.close();
 
-console.log(problems.length ? problems.join('\n') : `clean — ${PAIRS.length} English pages, switcher round-trips, 404 present`);
+console.log(
+  problems.length
+    ? problems.join('\n')
+    : `clean — ${PAIRS.length} English pages, switcher round-trips, ` +
+      `${NO_TWIN.length} Polish-only pages claim no twin, ` +
+      `/en/roi-calculator/ gone, 404 present`,
+);
 process.exit(problems.length ? 1 : 0);

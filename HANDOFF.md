@@ -10,9 +10,11 @@ one is what actually happened.
 
 `gravity-integration.com` is a static Astro site, built from Git, deployed to
 Artur's own Apache server, with forms posting straight to MailerLite. The
-Polish site is live. A full English site sits alongside it at `/en/`, nine
+Polish site is live. A full English site sits alongside it at `/en/`, eight
 pages, published and out of draft. The English site quotes euro, the Polish
-site quotes złoty, and that split is deliberate. Nothing has been pushed to
+site quotes złoty, and that split is deliberate. Two Polish pages have no
+English twin on purpose — `/polityka-prywatnosci/` and `/kalkulator/` — and
+the reasons are different for each; see "Pages a locale doesn't offer". Nothing has been pushed to
 GitHub from here — delivery is by patch series, for the reason in the next
 section.
 
@@ -31,29 +33,71 @@ patches don't care.
 
 There is no `origin` configured locally, and the only branch is `master`.
 
-## The two open loose ends on the euro pricing
+## The open loose end on the euro pricing
 
-Both were Artur's explicit calls, both are recorded in the commit message of
-"Price the English site in euro" and in the README inside the site archive.
-Neither is a bug to be tidied away by the next person who notices it.
+It was Artur's explicit call, recorded in the commit message of "Price the
+English site in euro" and in the README inside the site archive. It is not a
+bug to be tidied away by the next person who notices it.
 
 **The Stripe Buy buttons still point at the PLN-priced checkouts.** He is
 setting up euro prices in Stripe himself. Until he does, an English visitor who
 clicks Buy lands on a PLN checkout. Do not invent a replacement link.
 
-**The English ROI calculator is still denominated in PLN** — its two slider
-labels, its savings KPI, and a hard-coded `" PLN"` that the inline JS appends
-to every table cell. This is not an oversight. The day-rate slider defaults to
-1500 and runs 500–4000, which are Polish contractor day rates. Relabel it to
-EUR without rescaling it and the calculator starts asking an English visitor
-whether their people cost 4,000 EUR a day, then multiplies that by headcount
-and presents the total as a finding. Wrong currency with right arithmetic is
-recoverable; the reverse is not. It needs a euro default and range from Artur —
-for the day-rate slider and for the tools/licences slider, currently 0–200,000.
+There used to be a second loose end here — the English ROI calculator still
+quoting PLN. It was closed by removing the page rather than by repricing it;
+see the next section.
 
 The one PLN left on an English page that is neither of those is on
 `/en/contact/`: "Share capital: 100,000 PLN". That is a fact from the Polish
 companies register about a Polish company. It stays.
+
+## Pages a locale doesn't offer
+
+`/en/roi-calculator/` was removed at Artur's request: the software is priced
+for the Polish market, and the calculator is scaled to it. Its day-rate slider
+runs 500–4000 with a default of 1500, which are Polish contractor rates.
+Relabelling that in euro without rescaling it would ask an English visitor
+whether their people cost 4,000 EUR a day, multiply by headcount, and present
+the total as a finding. An English reader gets no calculator rather than a
+confident wrong one.
+
+Deleting the page was not enough, and this is the part worth knowing before
+you remove any other page from one locale. `linkUrl(slug, lang)` falls back to
+the Polish URL when a locale lacks the page — deliberately, because that is
+right for a page awaiting translation. Delete the English file and every
+English nav item pointing at it quietly starts pointing at the Polish page
+instead: the fallback doing exactly what it was built to do, to a page it was
+never meant to apply to. So `NOT_OFFERED` in `src/i18n/routes.ts` now records
+"this locale deliberately does not have this page", `isOffered(slug, lang)` is
+what navigation filters on, and `linkUrl` **throws** for a slug the locale
+doesn't offer rather than falling back. The failure it guards against is
+silent, and a link that lands somewhere wrong looks exactly like a link that
+lands somewhere right until someone clicks it.
+
+The privacy policy is the deliberate contrast. Also Polish-only, but it *is*
+linked from the English nav, labelled "(in Polish)" with `hreflang="pl"` — a
+privacy policy says the same thing in any language. That is an editorial
+judgement per page, which is why it lives in a per-page list rather than being
+derived from whether a file happens to exist.
+
+Consequences, all intended: the English `nav-big` is three items (Home,
+Download, Contact); Pricing sits in `nav-medium` in both locales and was not
+promoted, which Artur can reverse; the home page's business-row second CTA is
+absent in English; and `/kalkulator/` lost its hreflang pair and its sitemap
+alternates on its own, because `alternates()` returns `[]` the moment one
+locale lacks the page.
+
+What was kept on purpose: `Calculator.astro` is still locale-aware, the English
+`roi.*` strings are still in `ui.ts`, and `kalkulator-faq-jsonld.en.json` is
+still on disk. `en` is checked against `pl` key for key and `untranslated('en')`
+is asserted empty before ship, so deleting a translation to signal an absent
+page would report as a translation gap — a different problem wanting a
+different fix. Three of those strings still say PLN, which is the honest state:
+it is what they would have to stop saying before the page could come back.
+The way back is a euro default and range for each slider, a euro pass over the
+`" PLN"` hard-coded in `RoiCalculator.astro`, restoring
+`src/content/pages/en/roi-calculator.json` and the two-line route under
+`src/pages/en/`, then dropping `'kalkulator'` from `NOT_OFFERED`.
 
 ## Decisions that are settled, so you don't reopen them
 
@@ -110,7 +154,7 @@ the page published, so a draft page is not claimed. Tag values are bare `pl` /
 `OG_LOCALE` (`pl_PL` / `en_US`).
 
 **`draft: true`** builds the page but adds `noindex`, keeps it out of the
-sitemap, hides it from the switcher, and drops it from hreflang. All nine
+sitemap, hides it from the switcher, and drops it from hreflang. All eight
 English pages are `draft: false`.
 
 ## How to check your work
@@ -129,10 +173,16 @@ widths, whose floating spheres never land on the same frame twice. Needs
 
 `verify-delivery.mjs` — walks the **extracted archive** on 8414, not `dist/`.
 It starts on the Polish home page, follows the switcher across, and visits all
-nine English pages. This one exists because the only fault this project has
+eight English pages. This one exists because the only fault this project has
 ever shipped was in the packaging rather than the build, and it later caught
-two untranslated labels that every build-level check had passed. Clean output
-is `clean — 9 English pages, switcher round-trips, 404 present`.
+two untranslated labels that every build-level check had passed. It also
+asserts the calculator's absence positively — no English page links to it, the
+two Polish-only pages claim no `hreflang="en"`, and `/en/roi-calculator/` is
+actually gone from the archive rather than merely unlinked. Note that a
+Polish-only page still shows a switcher: `LangSwitch` falls back to the English
+*home* page, which is correct and is what the check allows. Clean output is
+`clean — 8 English pages, switcher round-trips, 2 Polish-only pages claim no
+twin, /en/roi-calculator/ gone, 404 present`.
 
 `package-delivery.sh` — assembles both zips, and replays both patch series into
 throwaway clones to prove they reproduce the tested tree. Refuses to run on a
@@ -173,8 +223,8 @@ Kontakt and Newsletter (download is already off), run end-to-end form tests
 from a real browser, confirm a live GA4/Ads hit, and check what `GT-K5LVDQD`
 actually feeds.
 
-Also outstanding: NAC case study metrics and quote; the ROI calculator's
-"Licencje / narzędzia" sign convention; deleting WordPress temp snippets 42 and
+Also outstanding: NAC case study metrics and quote; the Polish ROI
+calculator's "Licencje / narzędzia" sign convention; deleting WordPress temp snippets 42 and
 43; and clearing the eleven `_to_delete_gravity-preview-*` folders off his
 Desktop.
 

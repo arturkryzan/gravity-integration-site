@@ -15,22 +15,24 @@ mkdirSync(SHOTS, { recursive: true });
    happen in Polish? If it does, it is the site's own long-standing behaviour and
    not something the translation introduced. */
 const LOCALE = process.env.LOCALE === 'pl' ? 'pl' : 'en';
+/* `null` on the English side means the page is Polish-only on purpose, not
+   that its URL was forgotten. The row stays so LOCALE=pl still audits the
+   Polish page — dropping it would have quietly narrowed the Polish run too. */
 const ROUTES = {
   home: ['/', '/en/'],
   'czym-jest-esb': ['/czym-jest-esb/', '/en/what-is-esb/'],
   technologia: ['/technologia/', '/en/technology/'],
   cennik: ['/cennik/', '/en/pricing/'],
-  kalkulator: ['/kalkulator/', '/en/roi-calculator/'],
+  kalkulator: ['/kalkulator/', null],
   integracje: ['/integracje/', '/en/integrations/'],
   'case-studies': ['/case-studies/', '/en/case-studies/'],
   kontakt: ['/kontakt/', '/en/contact/'],
   pobieranie: ['/pobieranie/', '/en/download/'],
   '404': ['/404.html', '/en/404.html'],
 };
-const PAGES = Object.entries(ROUTES).map(([slug, [pl, en]]) => [
-  LOCALE === 'pl' ? pl : en,
-  slug,
-]);
+const PAGES = Object.entries(ROUTES)
+  .map(([slug, [pl, en]]) => [LOCALE === 'pl' ? pl : en, slug])
+  .filter(([url]) => url !== null);
 
 const WIDTHS = [
   ['mobile', 390, 844],

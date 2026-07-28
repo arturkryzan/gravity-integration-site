@@ -27,8 +27,10 @@ What to look at, in order
    one with different words in it. Nothing should have moved.
 2. The language switcher, in the header menu and in the footer. From any
    page it lands on the SAME page in the other language, not on the home
-   page. The privacy policy is the one exception: it is Polish-only by
-   decision, so it offers no switch.
+   page. Two Polish pages have no English twin by decision — the privacy
+   policy and the ROI calculator — and on those the switcher falls back to
+   the English home page rather than disappearing. One click from where
+   you were beats a dead end.
 3. The English forms — demo, contact, newsletter, download. The labels,
    the placeholders, the validation messages and the thank-you states are
    all English. What they post is unchanged: same MailerLite form IDs,
@@ -36,51 +38,63 @@ What to look at, in order
    nothing to reconfigure on the MailerLite side.
 4. /en/pricing/ — the cards now read 0 EUR, 799 EUR and 1,799 EUR. The
    Polish /cennik/ is untouched at 0, 2999 and 7999 PLN; that split is
-   deliberate. Two things to know before you click anything: the Buy
-   buttons still go to the PLN-priced Stripe checkouts, because you're
-   setting up the euro prices there yourself; and the ROI calculator on
-   the next page still asks for a day rate in PLN. See "The calculator
-   still says PLN" below.
-5. The ROI calculator at /en/roi-calculator/ — the table headers and the
-   totals row are translated, and the numbers use English grouping
-   (12,000 rather than 12 000). Its own currency is the exception noted
-   below.
+   deliberate. One thing to know before you click: the Buy buttons still
+   go to the PLN-priced Stripe checkouts, because you're setting up the
+   euro prices there yourself.
+5. The English header menu is one item shorter than the Polish one — no
+   ROI Calculator. See "There is no English calculator" below.
 6. /en/nonsense/ — should give you the English 404, not the Polish one.
    This only works over a real server with the .htaccess active; in the
    local preview above you'll get python's own plain 404 instead.
 
 
-The calculator still says PLN
------------------------------
-The English ROI calculator asks for a "Day rate (PLN net)", starts at
-1500, and prints its results in PLN. That is on purpose, and it is the
-one place on the English site where the currency doesn't match the
-pricing page.
+There is no English calculator
+------------------------------
+/en/roi-calculator/ is gone, at your call, and the Polish /kalkulator/ is
+untouched. Worth writing down why, because the page did exist in the last
+preview and its absence is the change you're most likely to notice.
 
-Renaming the labels to EUR takes a minute. Making them mean something
-takes a decision: the day-rate slider runs 500 to 4000, which is a range
-of Polish contractor rates. Relabel it without rescaling it and the
-calculator starts asking an English visitor whether their people cost
-4,000 EUR a day, then multiplies that by their headcount and shows them
-the total with a straight face. Wrong currency with right arithmetic is
-recoverable; right currency with nonsense arithmetic is not.
+The calculator quotes PLN, and that is the smaller half of the problem.
+Its day-rate slider runs 500 to 4000 with a default of 1500 — a range of
+Polish contractor rates. Relabel that in euro without rescaling it and it
+asks an English visitor whether their people cost 4,000 EUR a day,
+multiplies by headcount, and presents the total as a finding. An English
+reader gets no calculator rather than a confident wrong one.
 
-So: tell me the euro day-rate default and the range you want (and the
-same for the tools/licences slider, currently 0–200,000), and it's a
-small change.
+Removing it took more than deleting the page. The English nav is built by
+asking for each item's URL, and for a page with no English version that
+lookup deliberately falls back to the Polish URL — which is right for a
+page still awaiting translation, and wrong for one that will never have
+an English version. So the site now distinguishes the two, and asking for
+a URL that doesn't exist raises an error instead of quietly handing back
+the Polish one. The privacy policy is the other side of that judgement:
+also Polish-only, but still linked from the English nav, labelled "(in
+Polish)" — a privacy policy says the same thing in any language, and a
+calculator in the wrong currency does not.
+
+Two consequences you can see. The English menu drops to Home, Download
+and Contact; Pricing was already in the secondary menu in both languages,
+so nothing became unreachable, but say the word if you'd rather it were
+promoted. And the second button under the "for business" block on the
+English home page is gone, because it pointed at the calculator.
+
+Bringing it back is a content decision, not a code one: a euro default
+and range for each of the two sliders. The page itself is still wired for
+English underneath — the translated labels and the English FAQ markup are
+all still in the codebase, waiting.
 
 
-The nineteen URLs
+The eighteen URLs
 -----------------
   /                        /en/
   /czym-jest-esb/          /en/what-is-esb/
   /technologia/            /en/technology/
   /integracje/             /en/integrations/
   /cennik/                 /en/pricing/
-  /kalkulator/             /en/roi-calculator/
   /case-studies/           /en/case-studies/
   /kontakt/                /en/contact/
   /pobieranie/             /en/download/
+  /kalkulator/             (Polish only)
   /polityka-prywatnosci/   (Polish only)
 
 The English slugs are translated rather than transliterated, so the two
@@ -127,14 +141,20 @@ What was checked before this was packaged
 - Every English page was audited at three widths against its Polish
   counterpart: no finding appears on an English page that doesn't
   already appear on the Polish one.
-- hreflang reciprocates on all 18 paired pages; the sitemap lists 19
-  URLs and neither 404.
+- hreflang reciprocates on all 16 paired pages; the sitemap lists 18
+  URLs and neither 404. /kalkulator/ no longer advertises an English
+  version, which it stopped doing by itself the moment the English page
+  was removed — checked rather than assumed.
 - This archive itself was extracted, served, and clicked through by a
   script that starts on the Polish home page, follows the language
-  switcher across, and visits all nine English pages — checking each one
+  switcher across, and visits all eight English pages — checking each one
   loads, is in English, has real content, and switches back to the right
   Polish page. That check exists because the previous delivery's only
   fault was in the packaging, not the build.
+- No English page links to the calculator, and /en/roi-calculator/ is
+  actually absent from the archive rather than merely unlinked. Unlinked
+  is not gone: a page still sitting on the server is one Google can still
+  find and one a stale bookmark still opens.
 
 
 One Polish page changed, on purpose

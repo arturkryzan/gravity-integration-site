@@ -5,7 +5,7 @@
  * a page. Everything a page actually IS lives here, and both locales render the
  * same structure over their own content — `getPage('home', lang)` picks the
  * language off the URL, so there is nothing to keep in sync by hand. */
-import { getPage, linkUrl } from '../../i18n/routes';
+import { getPage, isOffered, linkUrl } from '../../i18n/routes';
 import { localeOf, t } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import HomeHero from '../../components/HomeHero.astro';
@@ -17,16 +17,23 @@ const s = t(lang);
 const entry = await getPage('home', lang);
 const page = entry.data;
 
+/* The business row's second CTA points at the ROI calculator, which English
+   doesn't have (NOT_OFFERED in routes.ts). Spreading an object rather than
+   passing an empty `extraLinks` array: the row already renders correctly with
+   no second link, and "the key isn't there" is a state SectionRenderer has
+   always handled, where "the key is there and empty" is one it would have to
+   learn. */
+const roiCta = isOffered('kalkulator', lang)
+  ? { extraLinks: [{ title: s('home.roiCta'), url: await linkUrl('kalkulator', lang) }] }
+  : {};
+
 /* live-site row overrides (was snippets 30 + 12):
    section0 row0 → developers SVG animation, row1 → business SVG + extra CTA
    section2 rows → use-case videos */
 const overrides = {
   0: {
     0: { media: 'svg-dev' },
-    1: {
-      media: 'svg-biz',
-      extraLinks: [{ title: s('home.roiCta'), url: await linkUrl('kalkulator', lang) }],
-    },
+    1: { media: 'svg-biz', ...roiCta },
   },
   2: {
     0: { media: { video: 'use_01' } },

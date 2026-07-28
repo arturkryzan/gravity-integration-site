@@ -546,7 +546,18 @@ const en: Partial<Record<UiKey, string>> = {
   'int.subHtml':
     'ready-made connectors and adapters.<br />Your systems joined into a single data bus\u00A0—\u00A0no programming.',
 
-  /* ROI calculator ------------------------------------------------------------ */
+  /* ROI calculator ------------------------------------------------------------
+     Nothing renders these any more: /en/roi-calculator/ was removed, because
+     the calculator is priced and scaled for the Polish market (NOT_OFFERED in
+     routes.ts). They stay because `en` is checked against `pl` key for key —
+     `untranslated('en')` is asserted empty before ship — and deleting a
+     translation to mark a page absent would report as a translation gap, which
+     is a different thing that wants a different fix.
+
+     Three of them still say PLN, and that is the honest state: it is what they
+     would have to stop saying before the page could come back. Translating them
+     to EUR now would leave the file claiming a page exists in euro when the
+     numbers behind them are still Polish day rates. */
   'roi.h2': 'See how much you could save with gravity.integration',
   'roi.disclaimer':
     'The calculation is based on averaged data from integration projects delivered with gravity.integration. Actual savings vary with system complexity and the specifics of your IT environment.',

@@ -8,9 +8,13 @@
    is documented on linkUrl). The privacy policy is Polish-only by decision, so
    its link never localises; the label names it in the reader's language and
    says which language the document is in, and the anchor carries hreflang="pl"
-   so that is machine-readable rather than only stated in the text. */
+   so that is machine-readable rather than only stated in the text.
+
+   A page the locale doesn't offer at all — the ROI calculator in English —
+   gets no entry in `href`, so its <li> renders as nothing. See NOT_OFFERED in
+   routes.ts for why that is a different case from the privacy policy. */
 import LangSwitch from './LangSwitch.astro';
-import { linkUrl } from '../i18n/routes';
+import { isOffered, linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
 
 interface Props {
@@ -37,9 +41,15 @@ const NAV_SLUGS = [
   'integracje',
   'polityka-prywatnosci',
 ] as const;
+/* Partial, not Record: a slug this locale doesn't offer is simply absent, and
+   the markup tests for it. Filtering here rather than in the markup keeps the
+   two nav lists free of locale conditions — they ask "is there a link?", not
+   "which language is this?" */
 const href = Object.fromEntries(
-  await Promise.all(NAV_SLUGS.map(async (k) => [k, await linkUrl(k, lang)])),
-) as Record<(typeof NAV_SLUGS)[number], string>;
+  await Promise.all(
+    NAV_SLUGS.filter((k) => isOffered(k, lang)).map(async (k) => [k, await linkUrl(k, lang)]),
+  ),
+) as Partial<Record<(typeof NAV_SLUGS)[number], string>>;
 
 const year = new Date().getFullYear();
 ---
@@ -84,7 +94,7 @@ const year = new Date().getFullYear();
 					<div class="nav-big">
 						<ul>
 							<li><a href={href.home} aria-current="page">{s('nav.home')}</a></li>
-<li><a href={href.kalkulator}>{s('nav.roiCalculator')}</a></li>
+{href.kalkulator && <li><a href={href.kalkulator}>{s('nav.roiCalculator')}</a></li>}
 <li><a href={href.pobieranie}>{s('nav.download')}</a></li>
 <li><a href={href.kontakt}>{s('nav.contact')}</a></li>
 						</ul>

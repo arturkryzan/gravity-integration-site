@@ -118,6 +118,48 @@ export async function translationUrl(slug: string, to: Lang): Promise<string | n
 }
 
 /**
+ * Pages a locale deliberately does not offer.
+ *
+ * This is a different thing from "not translated yet", and the difference is
+ * the reason this exists rather than a missing file being enough. A missing
+ * translation is answered by `linkUrl` below: it falls back to the Polish URL,
+ * which is the right answer for a page we intend to have in English one day.
+ * These are pages we intend NOT to have. Delete the English file without
+ * saying so here and every English nav item quietly points at the Polish page
+ * instead of disappearing — the fallback doing exactly what it was built to
+ * do, to a page it was never meant to apply to.
+ *
+ * The ROI calculator is the whole list. It is denominated in PLN and its day
+ * rate slider runs 500–4000 with a default of 1500, which are Polish
+ * contractor rates. Relabel that in euro without rescaling it and it asks an
+ * English visitor whether their people cost 4,000 EUR a day, multiplies by
+ * headcount, and presents the total as a finding. An English reader gets no
+ * calculator rather than a confident wrong one.
+ *
+ * Note this is not the same call as the privacy policy, which is also
+ * Polish-only but IS linked from the English nav, labelled "(in Polish)" with
+ * `hreflang="pl"`. A privacy policy says the same thing whatever language it
+ * is written in, so sending an English reader to the Polish one is useful.
+ * Sending them to a calculator quoting the wrong currency at the wrong scale
+ * is not. That is an editorial judgement per page, so it is written down per
+ * page rather than derived from whether a file happens to exist.
+ */
+const NOT_OFFERED: Readonly<Record<Lang, ReadonlySet<string>>> = {
+  pl: new Set<string>(),
+  en: new Set<string>(['kalkulator']),
+};
+
+/**
+ * Whether `lang` links to this page at all.
+ *
+ * Anything that builds navigation filters on this before asking for a URL,
+ * because for these slugs there is no URL to ask for.
+ */
+export function isOffered(slug: string, lang: Lang): boolean {
+  return !NOT_OFFERED[lang].has(slug);
+}
+
+/**
  * Where an internal link on a page rendered in `lang` should point.
  *
  * The nav, the CTAs and the announcement bar all link to *pages*, and on an
@@ -130,8 +172,21 @@ export async function translationUrl(slug: string, to: Lang): Promise<string | n
  * honest Polish over broken English.
  *
  * For `lang === DEFAULT_LOCALE` this resolves to the Polish URL it always was.
+ *
+ * It throws rather than falls back for a slug the locale doesn't offer. That
+ * is the point: the failure this guards against is silent, and a link that
+ * lands somewhere wrong looks exactly like a link that lands somewhere right
+ * until a reader clicks it.
  */
 export async function linkUrl(slug: string, lang: Lang): Promise<string> {
+  if (!isOffered(slug, lang)) {
+    throw new Error(
+      `[i18n] "${slug}" is not offered in "${lang}" — there is no URL to link to, ` +
+        `and falling back to the ${DEFAULT_LOCALE} one is what NOT_OFFERED exists to ` +
+        `prevent. Guard the link with isOffered() and render nothing, or take the ` +
+        `slug out of NOT_OFFERED because the page now exists in "${lang}".`,
+    );
+  }
   if (lang !== DEFAULT_LOCALE) {
     const hit = await translationUrl(slug, lang);
     if (hit) return hit;

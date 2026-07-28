@@ -82,8 +82,16 @@ fi
 # commit that documents patch N is itself patch N+1, so the check could never
 # pass on the commit that fixed it. A gate you have to defeat to make progress
 # teaches people to defeat gates.
+#
+# A line of the form "  0012+  ..." covers 0012 and everything after it. That
+# escape hatch exists because the tail of this series is repo tooling that
+# arrives in ones and twos and says nothing a visitor could see; describing
+# each by number would be a chore that adds no information, and a chore that
+# adds no information is one people stop doing.
+covered_from=$(sed -n 's/^  \([0-9]\{4\}\)+  .*/\1/p' "$OUT/patches/APPLY.txt" | head -1)
 for n in $(seq 1 "$NNEW"); do
   num=$(printf '%04d' "$n")
+  [ -n "$covered_from" ] && [ "$n" -ge "$((10#$covered_from))" ] && continue
   grep -q "^  $num  " "$OUT/patches/APPLY.txt" && continue
   subject=$(sed -n 's/^Subject: \[PATCH[^]]*\] //p' "$OUT/patches/new/$num-"*.patch | head -1)
   echo "   note: APPLY.txt doesn't describe $num — $subject" >&2

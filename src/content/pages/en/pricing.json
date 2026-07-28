@@ -6,7 +6,7 @@
   "url": "/en/pricing/",
   "seo": {
     "title": "gravity.integration pricing — from a free version to Enterprise",
-    "description": "Pricing for the gravity.integration ESB platform. Free for testing, commercial plans from 2,999 PLN/year (approx. €700). One simple rate, full support.",
+    "description": "Pricing for the gravity.integration ESB platform. Free for testing, commercial plans from 799 EUR/year. One simple rate, full support.",
     "focusKeyword": "ESB pricing, integration platform price"
   },
   "h1": "<h1>Pricing</h1>",
@@ -17,7 +17,7 @@
       "acf_fc_layout": "text_columns",
       "nav_li": null,
       "text0": "<p>gravity.integration is a product in constant development — one we build together with you. That's why we've adopted a pricing policy unheard of among tools of this class. First, you can download <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration completely free of charge</a>, use it with no limits on data throughput, and even use it commercially for 14 days.</p>\n",
-      "text1": "<p>Second, if you decide on commercial use, there are just two simple prices: 2,999 PLN a year (approx. €700) for a single use case, or 7,999 PLN a year (approx. €1,870) per instance for an unlimited number of connections. There are no restrictions on how you build your integration environment, and <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">the price is unheard of on this market</a>! Compare gravity with the competition yourself — we guarantee you'll come back!</p>\n"
+      "text1": "<p>Second, if you decide on commercial use, there are just two simple prices: 799 EUR a year for a single use case, or 1,799 EUR a year per instance for an unlimited number of connections. There are no restrictions on how you build your integration environment, and <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">the price is unheard of on this market</a>! Compare gravity with the competition yourself — we guarantee you'll come back!</p>\n"
     },
     {
       "acf_fc_layout": "pricing",
@@ -27,23 +27,23 @@
           "name": "For training <br />\r\nand testing",
           "text": "<ul>\n<li>Free, with full support.</li>\n<li>Switch to the commercial version at any time.</li>\n</ul>\n",
           "price": "0",
-          "currency": "PLN",
+          "currency": "EUR",
           "btn": "Download",
           "btn_link": "/en/download/"
         },
         {
           "name": "A single commercial use case",
           "text": "<ul>\n<li>One connection used commercially.</li>\n<li>Full support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
-          "price": "2,999",
-          "currency": "PLN",
+          "price": "799",
+          "currency": "EUR",
           "btn": "Buy a licence",
           "btn_link": "https://buy.stripe.com/14A8wP2aB9NSeFtdtZ38402"
         },
         {
           "name": "For commercial <br />\r\nuse",
           "text": "<ul>\n<li>One simple rate.</li>\n<li>An unlimited number of projects.</li>\n<li>Full priority support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
-          "price": "7,999",
-          "currency": "PLN",
+          "price": "1,799",
+          "currency": "EUR",
           "btn": "Buy a licence",
           "btn_link": "https://buy.stripe.com/00w14n3eF9NSbth9dJ38401"
         },

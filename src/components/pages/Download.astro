@@ -35,6 +35,11 @@ const offerDescription =
   lang === 'en'
     ? 'Free full version for testing and training purposes'
     : 'Bezpłatna pełna wersja do celów testowych i szkoleniowych';
+/* The offer is free either way, but a price of zero still has to be quoted in
+   a currency, and the two sites don't quote the same one: Polish sells in PLN,
+   English in EUR. Hard-coding PLN here would have the English page's structured
+   data contradict the prices printed on its own pricing page. */
+const offerCurrency = lang === 'en' ? 'EUR' : 'PLN';
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -45,7 +50,7 @@ const jsonLd = JSON.stringify({
   offers: {
     '@type': 'Offer',
     price: '0',
-    priceCurrency: 'PLN',
+    priceCurrency: offerCurrency,
     description: offerDescription,
   },
   url: new URL(page.url, site.siteUrl).href,

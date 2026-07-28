@@ -382,7 +382,7 @@ const en: Partial<Record<UiKey, string>> = {
 
   /* Home hero ----------------------------------------------------------- */
   'hero.sub':
-    '139+ connectors, Always\u2011on\u2011data, on-premises install. Plans from 2,999 PLN/year (approx. €700). Download and try it today.',
+    '139+ connectors, Always\u2011on\u2011data, on-premises install. Plans from 799\u00A0EUR/year. Download and try it today.',
   'hero.download': 'Download free',
   'hero.demo': 'Book a 15\u2011min demo',
   'hero.social':
@@ -476,7 +476,7 @@ const en: Partial<Record<UiKey, string>> = {
   'dl.cap3Html':
     '<strong>Routing, retries and authentication</strong> (OAuth 2.0, mTLS) configured visually — without writing code.',
   'dl.spec':
-    'Version\u00A04 · Windows · commercial licence from 2,999\u00A0PLN/year (approx. €700) only once you go beyond testing.',
+    'Version\u00A04 · Windows · commercial licence from 799\u00A0EUR/year only once you go beyond testing.',
   'dl.shot.alt':
     'gravity.integration visual flow editor — an RCP-to-PostgreSQL integration project',
   'dl.clients.h': 'Already at work at:',

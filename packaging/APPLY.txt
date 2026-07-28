@@ -39,6 +39,9 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
   0009  Check the archive that ships, not the build it came from
   0010  Translate the last Polish label on the English contact page
   0011  Price the English site in euro: 0 / 799 / 1,799
+  0012  Put the delivery kit under version control and script the
+        assembly
+  0013  Derive the patch counts and tree hash in APPLY.txt
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -63,15 +66,21 @@ and the ROI calculator is still denominated in PLN because relabelling
 its sliders without rescaling them would make it compute nonsense.
 
 
+0012 and 0013 touch no page. They move the prose you are reading — and
+the README inside the site archive — out of a scratch directory and into
+the repo, with a script that assembles both zips and refuses to ship a
+patch series that doesn't replay to the tree it was tested on. Apply them
+or drop them; the site is identical either way.
+
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------
-The same eleven, preceded by the four that were delivered earlier:
+The same ones, preceded by the four that were delivered earlier:
 
   0001  Scaffold the English site
   0002  Move the interface strings into the dictionary
   0003  Translate the SEO core: home, what-is-esb, technology
   0004  Translate the rest of the content: commercial, proof, conversion
-  0005..0015  as listed above
+  0005 onward   as listed above
 
 
 To apply and push

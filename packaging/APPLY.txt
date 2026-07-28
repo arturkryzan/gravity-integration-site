@@ -1,0 +1,99 @@
+The English site, as a replayable patch series
+==============================================
+
+Why patches and not a push: this session's GitHub credentials get a 403
+on arturkryzan/gravity-integration-site, so nothing here can reach it.
+These patches carry the identical work; you apply them in your own clone
+and push from there.
+
+There are two folders. Apply ONE of them, not both.
+
+
+Which one do I need?
+--------------------
+In your clone, run:
+
+    git log --oneline -8
+
+Look for "Translate the rest of the content: commercial, proof,
+conversion".
+
+  You have it        →  use  new/   (11 patches — everything since)
+  You don't have it  →  use  full/  (15 patches — the whole English build)
+
+Hashes will differ from mine; git am replays diffs, not hashes, so a
+different hash for the same commit message is expected and harmless.
+
+
+new/  — 11 patches, on top of "Translate the rest of the content"
+----------------------------------------------------------------
+  0001  Give the /en/ subtree its own 404
+  0002  Tell GA4 which language the page was served in
+  0003  Make the footer language switcher a real tap target
+  0004  Add the harnesses that check the English build and the Polish one
+  0005  Publish the English site          ← flips all 9 pages out of draft
+  0006  Bring DEPLOY.md up to date with the English site
+  0007  Format the ROI calculator's slider defaults through the page's
+        own locale
+  0008  Name the privacy policy in English and say which language it's in
+  0009  Check the archive that ships, not the build it came from
+  0010  Translate the last Polish label on the English contact page
+  0011  Price the English site in euro: 0 / 799 / 1,799
+
+Until 0005 lands, the English pages build but carry noindex, stay out of
+the sitemap, and the language switcher doesn't offer them. That is what
+"draft" means here, and it is why 0005 is the commit that actually turns
+the English site on.
+
+0007 is the only one that changes a Polish page. /kalkulator/'s day-rate
+slider now starts at "1500" rather than "1 500" — Polish doesn't group
+four-digit numbers, so the calculator's own JS has always rendered 1500
+the instant you touch the slider, and only the static label disagreed.
+Both come from the same formatter now. The commit message has the
+measurements.
+
+0008 and 0010 both came out of the harness added in 0009, which walks
+the packaged archive looking for Polish text left on English pages.
+
+0011 puts the English site in euro — 0, 799 and 1,799 — and leaves the
+Polish one on 2999 and 7999 PLN. Two deliberate loose ends ride along
+with it, both spelled out in its commit message: the Stripe Buy buttons
+still point at the PLN checkouts until you set the euro prices up there,
+and the ROI calculator is still denominated in PLN because relabelling
+its sliders without rescaling them would make it compute nonsense.
+
+
+full/  — 15 patches, on top of "Teach the codebase about locales"
+----------------------------------------------------------------
+The same eleven, preceded by the four that were delivered earlier:
+
+  0001  Scaffold the English site
+  0002  Move the interface strings into the dictionary
+  0003  Translate the SEO core: home, what-is-esb, technology
+  0004  Translate the rest of the content: commercial, proof, conversion
+  0005..0015  as listed above
+
+
+To apply and push
+-----------------
+    git status                      # must be clean before git am
+    git am /path/to/new/*.patch     # or full/*.patch
+    git push
+
+If git am stops on a patch you already have, `git am --skip` steps over
+it. To back out entirely at any point: `git am --abort`.
+
+
+One expected warning
+--------------------
+git reports "trailing whitespace" once, in Footer.astro. That is
+deliberate — the tab indentation is load-bearing in the rendered output.
+Apply it as-is; don't let an editor strip it.
+
+
+Verified before packaging
+-------------------------
+Both series were replayed into fresh clones from their respective base
+commits. Each produced tree 41fecb234e3935e7c48c9f1ba007f9aeb487c9ea,
+identical to the branch head here — so what you apply is what I built and
+tested, not a reconstruction of it.

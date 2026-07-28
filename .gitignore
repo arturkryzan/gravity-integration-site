@@ -15,3 +15,6 @@ dist-baseline/
 audit-shots/
 regress-shots/
 audit-*.json
+
+# delivery archives assembled by scripts/package-delivery.sh
+dist-delivery/

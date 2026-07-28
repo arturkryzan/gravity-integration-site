@@ -57,7 +57,31 @@ rm -f "$OUT/gravity-site-pl-en.zip"
 echo "→ generating patches"
 git format-patch -q "$BASE_NEW..HEAD"  -o "$OUT/patches/new"
 git format-patch -q "$BASE_FULL..HEAD" -o "$OUT/patches/full"
-cp packaging/APPLY.txt "$OUT/patches/"
+# APPLY.txt quotes the patch counts and the tree hash they replay to. Those
+# were literals once, and they were wrong within one commit of being written —
+# a document that confidently states a stale hash is worse than one that omits
+# it, because the reader checks the hash, sees a mismatch, and stops trusting
+# the rest. They are placeholders now, filled in from what was actually
+# generated a few lines above.
+NNEW=$(ls "$OUT/patches/new" | wc -l | tr -d ' ')
+NFULL=$(ls "$OUT/patches/full" | wc -l | tr -d ' ')
+sed -e "s/@@TREE@@/$(git rev-parse 'HEAD^{tree}')/g" \
+    -e "s/@@NNEW@@/$NNEW/g" \
+    -e "s/@@NFULL@@/$NFULL/g" \
+    packaging/APPLY.txt > "$OUT/patches/APPLY.txt"
+if grep -q '@@' "$OUT/patches/APPLY.txt"; then
+  echo "APPLY.txt still has unfilled placeholders" >&2; exit 1
+fi
+# The counts are derived but the annotated list under "new/" is hand-written,
+# because the useful half of it is the commentary — which patch turns the
+# English site on, which one touches a Polish page. Nothing stops the two from
+# drifting apart except this: if you add a commit and don't describe it, the
+# highest number the prose mentions falls behind the count and the build stops.
+if ! grep -q "^  $(printf '%04d' "$NNEW")  " "$OUT/patches/APPLY.txt"; then
+  echo "APPLY.txt describes fewer patches than new/ contains ($NNEW)." >&2
+  echo "Add the missing entry to packaging/APPLY.txt and re-run." >&2
+  exit 1
+fi
 
 rm -f "$OUT/gravity-en-patches-v2.zip"
 ( cd "$OUT/patches" && zip -qr "$OUT/gravity-en-patches-v2.zip" APPLY.txt new full )

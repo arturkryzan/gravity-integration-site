@@ -18,14 +18,14 @@ In your clone, run:
 Look for "Translate the rest of the content: commercial, proof,
 conversion".
 
-  You have it        →  use  new/   (11 patches — everything since)
-  You don't have it  →  use  full/  (15 patches — the whole English build)
+  You have it        →  use  new/   (@@NNEW@@ patches — everything since)
+  You don't have it  →  use  full/  (@@NFULL@@ patches — the whole English build)
 
 Hashes will differ from mine; git am replays diffs, not hashes, so a
 different hash for the same commit message is expected and harmless.
 
 
-new/  — 11 patches, on top of "Translate the rest of the content"
+new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
 ----------------------------------------------------------------
   0001  Give the /en/ subtree its own 404
   0002  Tell GA4 which language the page was served in
@@ -63,7 +63,7 @@ and the ROI calculator is still denominated in PLN because relabelling
 its sliders without rescaling them would make it compute nonsense.
 
 
-full/  — 15 patches, on top of "Teach the codebase about locales"
+full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------
 The same eleven, preceded by the four that were delivered earlier:
 
@@ -94,6 +94,6 @@ Apply it as-is; don't let an editor strip it.
 Verified before packaging
 -------------------------
 Both series were replayed into fresh clones from their respective base
-commits. Each produced tree 41fecb234e3935e7c48c9f1ba007f9aeb487c9ea,
+commits. Each produced tree @@TREE@@,
 identical to the branch head here — so what you apply is what I built and
 tested, not a reconstruction of it.

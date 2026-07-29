@@ -44,8 +44,9 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
          packaging tooling with no page changes; 0017 removes the
          English ROI calculator; 0020 rewrites the deploy run-book;
          0021 loads the MailerLite pop-up on consent; 0022-0023 fix the
-         header menu control; and 0024-0026 are the three quality
-         passes — audit, harden, optimize.
+         header menu control; 0024-0026 are the three quality
+         passes — audit, harden, optimize; and 0027-0028 are prose
+         only, this file and the two reports.
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -129,6 +130,13 @@ in the repo root:
 into media-src/orphans/, and moves the originals of every re-encoded
 image there too. Nothing on the site points at them; they are kept in
 the repo so a future edit has the source to work from.
+
+0027 and 0028 change no code at all. 0027 is this file and the README
+inside the site archive, brought up to date with everything above.
+0028 corrects three claims about fonts in OPTIMIZE.md: a probe of the
+actual network requests showed the Epilogue latin-ext subsets do NOT
+load on English routes — the unicode-range gating works — so the
+report no longer offers trimming them as a remaining win.
 
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------

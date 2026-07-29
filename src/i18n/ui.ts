@@ -88,6 +88,13 @@ const pl = {
   'nav.privacy': 'Polityka prywatności',
   'nav.menuOpen': 'MENU',
   'nav.menuClose': 'CLOSE',
+  /* The logo is a link with nothing but an <svg> inside it, so without this
+     it announces as "link" and nothing else. Names the destination rather
+     than describing the picture \u2014 a screen-reader user wants to know
+     where it goes, not what it looks like. */
+  'nav.logoHome': 'gravity.integration \u2014 strona główna',
+  /* First focusable element on every page; see .skip-link in site.css. */
+  'nav.skipToContent': 'Przejdź do treści',
 
   /* Accessibility ------------------------------------------------------ */
   'a11y.newTab': ' (otwiera się w nowej karcie)',
@@ -326,6 +333,13 @@ const pl = {
   'roi.row.tools': 'Licencje / narzędzia',
   'roi.row.total': 'Razem / rok',
   'roi.days.unit': ' dni',
+  /* Appended to the two money sliders' aria-valuetext. A range input
+     announces its raw `value`, which loses both the thousands grouping and
+     the currency: "2999" instead of "2 999 PLN". The three count sliders
+     get no valuetext on purpose \u2014 a bare number is already the whole
+     answer, and inventing Polish plural forms for it would read worse than
+     not trying. */
+  'roi.pln.unit': ' PLN',
   /* toLocaleString locale for the calculator's figures — formatting is
      language: 2 999 in Polish, 2,999 in English. */
   'roi.numberLocale': 'pl-PL',
@@ -366,6 +380,8 @@ const en: Partial<Record<UiKey, string>> = {
   'nav.privacy': 'Privacy policy (in Polish)',
   'nav.menuOpen': 'MENU',
   'nav.menuClose': 'CLOSE',
+  'nav.logoHome': 'gravity.integration \u2014 home',
+  'nav.skipToContent': 'Skip to content',
 
   /* Accessibility ------------------------------------------------------ */
   'a11y.newTab': ' (opens in a new tab)',
@@ -592,6 +608,7 @@ const en: Partial<Record<UiKey, string>> = {
   'roi.row.tools': 'Licences / tools',
   'roi.row.total': 'Total / year',
   'roi.days.unit': ' days',
+  'roi.pln.unit': ' PLN',
   'roi.numberLocale': 'en-US',
   'roi.cta': 'Download gravity.integration for free',
 

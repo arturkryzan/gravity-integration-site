@@ -50,7 +50,12 @@ const downloadHref = await linkUrl('pobieranie', lang);
             ><span>{s('hero.demo')}</span></a
           >
         </div>
-        <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;line-height:1.5;margin:0;">
+        {/* 0.4 alpha put this at 3.77:1 on the hero's #0a0a12 — a real 1.4.3 AA
+            failure at 12.8px, and it is the customer-names line, the one
+            piece of copy in the hero a skimmer is most likely to want.
+            0.55 reads 6.25:1 and still sits a clear step below the 0.75
+            sub-heading above it. */}
+        <p style="color:rgba(255,255,255,0.55);font-size:0.8rem;line-height:1.5;margin:0;">
           {s('hero.social')}
         </p>
       </div>

@@ -7,7 +7,7 @@ import '../styles/tokens.css';
 import '../styles/legacy.css';
 import '../styles/site.css';
 import site from '../data/site.json';
-import { localeOf, LOCALE_TAG, OG_LOCALE, DEFAULT_LOCALE } from '../i18n/ui';
+import { localeOf, t, LOCALE_TAG, OG_LOCALE, DEFAULT_LOCALE } from '../i18n/ui';
 import { alternates } from '../i18n/routes';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
 import CookieConsent from '../components/CookieConsent.astro';
@@ -56,6 +56,7 @@ const xDefault = alts.find((a) => a.lang === DEFAULT_LOCALE);
    other path is the unprefixed default. Nothing needs a `lang` prop threaded
    down to it, and the 404 (which belongs to no locale) falls back to Polish. */
 const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
 ---
 
 <!doctype html>
@@ -293,10 +294,31 @@ const lang = localeOf(Astro.currentLocale);
     <slot name="head" />
   </head>
   <body class={bodyClass}>
+    {/* Before the announcement bar, not after it: the skip link only helps if
+        it is the FIRST thing Tab reaches, and the bar carries a link of its
+        own. Everything between here and <main> is one dismissible bar, the
+        logo, the menu button and — once opened — a ten-item nav. */}
+    <a class="skip-link" href="#main">{s('nav.skipToContent')}</a>
+    {/* `tabindex="-1"` on the target is supposed to be enough — the UA is meant
+        to focus a focusable fragment target. Measured here, it is not: the hash
+        updates and the page scrolls, but document.activeElement stays on the
+        link, so the very next Tab walks back into the nav the reader just asked
+        to skip. Safari has never done it at all. So move focus explicitly
+        rather than trusting the UA. Inline and tiny so it is live before the
+        first Tab can happen; without JS the anchor still scrolls, which is the
+        pre-existing behaviour, not a regression. */}
+    <script is:inline>
+      document.querySelector('.skip-link')?.addEventListener('click', function () {
+        var m = document.getElementById('main');
+        if (m) requestAnimationFrame(function () { m.focus(); });
+      });
+    </script>
     <AnnouncementBar />
     <div class="page-container">
       <Header slug={slug} />
-      <main data-scroll-section>
+      {/* tabindex="-1" makes <main> a legal focus target for the skip link;
+          the script above is what actually moves the caret to it. */}
+      <main id="main" tabindex="-1" data-scroll-section>
         <slot />
       </main>
       <Footer slug={slug} />

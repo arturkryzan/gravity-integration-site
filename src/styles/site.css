@@ -376,3 +376,98 @@ html {
 .breadcrumbs a:before {
   top: calc(50% + 0.85em);
 }
+
+/* ---- focus indicators the legacy layer removed ----
+   legacy.css carries two `outline: 0` declarations from the WordPress theme
+   and supplies no replacement, so two controls were reachable by keyboard but
+   invisible once reached:
+
+     .hamburger{…outline:0…}
+     form .form-row input:not([type=checkbox]):not([type=submit]):not([type=radio]){…outline:0…}
+
+   The reset itself stays. It exists because the UA ring is drawn around the
+   whole 40px hamburger box and around the pill input's rectangle rather than
+   its 2rem radius, and both look wrong. What was missing is the ring the
+   theme should have drawn instead. These selectors repeat the originals plus
+   `:focus-visible`, so they outrank them on specificity without depending on
+   which stylesheet loads last, and they only paint for keyboard focus — a
+   mouse click on the menu still shows nothing.
+
+   The treatment is the one the hand-built components already use: 2px of
+   --gi-green for outlines, a 3px 28% green ring for fields.
+
+   But the ink cannot be green everywhere, and copying `.demo-input`'s ring
+   verbatim was a mistake worth recording. That component sits on the dark
+   slate panel, where green reads 11:1. The two places `input#nemaiil`
+   actually lives are both LIGHT: `section.contact.bg-green` is #27ea93, the
+   brand green itself, so a green ring is literally invisible — worse than
+   nothing, because the field's own dark border also turns green and the
+   input disappears the moment it is focused. `section.newsletter.bg-light`
+   is #f3f4fb, where green measures 1.44:1, under the 3:1 WCAG 1.4.11 wants.
+
+   So the ink is a variable, not a constant. It defaults to green for the
+   dark surfaces (header, menu overlay, the dark form panels) and flips to
+   the near-black ink on the two light section backgrounds, where it reads
+   12.5:1 on the green and 18:1 on the light grey. Anything added later that
+   sits on a light panel inherits the correct ring by setting one property. */
+:root {
+  --gi-focus-ink: var(--gi-green);
+  --gi-focus-halo: rgb(39 234 147 / 0.28);
+}
+.bg-green,
+.bg-light {
+  --gi-focus-ink: var(--gi-bg-dark);
+  --gi-focus-halo: rgb(10 10 18 / 0.24);
+}
+.hamburger:focus-visible {
+  outline: 2px solid var(--gi-focus-ink);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+form .form-row input:not([type='checkbox']):not([type='submit']):not([type='radio']):focus-visible {
+  outline: none;
+  border-color: var(--gi-focus-ink);
+  box-shadow: 0 0 0 3px var(--gi-focus-halo);
+}
+
+/* ---- skip link ----
+   First focusable thing in the document, so the first Tab on any page offers
+   to jump the header and the ten-item nav. Off-screen rather than
+   `visually-hidden`, because it has to become visible again on focus and a
+   1px clip-path box cannot grow; `top` is the only property animated, and it
+   moves from -100% to 0 rather than fading, so it is legible the instant it
+   appears. z-index sits above the announcement bar and below the modal layer.
+   `<main>` carries tabindex="-1" to be a legal focus target, and a four-line
+   inline script in Site.astro moves the caret there on activation — measured
+   here, Chrome scrolls to the fragment but leaves focus on the link, so the
+   next Tab walks straight back into the nav the reader asked to skip. */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: var(--gi-z-toast);
+  padding: 0.75rem 1.25rem;
+  background: var(--gi-green);
+  color: var(--gi-bg-dark);
+  font-family: var(--gi-font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--gi-radius);
+  transition: top 0.15s ease-out;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.skip-link:focus-visible {
+  outline: 2px solid var(--gi-bg-dark);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+main:focus {
+  outline: none;
+}

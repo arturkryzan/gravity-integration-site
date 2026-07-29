@@ -23,7 +23,7 @@ const s = t(lang);
 <div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
 <form action={action} data-form="newsletter" method="post" target="_blank" class="wpcf7-form init" aria-label={s('nl.form.aria')} data-status="init">
 
-<div class="form-row mb-5"><label for="nemaiil">{s('form.emailLabel')}</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" name="fields[email]" /></span></div>
+<div class="form-row mb-5"><label for="nemaiil">{s('form.emailLabel')}</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" autocomplete="email" inputmode="email" name="fields[email]" /></span></div>
 <div class="form-row mb-5 form-row-checkbox"><span class="wpcf7-form-control-wrap" data-name="acceptance-513"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-513" value="1" required data-ml-consent aria-invalid="false" /><span class="wpcf7-list-item-label">{s('nl.consent')}</span></label></span></span></span></div>
 <input type="hidden" name="ml-submit" value="1" />
 <input type="hidden" name="anticsrf" value="true" />

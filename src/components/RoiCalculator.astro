@@ -47,6 +47,7 @@ const GI = {
   rows: [s('roi.row.dev'), s('roi.row.test'), s('roi.row.deploy'), s('roi.row.maint')],
   rowTools: s('roi.row.tools'),
   rowTotal: s('roi.row.total'),
+  pln: s('roi.pln.unit'),
 };
 ---
 
@@ -68,6 +69,10 @@ const GI = {
 .gi-calc-card h3{color:var(--gi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
 .gi-slider-group{margin-bottom:1.5rem}
 .gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--gi-text)}
+/* The caption is a real <label for> now — the five sliders had no accessible
+   name at all before, so a screen reader announced five identical "slider"s.
+   Clicking it focuses the slider, so it should look clickable. */
+.gi-slider-label label{cursor:pointer;margin:0}
 .gi-slider-value{font-weight:700;color:var(--gi-green);font-size:1rem;min-width:80px;text-align:right}
 /* The input is 32px tall (the real touch target); the visible 6px track is
    drawn by the track pseudo-elements. Thumb offset centres it on the track. */
@@ -125,27 +130,27 @@ const GI = {
     <div class="gi-calc-card">
       <h3>{s('roi.params.h3')}</h3>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.projects')}</span><span class="gi-slider-value" id="v-projects">3</span></div>
+        <div class="gi-slider-label"><label for="s-projects">{s('roi.slider.projects')}</label><span class="gi-slider-value" id="v-projects">3</span></div>
         <input type="range" class="gi-range" id="s-projects" min="1" max="20" value="3">
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.days')}</span><span class="gi-slider-value" id="v-days">30</span></div>
+        <div class="gi-slider-label"><label for="s-days">{s('roi.slider.days')}</label><span class="gi-slider-value" id="v-days">30</span></div>
         <input type="range" class="gi-range" id="s-days" min="5" max="120" value="30">
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.team')}</span><span class="gi-slider-value" id="v-team">2</span></div>
+        <div class="gi-slider-label"><label for="s-team">{s('roi.slider.team')}</label><span class="gi-slider-value" id="v-team">2</span></div>
         <input type="range" class="gi-range" id="s-team" min="1" max="10" value="2">
       </div>
     </div>
     <div class="gi-calc-card">
       <h3>{s('roi.costs.h3')}</h3>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.rate')}</span><span class="gi-slider-value" id="v-rate">{nf.format(RATE_DEFAULT)}</span></div>
-        <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value={RATE_DEFAULT}>
+        <div class="gi-slider-label"><label for="s-rate">{s('roi.slider.rate')}</label><span class="gi-slider-value" id="v-rate">{nf.format(RATE_DEFAULT)}</span></div>
+        <input type="range" class="gi-range" id="s-rate" min="500" max="4000" step="100" value={RATE_DEFAULT} aria-valuetext={nf.format(RATE_DEFAULT) + s('roi.pln.unit')}>
       </div>
       <div class="gi-slider-group">
-        <div class="gi-slider-label"><span>{s('roi.slider.tools')}</span><span class="gi-slider-value" id="v-tool">{nf.format(TOOLS_DEFAULT)}</span></div>
-        <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value={TOOLS_DEFAULT}>
+        <div class="gi-slider-label"><label for="s-tool">{s('roi.slider.tools')}</label><span class="gi-slider-value" id="v-tool">{nf.format(TOOLS_DEFAULT)}</span></div>
+        <input type="range" class="gi-range" id="s-tool" min="0" max="200000" step="1000" value={TOOLS_DEFAULT} aria-valuetext={nf.format(TOOLS_DEFAULT) + s('roi.pln.unit')}>
       </div>
     </div>
   </div>
@@ -190,6 +195,11 @@ const GI = {
     document.getElementById("v-team").textContent=T;
     document.getElementById("v-rate").textContent=fmt(R);
     document.getElementById("v-tool").textContent=fmt(TL);
+    /* A range input announces its raw `value` — "2999", no grouping, no
+       currency. These two are money, so say so; the three counts above are
+       already unambiguous from their labels and get no valuetext. */
+    sl.r.setAttribute("aria-valuetext",fmt(R)+GI.pln);
+    sl.tl.setAttribute("aria-valuetext",fmt(TL)+GI.pln);
     var dd=D*DS,td=D*TS,dpd=D*DPS,md=D*MS;
     var cDev=dd*T*R,cTest=td*T*R,cDep=dpd*T*R,cMnt=md*T*R;
     var cTot=(cDev+cTest+cDep+cMnt)*P+TL;

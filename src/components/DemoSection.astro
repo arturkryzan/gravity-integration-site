@@ -222,7 +222,11 @@ const fields = [
     --f-line: rgb(255 255 255 / 0.55);
     --f-ink: #ffffff;
     --f-label: rgb(255 255 255 / 0.8);
-    --f-optional: rgb(255 255 255 / 0.65);
+    /* 0.65 composited to 4.19:1 over the panel's rgb(83 85 104) — under AA,
+       and "(optional)" is exactly the word someone deciding whether to fill a
+       field needs to read. 0.78 gives 4.86:1 and stays quieter than the 0.8
+       label it follows. */
+    --f-optional: rgb(255 255 255 / 0.78);
     --f-placeholder: rgb(255 255 255 / 0.6);
     --f-err-text: #ffc2c2;
     --f-err-line: #ff8f8f;

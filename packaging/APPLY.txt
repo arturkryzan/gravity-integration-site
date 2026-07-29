@@ -44,9 +44,9 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
          packaging tooling with no page changes; 0017 removes the
          English ROI calculator; 0020 rewrites the deploy run-book;
          0021 loads the MailerLite pop-up on consent; 0022-0023 fix the
-         header menu control; 0024-0026 are the three quality
-         passes — audit, harden, optimize; and 0027-0028 are prose
-         only, this file and the two reports.
+         header menu control; 0024-0026 and 0029 are the four quality
+         passes — audit, harden, optimize, polish; and 0027-0028 and
+         0030 are prose only, this file and the reports.
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -105,8 +105,8 @@ it. 0022 and 0023 fix the header: the MENU/CLOSE label no longer slides
 sideways when the menu opens, and the scrollbar gutter is reserved so
 the page doesn't shift underneath it.
 
-0024, 0025 and 0026 are three quality passes, each with its own report
-in the repo root:
+0024, 0025, 0026 and 0029 are four quality passes, each with its own
+report in the repo root:
 
   0024  audit     → AUDIT.md. Measures 18 routes at four viewports for
                     accessibility, performance, responsive behaviour and
@@ -125,18 +125,38 @@ in the repo root:
                     Every one of those was gated against a 38-shot
                     pixel diff of all 18 routes at two widths before it
                     was kept.
+  0029  polish    → POLISH.md. The first pass aimed at the design
+                    system rather than at defects. Six tokens the
+                    system was missing, 32 hex literals that were
+                    duplicating one, and three components that had each
+                    written their own copy of the prose measure — two
+                    as pixel widths frozen against a font size they
+                    don't know, and one in the right unit on the wrong
+                    element. Also: pointer feedback on the five ROI
+                    sliders, a truthful aria-current on all 18 routes
+                    rather than 1, and ZAMKNIJ instead of CLOSE in the
+                    Polish menu.
 
 0026 also moves 4.5 MB of files nothing references out of public/ and
 into media-src/orphans/, and moves the originals of every re-encoded
 image there too. Nothing on the site points at them; they are kept in
 the repo so a future edit has the source to work from.
 
+0029's visible cost is 26 pixels: capping the cookie panel's paragraph
+at its real 68 characters wraps it onto a fifth line at desktop widths,
+taking the bar from 154px to 180px. That was a deliberate trade rather
+than an oversight — it is the one paragraph on the site the reader is
+being asked to make a decision about. Below 1024px nothing moves at
+all, because the column is already narrower than the cap. The commit
+message and POLISH.md both carry the measurements.
+
 0027 and 0028 change no code at all. 0027 is this file and the README
 inside the site archive, brought up to date with everything above.
 0028 corrects three claims about fonts in OPTIMIZE.md: a probe of the
 actual network requests showed the Epilogue latin-ext subsets do NOT
 load on English routes — the unicode-range gating works — so the
-report no longer offers trimming them as a remaining win.
+report no longer offers trimming them as a remaining win. 0030 is this
+file again, describing 0029.
 
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------

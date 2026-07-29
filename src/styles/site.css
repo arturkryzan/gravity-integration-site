@@ -263,6 +263,44 @@ header {
   z-index: var(--gi-z-sticky);
 }
 
+/* ---- menu control: the two states have to sit on top of each other ----
+   The control is a word plus a ringed icon, and it swaps both when the menu
+   opens: MENU + logo mark becomes CLOSE + ×. The theme overlays the second
+   state on the first by taking it out of flow — but it anchors the two halves
+   to opposite edges. The icon is `right: 0`, so both rings land in exactly the
+   same place (measured pixel-identical at 8× DPI, in every state and at every
+   width). The label is `left: 0`, so the two words share a *left* edge instead:
+   CLOSE is 4.7px wider than MENU, so opening the menu slides the word 4.7px
+   right and shrinks the gap to the ring from 16px to 11.3px. Hovering makes it
+   worse — the theme's letter-spacing flourish grows CLOSE rightward into the
+   gap while MENU, sized by the shrink-to-fit button, keeps its own. The ring
+   never moves and the word does, so the lockup twitches on every open.
+
+   Anchor the second label from the right instead, one icon-width in, and let
+   the same `me-4` that spaces the first one space it too. Now both words end
+   on the same edge and the gap is 16px in all four states — closed, open, and
+   either of those hovered. */
+.hamburger span:nth-of-type(2) {
+  left: auto;
+  right: 2.5rem; /* the icon's own width; `me-4` supplies the gap after it */
+}
+
+/* The close control was styled dark for phones (#464861) back when the theme's
+   fullscreen menu was white down there. Our polish pass made the menu dark
+   slate at every width, and nobody came back to this: #464861 on #6b6d81 is
+   1.8:1, so on a phone the × and the word CLOSE all but disappear against the
+   panel behind them. White is 5.0:1 and is what the same control already uses
+   on every larger screen. */
+@media (max-width: 767.98px) {
+  .hamburger span:nth-of-type(2) {
+    color: #fff;
+  }
+  .hamburger svg:nth-of-type(2) circle,
+  .hamburger svg:nth-of-type(2) path {
+    stroke: #fff;
+  }
+}
+
 /* ---- pricing: currency unit ----
    The theme sets the currency span to #9b9cae, which is 2.71:1 on white — under
    the 3:1 large-text floor even at the 64px it renders at, and it isn't a token.

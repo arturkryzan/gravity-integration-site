@@ -306,8 +306,13 @@ const s = t(localeOf(Astro.currentLocale));
       document.cookie = KEY + '=' + value + ';path=/;max-age=' + MAX_AGE + ';samesite=lax';
       if (value === 'granted') {
         if (window.giEnableAnalytics) window.giEnableAnalytics();
-      } else if (window.giDisableAnalytics) {
-        window.giDisableAnalytics();
+        /* MailerLite's pop-up tag rides the same single answer. It is only
+           published on Polish pages, so on /en/ this call is a no-op — the
+           guard is in the loader rather than here, so this stays one branch. */
+        if (window.giEnableMailerLite) window.giEnableMailerLite();
+      } else {
+        if (window.giDisableAnalytics) window.giDisableAnalytics();
+        if (window.giDisableMailerLite) window.giDisableMailerLite();
       }
       hide();
     }
@@ -325,6 +330,7 @@ const s = t(localeOf(Astro.currentLocale));
     window.giOpenConsent = function () {
       document.cookie = KEY + '=;path=/;max-age=0;samesite=lax';
       if (window.giDisableAnalytics) window.giDisableAnalytics();
+      if (window.giDisableMailerLite) window.giDisableMailerLite();
       show();
       var first = bar.querySelector('.gi-consent-btn');
       if (first) first.focus();

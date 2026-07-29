@@ -256,10 +256,17 @@ const pl = {
 
   /* Cookie consent --------------------------------------------------------
      cc.bodyHtml links to the privacy policy, which exists only in Polish — by
-     decision, not omission — so both locales point at the same URL. */
+     decision, not omission — so both locales point at the same URL.
+
+     The Polish string names MailerLite and the English one does not, and that
+     asymmetry is the accurate state rather than a missed translation: the
+     MailerLite pop-up tag is published on Polish pages only (see Site.astro),
+     so naming it on /en/ would describe something that never loads there.
+     Each string lists what actually runs on the page it appears on. If the
+     pop-up is ever turned on for English, this is the second edit. */
   'cc.title': 'Ciasteczka na tej stronie',
   'cc.bodyHtml':
-    'Niezbędne pliki cookie utrzymują działanie serwisu i\u00A0zapamiętują tę\u00A0decyzję. Do statystyk odwiedzin i\u00A0do\u00A0działań reklamowych używamy narzędzi Google — Google\u00A0Analytics oraz Google\u00A0Ads. Uruchamiamy je\u00A0tylko wtedy, gdy wyrazisz zgodę. Szczegóły znajdziesz w\u00A0<a href="/polityka-prywatnosci/#cookies">polityce prywatności</a>.',
+    'Niezbędne pliki cookie utrzymują działanie serwisu i\u00A0zapamiętują tę\u00A0decyzję. Do statystyk odwiedzin i\u00A0do\u00A0działań reklamowych używamy narzędzi Google — Google\u00A0Analytics oraz Google\u00A0Ads — a\u00A0okienko z\u00A0zapisem na\u00A0newsletter wyświetla MailerLite. Uruchamiamy je\u00A0tylko wtedy, gdy wyrazisz zgodę. Szczegóły znajdziesz w\u00A0<a href="/polityka-prywatnosci/#cookies">polityce prywatności</a>.',
   'cc.accept': 'Akceptuję',
   'cc.reject': 'Tylko niezbędne',
 

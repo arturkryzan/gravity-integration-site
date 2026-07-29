@@ -330,15 +330,24 @@ both.
 5. Watch GA4 Realtime while clicking; confirm `generate_lead` fires on a form
    submit (with consent accepted), and that the `page_language` parameter reads
    `pl` on Polish pages and `en` on English ones.
-6. Google Search Console: submit
+6. Confirm the MailerLite pop-up. On a Polish page, accept cookies and wait ten
+   seconds — the sign-up window configured in account 1115638 should appear.
+   Then check the two ways it is deliberately absent: it never shows on `/en/`
+   (the tag is only published on Polish pages, because the pop-up's copy is
+   Polish and MailerLite targets it by hostname, which would otherwise match
+   `/en/` too), and it never shows for anyone who chose *Tylko niezbędne* (it
+   loads on consent, exactly like GA4). If you want it on English pages later,
+   the change is one condition in `src/layouts/Site.astro` plus a matching
+   sentence in the English cookie banner.
+7. Google Search Console: submit
    `https://gravity-integration.com/sitemap-index.xml`. Then check
    International Targeting for `hreflang` errors — every English page must name
    its Polish counterpart and be named back by it. One-directional tags are
    ignored wholesale, so a single missing return tag silently disables the
    pairing for that page.
-7. Lighthouse the homepage and `/pobieranie/` on the live server (target: green
+8. Lighthouse the homepage and `/pobieranie/` on the live server (target: green
    Core Web Vitals).
-8. Keep `_wp-retired/` and the WordPress database until GSC traffic looks normal
+9. Keep `_wp-retired/` and the WordPress database until GSC traffic looks normal
    for two to three weeks.
 
 ---

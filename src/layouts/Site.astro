@@ -212,6 +212,84 @@ const lang = localeOf(Astro.currentLocale);
 
       if (/(?:^|;\s*)gi_consent=granted/.test(document.cookie)) window.giEnableAnalytics();
     </script>
+
+    <!-- MailerLite Universal — the pop-up only, and only in Polish.
+
+         The four forms on this site post to MailerLite over plain HTTPS from
+         our own handler (src/scripts/ml-forms.ts); not one of them needs this
+         tag. What needs it is the pop-up configured in account 1115638: ten
+         seconds' delay, re-shown after a day, scoped inside MailerLite to
+         gravity-integration.com and docs.gravity-integration.com. That scoping
+         is by hostname, so it matches /en/ as well — which is why the language
+         gate has to be here rather than there. The pop-up's copy is Polish, and
+         an English visitor gets no pop-up rather than one they can't read.
+
+         It loads on consent for the same reason gtag does. universal.js is a
+         third party that stores state on the device, and the bar at the bottom
+         of this document promises nothing of that kind runs before an answer.
+         A banner that is untrue about one tag is worth less on all of them.
+         The cost is real and was accepted: whoever picks "Tylko niezbędne"
+         never sees the pop-up.
+
+         Same shape as the analytics loader above — a named enable function, an
+         idempotence flag, and a return-visit check that fires before paint. The
+         script is emitted on every page and does nothing on the English ones;
+         `mlEnabled` is what decides, because a conditional element here would
+         have to survive JSX parsing of a body full of braces. -->
+    <script
+      is:inline
+      define:vars={{
+        mlAccount: site.mailerliteAccount,
+        mlEnabled: lang === DEFAULT_LOCALE && Boolean(site.mailerliteAccount),
+      }}
+    >
+      var giMlLoaded = false;
+
+      window.giEnableMailerLite = function () {
+        if (!mlEnabled || giMlLoaded) return;
+        giMlLoaded = true;
+        /* MailerLite's own snippet, unchanged apart from the account id, which
+           comes from site.json. Their loader queues calls on window.ml before
+           the script lands, so 'account' can be set in the same breath. */
+        (function (w, d, e, u, f, l, n) {
+          w[f] =
+            w[f] ||
+            function () {
+              (w[f].q = w[f].q || []).push(arguments);
+            };
+          l = d.createElement(e);
+          l.async = 1;
+          l.src = u;
+          n = d.getElementsByTagName(e)[0];
+          n.parentNode.insertBefore(l, n);
+        })(window, document, 'script', 'https://assets.mailerlite.com/js/universal.js', 'ml');
+        window.ml('account', mlAccount);
+      };
+
+      /* A script that has loaded cannot be unloaded, so withdrawal does what it
+         can: clear what MailerLite stored, so the next visit starts clean and
+         the pop-up's "not for another day" memory doesn't outlive the consent
+         that allowed it. The same bargain giDisableAnalytics strikes. */
+      window.giDisableMailerLite = function () {
+        document.cookie.split(';').forEach(function (c) {
+          var name = c.split('=')[0].trim();
+          if (name.indexOf('ml_') !== 0) return;
+          var host = location.hostname;
+          document.cookie = name + '=;path=/;max-age=0';
+          document.cookie = name + '=;path=/;domain=' + host + ';max-age=0';
+          document.cookie = name + '=;path=/;domain=.' + host + ';max-age=0';
+        });
+        try {
+          Object.keys(window.localStorage).forEach(function (k) {
+            if (/^ml[_-]|^mailerlite/i.test(k)) window.localStorage.removeItem(k);
+          });
+        } catch (e) {
+          /* storage is unavailable in some private modes; nothing to clear */
+        }
+      };
+
+      if (/(?:^|;\s*)gi_consent=granted/.test(document.cookie)) window.giEnableMailerLite();
+    </script>
     <slot name="head" />
   </head>
   <body class={bodyClass}>

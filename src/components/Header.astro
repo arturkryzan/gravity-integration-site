@@ -114,7 +114,11 @@ const current = (url?: string) =>
 						<ul>
 							<li><a href={href.home} aria-current={current(href.home)}>{s('nav.home')}</a></li>
 {href.kalkulator && <li><a href={href.kalkulator} aria-current={current(href.kalkulator)}>{s('nav.roiCalculator')}</a></li>}
-<li><a href={href.pobieranie} aria-current={current(href.pobieranie)}>{s('nav.download')}</a></li>
+{/* Download is the one item in this list the whole site is pointed at, so it
+    is the one item that carries the brand green. The class is the hook; the
+    colour and the inverted hover live in site.css next to the rest of the
+    nav-big rules. */}
+<li><a class="nav-download" href={href.pobieranie} aria-current={current(href.pobieranie)}>{s('nav.download')}</a></li>
 <li><a href={href.kontakt} aria-current={current(href.kontakt)}>{s('nav.contact')}</a></li>
 						</ul>
 					</div>	

@@ -108,6 +108,20 @@ body.nav-opening .nav-main {
 .nav-main .nav-big a:hover {
   color: var(--gi-green) !important;
 }
+/* Download is the primary action of the whole site, so it is the one nav-big
+   item that wears the brand green rather than the white the other three share.
+   Hover/focus inverts the pair — green to white — rather than reusing the
+   green, which would have left the most important item as the only one in the
+   list with no pointer feedback. Contrast: #27ea93 on --gi-bg-slate-lift-2
+   (#6b6d81) is 3.21:1, which clears AA for the 36-64px type this list is set
+   in; the white it inverts to is 5.09:1 on the same ground. */
+.nav-main .nav-big a.nav-download {
+  color: var(--gi-green) !important;
+}
+.nav-main .nav-big a.nav-download:hover,
+.nav-main .nav-big a.nav-download:focus-visible {
+  color: var(--gi-text-on-dark) !important;
+}
 /* logo stays white on the dark menu (theme dims it to slate when open) */
 body.nav-open header .logo path {
   fill: var(--gi-text-on-dark) !important;

@@ -206,6 +206,14 @@ const pl = {
   'dl.done.p2': '. Szukaj wiadomości ',
   'dl.done.msg': '„Witaj w\u00A0gravity.integration”',
   'dl.done.p3': ' od\u00A0contact@gravity-integration.com.',
+  /* The e-mail is the path that puts the address into MailerLite, so it stays
+     the headline. But by the time this panel renders we already have the
+     address and the automation has fired — making someone wait on an inbox
+     they may not have open buys us nothing. The direct link is for the
+     impatient; it costs the lead nothing, because the lead is already in. */
+  'dl.done.direct1': 'Nie chcesz czekać? ',
+  'dl.done.directLink': 'Pobierz instalator teraz',
+  'dl.done.direct2': ' (GravityInstaller.exe, Windows).',
   'dl.done.note1':
     'Nie widzisz jej po\u00A0kilku minutach? Zajrzyj do\u00A0folderu Oferty lub Spam. W\u00A0międzyczasie możesz przejrzeć ',
   'dl.done.docsLink': 'dokumentację online',
@@ -484,6 +492,9 @@ const en: Partial<Record<UiKey, string>> = {
   'dl.done.p2': '. Look for the message ',
   'dl.done.msg': '"Witaj w\u00A0gravity.integration"',
   'dl.done.p3': ' from contact@gravity-integration.com.',
+  'dl.done.direct1': "Don't want to wait? ",
+  'dl.done.directLink': 'Download the installer now',
+  'dl.done.direct2': ' (GravityInstaller.exe, Windows).',
   'dl.done.note1':
     "Can't see it after a few minutes? Check your Offers or Spam folder. In the meantime you can browse the ",
   'dl.done.docsLink': 'online documentation',

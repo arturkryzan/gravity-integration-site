@@ -215,6 +215,19 @@ const clients = [
           <p class="dl-done-p">
             {s('dl.done.p1')}<strong data-done="email"></strong>{s('dl.done.p2')}<strong>{s('dl.done.msg')}</strong>{s('dl.done.p3')}
           </p>
+          {/* Absolute, not root-relative: the installer lives on the production
+              host, and a preview build served from anywhere else should still
+              hand out the real file rather than a 404 that looks like a broken
+              download. `download` is honoured because this is same-origin in
+              production; it also names the file the browser saves. */}
+          <p class="dl-done-direct">
+            {s('dl.done.direct1')}<a
+              class="dl-done-exe"
+              href="https://gravity-integration.com/downloads/GravityInstaller.exe"
+              download
+              data-direct-download
+            >{s('dl.done.directLink')}</a>{s('dl.done.direct2')}
+          </p>
           <p class="dl-done-note">
             {s('dl.done.note1')}<a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">
               {s('dl.done.docsLink')}<span class="visually-hidden">{s('a11y.newTab')}</span></a>.
@@ -819,6 +832,33 @@ const clients = [
     font-weight: 600;
     word-break: break-word;
   }
+  /* Sits between the e-mail confirmation and the spam-folder note: a real
+     second option, not a footnote, so it reads at body size rather than the
+     note's 0.85rem. It stays a link and not a button because the e-mail
+     remains the recommended path — this is the escape hatch, not the CTA. */
+  .dl-done-direct {
+    color: rgb(255 255 255 / 0.86);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 auto 0.75rem;
+    max-width: 24rem;
+  }
+  .dl-done-exe {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    border-radius: 3px;
+    transition: color 0.18s var(--ease);
+  }
+  .dl-done-exe:hover {
+    color: var(--gi-text-on-dark);
+  }
+  .dl-done-exe:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+  }
   .dl-done-note {
     color: rgb(255 255 255 / 0.72);
     font-size: 0.85rem;
@@ -833,14 +873,18 @@ const clients = [
   }
   .dl-done[data-in] .dl-done-h,
   .dl-done[data-in] .dl-done-p,
+  .dl-done[data-in] .dl-done-direct,
   .dl-done[data-in] .dl-done-note {
     animation: dl-rise 0.5s var(--ease) both;
   }
   .dl-done[data-in] .dl-done-p {
     animation-delay: 0.07s;
   }
-  .dl-done[data-in] .dl-done-note {
+  .dl-done[data-in] .dl-done-direct {
     animation-delay: 0.14s;
+  }
+  .dl-done[data-in] .dl-done-note {
+    animation-delay: 0.21s;
   }
   @keyframes dl-rise {
     from {
@@ -1288,6 +1332,19 @@ const clients = [
     if (!card || !submit) return;
 
     form.noValidate = true;
+
+    /* The direct-download link is deliberately NOT a trackLead() call. By the
+       time it can be clicked the address is already in MailerLite and
+       generate_lead has fired once; firing it again would count one person
+       twice. A plain dataLayer push keeps the two paths apart — how many
+       people wait for the e-mail, how many take the file straight away — and
+       stays silent when consent hasn't been given, because dataLayer only
+       exists once the banner is accepted. */
+    done
+      ?.querySelector<HTMLAnchorElement>('[data-direct-download]')
+      ?.addEventListener('click', () => {
+        (window as any).dataLayer?.push({ event: 'direct_download' });
+      });
 
     const ts = form.querySelector<HTMLInputElement>('[data-key="_dl_ts"]');
     if (ts) ts.value = String(Date.now());

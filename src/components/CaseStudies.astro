@@ -155,19 +155,24 @@ const keepCompounds = (html: string) =>
 </div>
 
 <style>
+  /* Local short names for the global tokens — see IntegrationsGrid. */
   .cs {
-    --ink: #14152a;
-    --body: #464861;
-    --muted: #5f6178;
-    --green: #27ea93;
-    --green-deep: #097a53;
-    --tint: #f3f4fb;
-    --line: #e4e5ef;
-    --dark: #0a0a12;
+    --ink: var(--gi-text-on-light);
+    --body: var(--gi-bg-slate);
+    --muted: var(--gi-text-muted-slate);
+    --green: var(--gi-green);
+    --green-deep: var(--gi-green-deep);
+    --tint: var(--gi-bg-tint);
+    --line: var(--gi-line);
+    --dark: var(--gi-bg-dark);
     --rail: 296px;
-    /* Reading measure. 39rem = 624px, which at 17px Epilogue is ~72 characters
-       per line — inside the 65-75ch band. Applied to text, not to the column. */
-    --measure: 39rem;
+    /* A deliberate local override of --gi-measure (68ch), not a second opinion
+       about it: the case-study column is a wide single-column article and reads
+       well a few characters longer. It was `39rem` — 624px, ~72 characters at
+       the 17px Epilogue this component sets — which froze a pixel width against
+       one assumed font size. Same intent, expressed in the unit that keeps it
+       true if the type scale ever moves. */
+    --measure: 72ch;
     font-family: Epilogue, system-ui, sans-serif;
     color: var(--body);
   }
@@ -235,7 +240,7 @@ const keepCompounds = (html: string) =>
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: var(--gi-bg-light);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 0.85rem 1.35rem;
@@ -371,7 +376,7 @@ const keepCompounds = (html: string) =>
   .cs-mark {
     margin: 1.75rem 0 0;
     max-width: 380px;
-    background: #fff;
+    background: var(--gi-bg-light);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 1.25rem 1.75rem;
@@ -402,7 +407,7 @@ const keepCompounds = (html: string) =>
     line-height: 1.15;
     font-weight: 700;
     letter-spacing: -0.015em;
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
   .cs-payoff-body {
     max-width: none;
@@ -432,7 +437,7 @@ const keepCompounds = (html: string) =>
     color: rgb(255 255 255 / 0.92);
   }
   .cs-wins :global(strong) {
-    color: #fff;
+    color: var(--gi-text-on-dark);
     font-weight: 700;
   }
   .cs-check {

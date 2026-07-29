@@ -26,16 +26,65 @@
   --gi-bg-card-dark: #242538;     /* calculator cards */
   --gi-bg-calc: #1a1b2e;          /* calculator section */
   --gi-bg-light: #ffffff;
+  /* The light side of the system was never finished. Only the surface (#fff)
+     had a name, so every light-section component — EsbArticle, CaseStudies,
+     IntegrationsGrid, DownloadPage — independently re-declared the same two
+     values locally: a tinted panel behind quoted/boxed content and a hairline
+     rule. Four copies of one decision is the definition of drift, so they get
+     names here and the components point at them. */
+  --gi-bg-tint: #f3f4fb;          /* light panels: FAQ rows, callouts, cards */
+  --gi-line: #e4e5ef;             /* hairline rules on light surfaces */
 
   /* text */
   --gi-text-on-dark: #ffffff;
   --gi-text-muted-on-dark: rgb(255 255 255 / 0.75);
-  --gi-text-on-light: #1a1a2e;
+  /* Heading/ink colour on light surfaces. Was #1a1a2e, which had exactly one
+     consumer (Footer.astro) while five components carried a local `--ink:
+     #14152a` across 19 call sites — the same role, declared twice, and the
+     copy the system named was the one almost nothing used. Unified onto the
+     value that actually ships. The footer moves from 17.06:1 to 17.94:1 on
+     white, which is a change no eye can see and no threshold cares about. */
+  --gi-text-on-light: #14152a;
   --gi-text-muted-on-light: rgb(0 0 0 / 0.55);
+  /* Muted text on light that has to stay in the slate family rather than go
+     neutral: secondary copy in the light sections, and the pricing card's
+     currency unit sitting directly under the --gi-bg-slate figure, which must
+     read as a step down from it rather than as a different colour.
+     --gi-text-muted-on-light is a black transparency (≈#737373, 4.76:1) and
+     goes grey next to slate, which is why nothing uses it here.
+
+     This role had drifted into three values and no name: site.css hard-coded
+     #6b6d84 while calling it "the documented muted token" (a value chosen as a
+     token, described as one, then never declared); EsbArticle and
+     IntegrationsGrid declared #6b6d84 locally; CaseStudies and DownloadPage
+     declared #5f6178. Three call sites each — a tie on usage, so the tie is
+     broken the way this file has broken it twice already (--gi-green-deep,
+     --gi-red-deep): when two candidates serve one role, take the darker.
+     #6b6d84 measures 4.62:1 on --gi-bg-tint, 0.12 above the floor, and
+     EsbArticle uses it on exactly that panel. #5f6178 is 6.06:1 on white and
+     5.52:1 on the tint, and stays lighter than --gi-bg-slate, so the pricing
+     unit is still a clear step down from the figure above it. */
+  --gi-text-muted-slate: #5f6178;
+
+  /* Slate lift — the fullscreen menu stacks three columns and separates them
+     by stepping the slate surface, not by drawing borders. The base tone is
+     --gi-bg-slate; these are the two steps above it. They were literals in
+     site.css with the ramp explained only in a comment, which is a token the
+     system needed and never got. */
+  --gi-bg-slate-lift-1: #565971;
+  --gi-bg-slate-lift-2: #6b6d81;
 
   /* typography */
   --gi-font-heading: 'Epilogue', system-ui, sans-serif;
   --gi-font-ui: 'Inter', system-ui, sans-serif;
+
+  /* Measure — the width at which running prose stays readable. The ported
+     theme never had one, so body copy simply took whatever the Bootstrap
+     column gave it: 111ch on /kontakt/, 99ch on the newsletter block, 88ch
+     in the integrations grid. Comfortable reading is 65–75ch; 68 sits in
+     the middle of that band. It is a `ch`, so it tracks the font size of
+     whatever it is applied to instead of freezing a pixel width. */
+  --gi-measure: 68ch;
 
   /* layout */
   --gi-container: 1140px;

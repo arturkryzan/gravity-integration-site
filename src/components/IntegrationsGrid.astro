@@ -57,15 +57,19 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
 {total !== 139 && <p style="display:none" data-count-warning>integration count {total} ≠ 139</p>}
 
 <style>
+  /* Local short names for the global tokens, the convention DownloadPage
+     already used. They were bare literals here — the same eight values
+     re-decided in four components, which is how a design system stops being
+     one. Renaming stays local; the values are the system's. */
   .gi-int {
-    --ink: #14152a;
-    --body: #464861;
-    --muted: #6b6d84;
-    --green: #27ea93;
-    --green-deep: #097a53;
-    --line: #e4e5ef;
+    --ink: var(--gi-text-on-light);
+    --body: var(--gi-bg-slate);
+    --muted: var(--gi-text-muted-slate);
+    --green: var(--gi-green);
+    --green-deep: var(--gi-green-deep);
+    --line: var(--gi-line);
     font-family: Epilogue, system-ui, sans-serif;
-    background: #fff;
+    background: var(--gi-bg-light);
     padding: clamp(3rem, 6vw, 5rem) 0 clamp(3.5rem, 7vw, 6rem);
   }
   .gi-int-wrap {
@@ -136,11 +140,17 @@ const badges = ['REST API', 'SOAP', 'GraphQL', 'FTP/SFTP', 'ODBC', 'Webhooks', '
     font-weight: 600;
     color: var(--muted);
   }
+  /* `max-width: 780px` was a one-off implementation of the measure concept:
+     a pixel width picked by eye, frozen against a font size it doesn't know.
+     At this component's 15.68px Epilogue it resolves to 88ch — thirteen
+     category descriptions, every one of them past the point where the eye
+     starts losing the line it is returning to. The token is the same idea
+     said properly, and `ch` means it stays correct if the type size moves. */
   .gi-int-desc {
     color: var(--muted);
     font-size: 0.98rem;
     line-height: 1.6;
-    max-width: 780px;
+    max-width: var(--gi-measure);
     margin: 0 0 1.5rem;
   }
 

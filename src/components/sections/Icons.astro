@@ -164,7 +164,7 @@ const stripTags = (s: string) => (s || '').replace(/<[^>]+>/g, '').trim();
 
 <style>
   .gi-clients {
-    background: #fff;
+    background: var(--gi-bg-light);
   }
   .gi-clients-head {
     margin-bottom: 1rem;
@@ -214,13 +214,13 @@ const stripTags = (s: string) => (s || '').replace(/<[^>]+>/g, '').trim();
     min-height: 44px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #097a53;
+    color: var(--gi-green-deep);
     text-decoration: none;
     white-space: nowrap;
     transition: opacity 0.2s ease;
   }
   .gi-logo-link:focus-visible {
-    outline: 2px solid #097a53;
+    outline: 2px solid var(--gi-green-deep);
     outline-offset: 2px;
   }
   .gi-logo-link:hover {

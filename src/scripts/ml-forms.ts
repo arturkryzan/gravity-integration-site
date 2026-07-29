@@ -158,11 +158,19 @@ const MSG = pick({
   },
 });
 
-/* #8c1d18 clears 4.5:1 on both surfaces these forms render on
-   (5.76:1 on the green contact band, 8.31:1 on the light newsletter band);
-   #464861 is the theme's own ink. Set inline because legacy.css already
-   colours `.wpcf7-response-output` and this avoids a specificity fight. */
-const INK = '#464861';
+/* Set inline because legacy.css already colours `.wpcf7-response-output`, and
+   an inline declaration avoids a specificity fight with a minified vendor blob
+   we don't otherwise touch. Inline styles still resolve custom properties, so
+   the success tone can point at the design system rather than restate it:
+   --gi-bg-slate (#464861) is the slate value, and every light-surface component
+   in the system already aliases it as `--body` and uses it as body-text colour,
+   so this is the same role, not a background token pressed into text duty.
+   --gi-red-deep is not the right partner here — it's tuned for the dark
+   surfaces. #8c1d18 stays a documented one-off: it is the only value that
+   clears 4.5:1 on *both* surfaces these forms render on (5.76:1 on the green
+   contact band, 8.31:1 on the light newsletter band), which no existing token
+   does. */
+const INK = 'var(--gi-bg-slate)';
 const ERR = '#8c1d18';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;

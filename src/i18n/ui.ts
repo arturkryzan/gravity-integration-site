@@ -86,8 +86,14 @@ const pl = {
   'nav.docs': 'Dokumentacja',
   'nav.integrations': 'Integracje',
   'nav.privacy': 'Polityka prywatności',
+  /* MENU is the same word in Polish and stays. CLOSE was not — an English
+     verb inside an otherwise Polish interface, on the one control a reader
+     needs when they want out of the fullscreen menu. The stylesheet anchors
+     this label from the *right*, so a longer word grows leftward into empty
+     space instead of shifting the ring: ZAMKNIJ is safe by construction, not
+     by luck. Verified in a real browser at all three widths. */
   'nav.menuOpen': 'MENU',
-  'nav.menuClose': 'CLOSE',
+  'nav.menuClose': 'ZAMKNIJ',
   /* The logo is a link with nothing but an <svg> inside it, so without this
      it announces as "link" and nothing else. Names the destination rather
      than describing the picture \u2014 a screen-reader user wants to know

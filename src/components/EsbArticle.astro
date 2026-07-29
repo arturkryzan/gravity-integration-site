@@ -196,14 +196,15 @@ const NH = 17; // node box half-height
 />
 
 <style>
+  /* Local short names for the global tokens — see IntegrationsGrid. */
   .esb {
-    --ink: #14152a;
-    --body: #464861;
-    --muted: #6b6d84;
-    --green: #27ea93;
-    --green-deep: #097a53;
-    --tint: #f3f4fb;
-    --line: #e4e5ef;
+    --ink: var(--gi-text-on-light);
+    --body: var(--gi-bg-slate);
+    --muted: var(--gi-text-muted-slate);
+    --green: var(--gi-green);
+    --green-deep: var(--gi-green-deep);
+    --tint: var(--gi-bg-tint);
+    --line: var(--gi-line);
     font-family: Epilogue, system-ui, sans-serif;
     color: var(--body);
   }
@@ -266,7 +267,7 @@ const NH = 17; // node box half-height
   }
   .esb-panel {
     margin: 0;
-    background: #fff;
+    background: var(--gi-bg-light);
     border: 1px solid var(--line);
     border-radius: 16px;
     padding: 1.25rem 1rem 0.5rem;
@@ -284,11 +285,12 @@ const NH = 17; // node box half-height
   }
   /* The "before" pill was two invented values (#8a8ca3 on #eef0f6 = 2.90:1, well
      under AA at 12.8px). It reads as the muted counterpart to the green .esb-tag--ok
-     pill, so use the documented muted ink on the documented light surface instead:
-     #6b6d84 on #f3f4fb = 4.62:1, same "quieter option" tone, actually readable. */
+     pill, so use the muted ink on the light-panel surface instead — now both
+     named: --gi-text-muted-slate on --gi-bg-tint, 5.52:1 at 12.8px, same
+     "quieter option" tone, actually readable. */
   .esb-tag--warn {
-    color: #6b6d84;
-    background: #f3f4fb;
+    color: var(--gi-text-muted-slate);
+    background: var(--gi-bg-tint);
   }
   .esb-tag--ok {
     color: var(--green-deep);
@@ -301,11 +303,11 @@ const NH = 17; // node box half-height
   }
   .esb-node-t {
     font: 700 12px Epilogue, sans-serif;
-    fill: #464861;
+    fill: var(--gi-bg-slate);
   }
   .esb-hub-t {
     font: 800 17px Epilogue, sans-serif;
-    fill: #0a0a12;
+    fill: var(--gi-bg-dark);
   }
   /* The hub's second line is 9.5px in a 380-unit viewBox — it renders *below*
      9.5px on any panel narrower than that, so it is normal text and owes 4.5:1.
@@ -321,7 +323,7 @@ const NH = 17; // node box half-height
 
   /* ---- pull quote ---- */
   .esb-quote {
-    background: #0a0a12;
+    background: var(--gi-bg-dark);
     padding: clamp(3.5rem, 8vw, 6rem) 0;
   }
   .esb-quote blockquote {
@@ -331,7 +333,7 @@ const NH = 17; // node box half-height
     font-size: clamp(1.5rem, 3.6vw, 2.4rem);
     line-height: 1.35;
     font-weight: 600;
-    color: #fff;
+    color: var(--gi-text-on-dark);
     letter-spacing: -0.01em;
     text-wrap: balance;
     position: relative;
@@ -469,6 +471,11 @@ const NH = 17; // node box half-height
     font-size: 1.03rem;
     line-height: 1.7;
     color: var(--body);
+  }
+  /* Answers ran 82ch open. Cap the paragraphs rather than the wrapper, whose
+     border-box width already carries 3rem of right padding. */
+  .esb-faq-a :global(p) {
+    max-width: var(--gi-measure);
   }
   .esb-faq-a :global(a) {
     color: var(--green-deep);

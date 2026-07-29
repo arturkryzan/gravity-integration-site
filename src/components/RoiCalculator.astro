@@ -52,7 +52,7 @@ const GI = {
 ---
 
 <section id="scroll-calc" data-scroll data-scroll-repeat data-scroll-call="spyCalc" data-scroll-offset="100%, 50%">
-  <div class="container-fluid pt-10 pb-10" style="background:#1a1b2e;">
+  <div class="container-fluid pt-10 pb-10" style="background:var(--gi-bg-calc);">
     <div class="row">
       <div class="col-12" data-scroll data-scroll-opacity>
 
@@ -61,50 +61,70 @@ const GI = {
      every `.gi-breakdown tr/td` rule silently missed the generated rows. Every
      selector here is namespaced under #gi-roi-calculator / .gi-*. -->
 <style is:global>
-#gi-roi-calculator{--gi-green:#27ea93;--gi-dark:#1a1b2e;--gi-card:#242538;--gi-border:#464861;--gi-text:#c8cad0;--gi-white:#fff;font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--gi-text)}
-#gi-roi-calculator h2{color:var(--gi-white);font-size:2rem;font-weight:700;text-align:center;margin:2rem 0 3rem}
+#gi-roi-calculator{--roi-green:var(--gi-green);--roi-dark:var(--gi-bg-calc);--roi-card:var(--gi-bg-card-dark);--roi-border:var(--gi-bg-slate);--roi-text:#c8cad0;--roi-white:var(--gi-text-on-dark);font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--roi-text)}
+#gi-roi-calculator h2{color:var(--roi-white);font-size:2rem;font-weight:700;text-align:center;margin:2rem 0 3rem}
 .gi-calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem}
 @media(max-width:768px){.gi-calc-grid{grid-template-columns:1fr}}
-.gi-calc-card{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:2rem}
-.gi-calc-card h3{color:var(--gi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
+.gi-calc-card{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:2rem}
+.gi-calc-card h3{color:var(--roi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
 .gi-slider-group{margin-bottom:1.5rem}
-.gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--gi-text)}
+.gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--roi-text)}
 /* The caption is a real <label for> now — the five sliders had no accessible
    name at all before, so a screen reader announced five identical "slider"s.
    Clicking it focuses the slider, so it should look clickable. */
 .gi-slider-label label{cursor:pointer;margin:0}
-.gi-slider-value{font-weight:700;color:var(--gi-green);font-size:1rem;min-width:80px;text-align:right}
+.gi-slider-value{font-weight:700;color:var(--roi-green);font-size:1rem;min-width:80px;text-align:right}
 /* The input is 32px tall (the real touch target); the visible 6px track is
    drawn by the track pseudo-elements. Thumb offset centres it on the track. */
 .gi-range{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;outline:none;cursor:pointer}
-.gi-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--gi-border)}
-.gi-range::-moz-range-track{height:6px;border-radius:3px;background:var(--gi-border)}
-.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
-.gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--gi-green);cursor:pointer;border:2px solid var(--gi-dark)}
+.gi-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--roi-border)}
+.gi-range::-moz-range-track{height:6px;border-radius:3px;background:var(--roi-border)}
+.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--roi-green);cursor:pointer;border:2px solid var(--roi-dark);transition:box-shadow .18s cubic-bezier(.16,1,.3,1)}
+.gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--roi-green);cursor:pointer;border:2px solid var(--roi-dark);transition:box-shadow .18s cubic-bezier(.16,1,.3,1)}
+/* Every other control on this page answers the pointer; these five didn't.
+   The keyboard reader got a ring on :focus-visible and the mouse reader got
+   nothing but `cursor:pointer`, which promises the thumb is grabbable without
+   ever confirming the pointer is actually on it — and the thumb is 20px inside
+   a 32px row, so "am I on it?" is a real question. Same ring as focus, at
+   lower alpha so the two states read as a sequence rather than as the same
+   thing. Ordered before :focus-visible deliberately: equal specificity, so a
+   focused *and* hovered thumb has to resolve to the focus ring, not the
+   hover one. `hover: hover` keeps it off touch, where a hover state that
+   sticks after a drag is just a ring that won't go away.
+   Each vendor pseudo-element gets its own rule: one unknown selector in a
+   list invalidates the whole list, so pairing them would silently drop both. */
+@media (hover: hover) {
+  .gi-range:hover::-webkit-slider-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.18)}
+  .gi-range:hover::-moz-range-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.18)}
+}
 .gi-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
 .gi-range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
+@media (prefers-reduced-motion: reduce) {
+  .gi-range::-webkit-slider-thumb{transition:none}
+  .gi-range::-moz-range-thumb{transition:none}
+}
 .gi-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
 @media(max-width:768px){.gi-kpi-row{grid-template-columns:1fr}}
-.gi-kpi{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:1.5rem;text-align:center}
-.gi-kpi-value{font-size:2rem;font-weight:800;color:var(--gi-green);line-height:1.2}
-.gi-kpi-label{font-size:.8rem;color:var(--gi-text);margin-top:.3rem}
-.gi-chart-container{background:var(--gi-card);border:1px solid var(--gi-border);border-radius:1rem;padding:2rem;margin-bottom:2.5rem}
-.gi-chart-container h3{color:var(--gi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
+.gi-kpi{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:1.5rem;text-align:center}
+.gi-kpi-value{font-size:2rem;font-weight:800;color:var(--roi-green);line-height:1.2}
+.gi-kpi-label{font-size:.8rem;color:var(--roi-text);margin-top:.3rem}
+.gi-chart-container{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:2rem;margin-bottom:2.5rem}
+.gi-chart-container h3{color:var(--roi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
 .gi-bar-wrap{display:flex;align-items:center;margin-bottom:1rem;gap:1rem}
-.gi-bar-label{width:100px;font-size:.8rem;color:var(--gi-text);text-align:right;flex-shrink:0}
-.gi-bar-track{flex:1;background:var(--gi-border);border-radius:6px;height:32px;position:relative;overflow:hidden}
+.gi-bar-label{width:100px;font-size:.8rem;color:var(--roi-text);text-align:right;flex-shrink:0}
+.gi-bar-track{flex:1;background:var(--roi-border);border-radius:6px;height:32px;position:relative;overflow:hidden}
 /* Bar labels sit *inside* the fill, so they inherit whichever bar they're on.
-   --gi-dark (#1a1b2e) on the red bar measures exactly 4.500:1 — passing on paper
+   --roi-dark (#1a1b2e) on the red bar measures exactly 4.500:1 — passing on paper
    with zero headroom, and 12px bold is not "large text". Use the darkest ink
    token instead: 5.24:1 on red, 12.5:1 on green. Same near-black reading. */
 .gi-bar-fill{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.75rem;font-weight:700;color:var(--gi-bg-dark,#0a0a12);transform:translateX(-100%);transition:transform .5s ease}
 .gi-bar-fill.current{background:var(--gi-red,#ef4444)}
-.gi-bar-fill.gravity{background:var(--gi-green)}
+.gi-bar-fill.gravity{background:var(--roi-green)}
 .gi-breakdown{width:100%;border-collapse:collapse;margin-bottom:2rem}
-.gi-breakdown th,.gi-breakdown td{padding:.75rem 1rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--gi-border)}
-.gi-breakdown th{color:var(--gi-text);font-weight:600}
-.gi-breakdown td{color:var(--gi-white)}
-.gi-breakdown .gi-savings{color:var(--gi-green);font-weight:700}
+.gi-breakdown th,.gi-breakdown td{padding:.75rem 1rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--roi-border)}
+.gi-breakdown th{color:var(--roi-text);font-weight:600}
+.gi-breakdown td{color:var(--roi-white)}
+.gi-breakdown .gi-savings{color:var(--roi-green);font-weight:700}
 .gi-cta-box{text-align:center;padding:2rem 0 1rem}
 /* Phone: a four-column money table can't fit ~310px of usable width, so restack
    each row as a card — phase as the card title, the three figures as labelled
@@ -115,16 +135,21 @@ const GI = {
   .gi-breakdown,.gi-breakdown thead,.gi-breakdown tbody,.gi-breakdown tr,.gi-breakdown th,.gi-breakdown td{display:block}
   .gi-breakdown{border-collapse:separate}
   .gi-breakdown thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-  .gi-breakdown tr{border:1px solid var(--gi-border);border-radius:.75rem;padding:.15rem .9rem .5rem;margin-bottom:.75rem}
+  .gi-breakdown tr{border:1px solid var(--roi-border);border-radius:.75rem;padding:.15rem .9rem .5rem;margin-bottom:.75rem}
   .gi-breakdown td{border-bottom:none;padding:.4rem 0;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;text-align:right}
-  .gi-breakdown td:first-child{font-weight:700;color:var(--gi-white);text-align:left;border-bottom:1px solid var(--gi-border);padding-bottom:.5rem;margin-bottom:.15rem}
-  .gi-breakdown td[data-label]::before{content:attr(data-label);color:var(--gi-text);font-weight:600;font-size:.78rem;text-align:left}
+  .gi-breakdown td:first-child{font-weight:700;color:var(--roi-white);text-align:left;border-bottom:1px solid var(--roi-border);padding-bottom:.5rem;margin-bottom:.15rem}
+  .gi-breakdown td[data-label]::before{content:attr(data-label);color:var(--roi-text);font-weight:600;font-size:.78rem;text-align:left}
 }
 </style>
 
 <div id="gi-roi-calculator">
   <h2>{s('roi.h2')}</h2>
-  <p style="text-align:center;color:var(--gi-text);font-size:.9rem;max-width:640px;margin:0 auto 3rem;line-height:1.7;opacity:.85;">{s('roi.disclaimer')}</p>
+  {/* `max-width:640px` was a pixel width picked by eye and frozen against a
+      font size it doesn't know: at this paragraph's 14.4px it resolves to
+      78ch. It is centred with `margin: 0 auto`, so the token just makes the
+      centred block narrower — there is no panel to re-lay-out, which is why
+      the earlier note calling this an unavoidable exception was wrong. */}
+  <p style="text-align:center;color:var(--roi-text);font-size:.9rem;max-width:var(--gi-measure);margin:0 auto 3rem;line-height:1.7;opacity:.85;">{s('roi.disclaimer')}</p>
 
   <div class="gi-calc-grid">
     <div class="gi-calc-card">
@@ -232,7 +257,7 @@ const GI = {
     }
     var h="";
     rows.forEach(function(r){h+=row(r[0], r[1], r[2])});
-    h+=row(GI.rowTotal, cTot, gTot, " style=\"border-top:2px solid #464861;font-weight:700\"");
+    h+=row(GI.rowTotal, cTot, gTot, " style=\"border-top:2px solid var(--gi-bg-slate);font-weight:700\"");
     document.getElementById("gi-tbody").innerHTML=h;
   }
   Object.values(sl).forEach(function(s){s.addEventListener("input",calc)});

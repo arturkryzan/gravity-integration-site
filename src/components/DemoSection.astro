@@ -215,12 +215,12 @@ const fields = [
      the green focus accent in one move — and a recessed well is the more
      honest affordance anyway. --------------------------------------------- */
   .demo-section {
-    --f-surface: #464861;
+    --f-surface: var(--gi-bg-slate);
     --f-card: #535568;
     --f-well: #393b4d;
     --f-well-focus: #3f4155;
     --f-line: rgb(255 255 255 / 0.55);
-    --f-ink: #ffffff;
+    --f-ink: var(--gi-text-on-dark);
     --f-label: rgb(255 255 255 / 0.8);
     /* 0.65 composited to 4.19:1 over the panel's rgb(83 85 104) — under AA,
        and "(optional)" is exactly the word someone deciding whether to fill a
@@ -231,8 +231,8 @@ const fields = [
     --f-err-text: #ffc2c2;
     --f-err-line: #ff8f8f;
     --f-hint: #ffd166;
-    --f-green: #27ea93;
-    --f-ink-on-green: #0a0a12;
+    --f-green: var(--gi-green);
+    --f-ink-on-green: var(--gi-bg-dark);
     --f-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     background-color: var(--f-surface);
@@ -247,7 +247,7 @@ const fields = [
     text-align: center;
   }
   .demo-h2 {
-    color: #fff;
+    color: var(--gi-text-on-dark);
     font-size: clamp(1.6rem, 4.2vw, 2.2rem);
     font-weight: 700;
     line-height: 1.25;
@@ -521,7 +521,7 @@ const fields = [
   .demo-submit:hover { background: #4ff0a8; }
   .demo-submit:active { transform: translateY(1px); }
   .demo-submit:focus-visible {
-    outline: 2px solid #fff;
+    outline: 2px solid var(--gi-text-on-dark);
     outline-offset: 3px;
   }
   .demo-submit-label,
@@ -593,7 +593,7 @@ const fields = [
     transition: stroke-dashoffset 0.35s var(--f-ease) 0.34s;
   }
   .demo-done-h {
-    color: #fff;
+    color: var(--gi-text-on-dark);
     font-size: clamp(1.3rem, 3.5vw, 1.6rem);
     font-weight: 700;
     margin: 0 0 0.6rem;
@@ -605,7 +605,7 @@ const fields = [
     margin: 0 auto 0.75rem;
     max-width: 30rem;
   }
-  .demo-done-p strong { color: #fff; font-weight: 600; word-break: break-word; }
+  .demo-done-p strong { color: var(--gi-text-on-dark); font-weight: 600; word-break: break-word; }
   .demo-done-note {
     color: var(--f-optional);
     font-size: 0.85rem;

@@ -109,8 +109,29 @@ const s = t(localeOf(Astro.currentLocale));
 
   .gi-consent-copy {
     flex: 1 1 auto;
-    /* keeps the paragraph inside the 65–75ch band on wide screens */
-    max-width: 68ch;
+  }
+  /* The cap was here, on the wrapper, and it read `68ch` — the right number on
+     the wrong element. `ch` resolves against the font of the element it is
+     written on, and the wrapper inherits the panel's 16px while the paragraph
+     inside it sets at 14px. So a box sized to 68 of the wrapper's characters
+     handed the paragraph 78 of its own, and the measure check kept reporting
+     78ch on a rule that says 68. That was written off as a deliberate
+     exception; it was a unit resolving against the wrong font.
+
+     Cap the children instead, the same shape `.paragraph > p` uses in
+     site.css, so each one counts in the type size it is actually set in. The
+     h2 gets the same cap and is unaffected — it is one short line — but it
+     inherits the correct behaviour if the title ever grows.
+
+     This costs 26px: at 1440 the body goes from 78ch/4 lines to 68ch/5, and
+     the bar from 154px to 180px. Worth paying, and not a close call — this is
+     the one paragraph on the site the reader is being asked to make a decision
+     about, so its legibility outranks 26px of a panel they dismiss with one
+     click. Below 1024 the cap never binds (the column is 340–459px, well under
+     68ch at 13–14px), so every mobile layout is untouched; the whole change is
+     desktop-only and was verified as such against 38 screenshots. */
+  .gi-consent-copy > * {
+    max-width: var(--gi-measure);
   }
 
   #gi-consent h2 {

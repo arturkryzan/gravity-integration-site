@@ -39,7 +39,7 @@ const [download, home, cases, contact] = await Promise.all([
 <style>
   .nf {
     background: var(--gi-bg-dark, #0a0a12);
-    color: #fff;
+    color: var(--gi-text-on-dark);
     min-height: 82vh;
     display: grid;
     place-items: center;
@@ -57,7 +57,7 @@ const [download, home, cases, contact] = await Promise.all([
     line-height: 1;
     font-weight: 800;
     letter-spacing: -0.03em;
-    color: #fff;
+    color: var(--gi-text-on-dark);
     display: inline-flex;
     align-items: center;
     gap: 0.08em;
@@ -75,7 +75,7 @@ const [download, home, cases, contact] = await Promise.all([
     line-height: 1.25;
     font-weight: 700;
     letter-spacing: -0.015em;
-    color: #fff;
+    color: var(--gi-text-on-dark);
     text-wrap: balance;
   }
   .nf-p {
@@ -119,15 +119,15 @@ const [download, home, cases, contact] = await Promise.all([
   }
   .nf-btn-solid {
     background: var(--gi-green, #27ea93);
-    color: #0a0a12;
+    color: var(--gi-bg-dark);
   }
   .nf-btn-solid:hover {
     background: #4ff0a8;
-    color: #0a0a12;
+    color: var(--gi-bg-dark);
   }
   .nf-btn-ghost {
     border: 1.5px solid rgb(255 255 255 / 0.4);
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
   .nf-btn-ghost:hover {
     border-color: var(--gi-green, #27ea93);

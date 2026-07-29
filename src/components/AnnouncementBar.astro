@@ -104,12 +104,12 @@ const downloadHref = await linkUrl('pobieranie', lang);
   }
   .gi-bar-cta-primary {
     background: var(--gi-bg-dark, #0a0a12);
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
   .gi-bar-cta-primary:hover,
   .gi-bar-cta-primary:focus-visible {
     background: #23243a; /* lifts on hover without dropping below 4.5:1 on white text */
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
   .gi-bar-cta-ghost {
     background: transparent;
@@ -118,7 +118,7 @@ const downloadHref = await linkUrl('pobieranie', lang);
   .gi-bar-cta-ghost:hover,
   .gi-bar-cta-ghost:focus-visible {
     background: var(--gi-bg-dark, #0a0a12);
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
 
   #gi-bar-close {

@@ -87,7 +87,10 @@ if (img.src.toLowerCase().endsWith('.gif') && !img.motion) {
     border: 1px solid var(--line);
     border-radius: 14px;
     box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
-    background: #14152a;
+    /* The letterbox behind a video that hasn't painted its first frame yet.
+       It's a surface, not text, so it takes the .cs alias rather than
+       --gi-text-on-light directly — same value, correct role. */
+    background: var(--ink);
   }
   :global(.cs-payoff) .cs-motion video {
     border-color: rgb(255 255 255 / 0.12);

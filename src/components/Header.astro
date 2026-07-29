@@ -52,6 +52,21 @@ const href = Object.fromEntries(
 ) as Partial<Record<(typeof NAV_SLUGS)[number], string>>;
 
 const year = new Date().getFullYear();
+
+/* `aria-current="page"` was hard-coded onto the home link, which meant it was
+   true on 1 of the 18 routes and a lie on the other 17: a screen reader
+   announced "Strona główna, current page" while the reader was on /cennik/.
+   That is worse than having no current-page marker at all, because the marker
+   is the thing the reader trusts to tell them where they are.
+
+   The cause wasn't the one attribute, it was that "which page am I on" had no
+   implementation — the attribute was a hand-placed decoration, so it could
+   only ever be right by luck. Derive it once from the URL and let every nav
+   link ask the same question. Trailing slashes are normalised because the
+   routes ship with one and the home route is bare "/". */
+const here = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const current = (url?: string) =>
+  url && (url.replace(/\/+$/, '') || '/') === here ? 'page' : undefined;
 ---
 <header data-scroll-section>
 	<div class="container-fluid pb-lg-0">
@@ -97,10 +112,10 @@ const year = new Date().getFullYear();
 				<div class="col-pull-inner d-flex flex-column col">
 					<div class="nav-big">
 						<ul>
-							<li><a href={href.home} aria-current="page">{s('nav.home')}</a></li>
-{href.kalkulator && <li><a href={href.kalkulator}>{s('nav.roiCalculator')}</a></li>}
-<li><a href={href.pobieranie}>{s('nav.download')}</a></li>
-<li><a href={href.kontakt}>{s('nav.contact')}</a></li>
+							<li><a href={href.home} aria-current={current(href.home)}>{s('nav.home')}</a></li>
+{href.kalkulator && <li><a href={href.kalkulator} aria-current={current(href.kalkulator)}>{s('nav.roiCalculator')}</a></li>}
+<li><a href={href.pobieranie} aria-current={current(href.pobieranie)}>{s('nav.download')}</a></li>
+<li><a href={href.kontakt} aria-current={current(href.kontakt)}>{s('nav.contact')}</a></li>
 						</ul>
 					</div>	
 				</div>
@@ -111,12 +126,12 @@ const year = new Date().getFullYear();
 				<div class="col-pull-inner d-inline-flex justify-content-between flex-column">
 					<div class="nav-medium">
 						<ul>
-							<li><a href={href.technologia}>{s('nav.technology')}</a></li>
-<li><a href={href['czym-jest-esb']}>{s('nav.whatIsEsb')}</a></li>
-<li><a href={href.cennik}>{s('nav.pricing')}</a></li>
-<li><a href={href['case-studies']}>{s('nav.caseStudies')}</a></li>
+							<li><a href={href.technologia} aria-current={current(href.technologia)}>{s('nav.technology')}</a></li>
+<li><a href={href['czym-jest-esb']} aria-current={current(href['czym-jest-esb'])}>{s('nav.whatIsEsb')}</a></li>
+<li><a href={href.cennik} aria-current={current(href.cennik)}>{s('nav.pricing')}</a></li>
+<li><a href={href['case-studies']} aria-current={current(href['case-studies'])}>{s('nav.caseStudies')}</a></li>
 <li><a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">{s('nav.docs')}<span class="visually-hidden">{s('a11y.newTab')}</span></a></li>
-<li><a href={href.integracje}>{s('nav.integrations')}</a></li>
+<li><a href={href.integracje} aria-current={current(href.integracje)}>{s('nav.integrations')}</a></li>
 						</ul>
 					</div>	
 					<div class="nav-small paragraph hover-underline py-10 d-none d-md-block">
@@ -124,7 +139,7 @@ const year = new Date().getFullYear();
 						    (no published translation) it leaves no gap and no stray <br> —
 						    unlike the privacy link below, which is glued to one. */}
 						<LangSwitch slug={slug} class="mb-4 d-block" />
-						<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+						<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block" aria-current={current(href['polityka-prywatnosci'])}>{s('nav.privacy')}</a><br>
 						{s('footer.copyright')} {year} gravity.integration					</div>		
 				</div>
 			</div>
@@ -147,7 +162,7 @@ const year = new Date().getFullYear();
 					{/* The mobile twin of the block above — the nav's two columns collapse
 					    at md, and each keeps its own copy rather than one moving. */}
 					<LangSwitch slug={slug} class="mb-4 d-block" />
-					<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block">{s('nav.privacy')}</a><br>
+					<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block" aria-current={current(href['polityka-prywatnosci'])}>{s('nav.privacy')}</a><br>
 					{s('footer.copyright')} {year} gravity.integration				</div>
 			</div>
 		</div>

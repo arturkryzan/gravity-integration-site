@@ -66,7 +66,7 @@ body.header-hidden header:not(.nav-is-open) {
    invisible, overlapping the content). Transparent at the top over the hero.
    Suppressed while the fullscreen menu is open (menu owns the backdrop). */
 body.header-solid:not(.nav-open) header {
-  background: #0a0a12;
+  background: var(--gi-bg-dark);
   padding-bottom: 1.25rem; /* balance the bar without moving the logo (no jump) */
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
 }
@@ -91,26 +91,26 @@ body.nav-opening .nav-main {
    none is a bright band. White text + white logo throughout — never black. */
 .nav-main,
 .nav-main .col-pull .overlay {
-  background: #6b6d81 !important; /* col1 — primary nav */
+  background: var(--gi-bg-slate-lift-2) !important; /* col1 — primary nav */
 }
 .nav-main .col-pull:nth-of-type(2) .overlay {
-  background: #565971 !important; /* col2 — secondary nav */
+  background: var(--gi-bg-slate-lift-1) !important; /* col2 — secondary nav */
 }
 .nav-main .col-pull:last-of-type .overlay {
-  background: #464861 !important; /* col3 — socials + legal */
+  background: var(--gi-bg-slate) !important; /* col3 — socials + legal */
 }
 /* nav-big is dark in the theme — make it white on the dark menu */
 .nav-main .nav-big,
 .nav-main .nav-big a {
-  color: #ffffff !important;
+  color: var(--gi-text-on-dark) !important;
 }
 /* ...but keep the green hover (our !important white was overriding it) */
 .nav-main .nav-big a:hover {
-  color: #27ea93 !important;
+  color: var(--gi-green) !important;
 }
 /* logo stays white on the dark menu (theme dims it to slate when open) */
 body.nav-open header .logo path {
-  fill: #ffffff !important;
+  fill: var(--gi-text-on-dark) !important;
 }
 .nav-main .nav-small a {
   opacity: 0.75;
@@ -285,21 +285,26 @@ html {
 
 /* ---- menu control: the two states have to sit on top of each other ----
    The control is a word plus a ringed icon, and it swaps both when the menu
-   opens: MENU + logo mark becomes CLOSE + ×. The theme overlays the second
-   state on the first by taking it out of flow — but it anchors the two halves
-   to opposite edges. The icon is `right: 0`, so both rings land in exactly the
-   same place (measured pixel-identical at 8× DPI, in every state and at every
-   width). The label is `left: 0`, so the two words share a *left* edge instead:
-   CLOSE is 4.7px wider than MENU, so opening the menu slides the word 4.7px
-   right and shrinks the gap to the ring from 16px to 11.3px. Hovering makes it
-   worse — the theme's letter-spacing flourish grows CLOSE rightward into the
-   gap while MENU, sized by the shrink-to-fit button, keeps its own. The ring
-   never moves and the word does, so the lockup twitches on every open.
+   opens: MENU + logo mark becomes the close label + ×. The theme overlays the
+   second state on the first by taking it out of flow — but it anchors the two
+   halves to opposite edges. The icon is `right: 0`, so both rings land in
+   exactly the same place (measured pixel-identical at 8× DPI, in every state
+   and at every width). The label was `left: 0`, so the two words shared a
+   *left* edge instead, and any difference in their widths pushed the word
+   around under a ring that never moved: with the original English "CLOSE",
+   4.7px wider than MENU, opening the menu slid the word 4.7px right and shrank
+   the gap to the ring from 16px to 11.3px. Hovering made it worse — the
+   theme's letter-spacing flourish grew the close label rightward into the gap
+   while MENU, sized by the shrink-to-fit button, kept its own. So the lockup
+   twitched on every open.
 
    Anchor the second label from the right instead, one icon-width in, and let
    the same `me-4` that spaces the first one space it too. Now both words end
    on the same edge and the gap is 16px in all four states — closed, open, and
-   either of those hovered. */
+   either of those hovered — whatever the label says. That last clause is the
+   point: the fix is width-independent, which is why the Polish label could
+   later become ZAMKNIJ (wider again) without re-opening this. Deliberately no
+   fixed width here; the arithmetic above is history, not a constraint. */
 .hamburger span:nth-of-type(2) {
   left: auto;
   right: 2.5rem; /* the icon's own width; `me-4` supplies the gap after it */
@@ -313,21 +318,21 @@ html {
    on every larger screen. */
 @media (max-width: 767.98px) {
   .hamburger span:nth-of-type(2) {
-    color: #fff;
+    color: var(--gi-text-on-dark);
   }
   .hamburger svg:nth-of-type(2) circle,
   .hamburger svg:nth-of-type(2) path {
-    stroke: #fff;
+    stroke: var(--gi-text-on-dark);
   }
 }
 
 /* ---- pricing: currency unit ----
    The theme sets the currency span to #9b9cae, which is 2.71:1 on white — under
    the 3:1 large-text floor even at the 64px it renders at, and it isn't a token.
-   Use the documented muted token (#6b6d84, 5.07:1): still a clear step down from
-   the #464861 figure it follows, but actually readable. */
+   Use --gi-text-muted-slate (#5f6178, 6.06:1): still a clear step down from the
+   --gi-bg-slate figure it follows, but actually readable. */
 .price-item-value span:last-of-type {
-  color: #6b6d84;
+  color: var(--gi-text-muted-slate);
 }
 
 /* ---- privacy-policy hero lede ----
@@ -470,4 +475,48 @@ form .form-row input:not([type='checkbox']):not([type='submit']):not([type='radi
 }
 main:focus {
   outline: none;
+}
+
+/* ---- measure ----
+   The ported theme has a real prose class — `.paragraph`, defined in the legacy
+   layer as Epilogue/1rem/1.7 and used 19 times — but it never carried a width.
+   Running copy therefore took whatever the Bootstrap column happened to be:
+   measured at 1440 it runs 111ch on /kontakt/ (col-lg-9), 99ch on the newsletter
+   blurb and the home intro (col-lg-8). Comfortable reading tops out around
+   65–75ch; past that the eye loses the line it is returning to.
+
+   The cap goes on the *children*, not the container, for two reasons: the
+   container also holds <h2>s, which are set larger and want the full column;
+   and `.paragraph` is used on link boxes and the menu's legal column, which
+   hold no <p> at all and are narrower than the cap regardless. `ch` rather than
+   a pixel width so it tracks the type size it is applied to.
+
+   Three blocks outside `.paragraph` carried their own hand-made version of
+   this cap and are now on the token instead: IntegrationsGrid's category
+   description (`max-width: 780px`, 88ch), the calculator's disclaimer
+   (`640px`, 78ch), and the cookie panel's copy column, which is the
+   interesting one — it already said `68ch`, but on the *wrapper*, whose
+   inherited 16px is not the 14px the paragraph inside sets at, so it bought
+   the paragraph 78 of its own characters. All three were first written off as
+   acceptable exceptions. None of them were: two were pixel widths standing in
+   for a concept, and the third was the right unit on the wrong element.
+
+   The one real exception is single-line copy. Measure is a property of the
+   return sweep — the eye going back for the start of the next line and
+   landing on the wrong one — so a block that sets on one line cannot have a
+   measure defect however wide its box is. The hero's client-names line boxes
+   at 88ch and renders as one 12.8px line; capping it would insert a wrap in
+   the middle of a list of customer names to satisfy a number. verify-polish
+   counts line boxes from a Range's client rects and skips those. */
+.paragraph > p,
+.paragraph > ul,
+.paragraph > ol {
+  max-width: var(--gi-measure);
+}
+/* …and where the block is centred, keep it centred rather than letting the cap
+   pull it to the left edge of a column it no longer fills. */
+.paragraph.text-center > p,
+.paragraph.text-center > ul,
+.paragraph.text-center > ol {
+  margin-inline: auto;
 }

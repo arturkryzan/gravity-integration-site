@@ -263,6 +263,26 @@ header {
   z-index: var(--gi-z-sticky);
 }
 
+/* ---- opening the menu must not move the page ----
+   The menu locks the page behind it with `.nav-open { overflow: hidden }`. On a
+   browser with classic (space-taking) scrollbars — Chrome on Windows, and any
+   Mac set to "always show scroll bars" — that removes the scrollbar, the layout
+   viewport gets 15px wider, and everything anchored to the right edge jumps
+   15px right the moment the menu opens: the header's menu control, the
+   announcement bar's close button, the whole page under it. It reads as the
+   control lurching sideways, because next to it sits the fixed logo, which
+   doesn't move.
+
+   Nothing in the header can fix this — the header is honestly following a
+   viewport that changed width. Reserve the scrollbar's space permanently
+   instead, so taking the scrollbar away leaves the width alone. Browsers with
+   overlay scrollbars (default macOS, all touch devices) reserve nothing and
+   are unaffected. Safari below 16 ignores the property and keeps the old
+   behaviour, which is no worse than before. */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* ---- menu control: the two states have to sit on top of each other ----
    The control is a word plus a ringed icon, and it swaps both when the menu
    opens: MENU + logo mark becomes CLOSE + ×. The theme overlays the second

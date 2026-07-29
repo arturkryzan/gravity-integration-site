@@ -16,6 +16,15 @@
  *   3. The open-state control is legible against the panel behind it. On
  *      phones the theme painted it #464861 for a white menu that no longer
  *      exists; ours is dark slate, which made it 1.8:1.
+ *   4. The scrollbar gutter stays reserved. Opening the menu sets
+ *      `overflow: hidden`; where scrollbars take up space, that widens the
+ *      layout viewport by ~15px and throws the whole right-anchored header
+ *      sideways — a jump three times bigger than the one in (2). This one
+ *      cannot be reproduced here: headless Chromium on Linux has zero-width
+ *      scrollbars whatever flags you pass it, so the harness checks the cause
+ *      (the gutter rule computes) and the risk the fix introduces (a reserved
+ *      gutter plus a 100vw child would overflow sideways). The jump itself was
+ *      verified by hand in Chrome on the live site.
  *
  * Run: CHROME=/opt/pw-browsers/chromium-1194/chrome-linux/chrome \
  *      ORIGIN=http://127.0.0.1:8412 node scripts/verify-menu-control.mjs
@@ -115,6 +124,28 @@ for (const [width, label] of [
     `  ok  ${label}: rings coincident, labels flush — gap ${gap.toFixed(1)}px closed, ` +
       `${gapOpen.toFixed(1)}px open`,
   );
+
+  /* 4 — the gutter. `scrollbar-gutter: stable` is what keeps the viewport the
+     same width when the open menu removes the scrollbar. Reserving it is only
+     safe while nothing on the page is sized in viewport units, so check for a
+     sideways overflow at the same time. */
+  const doc = await page.evaluate(() => ({
+    gutter: getComputedStyle(document.documentElement).scrollbarGutter,
+    scrollW: document.documentElement.scrollWidth,
+    clientW: document.documentElement.clientWidth,
+  }));
+  if (!/stable/.test(doc.gutter)) {
+    note(`${label}: the root's scrollbar-gutter is "${doc.gutter}" — the header will jump on open`);
+  }
+  if (/stable/.test(doc.gutter) && doc.scrollW <= doc.clientW + EPS) {
+    console.log(`  ok  ${label}: scrollbar gutter reserved, nothing overflows sideways`);
+  }
+  if (doc.scrollW > doc.clientW + EPS) {
+    note(
+      `${label}: the page overflows sideways by ${(doc.scrollW - doc.clientW).toFixed(1)}px ` +
+        `— something is sized in viewport units and the reserved gutter no longer fits`,
+    );
+  }
 
   /* 3 — is the open control actually visible? The menu panel is what sits
      behind it once it opens. */

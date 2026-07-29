@@ -17,6 +17,16 @@
  * standing in for markup — the "•" glyphs and the <br /> separators — because
  * their job is now done by real <ul>/<li> and <dl>/<dt>/<dd>.
  */
+import motionManifest from '../data/motion.json';
+import imageManifest from '../data/images.json';
+
+export interface CsMotion {
+  mp4: string;
+  poster: string;
+  width: number;
+  height: number;
+  seconds: number;
+}
 
 export interface CsImage {
   src: string;
@@ -26,6 +36,11 @@ export interface CsImage {
   /** `shot` = a screenshot or diagram (full-width figure);
       `mark` = a brand/system logo asset (small plate). */
   variant: 'shot' | 'mark';
+  /** Present only when the source is an animated GIF that
+      `scripts/build-motion.mjs` has already encoded to video. The content
+      still names the .gif; this is the derivative the page should render
+      instead. Absent means "no derivative exists" — render the GIF as-is. */
+  motion?: CsMotion;
 }
 
 export type CsBlock =
@@ -99,12 +114,21 @@ function toImage(raw: any): CsImage | null {
   if (!src) return null;
   const width = Number(raw.width) || 0;
   const height = Number(raw.height) || 0;
+  const motion = (motionManifest as Record<string, CsMotion>)[src];
+  /* The case-study logos and screenshots don't pass through src/lib/media.ts —
+     this parser builds their <img> data itself — so the derivative swap has to
+     happen here too, or every asset on the page 404s against a master that now
+     lives in media-src/. `variant` stays keyed to the SOURCE width on purpose:
+     it is asking "is this a logo or a screenshot", which is a fact about the
+     artwork, not about how large the file we chose to ship happens to be. */
+  const derivative = (imageManifest as Record<string, { src: string; width: number; height: number }>)[src];
   return {
-    src,
+    src: derivative?.src ?? src,
     alt: raw.alt ?? '',
-    width,
-    height,
+    width: derivative?.width ?? width,
+    height: derivative?.height ?? height,
     variant: width >= SHOT_MIN_WIDTH ? 'shot' : 'mark',
+    ...(motion ? { motion } : {}),
   };
 }
 

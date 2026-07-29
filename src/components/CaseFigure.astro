@@ -1,0 +1,96 @@
+---
+/* One figure inside a case study — a still, or a screen recording.
+ *
+ * The recording branch exists because the tiptopol study shipped a 2.35 MB
+ * animated GIF: 84% of the weight of /case-studies/, downloaded by every
+ * visitor whether or not they ever scrolled to it, playing on a loop with no
+ * way to pause it (WCAG 2.2.2). `scripts/build-motion.mjs` encodes those to
+ * MP4 and a poster frame; this renders the derivative.
+ *
+ * Deliberately NOT autoplaying. A GIF autoplays because a GIF cannot do
+ * anything else, not because autoplay was the design. What a 53-second product
+ * demo actually wants is a poster the reader can look at, a play control, and a
+ * scrub bar — and the side effect is that the 1.31 MB encode is fetched only by
+ * people who asked for it (`preload="none"` fetches neither the video nor its
+ * metadata). That is also the whole reduced-motion story: nothing moves until
+ * someone moves it, so there is no motion to suppress.
+ *
+ * `width`/`height` are the derivative's, not the GIF's, and both are always
+ * present — the aspect ratio is what reserves the box, and a video that lands
+ * without one shifts the article underneath it exactly like an image would.
+ */
+import type { CsImage } from '../lib/case-studies';
+
+interface Props {
+  img: CsImage;
+  /** `cs-shot` (full-width figure) or `cs-mark` (small logo plate) */
+  cls?: string;
+}
+const { img, cls } = Astro.props;
+const klass = cls ?? (img.variant === 'shot' ? 'cs-shot' : 'cs-mark');
+
+/* Loud, not silent — the same rule the en-404 integration follows. GIF masters
+   live in media-src/, which is never copied into dist/, so a GIF that reaches
+   here without a manifest entry would render an <img> pointing at a file that
+   is not on the server. Fail the build instead. */
+if (img.src.toLowerCase().endsWith('.gif') && !img.motion) {
+  throw new Error(
+    `CaseFigure: ${img.src} is a GIF with no entry in src/data/motion.json. ` +
+      `Put the master in media-src/${img.src.replace(/^\//, '')} and run ` +
+      `\`node scripts/build-motion.mjs\`.`,
+  );
+}
+---
+
+{
+  img.motion ? (
+    <figure class={`${klass} cs-motion`}>
+      <video
+        src={img.motion.mp4}
+        poster={img.motion.poster}
+        width={img.motion.width}
+        height={img.motion.height}
+        controls
+        loop
+        muted
+        playsinline
+        preload="none"
+        aria-label={img.alt}
+      >
+        <a href={img.motion.mp4}>{img.alt}</a>
+      </video>
+    </figure>
+  ) : (
+    <figure class={klass}>
+      <img
+        src={img.src}
+        alt={img.alt}
+        width={img.width}
+        height={img.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  )
+}
+
+<style>
+  /* The video inherits the still's frame so a study that mixes the two reads as
+     one set of figures. `display:block` kills the inline-baseline gap, and the
+     `width:100%` + `height:auto` pair is what lets the UA derive the box from
+     the width/height attributes — which is why those attributes are required
+     above rather than optional. */
+  .cs-motion video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
+    background: #14152a;
+  }
+  :global(.cs-payoff) .cs-motion video {
+    border-color: rgb(255 255 255 / 0.12);
+    box-shadow: none;
+  }
+</style>

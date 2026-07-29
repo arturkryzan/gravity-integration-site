@@ -28,6 +28,7 @@
  * technical support included (this page's previous copy), commercial plans
  * from 2 999 PLN/yr (home, cennik). */
 import Breadcrumbs from './Breadcrumbs.astro';
+import { asset } from '../lib/media';
 import { mlAction } from '../lib/mailerlite';
 import { linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
@@ -262,10 +263,8 @@ const clients = [
       </div>
       <figure class="dl-shot" data-scroll data-scroll-opacity>
         <img
-          src="/media/kapitan-navi-gravity-integration-etl.png"
+          {...asset('/media/kapitan-navi-gravity-integration-etl.png')}
           alt={s('dl.shot.alt')}
-          width="1920"
-          height="1039"
           loading="lazy"
           decoding="async"
         />
@@ -277,7 +276,11 @@ const clients = [
         {clients.map((c) => (
           <li>
             <a href={`${caseStudiesHref}#${c.anchor}`} aria-label={`${s('dl.caseAria')}${c.alt}`}>
-              <img src={c.src} alt={c.alt} width="800" height="400" loading="lazy" decoding="async" />
+              {/* asset() carries the src swap and the resampled dimensions
+                  together — these four masters were 800x400 and now ship at
+                  520x260, so a hard-coded pair here would reserve a box half
+                  again too tall. */}
+              <img {...asset(c.src)} alt={c.alt} loading="lazy" decoding="async" />
             </a>
           </li>
         ))}
@@ -311,10 +314,8 @@ const clients = [
       </div>
       <img
         class="dl-docs-img"
-        src="/media/manual_mockup.jpg"
+        {...asset('/media/manual_mockup.jpg')}
         alt={s('dl.manual.alt')}
-        width="672"
-        height="378"
         loading="lazy"
         decoding="async"
         data-scroll

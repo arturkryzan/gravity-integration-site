@@ -14,6 +14,7 @@
    both the light body and the dark panel, so the page has one vertical spine. */
 import type { CsStudy } from '../lib/case-studies';
 import { localeOf, t } from '../i18n/ui';
+import CaseFigure from './CaseFigure.astro';
 
 interface Props {
   studies: CsStudy[];
@@ -103,28 +104,8 @@ const keepCompounds = (html: string) =>
                             </li>
                           ))}
                         </ul>
-                      ) : b.img.variant === 'shot' ? (
-                        <figure class="cs-shot">
-                          <img
-                            src={b.img.src}
-                            alt={b.img.alt}
-                            width={b.img.width}
-                            height={b.img.height}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </figure>
                       ) : (
-                        <figure class="cs-mark">
-                          <img
-                            src={b.img.src}
-                            alt={b.img.alt}
-                            width={b.img.width}
-                            height={b.img.height}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </figure>
+                        <CaseFigure img={b.img} />
                       ),
                     )}
                   </section>
@@ -160,16 +141,7 @@ const keepCompounds = (html: string) =>
                         ))}
                       </ul>
                     ) : (
-                      <figure class={b.img.variant === 'shot' ? 'cs-shot' : 'cs-mark'}>
-                        <img
-                          src={b.img.src}
-                          alt={b.img.alt}
-                          width={b.img.width}
-                          height={b.img.height}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </figure>
+                      <CaseFigure img={b.img} />
                     ),
                   )}
                 </div>

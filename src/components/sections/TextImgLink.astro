@@ -29,6 +29,8 @@ const { index, rows, overrides = {} } = Astro.props;
       alt=""
       width="295"
       height="823"
+      loading="lazy"
+      decoding="async"
       class="download-img"
       data-scroll
       data-scroll-delay=".1"
@@ -86,8 +88,17 @@ const { index, rows, overrides = {} } = Astro.props;
               <SvgHeroBusiness />
             ) : ov.media && typeof ov.media === 'object' ? (
               <div class="ratio" style="--bs-aspect-ratio: 55.82%">
+                {/* No `autoplay` attribute — deliberately. Chrome starts
+                    fetching an autoplaying video as soon as it is eligible to
+                    play, and that overrides `preload="none"`: measured on the
+                    homepage, all four of these files downloaded in full on
+                    every cold load (1.1 MB, none of it above the fold) while
+                    the IntersectionObserver below never once reported them as
+                    intersecting. The observer was not lazy-loading anything;
+                    it was arriving after the fetch it meant to gate. Playback
+                    is now started from that observer instead, which is what
+                    makes `preload="none"` mean what it says. */}
                 <video
-                  autoplay
                   loop
                   muted
                   playsinline
@@ -112,21 +123,36 @@ const { index, rows, overrides = {} } = Astro.props;
 </section>
 
 <script>
-  /* videos: start download only when near viewport */
-  const vids = document.querySelectorAll('section video[preload="none"]');
+  /* These videos have no `autoplay` attribute (see the markup above), so this
+     script is now the only thing that ever starts them — which is the point:
+     with the attribute present the browser fetched all of them at load and
+     `preload="none"` did nothing. `load()` is what begins the download, so it
+     must not run until the element is actually near the viewport. */
+  const vids = document.querySelectorAll<HTMLVideoElement>('section video[preload="none"]');
+
+  const start = (v: HTMLVideoElement) => {
+    v.load();
+    /* muted + playsinline are already on the element, so this satisfies the
+       autoplay policy; a rejected promise (a user agent that blocks it anyway,
+       or Save-Data) leaves the poster showing, which is a fine resting state. */
+    v.play().catch(() => {});
+  };
+
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
       (es) =>
         es.forEach((e) => {
-          if (e.isIntersecting) {
-            const v = e.target as HTMLVideoElement;
-            v.load();
-            v.play().catch(() => {});
-            io.unobserve(v);
-          }
+          if (!e.isIntersecting) return;
+          start(e.target as HTMLVideoElement);
+          io.unobserve(e.target);
         }),
       { rootMargin: '200px' },
     );
     vids.forEach((v) => io.observe(v));
+  } else {
+    /* Without IntersectionObserver there is nothing to defer against, and a
+       silent poster on every row would look broken. Start them all — the old
+       eager behaviour, but only for the browsers that leave no alternative. */
+    vids.forEach(start);
   }
 </script>

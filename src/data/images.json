@@ -1,0 +1,182 @@
+{
+  "/media/bispol-logo-1.png": {
+    "src": "/media/bispol-logo-1.webp",
+    "width": 208,
+    "height": 104
+  },
+  "/media/nac-logo.png": {
+    "src": "/media/nac-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/elmet-poznan-logo.png": {
+    "src": "/media/elmet-poznan-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/tiptopol-case-logo.png": {
+    "src": "/media/tiptopol-case-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/logistics-operators-logos.png": {
+    "src": "/media/logistics-operators-logos.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/kapitan-navi-logo-hires.png": {
+    "src": "/media/kapitan-navi-logo-hires.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/roger-rcp-logo.png": {
+    "src": "/media/roger-rcp-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/baselinker-case-logo.png": {
+    "src": "/media/baselinker-case-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/cstore-logo.png": {
+    "src": "/media/cstore-logo.webp",
+    "width": 520,
+    "height": 260
+  },
+  "/media/kapitan-navi-gravity-integration-etl.png": {
+    "src": "/media/kapitan-navi-gravity-integration-etl.webp",
+    "width": 1480,
+    "height": 801
+  },
+  "/media/cstore-pozycje-cennika-graffiti.png": {
+    "src": "/media/cstore-pozycje-cennika-graffiti.webp",
+    "width": 1480,
+    "height": 709
+  },
+  "/media/consorfrut-logo.png": {
+    "src": "/media/consorfrut-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/fideli-logo.png": {
+    "src": "/media/fideli-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/witamina-logo.png": {
+    "src": "/media/witamina-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/gelg-logo.png": {
+    "src": "/media/gelg-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/kapitan-navi-logo.png": {
+    "src": "/media/kapitan-navi-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/frogum-logo.png": {
+    "src": "/media/frogum-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/henmar-logo.png": {
+    "src": "/media/henmar-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/maxpol-logo.png": {
+    "src": "/media/maxpol-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/tia-logo.png": {
+    "src": "/media/tia-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/hewalex-logo.png": {
+    "src": "/media/hewalex-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/serix-logo.png": {
+    "src": "/media/serix-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/lindner-logo.png": {
+    "src": "/media/lindner-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/metaltech-logo.png": {
+    "src": "/media/metaltech-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/mtm-logo.png": {
+    "src": "/media/mtm-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/wze-logo.png": {
+    "src": "/media/wze-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/biall-logo.png": {
+    "src": "/media/biall-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/zniczplast-logo.png": {
+    "src": "/media/zniczplast-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/tiptopol-logo.png": {
+    "src": "/media/tiptopol-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/ezt-logo.png": {
+    "src": "/media/ezt-logo.webp",
+    "width": 200,
+    "height": 100
+  },
+  "/media/manual_mockup.jpg": {
+    "src": "/media/manual_mockup.webp",
+    "width": 672,
+    "height": 378
+  },
+  "/theme/content/img.jpg": {
+    "src": "/theme/content/img.webp",
+    "width": 1360,
+    "height": 814
+  },
+  "/uploads/heropricing.jpg": {
+    "src": "/uploads/heropricing.webp",
+    "width": 1440,
+    "height": 400
+  },
+  "/uploads/contact.png": {
+    "src": "/uploads/contact.webp",
+    "width": 1440,
+    "height": 400
+  },
+  "/media/CM_CLAIM.png": {
+    "src": "/media/CM_CLAIM.webp",
+    "width": 434,
+    "height": 555
+  },
+  "/media/etl-text.png": {
+    "src": "/media/etl-text.webp",
+    "width": 434,
+    "height": 555
+  }
+}

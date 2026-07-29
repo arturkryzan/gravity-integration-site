@@ -160,10 +160,18 @@ function initAnnounceBar() {
   // The bar's content wraps to two lines on phones, so its height isn't the
   // 44px the CSS assumes; body margin and the fixed header both offset from
   // --gi-bar-h, so measure the real height and keep it in sync on resize.
+  // The variable this writes must never be read back by the bar's own
+  // min-height (see AnnouncementBar.astro) — that closed the loop and let the
+  // height ratchet up on any transient, permanently. Writing only on a real
+  // change also keeps the ResizeObserver from re-entering on its own effect.
+  let last = -1;
   const sync = () => {
     if (hidden) return;
     const h = Math.round(bar.getBoundingClientRect().height);
-    if (h > 0) document.documentElement.style.setProperty('--gi-bar-h', h + 'px');
+    if (h > 0 && h !== last) {
+      last = h;
+      document.documentElement.style.setProperty('--gi-bar-h', h + 'px');
+    }
   };
   const hide = () => {
     hidden = true;

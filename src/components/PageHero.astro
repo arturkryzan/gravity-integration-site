@@ -1,6 +1,14 @@
 ---
-/* Subpage hero (theme page/hero.php): featured image + h1, optional circle decoration. */
-import { fileDims } from '../lib/media';
+/* Subpage hero (theme page/hero.php): featured image + h1, optional circle decoration.
+ *
+ * This image is the LCP element on every subpage that has one — it fills the
+ * hero band above the fold. So it is the one <img> on the site that must NOT be
+ * lazy, and the one worth `fetchpriority="high"`: without it the preload
+ * scanner queues the hero behind the stylesheet and the fonts, which is exactly
+ * backwards for the pixel the visitor is waiting on. The inherited `lazyload`
+ * class is the old theme's JS hook, not the native attribute, and is left alone
+ * so the theme CSS that keys off it still applies. */
+import { asset } from '../lib/media';
 
 interface Props {
   h1: string;
@@ -12,7 +20,18 @@ const { h1, img = null, alt = '', circle = false } = Astro.props;
 ---
 
 <section class="hero hero-small d-flex align-items-end" data-scroll-section>
-  {img && <img src={img} alt={alt} class="lazyload img-fit h-100 w-100" {...(fileDims(img) ?? {})} />}
+  {
+    img && (
+      <img
+        {...asset(img)}
+        alt={alt}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="lazyload img-fit h-100 w-100"
+      />
+    )
+  }
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 hero-text pb-10" data-scroll data-scroll-opacity>

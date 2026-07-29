@@ -56,7 +56,19 @@ const downloadHref = await linkUrl('pobieranie', lang);
     flex-wrap: wrap;
     gap: 0.75rem;
     row-gap: 0.4rem;
-    min-height: var(--gi-bar-h, 44px);
+    /* A CONSTANT, deliberately — never `var(--gi-bar-h)`.
+       main.js measures this element's height into --gi-bar-h so the body
+       margin and the fixed header can offset by it. If this bar also *read*
+       that variable, the measurement would be feeding its own constraint and
+       the height could only ever ratchet upward: any transient that made the
+       content taller for one frame (a webfont swapping in and wrapping the
+       message to two rows, a resize mid-layout) got measured, written back as
+       a floor, and then held forever, because the ResizeObserver has nothing
+       left to observe once min-height pins the box. Caught by the screenshot
+       gate — two captures of the same build disagreed, and the bar was 146px
+       in one and 44px in the other, pushing every page 99px down. The
+       variable is an output now, and only an output. */
+    min-height: 44px;
     /* the close control is absolutely positioned at the right edge — reserve
        its width on both sides so the centered content stays optically centred */
     padding: 0.6rem 3rem;

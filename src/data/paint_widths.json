@@ -1,0 +1,712 @@
+[
+  {
+    "path": "/media/bispol-logo-1.png",
+    "maxCss": 104,
+    "nw": 400,
+    "nh": 200,
+    "target": 208,
+    "over": 1.92,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/nac-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/",
+      "/case-studies/",
+      "/pobieranie/",
+      "/en/",
+      "/en/case-studies/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/media/elmet-poznan-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/",
+      "/case-studies/",
+      "/pobieranie/",
+      "/en/",
+      "/en/case-studies/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/media/tiptopol-case-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/pobieranie/",
+      "/en/case-studies/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/media/logistics-operators-logos.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/kapitan-navi-logo-hires.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/pobieranie/",
+      "/en/case-studies/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/media/roger-rcp-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/baselinker-case-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/cstore-logo.png",
+    "maxCss": 260,
+    "nw": 800,
+    "nh": 400,
+    "target": 520,
+    "over": 1.54,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/kapitan-navi-gravity-integration-etl.png",
+    "maxCss": 740,
+    "nw": 1920,
+    "nh": 1039,
+    "target": 1480,
+    "over": 1.3,
+    "routes": [
+      "/case-studies/",
+      "/pobieranie/",
+      "/en/case-studies/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/media/tiptopol-dpd-integration.gif",
+    "maxCss": 740,
+    "nw": 1911,
+    "nh": 982,
+    "target": 1480,
+    "over": 1.29,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/cstore-pozycje-cennika-graffiti.png",
+    "maxCss": 740,
+    "nw": 1900,
+    "nh": 910,
+    "target": 1480,
+    "over": 1.28,
+    "routes": [
+      "/case-studies/",
+      "/en/case-studies/"
+    ]
+  },
+  {
+    "path": "/media/consorfrut-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/fideli-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/witamina-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/gelg-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/kapitan-navi-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/frogum-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/henmar-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/maxpol-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/tia-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/hewalex-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/serix-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/lindner-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/metaltech-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/mtm-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/wze-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/biall-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/zniczplast-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/tiptopol-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/ezt-logo.png",
+    "maxCss": 104,
+    "nw": 200,
+    "nh": 100,
+    "target": 200,
+    "over": 0.96,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/uploads/etl-scaled.jpg",
+    "maxCss": 1425,
+    "nw": 2560,
+    "nh": 711,
+    "target": 2560,
+    "over": 0.9,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/manual_mockup.jpg",
+    "maxCss": 384,
+    "nw": 672,
+    "nh": 378,
+    "target": 672,
+    "over": 0.88,
+    "routes": [
+      "/pobieranie/",
+      "/en/download/"
+    ]
+  },
+  {
+    "path": "/theme/content/img.jpg",
+    "maxCss": 897,
+    "nw": 1360,
+    "nh": 814,
+    "target": 1360,
+    "over": 0.76,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/icon-1.svg",
+    "maxCss": 26,
+    "nw": 27,
+    "nh": 24,
+    "target": 27,
+    "over": 0.52,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/uploads/heropricing.jpg",
+    "maxCss": 1425,
+    "nw": 1440,
+    "nh": 400,
+    "target": 1440,
+    "over": 0.51,
+    "routes": [
+      "/cennik/",
+      "/czym-jest-esb/",
+      "/kalkulator/",
+      "/en/pricing/",
+      "/en/what-is-esb/"
+    ]
+  },
+  {
+    "path": "/uploads/contact.png",
+    "maxCss": 1425,
+    "nw": 1440,
+    "nh": 400,
+    "target": 1440,
+    "over": 0.51,
+    "routes": [
+      "/kontakt/",
+      "/en/contact/"
+    ]
+  },
+  {
+    "path": "/media/ic_247-1.svg",
+    "maxCss": 22,
+    "nw": 22,
+    "nh": 23,
+    "target": 22,
+    "over": 0.5,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/Union.svg",
+    "maxCss": 7,
+    "nw": 7,
+    "nh": 16,
+    "target": 7,
+    "over": 0.5,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/media/ic_IntelliChain.svg",
+    "maxCss": 9,
+    "nw": 9,
+    "nh": 24,
+    "target": 9,
+    "over": 0.5,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/theme/static/linesdownload.svg",
+    "maxCss": 295,
+    "nw": 295,
+    "nh": 823,
+    "target": 295,
+    "over": 0.5,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/theme/static/logo-dark.svg",
+    "maxCss": 222,
+    "nw": 222,
+    "nh": 48,
+    "target": 222,
+    "over": 0.5,
+    "routes": [
+      "/",
+      "/case-studies/",
+      "/cennik/",
+      "/czym-jest-esb/",
+      "/integracje/",
+      "/kalkulator/",
+      "/kontakt/",
+      "/pobieranie/",
+      "/polityka-prywatnosci/",
+      "/technologia/",
+      "/en/",
+      "/en/case-studies/",
+      "/en/contact/",
+      "/en/download/",
+      "/en/integrations/",
+      "/en/pricing/",
+      "/en/technology/",
+      "/en/what-is-esb/"
+    ]
+  },
+  {
+    "path": "/theme/static/logo_small.svg",
+    "maxCss": 111,
+    "nw": 111,
+    "nh": 24,
+    "target": 111,
+    "over": 0.5,
+    "routes": [
+      "/cennik/",
+      "/en/pricing/"
+    ]
+  },
+  {
+    "path": "/theme/static/linesfaq.svg",
+    "maxCss": 203,
+    "nw": 203,
+    "nh": 280,
+    "target": 203,
+    "over": 0.5,
+    "routes": [
+      "/cennik/",
+      "/kalkulator/",
+      "/en/pricing/"
+    ]
+  },
+  {
+    "path": "/media/CM_CLAIM.png",
+    "maxCss": 432,
+    "nw": 434,
+    "nh": 555,
+    "target": 434,
+    "over": 0.5,
+    "routes": [
+      "/kontakt/",
+      "/en/contact/"
+    ]
+  },
+  {
+    "path": "/media/etl-text.png",
+    "maxCss": 432,
+    "nw": 434,
+    "nh": 555,
+    "target": 434,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/theme/static/lines.svg",
+    "maxCss": 279,
+    "nw": 279,
+    "nh": 235,
+    "target": 279,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/ic_247.svg",
+    "maxCss": 21,
+    "nw": 21,
+    "nh": 23,
+    "target": 21,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/icon.svg",
+    "maxCss": 27,
+    "nw": 27,
+    "nh": 24,
+    "target": 27,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/icon2.svg",
+    "maxCss": 7,
+    "nw": 7,
+    "nh": 16,
+    "target": 7,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/media/icon3.svg",
+    "maxCss": 9,
+    "nw": 9,
+    "nh": 24,
+    "target": 9,
+    "over": 0.5,
+    "routes": [
+      "/technologia/",
+      "/en/technology/"
+    ]
+  },
+  {
+    "path": "/theme/static/linespricing0.svg",
+    "maxCss": 217,
+    "nw": 210,
+    "nh": 39,
+    "target": 210,
+    "over": 0.48,
+    "routes": [
+      "/cennik/",
+      "/en/pricing/"
+    ]
+  },
+  {
+    "path": "/theme/static/linespricing1.svg",
+    "maxCss": 193,
+    "nw": 180,
+    "nh": 46,
+    "target": 180,
+    "over": 0.47,
+    "routes": [
+      "/cennik/",
+      "/en/pricing/"
+    ]
+  },
+  {
+    "path": "/theme/static/lineshome.svg",
+    "maxCss": 149,
+    "nw": 110,
+    "nh": 110,
+    "target": 110,
+    "over": 0.37,
+    "routes": [
+      "/",
+      "/en/"
+    ]
+  },
+  {
+    "path": "/theme/static/linesmenu.svg",
+    "maxCss": 0,
+    "nw": 793,
+    "nh": 390,
+    "target": 793,
+    "over": null,
+    "routes": [
+      "/",
+      "/case-studies/",
+      "/cennik/",
+      "/czym-jest-esb/",
+      "/integracje/",
+      "/kalkulator/",
+      "/kontakt/",
+      "/pobieranie/",
+      "/polityka-prywatnosci/",
+      "/technologia/",
+      "/en/",
+      "/en/case-studies/",
+      "/en/contact/",
+      "/en/download/",
+      "/en/integrations/",
+      "/en/pricing/",
+      "/en/technology/",
+      "/en/what-is-esb/"
+    ]
+  }
+]

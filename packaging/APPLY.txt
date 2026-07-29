@@ -47,8 +47,8 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
          header menu control; 0024-0026 and 0029 are the four quality
          passes — audit, harden, optimize, polish; 0031 colours the
          menu's download item and adds a direct installer link to the
-         post-submit panel; and 0027-0028 and 0030 are prose only, this
-         file and the reports.
+         post-submit panel; 0032 re-audits everything; and 0027-0028
+         and 0030 are prose only, this file and the reports.
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -185,6 +185,35 @@ deliberately does not re-fire generate_lead for a person already counted.
   and that file has to be there. Put the installer at that path before
   this goes live, or the panel will offer a 404 to exactly the people
   who were keenest to download.
+
+0032 re-audits the whole site now that the four quality passes have
+landed, and rewrites AUDIT.md. It changes no page: the report is the
+deliverable, and the only code it adds is six more measuring harnesses.
+
+The site scores 16 out of 20 against the same 18 routes and four
+viewports that scored 12 before, with no P1 findings for the first time.
+Of the previous report's 19 findings, 12 verify fixed, 2 are better but
+not finished, and 5 are still open. Every one was re-measured rather than
+assumed closed — for one of them the old selector no longer matched
+anything, which is not the same thing as the problem being gone, so the
+element was found by its text and measured directly.
+
+Eleven findings remain, none of them urgent: seven 17px links in the
+contact block, the ROI sliders' focus ring two hundredths short of the
+contrast floor, the header's navigation marked up as a <section> rather
+than a <nav>, eleven images still shipping larger than they are drawn,
+and the tail end of the colour-token migration.
+
+The part worth reading in AUDIT.md is not the score. All thirteen
+findings the automated sweep produced were false — every one of them a
+case of a probe reporting the absence of something it simply cannot see.
+The focus ring on the calculator sliders is drawn on a pseudo-element
+that no DOM query can reach, so eleven controls that visibly light up
+under a real Tab were reported as having no indicator at all. Chasing
+down why one of those "passes" made no sense is what turned up the only
+genuinely new problem in the whole audit. Had the sweep been believed,
+the report would have listed eleven things that aren't wrong and missed
+the one that is.
 
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------

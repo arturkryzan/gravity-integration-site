@@ -45,8 +45,10 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
          English ROI calculator; 0020 rewrites the deploy run-book;
          0021 loads the MailerLite pop-up on consent; 0022-0023 fix the
          header menu control; 0024-0026 and 0029 are the four quality
-         passes — audit, harden, optimize, polish; and 0027-0028 and
-         0030 are prose only, this file and the reports.
+         passes — audit, harden, optimize, polish; 0031 colours the
+         menu's download item and adds a direct installer link to the
+         post-submit panel; and 0027-0028 and 0030 are prose only, this
+         file and the reports.
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -157,6 +159,32 @@ actual network requests showed the Epilogue latin-ext subsets do NOT
 load on English routes — the unicode-range gating works — so the
 report no longer offers trimming them as a remaining win. 0030 is this
 file again, describing 0029.
+
+0031 is the only patch here that changes what a visitor sees on both
+locales at once, and it does two things.
+
+The fullscreen menu listed four items in identical white, so the one the
+whole site funnels toward — Pobieranie / Download — was styled as if it
+were interchangeable with Kontakt. It now carries the brand green, and it
+is the only item that does. Hover and keyboard focus invert it to white
+rather than reusing the green, because leaving it green on hover would
+have made the most important item the only one in the list with no
+pointer feedback. Measured at 1440, 768 and 390: 3.22:1 for the green on
+the menu's real painted ground, 5.09:1 for the white — the type is 36-64px,
+so AA asks 3:1.
+
+The second half adds a direct installer link to the download form's
+success panel. By the time that panel renders the address is already in
+MailerLite and the automation has fired, so waiting on an inbox buys
+nothing; the e-mail stays the headline and this stays a link rather than
+a button. Its click pushes a dataLayer `direct_download` event and
+deliberately does not re-fire generate_lead for a person already counted.
+
+  ONE THING TO DO ON THE SERVER: the link points at
+  https://gravity-integration.com/downloads/GravityInstaller.exe
+  and that file has to be there. Put the installer at that path before
+  this goes live, or the panel will offer a 404 to exactly the people
+  who were keenest to download.
 
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------

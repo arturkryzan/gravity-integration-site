@@ -1,269 +1,236 @@
 # Technical Audit — gravity.integration (Astro rebuild)
 
-`/impeccable audit` · web · register: brand · scope: **18 routes** (10 Polish, 8 English) × **4 viewports** (1440 / 768 / 390 / 320), measured against a production build served locally (`Site.oKJWfLLW.css`).
+`/impeccable audit` · web · register: brand · scope: **18 routes** (10 Polish, 8 English) × **4 viewports** (1440 / 768 / 390 / 320) = **72 combinations**, measured against a production build served locally.
 
-Every finding below survived a second instrument. The raw sweep produced 22 contrast failures, 13 missing focus rings, 6 missing labels and 27 "text over an image" cases; verification cut those to 2, 2, 5 and 0. What was thrown out is listed under *Suppressed false positives* so a re-run doesn't re-report it.
+Every finding below survived a second instrument. The raw sweep produced 2 contrast failures, 11 missing focus rings, 9 undersized targets and 27 "text over an image" cases; verification cut those to **0, 0, 8 and 0** — with one new and different finding taking the focus-ring group's place, found by the arbitration rather than by the sweep. What was thrown out is listed under *Suppressed false positives* so a re-run doesn't re-report it.
 
-This supersedes the previous audit (13/20, 10 routes × 2 viewports). Its three responsive bugs, the missing H1, the arbitrary z-index and the images without dimensions all verify fixed.
+This supersedes the previous audit (12/20, same scope). Of its 19 findings, **12 verify fixed, 2 are materially improved but not closed, and 5 remain open.** Every one was re-measured; none is carried forward as "fixed" because a commit claimed to fix it.
 
 ## Audit Health Score
 
 | # | Dimension | Score | Key Finding |
 |---|-----------|-------|-------------|
-| 1 | Accessibility | 2 / 4 | The hamburger — the only way into the main navigation — draws no visible focus indicator on any of the 14 routes |
-| 2 | Performance | 2 / 4 | `/case-studies/` ships 2.78 MB, of which a single decorative GIF is 2.35 MB |
-| 3 | Responsive Design | 3 / 4 | No horizontal overflow anywhere at 320–1440; contact links are 17 px tall, below the 24 px AA floor |
-| 4 | Theming | 2 / 4 | 216 hard-coded hex literals across 42 distinct values against 78 uses of `var(--gi-*)`, despite `tokens.css` being the declared single source of truth |
-| 5 | Anti-Patterns | 3 / 4 | No AI tells at all; two instances of the washed-out translucent-white-on-colour pattern |
-| **Total** | | **12 / 20** | **Acceptable — significant work needed** |
+| 1 | Accessibility | 3 / 4 | No `<nav>` landmark on any of the 18 routes; the ROI sliders' focus ring measures 2.98:1 against a 3:1 floor |
+| 2 | Performance | 3 / 4 | Total weight across 18 routes is down 68% to 5.83 MB; 11 images still ship at ≥2× their displayed width |
+| 3 | Responsive Design | 3 / 4 | Zero horizontal overflow in 72 of 72 combinations; seven 17 px contact links remain below the 24 px AA floor |
+| 4 | Theming | 3 / 4 | 121 hex literals against 167 token references — the ratio has inverted, but 27 of the survivors are the brand green |
+| 5 | Anti-Patterns | 4 / 4 | No AI tells, and the two washed-out translucent-white instances that cost this dimension a point last time now measure clear |
+| **Total** | | **16 / 20** | **Good — minor issues only** |
 
-The score moved down from 13 while the site got better. That is the wider net: this run added the 768 px and 320 px viewports, the eight English routes, keyboard-driven focus testing and real network weight — categories the previous pass never measured. Theming dropped a point for the same reason: the token *system* is as strong as it was rated, but counting actual adoption across the component tree told a different story than reading the token file did.
+Up from 12/20 at identical scope, and **zero P0 and zero P1 for the first time.** Four points moved: accessibility and performance each gained one from the harden and optimize passes, theming gained one as token adoption crossed over, and anti-patterns returned to full marks because the two contrast failures behind its deduction are gone and there is no third.
 
 ## Anti-Patterns Verdict
 
-**Pass.** This does not look AI-generated, and it isn't close.
+**Pass, without caveat.** This does not look AI-generated, and it is not close.
 
-Being brutally honest about what I looked for and did not find: no gradient text anywhere (`background-clip: text` appears zero times in the component tree), no `backdrop-filter` and no glassmorphism, no tiny uppercase tracked eyebrow above section headings (`text-transform: uppercase` appears zero times outside the vendored Bootstrap layer), no `01 / 02 / 03` numbered section scaffolding, no hero-metric template, no repeating identical icon-heading-text card grid, no bounce or elastic easing (no `cubic-bezier` with an overshoot control point anywhere), and no cream/sand/beige body background. The palette is a committed dark slate with a single saturated green carrying the accent load — a real strategy, not a default. Epilogue, Inter and Telegraf are the existing brand's committed typefaces on a ported commercial identity, so they are not scored as reflex picks.
+Being brutally honest about what I looked for and did not find: `background-clip: text` appears **zero** times; `backdrop-filter` **zero**; `text-transform: uppercase` **zero** outside the vendored layer; no `01 / 02 / 03` numbered section scaffolding; no tiny uppercase tracked eyebrow above section headings; no hero-metric template; no repeating identical icon-heading-text card grid; no side-stripe accent borders; no `z-index` of three digits or more anywhere in the new code; a single `will-change`; and no cream/sand/beige body background. All four `cubic-bezier` curves in the built CSS are monotone ease-outs with both ordinates inside [0,1] — no bounce, no elastic, no overshoot. The palette is a committed dark slate carrying a single saturated green, which is a strategy rather than a default. Epilogue, Inter and Telegraf are the existing brand's committed typefaces on a ported commercial identity, so they are not scored as reflex picks.
 
-The one general anti-pattern that *is* present, twice, is **washed-out translucent white on a coloured surface** — `rgba(255,255,255,0.4)` for the hero social-proof line and `rgba(255,255,255,0.65)` for the "(optional)" field hints. Both are the "gray text on a colored background looks washed out" failure, and both fail contrast (P1-1 and P1-2). The fix in each case is a heavier alpha or a solid token, not different structure.
+Last pass deducted a point for **washed-out translucent white on a coloured surface**, present twice. Both are now measured clear: the hero social-proof line composites to **6.25:1** and the "(optional)" field hints to **5.24:1**. There is no third instance. The point is returned.
 
-The score is 3 rather than 4 only because of those two. There are no AI tells to deduct for.
+The one change worth naming explicitly as *not* a tell is the new green menu item. A single item in a list rendered in the accent colour is exactly the shape of a reflex — except this one is the item the entire site funnels toward, it is the only green item in the menu, and it inverts to white on hover and keyboard focus rather than reusing the green, so it is the one item in the list that would otherwise have had no pointer feedback. Measured on the menu's real painted ground: **3.22:1** at rest and **5.09:1** inverted, on 36–64 px type where AA asks 3:1. That is a decision with a reason behind it, which is the difference.
 
 ## Executive Summary
 
-- **Audit Health Score: 12 / 20 (Acceptable — significant work needed)**
-- **19 verified issues: 0 P0 · 7 P1 · 8 P2 · 4 P3**
-- The score is dragged down by three things, all concentrated rather than diffuse: the **ported legacy CSS layer** (`legacy.css` sets `outline: 0` on controls without supplying a `:focus-visible` replacement), **unoptimised source imagery** shipped at full resolution, and **hard-coded colour** in components that predates `tokens.css`.
+- **Audit Health Score: 16 / 20 (Good — minor issues only)**
+- **11 verified issues: 0 P0 · 0 P1 · 7 P2 · 4 P3**
+- Nothing left is systemic. The previous audit's central pattern — every accessibility gap living in the ported `legacy.css` layer — has been closed out; what remains clusters by **style rule**, not by page, which is why eleven findings produce no P1s.
 
 **Top five:**
 
-1. **The hamburger has no visible focus indicator**, and it is the only entry point to the site's navigation at every viewport. A keyboard user tabbing through the header cannot see when they have reached the menu they need. (P1-3 · WCAG 2.4.7 AA)
-2. **`/case-studies/` weighs 2.78 MB** in both locales, 2.35 MB of it a single animated GIF that would be a fraction of the size as a looping muted MP4. (P1-6)
-3. **The five ROI-calculator sliders have no accessible name.** A screen-reader user hears five unlabelled ranges and cannot tell which is "projects" and which is "hourly rate" — on the page whose entire purpose is that calculator. (P1-5 · WCAG 4.1.2 / 3.3.2 AA)
-4. **216 hard-coded hex literals against 78 token references.** `tokens.css` is real and well-built; the component tree largely bypasses it. Any future theme change is a find-and-replace across 42 distinct values, two of which are the same green in different letter case. (P2-5)
-5. **The site logo link has no accessible name on any route.** It is announced as "link", full stop — and it is the conventional back-to-home affordance. (P1-4 · WCAG 4.1.2 AA)
+1. **Seven contact links are 17 px tall**, below the 24 px AA target floor, on `/kontakt/` and `/en/contact/`. One `.btn-text` rule, one line to fix. (P2-1 · WCAG 2.5.8 AA)
+2. **The five ROI sliders' focus ring measures 2.98:1** against the 3:1 non-text-contrast floor. The ring is real and correctly implemented — it is drawn on `::-webkit-slider-thumb`, which is why no DOM-level probe can see it — it is simply two hundredths short. (P2-2 · WCAG 1.4.11 AA)
+3. **No `<nav>` landmark exists on any of the 18 routes.** The header's navigation is marked up as `<section class="nav-main">`. Screen-reader users navigating by landmark find `main`, `header` and `footer`, and no navigation. (P2-3 · WCAG 1.3.1 A)
+4. **Eleven images still ship at ≥2× their displayed width**, worst case 8.4× — down from 21, but the remaining set includes a 2560 px JPEG drawn at 305 px. (P2-6)
+5. **121 hex literals against 167 token references.** The ratio inverted since the last pass (it was 216 against 78), but 27 of the survivors are the brand green in two components. (P2-5)
 
-**Next steps:** `/impeccable harden` clears every P1 accessibility finding in one pass, since five of the seven trace to the same two lines of `legacy.css`. `/impeccable optimize` handles page weight. Then `/impeccable adapt` for touch targets, and `/impeccable polish` to consolidate colour onto tokens.
+**Next steps:** `/impeccable adapt` carries the largest group — the contact links, the footer logo, the slider ring's alpha and the AAA target sizes. Then `/impeccable harden` for the `<nav>` landmark, `/impeccable clarify` for the "here" link, `/impeccable optimize` for the oversized images and the missing `decoding` attributes, `/impeccable animate` for the one stylesheet without a reduced-motion block, and `/impeccable polish` last to finish the token migration.
 
 ## Detailed Findings by Severity
 
+### P0 — Critical
+
+None.
+
 ### P1 — Major
 
-**[P1-1] Hero social-proof line fails contrast at 3.77:1**
-
-- **Location:** `/` and `/en/`, the customer-name line beneath the hero heading — "Wybierany przez Bispol, Frogum, Hewalex, Lindner…"
-- **Category:** Accessibility
-- **Impact:** 12.8 px text at `rgba(255,255,255,0.4)` on `rgb(10,10,18)`. This line carries the site's social proof, so it is content a visitor is meant to read, not decoration — and it is the least legible text on the page. On a laptop screen in daylight it disappears.
-- **WCAG:** 1.4.3 Contrast (Minimum), AA — needs 4.5:1; measured 3.77:1 by pixel arbitration against the composited backdrop.
-- **Recommendation:** Raise the alpha to `0.55` (≈4.9:1), or better, use `--gi-text-muted` so the value lives in the token file. Do not compensate with a larger font; 12.8 px is not large text and the threshold would not move.
-- **Suggested command:** `/impeccable harden`
-
-**[P1-2] "(optional)" field hints fail contrast at 4.19:1**
-
-- **Location:** `span.demo-optional`, 12 routes — the demo-request block
-- **Category:** Accessibility
-- **Impact:** `rgba(255,255,255,0.65)` on `rgb(83,85,104)`. These hints tell the user which fields they can skip; a user who cannot read them either fills in everything or abandons the form.
-- **WCAG:** 1.4.3 Contrast (Minimum), AA — needs 4.5:1; measured 4.19:1.
-- **Recommendation:** `0.78` alpha reaches 5.1:1 on the same surface. The gap is small enough that darkening the surface would also work, but the alpha is the safer edit — the surface is shared with other content.
-- **Suggested command:** `/impeccable harden`
-
-**[P1-3] The hamburger draws no focus indicator**
-
-- **Location:** `button.hamburger`, all 14 routes. Cause is `src/styles/legacy.css`: `.hamburger{…outline:0…}` with no `:focus-visible` rule anywhere to replace it.
-- **Category:** Accessibility
-- **Impact:** This is the sole control that opens the main navigation, at every viewport. A keyboard-only or low-vision user tabbing across the header sees nothing change when focus lands on it, so they cannot tell they have arrived. Verified under real keyboard focus with animations and caret frozen: zero pixels changed above threshold. The control is genuinely bare, not merely hard to measure.
-- **WCAG:** 2.4.7 Focus Visible, AA
-- **Recommendation:** Add a `:focus-visible` rule matching the pattern every hand-built component already uses (`Icons.astro`, `LangSwitch.astro`, `AnnouncementBar.astro` all do this correctly) — a 2 px `--gi-green` outline at 2 px offset, or the 4 px `rgb(39 234 147 / .3)` ring the range inputs use. Do not remove the `outline: 0`; supply the replacement.
-- **Suggested command:** `/impeccable harden`
-
-**[P1-4] The logo link has no accessible name**
-
-- **Location:** `a.logo.d-inline-block`, every route
-- **Category:** Accessibility
-- **Impact:** The link wraps an SVG with no `<title>` and no text, so screen readers announce "link" and nothing more. It is also the conventional back-to-home affordance, which makes it the one link users most rely on for orientation and the one with no name.
-- **WCAG:** 4.1.2 Name, Role, Value, AA
-- **Recommendation:** `aria-label="gravity.integration — strona główna"` on the Polish build, the English equivalent on `/en/`, or a `<title>` inside the SVG. `ui.ts` already carries the per-locale string table, so this should be a translated key rather than a literal.
-- **Suggested command:** `/impeccable harden`
-
-**[P1-5] Five range inputs on the ROI calculator have no label**
-
-- **Location:** `/kalkulator/` — `input#s-projects`, `#s-days`, `#s-team`, `#s-rate`, `#s-tool` in `RoiCalculator.astro`
-- **Category:** Accessibility
-- **Impact:** The calculator is the page's entire purpose. Non-visually it is five identical unlabelled ranges and a number that changes; there is no way to know which slider is which or what unit it carries. The visible captions exist but are not associated with the inputs.
-- **WCAG:** 4.1.2 Name, Role, Value and 3.3.2 Labels or Instructions, AA
-- **Recommendation:** Associate each visible caption with its input via `<label for>`, and add `aria-valuetext` so the announced value carries its unit ("14 projektów", "220 zł/h") rather than a bare number. The sliders already have a correct `:focus-visible` thumb ring, so naming is the only thing missing.
-- **Suggested command:** `/impeccable harden`
-
-**[P1-6] `/case-studies/` ships 2.78 MB, 2.35 MB of it one GIF**
-
-- **Location:** `/case-studies/` and `/en/case-studies/` — `tiptopol-dpd-integration.gif`, 2347 kB, natural 1911×982, displayed 740×381
-- **Category:** Performance
-- **Impact:** On a typical 4G connection this page alone is a multi-second wait before the case study is readable, and the GIF is decoded at more than twice its display size. It is 84% of the page's total weight and 98% of its image weight — and the heaviest thing on the site by an order of magnitude. The next-largest page, `/`, is 1.36 MB.
-- **Recommendation:** Convert to a muted, looping, `playsinline` MP4 or WebM at 740×381 — the same animation typically lands under 200 kB — with a static WebP poster. If it must remain a GIF, at minimum resample it to display size.
-- **Suggested command:** `/impeccable optimize`
-
-**[P1-7] The newsletter and contact email field draws no focus indicator**
-
-- **Location:** `input#nemaiil` on 7 routes (`ContactForm.astro:30`, `Newsletter.astro:26`). Cause is the same `legacy.css` layer: `form .form-row input:not([type=checkbox]):not([type=submit]):not([type=radio]){…outline:0…}`.
-- **Category:** Accessibility
-- **Impact:** A keyboard user tabbing to the newsletter or contact form cannot see that the email field is focused, and there is no caret hint until they type. The `:not([type=submit])` exclusion in that selector is exactly why the submit button beside it keeps its ring while the field does not — the inconsistency reads as a rendering bug rather than a style choice.
-- **WCAG:** 2.4.7 Focus Visible, AA
-- **Recommendation:** Add a `:focus-visible` border-colour change plus a ring to that same selector. The hand-built demo fields (`DemoSection.astro:335`) already do precisely this; reuse the treatment so the two form styles converge instead of diverging further.
-- **Suggested command:** `/impeccable harden`
+None. This is the first pass at this scope with no P1 findings.
 
 ### P2 — Minor
 
-**[P2-1] Contact links are 17 px tall, below the AA target floor**
+**[P2-1] Seven contact links are 17 px tall, below the AA target floor**
 
-- **Location:** `/kontakt/` and `/en/contact/` — six `a.btn.btn-text` links: `graffiti-erp.pl` (173.7×17), `caffeine-minds.com` (217.7×17), `dminvestments.pl` (202.2×17), `contact@caffeine-minds.com` (223.3×17), `Polityka prywatności` (164×17), `Read it (in Polish)` (138.2×17)
+- **Location:** `/kontakt/` and `/en/contact/` — seven `a.btn.btn-text` links, including `graffiti-erp.pl`, `caffeine-minds.com`, `dminvestments.pl`, `contact@caffeine-minds.com` and the privacy-policy link in both locales
 - **Category:** Responsive
-- **Impact:** These are standalone links in a contact block, not inline links inside prose, so WCAG's inline exemption does not apply. On a phone they are a 17 px strip — a mis-tap lands on the neighbouring link, and the neighbouring link is a different company's website.
+- **Impact:** These are standalone links in a contact block, not inline links inside prose, so WCAG's inline exemption does not apply. On a phone they are a 17 px strip, and a mis-tap lands on the neighbouring link — which is a different company's website. Carried forward unchanged from the previous audit; the count is seven rather than six because the English contact page gained a link since.
 - **WCAG:** 2.5.8 Target Size (Minimum), AA — 24×24 required
-- **Recommendation:** `padding-block: 6px` on `.btn-text` inside the contact block takes them to 29 px without changing the visual rhythm, since the padding is transparent.
+- **Recommendation:** `padding-block: 6px` on `.btn-text` inside the contact block takes them to 29 px without changing the visual rhythm, since the padding is transparent. One rule covers all seven.
 - **Suggested command:** `/impeccable adapt`
 
-**[P2-2] The logo link drops to 19.1 px tall at 320 px**
+**[P2-2] The ROI sliders' focus ring measures 2.98:1**
 
-- **Location:** `a.logo.d-inline-block`, `small` viewport (320×700), every route
-- **Category:** Responsive
-- **Impact:** 88.4×19.1 — the home link becomes the smallest tap target on the page at exactly the viewport where taps are least precise.
-- **WCAG:** 2.5.8 Target Size (Minimum), AA
-- **Recommendation:** Give the anchor `min-height: 44px` and centre the mark inside it; the mark itself does not need to grow.
-- **Suggested command:** `/impeccable adapt`
-
-**[P2-3] The email field has no `autocomplete`**
-
-- **Location:** `input#nemaiil` (`name="fields[email]"`), 7 routes
+- **Location:** `/kalkulator/` — `#s-projects`, `#s-days`, `#s-team`, `#s-rate`, `#s-tool`. The rule is `.gi-range:focus-visible::-webkit-slider-thumb { box-shadow: rgba(39,234,147,0.3) 0 0 0 4px }`.
 - **Category:** Accessibility
-- **Impact:** Browsers and password managers cannot autofill it, so every visitor types their address by hand. For users with motor or cognitive impairments this is the difference between a one-tap signup and a typo-prone one.
-- **WCAG:** 1.3.5 Identify Input Purpose, AA
-- **Recommendation:** `autocomplete="email"` plus `inputmode="email"`. The MailerLite field name stays exactly as it is — this changes nothing about what gets posted.
+- **Impact:** Under a real Tab the ring is painted — 340 changed pixels, cluster confined to the thumb — but at 30% alpha the green composites to `rgb(60,121,111)` against the track's `rgb(36,37,56)`, which is **2.98:1** where 3:1 is required. It is a genuine, narrow miss on a control whose position is the only thing that tells the user which slider they are on.
+- **Note on how this was found:** the sweep reported these five as *no focus ring at all*, because `getComputedStyle` on the input reports `outline: none` and a fully transparent `box-shadow` — a ring drawn on `::-webkit-slider-thumb` is invisible to any DOM-level query. That reading was a false positive, but the arbitration that cleared it is what surfaced the real, different problem underneath. Had the sweep been trusted in either direction, this finding would not exist.
+- **WCAG:** 1.4.11 Non-text Contrast, AA — 3:1 for the indicator against what is adjacent
+- **Recommendation:** Raise the alpha from `0.3` to `0.38`; that composites to roughly 3.4:1 on the same track and changes nothing else about the treatment. Widening the ring does not help — contrast, not size, is what is short.
+- **Suggested command:** `/impeccable adapt`
+
+**[P2-3] No `<nav>` landmark on any route**
+
+- **Location:** `Header.astro` — the primary navigation is `<section class="nav-main">`. Landmark counts are identical on all 18 routes: `{ main: 1, nav: 0, header: 1, footer: 1, h1: 1 }`.
+- **Category:** Accessibility
+- **Impact:** A screen-reader user pulling up the landmark list finds banner, main and contentinfo, and no navigation — on a site whose entire menu lives behind one control. The skip link (added by the harden pass, present on all 18 routes) partly covers the sighted-keyboard case, but landmark navigation has no substitute.
+- **WCAG:** 1.3.1 Info and Relationships, A
+- **Recommendation:** Change the element to `<nav class="nav-main">` and give it an `aria-label` from `ui.ts` so it is named per locale. Nothing else needs to move; the class carries all the styling.
 - **Suggested command:** `/impeccable harden`
 
 **[P2-4] Link text "here" carries no context**
 
-- **Location:** `/en/pricing/`, an `<a>` whose entire text is "here"
+- **Location:** `/en/pricing/`, an `<a href="/en/contact/">` whose entire text is "here"
 - **Category:** Accessibility
-- **Impact:** Screen-reader users commonly navigate by pulling up a list of a page's links; "here" tells them nothing. It is the only such link on the site, so it is a one-line fix.
+- **Impact:** Screen-reader users commonly navigate by pulling up a list of a page's links; "here" tells them nothing. It is still the only such link on the site. Carried forward unchanged.
 - **WCAG:** 2.4.4 Link Purpose (In Context), A
-- **Recommendation:** Replace with the destination — "read the Polish privacy policy", or whatever the target actually is.
+- **Recommendation:** Replace with the destination — "get in touch" or "contact us" — now that the target is confirmed to be `/en/contact/`.
 - **Suggested command:** `/impeccable clarify`
 
-**[P2-5] 216 hard-coded hex literals against 78 token references**
+**[P2-5] 121 hex literals remain against 167 token references**
 
-- **Location:** `src/components`, `src/pages`, `src/layouts` — 216 literals across 42 distinct values
+- **Location:** `src/components`, `src/pages`, `src/layouts`. Heaviest: `DownloadPage.astro` (29), `DemoSection.astro` (22).
 - **Category:** Theming
-- **Impact:** `DESIGN.md` names `tokens.css` the single source of truth, and it is genuinely well-built — but the component tree bypasses it nearly 3:1. Changing the brand green means editing 64 places in two different letter cases. Worse, 7 of the 42 values are not in the token file at all (`#ffc2c2`, `#ececf3`, `#e4e5ef`, `#6b6d84`, `#4ff0a8`, `#14152a`, `#ffd166`) — one-off colours nobody decided on twice.
-- **Recommendation:** Mechanical substitution for the six values that already have tokens (45× `#0a0a12` → `--gi-bg-dark`, 64× `#27EA93`/`#27ea93` → `--gi-green`, 12× `#464861` → `--gi-bg-slate`, 9× `#097a53` → `--gi-green-deep`, 7× `#242538` → `--gi-bg-card-dark`, 5× `#f3f4fb`). Then decide, one at a time, whether each of the seven orphans becomes a token or collapses into an existing one.
+- **Impact:** The previous audit measured 216 literals against 78 token uses; the polish pass inverted that to **121 against 167**, with 39 tokens now defined. The remaining problem is narrower and more specific: **27 of the 121 are the brand green**, concentrated in two components. A brand-colour change today still means editing two files by hand.
+- **Recommendation:** Finish the substitution in `DownloadPage.astro` and `DemoSection.astro` first — those two account for 42% of what is left. The 37 uppercase `#27EA93` occurrences that remain are inside SVG artwork (`SvgHeroDevelopers.astro` 24, `SvgHeroBusiness.astro` 13) plus three inline-SVG uses in `Header.astro` and the token definition itself; SVG artwork is out of scope by explicit instruction and should not be counted against this.
 - **Suggested command:** `/impeccable polish`
 
-**[P2-6] 21 images are served far larger than they are displayed**
+**[P2-6] Eleven images ship at ≥2× their displayed width**
 
-- **Location:** worst cases `etl-scaled.jpg` (natural 2560×711, shown 305×400), `kapitan-navi-gravity-integration-etl.png` (1920×1039 → 612×332), `heropricing.jpg` and `contact.png` (1440×400 → 305×400), and four partner logos on `/pobieranie/` shipped at 800×400 to be drawn at 68×34
+- **Location:** `etl-scaled.jpg` 8.4× (2560 → 305), four case-study logos 7.6× (520 → 68), `heropricing.webp` and `contact.webp` 4.7×, `img.webp` 3.0×, `etl-text.webp` and `CM_CLAIM.webp` 2.7×, `kapitan-navi-gravity-integration-etl.webp` 2.4×
 - **Category:** Performance
-- **Impact:** Bytes downloaded and then discarded, plus decode and rescale work on the main thread. The partner logos are the clearest case — roughly 137× more pixels than are painted.
-- **Recommendation:** Route these through Astro's image pipeline with explicit `widths` and WebP output, or resample at source. The markup already carries correct `width`/`height` on every image, so nothing needs to change structurally.
+- **Impact:** Down from 21, and all but one are now WebP — the format work landed, the resampling did not. Bytes are still downloaded and discarded, and the browser still pays decode and rescale on the main thread. The four case-study logos are the clearest case: roughly 58× more pixels than are painted.
+- **Recommendation:** Resample at source to the largest size actually displayed, then re-encode. The assets live in `public/`, so Astro's image pipeline never sees them — `media-src/` holds the originals, which is where this work starts.
 - **Suggested command:** `/impeccable optimize`
 
-**[P2-7] One stylesheet ships transitions with no reduced-motion escape**
+**[P2-7] The footer logo drops to 19.1 px tall at 320 px**
 
-- **Location:** `WhatIsEsb.9Z0uFwVl.css` — the only one of six built stylesheets with zero `prefers-reduced-motion` blocks, while shipping `transition: color .2s` and `transition: transform .25s`
-- **Category:** Accessibility / Performance
-- **Impact:** Small in absolute terms, but it is a hole in an otherwise complete policy: the other five stylesheets all honour the preference. A user with vestibular sensitivity gets a consistent experience everywhere except this one component.
-- **Recommendation:** Add the same `@media (prefers-reduced-motion: reduce)` block the other stylesheets already use.
-- **Suggested command:** `/impeccable animate`
-
-**[P2-8] No skip link**
-
-- **Location:** every route
-- **Category:** Accessibility
-- **Impact:** A keyboard user must tab through the full header — announcement-bar CTA, language switch, logo, hamburger — on every page before reaching content. `<main>` is present on every route, which is a recognised bypass mechanism for users on assistive tech that exposes landmarks, so this is not a hard failure. It is a gap for sighted keyboard users, who have no landmark navigation.
-- **WCAG:** 2.4.1 Bypass Blocks, A (satisfied via landmarks; the skip link is the sighted-keyboard complement)
-- **Recommendation:** A visually-hidden `<a href="#main">` as the first focusable element, revealed on `:focus`.
-- **Suggested command:** `/impeccable harden`
+- **Location:** `a.logo` in the footer, `small` viewport (320×640), every route
+- **Category:** Responsive
+- **Impact:** 88.4×19.1. The previous audit attributed this to the header logo; enumerating all 144 `a.logo` instances across 18 routes × 4 viewports settles it — the header logo measures 112.5×24.2 at 320 and clears the floor, the footer one does not.
+- **WCAG:** 2.5.8 Target Size (Minimum), AA
+- **Recommendation:** `min-height: 44px` on the footer anchor with the mark centred inside it. The mark itself does not need to grow.
+- **Suggested command:** `/impeccable adapt`
 
 ### P3 — Polish
 
-**[P3-1] Announcement-bar CTAs and header controls sit below the 44 px AAA target**
+**[P3-1] 43 controls sit between 24 px and 44 px**
 
-- **Location:** `Pobierz teraz` (127.5×28) and `Sprawdź zmiany` (144.8×28) on 10 routes; `Download now` (119.6×28) and `See what's new` (125.2×28) on 8; `button.hamburger` at 93.9×40; the language switcher and consent link at 38.8 px; the calculator sliders at 32 px
+- **Location:** Across all 18 routes — the announcement-bar CTAs, the language switcher, the consent-panel controls, the calculator sliders and the header hamburger
 - **Category:** Responsive
-- **Impact:** All clear the 24 px AA floor, so this is comfort rather than compliance. The 28 px bar CTAs are the ones worth raising — they sit at the very top edge of the screen, where thumbs are least accurate.
+- **Impact:** All clear the 24 px AA floor, so this is comfort rather than compliance. The bar CTAs are the ones worth raising: they sit at the very top edge of the screen, where thumbs are least accurate.
 - **WCAG:** 2.5.5 Target Size (Enhanced), AAA
 - **Recommendation:** Take the bar CTAs to 44 px on touch viewports only, via `@media (pointer: coarse)`, so the desktop bar keeps its slim proportions.
 - **Suggested command:** `/impeccable adapt`
 
-**[P3-2] Three images ship without `loading="lazy"`**
+**[P3-2] One stylesheet ships motion with no reduced-motion escape**
 
-- **Location:** `linesdownload.svg` (`/`, `/en/`), `logo-dark.svg` (every route), `logo_small.svg` (`/cennik/`, `/en/pricing/`)
+- **Location:** `WhatIsEsb.Dm9LqSoJ.css` — the only one of six built stylesheets with zero `prefers-reduced-motion` blocks, while shipping two animation/transition declarations. Loaded by `/czym-jest-esb/` and `/en/what-is-esb/`.
+- **Category:** Accessibility
+- **Impact:** Small in absolute terms, but it is a hole in an otherwise complete policy: the other five stylesheets all honour the preference. Carried forward unchanged.
+- **Recommendation:** Add the same `@media (prefers-reduced-motion: reduce)` block the other five already use.
+- **Suggested command:** `/impeccable animate`
+
+**[P3-3] Focus indicators fall short of AAA focus appearance**
+
+- **Location:** Ten of the eleven keyboard-focusable form controls tested at 1440
+- **Category:** Accessibility
+- **Impact:** Measured as the ratio between the focused and unfocused states of the changed area: the four demo fields reach **1.80:1**, the five sliders **2.06:1**, `#dl-email` **2.32:1**, against the 3:1 AAA threshold. `#dl-company` is the sole pass at **11.96:1**. All of these pass the AA criterion (1.4.11) comfortably except the sliders, which are recorded separately as P2-2 — this finding is the AAA layer only.
+- **WCAG:** 2.4.13 Focus Appearance, AAA
+- **Recommendation:** Recorded for completeness and probably not worth taking. Reaching 3:1 state-to-state on the demo fields would mean a heavier ring than the design calls for, on controls whose AA indicator is already 6.96:1 against its surround. Fix P2-2 and leave the rest.
+- **Suggested command:** none — informational
+
+**[P3-4] 292 images ship without a `decoding` attribute**
+
+- **Location:** Across all 18 routes
 - **Category:** Performance
-- **Impact:** Minor — all three are small SVGs, and `logo-dark.svg` is above the fold where eager loading is correct. Only `linesdownload.svg` is a genuine miss.
-- **Recommendation:** Add `loading="lazy"` to `linesdownload.svg` and `logo_small.svg`; leave the header logo eager and consider `fetchpriority="high"` on it instead.
+- **Impact:** Minor. Every image already carries `width`, `height` and `loading`, so there is no layout shift and no eager-loading waste; `decoding="async"` would only keep image decode off the critical path during first paint. Worth doing in the same pass as the resampling, not on its own.
+- **Recommendation:** `decoding="async"` on everything below the fold; leave the header logo synchronous.
 - **Suggested command:** `/impeccable optimize`
 
-**[P3-3] The brand green is written in two letter cases**
+## Previous findings, re-measured
 
-- **Location:** 40 occurrences of `#27EA93`, 24 of `#27ea93`
-- **Category:** Theming
-- **Impact:** Same colour, so nothing renders wrong — but any grep-based refactor or token migration silently misses one of the two sets. It is the reason a mechanical fix for P2-5 has to be written case-insensitively.
-- **Recommendation:** Resolved by P2-5; noted separately so the substitution is written to catch both.
-- **Suggested command:** `/impeccable polish`
+Every one of the previous audit's 19 findings was re-measured against the current build. None was carried forward on the strength of a commit message.
 
-**[P3-4] Every page ships 172–189 kB of CSS**
+**Fixed — 12:**
 
-- **Location:** `Site.oKJWfLLW.css` at 172 kB, loaded on all 18 routes
-- **Category:** Performance
-- **Impact:** Render-blocking on first visit, then cached. The bulk is the vendored Bootstrap layer inside `legacy.css`, most of which the ported design does not use. Not urgent — but it is the floor under every page, including the 381 kB privacy policy where it is nearly half the weight.
-- **Recommendation:** Run a coverage pass in DevTools across the 18 routes and strip the unused Bootstrap utilities. Do this *after* the P1 focus-indicator work, not before — that work touches `legacy.css` and you want one edit to it, not two.
-- **Suggested command:** `/impeccable optimize`
+- **P1-1** hero social-proof line: 3.77 → **6.25:1** (composited from `rgba(255,255,255,0.55)` over black, at 12.8 px/300)
+- **P1-2** "(optional)" hints: 4.19 → **5.24:1** (`rgba(255,255,255,0.78)` over `rgb(83,85,104)`, at 13.6 px/400)
+- **P1-3** the hamburger: draws a ring under real keyboard focus, 629 changed pixels, **10.54:1** indicator against its ground
+- **P1-4** the logo link: all **144** instances (18 routes × 4 viewports × 2 logos) carry an accessible name — three distinct shapes, all named
+- **P1-5** the five ROI sliders: every one now carries a `<label for>`; announced names are the visible captions
+- **P1-6** `/case-studies/`: **2.78 MB → 336 kB**
+- **P1-7** the contact email field: **12.48:1** indicator under real keyboard focus
+- **P2-3** `autocomplete`: present, alongside `required` and `aria-required`
+- **P2-8** the skip link: present on all **18** routes
+- **P3-2** images without `loading`: **zero**
+- **P3-3** brand-green letter case: resolved in authored CSS; the 37 uppercase occurrences that remain are SVG artwork, out of scope
+- **P3-4** CSS weight: **172–189 kB → 47–61 kB** per route
+
+**Improved but not closed — 2:**
+
+- **P2-5** tokens: 216 literals / 78 references → **121 / 167**, with 39 tokens defined. Re-reported above.
+- **P2-6** oversized images: **21 → 11**, all but one now WebP, none resampled. Re-reported above.
+
+**Still open — 5:** P2-1 (contact links), P2-2 (the logo at 320 — re-attributed to the footer logo and re-reported as P2-7), P2-4 ("here"), P2-7 (WhatIsEsb reduced motion — re-reported as P3-2), P3-1 (targets between 24 and 44 px).
 
 ## Patterns & Systemic Issues
 
-**Every accessibility gap is in ported code; every hand-built component is clean.** This is the strongest signal in the audit. `legacy.css` — the minified WordPress theme layer — sets `outline: 0` on `.hamburger` and on form inputs, and its `:not([type=submit])` exclusion is precisely why the submit button keeps a ring and the email field beside it does not. Nothing supplies a replacement, and `site.css` contains zero `:focus` rules of any kind. Meanwhile every component written for this rebuild — `Icons.astro`, `LangSwitch.astro`, `Footer.astro`, `DemoSection.astro`, `CookieConsent.astro`, `AnnouncementBar.astro`, `DownloadPage.astro`, `NotFound.astro`, `RoiCalculator.astro` — ships a real `:focus-visible` treatment. The same split explains the missing accessible name on the logo and the missing labels on the ported form controls. The fix is not scattered: it is one focus-visible pass over the legacy layer, and it resolves five of the seven P1s.
+**The legacy layer is no longer the story.** The previous audit's strongest signal was that every accessibility gap lived in ported code while every hand-built component was clean. That pattern is closed: the focus indicators, the accessible names, the labels and the contrast fixes all landed, and `legacy.css` went from 162,623 to 28,912 bytes along the way. Nothing in this pass traces back to it.
 
-**Colour was ported before the token file existed.** 216 literals against 78 `var(--gi-*)` uses, with the brand green in two letter cases and seven values that appear nowhere in `tokens.css`. This is not a design problem — the palette is coherent and deliberate — it is a migration that stopped halfway. It matters now because the token file is where the next theme decision will be made, and today that decision would not propagate.
+**What is left clusters by style rule, not by page.** Eleven findings, four underlying causes: one `.btn-text` rule (seven links), one `::-webkit-slider-thumb` alpha (five sliders), one element name in `Header.astro` (18 routes), one un-run resampling step (eleven images). That is why there are no P1s despite the finding count — nothing here compounds, and each fix is bounded.
 
-**Images went in at source resolution.** 21 oversized images and one 2.35 MB GIF, on a site whose markup is otherwise careful: every image carries `width` and `height`, which is the harder discipline. The asset pipeline was simply never pointed at the media.
+**Instrumentation lied more than the site did, and in a specific direction.** All 13 raw findings — 2 contrast, 11 focus — were false positives. Every one of them was a case of a probe reporting *the absence of what it cannot observe* as the absence of the thing itself: `getComputedStyle` on a range input cannot see a shadow drawn on `::-webkit-slider-thumb`; a CSS-only backdrop walk cannot resolve ink behind a transparent fixed header; an off-screen honeypot at x = −9566 reads as "in the DOM" to anything that doesn't check where it actually sits. The corrective is not a better probe but a second instrument of a different kind — pixels, under a real Tab. Worth stating plainly: **the one genuinely new finding in this audit (P2-2) was produced by the arbitration, not by the sweep.** Had the sweep's eleven focus findings been trusted, the report would have been eleven wrong things and one missing right one.
 
-**Touch targets cluster at exactly two heights, 17 px and 28 px.** The 17 px group is the `.btn-text` link style used through the contact block; the 28 px group is the announcement bar. Both are single style rules, so both are one-line fixes rather than a sweep.
+**Colour discipline improved faster than colour consolidation.** The letter-case inconsistency is gone from authored CSS and the token file grew to 39 entries, but 121 literals remain and 27 of them are the one colour the token file exists to own. Discipline arrived; the migration is still two components short of done.
 
 ## Positive Findings
 
-**Responsive behaviour is genuinely clean.** Zero horizontal overflow at 320, 390, 768 and 1440 across all 18 routes. That is the most common failure in this category and it does not occur once — including on the widest-content pages and at 320 px, where most sites break. The previous audit's three responsive bugs are all gone.
+**Zero horizontal overflow in 72 of 72 combinations.** At 320, 390, 768 and 1440, across all 18 routes, in both locales. This is the single most common failure in the responsive category and it does not occur once.
 
-**Zero JavaScript errors and zero console warnings** across every route in both locales.
+**Zero JavaScript errors and zero console warnings** on every route at every viewport.
 
-**Semantic structure is correct throughout:** exactly one `<h1>` per page (the previous audit's missing-H1 finding is fixed), no heading-level skips anywhere, `<main>` on every route, no clickable `<div>`s, no images missing `alt`.
+**Semantic structure is correct throughout:** exactly one `<h1>` per page, **zero** heading-level skips anywhere, `<main>` on every route, no clickable `<div>`s, no images missing `alt`. The `<nav>` gap (P2-3) is the only structural finding.
 
-**`tokens.css` is a real design system, not a token file in name only** — a proper colour ramp, a genuine semantic z-index scale (`--gi-z-decor: 2` through `--gi-z-toast: 50`; the previous audit's arbitrary `9999` is gone from the new code), and layout tokens. The problem is adoption, not design.
+**Every image carries explicit `width`, `height` and `loading`.** Zero exceptions across 292 images. Layout shift from media is structurally impossible on this site.
 
-**Every image carries explicit `width` and `height`,** so there is no layout shift from media. The discipline that is usually missing is present here; the one that is usually present — resampling — is the one that is missing.
+**Total weight across the 18 routes fell from 18.1 MB to 5.83 MB** — a 68% reduction, measured as real transfer bytes rather than declared `Content-Length`. The heaviest route is now `/technologia/` at 535 kB; the lightest, `/polityka-prywatnosci/`, is 181 kB.
 
-**The honeypot is correctly implemented.** `.demo-hp` is off-screen positioned, 1×1, `overflow: hidden`, `tabindex="-1"` — invisible to both users and the tab order, which is what makes it a honeypot rather than a trap. It generated a contrast finding and two target-size findings in the raw sweep, all correctly false.
+**Form accessibility is complete.** Labels, `autocomplete`, `required` and `aria-required` on every field; accessible names on all five sliders; a visible focus indicator on every one of the eleven controls tested under a real keyboard.
 
-**Reduced motion is honoured in five of six stylesheets,** which means it was a policy rather than an accident. Only `WhatIsEsb` was missed.
+**The honeypot is correctly implemented.** Off-screen at x = −9566 inside a 1×1 wrapper, `tabindex="-1"` — invisible to both users and the tab order, which is what makes it a honeypot rather than a trap. It generated three findings in the raw sweep, all correctly false.
 
-**No `will-change` abuse, no unbounded blur or filter effects, no animation of layout properties.** The motion that exists is transform- and opacity-based.
+**Reduced motion is honoured in five of six stylesheets,** which makes it a policy rather than an accident. Only `WhatIsEsb` was missed.
 
-**The two most recent fixes both still verify clean:** the header menu-control alignment (rings coincident and labels flush in all four states across three viewports, scrollbar gutter reserved, nothing overflowing sideways) and the consent-gated MailerLite pop-up.
+**`tokens.css` is a real design system** — a proper colour ramp, a genuine semantic z-index scale, layout tokens, 39 entries. The remaining problem is adoption in two components, not design.
+
+**Motion is disciplined.** One `will-change` on the whole site, no unbounded blur or filter effects, no animation of layout properties, and all four `cubic-bezier` curves monotone ease-outs with ordinates inside [0,1].
+
+**Both recent changes verify clean.** The green download item in the menu measures 3.22:1 at rest and 5.09:1 inverted on 36–64 px type, and the direct-installer link in the download form's success panel renders and fires its `direct_download` event without re-firing `generate_lead`.
 
 ## Suppressed false positives
 
 Recorded so a re-run doesn't re-report them:
 
-- **Ten "2.22:1" findings on the hero SVG captions** (`/`, `/en/`) — the harness read `color`, where SVG `<text>` takes its ink from `fill`. Real fills are `rgb(255,255,255)` and `rgb(39,234,147)`, measured at better than 11:1. *The harness has been fixed.*
-- **`span.btn.btn-text` "MENU" at 1:1 on every route** — the fixed header is transparent, which defeats a CSS-only backdrop walk. Pixel-arbitrated at 19.72:1 over the hero and 8.90:1 over the open menu.
-- **`label` "Leave this field empty" at 1.21:1 on 12 routes**, plus the target-size findings on `input#demo-website-url` (215×23) and `input#dl-website-url` (188×23) — all three are the honeypot, correctly implemented.
-- **`NOLABEL input.wpcf7-submit` on 7 routes** — `<input type="submit" value="Zapisz się">` takes its accessible name from `value`.
-- **All 27 "text over an image" cases** — pixel-arbitrated between 8.11:1 and 11.06:1. None fail.
-- **11 of the 13 "no focus ring" findings** — the four demo fields, both download fields and all five calculator sliders do draw indicators under real keyboard focus. The slider thumb rings in particular are invisible to CDP's `CSS.forcePseudoState`, which cannot reach `::-webkit-slider-thumb`, and invisible to element-clipped screenshots, which crop away an outline drawn outside the element box.
-- **`input#nemaiil` on `/kontakt/` initially read as "ok"** at 0.68% of pixels changed — that was the uppercase label above it reflowing by a pixel, not a ring. Viewing both crops side by side settled it: the field border is pixel-identical. Reported as a real failure under P1-7.
+- **`span.btn.btn-text` "MENU"** — the fixed header is transparent, which defeats a CSS-only backdrop walk. Pixel-arbitrated at **16.67:1**.
+- **The honeypot label "Leave this field empty"** and the two target-size findings on the fields beside it — the element sits at **x = −9566** in a 1×1 wrapper with `tabindex="-1"`. Not on the page.
+- **All 11 "no focus ring" findings.** Under a real Tab, every one paints an indicator. The five slider cases survive in altered form as **P2-2 — a *contrast* finding, not an absence**; the other six are cleanly false. `getComputedStyle` on the input reports `outline: none` and a transparent `box-shadow` because the ring lives on `::-webkit-slider-thumb`, which it can never reach.
+- **All 27 "text over an image" cases** — pixel-arbitrated; none fail.
+- **The footer logo's empty `text` field.** `probe.targets[].text` is `textContent`, not an accessible name; reading it as a name manufactures a phantom "unnamed logo link". Enumerating every naming source across all 144 instances found no unnamed logo.
+- **"0 oversized images"** — an earlier query read fields (`i.nw` / `i.dw`) that do not exist in the record shape (`natural: [w,h]` / `shown: [w,h]`), so every record fell through and the query returned a convenient zero. The real answer is 11. A null instrument is not a pass.
 
 ## Recommended Actions
 
-1. **[P1] `/impeccable harden`** — the accessibility pass. Focus indicators for `button.hamburger` and `input#nemaiil` (both trace to `outline: 0` in `legacy.css` with no replacement), an accessible name for the logo link, labels and `aria-valuetext` for the five calculator sliders, the two contrast fixes on translucent white, `autocomplete="email"`, and a skip link. Seven P1s and two P2s, most of them in the same two files.
-2. **[P1] `/impeccable optimize`** — page weight. Convert `tiptopol-dpd-integration.gif` (2.35 MB) to a looping muted MP4, route the 21 oversized images through the Astro image pipeline, fix the two genuine lazy-loading misses, and strip unused Bootstrap from the 172 kB stylesheet once the `legacy.css` edits above have landed.
-3. **[P2] `/impeccable adapt`** — touch targets. The six 17 px contact links to 29 px via transparent padding, the logo link to 44 px at 320, and the 28 px announcement-bar CTAs to 44 px under `@media (pointer: coarse)`.
-4. **[P2] `/impeccable animate`** — add the missing `prefers-reduced-motion` block to `WhatIsEsb`, matching the five stylesheets that already have one.
-5. **[P2] `/impeccable clarify`** — replace the bare "here" link on `/en/pricing/` with its destination.
-6. **[P2] `/impeccable polish`** — migrate the 216 hard-coded hex literals onto `tokens.css` (case-insensitively, so both spellings of the brand green are caught), and decide what happens to the seven orphan colours that have no token at all.
+1. **[P2] `/impeccable adapt`** — the largest group. The seven 17 px contact links to 29 px via transparent padding, the footer logo to 44 px at 320, the slider ring's alpha from 0.3 to 0.38, and the 28 px announcement-bar CTAs to 44 px under `@media (pointer: coarse)`.
+2. **[P2] `/impeccable harden`** — change `<section class="nav-main">` to `<nav class="nav-main">` with a per-locale `aria-label` from `ui.ts`.
+3. **[P2] `/impeccable clarify`** — replace the bare "here" on `/en/pricing/` with its destination.
+4. **[P2] `/impeccable optimize`** — resample the 11 oversized images at source (starting with `etl-scaled.jpg` at 8.4× and the four case-study logos at 7.6×), and add `decoding="async"` below the fold.
+5. **[P3] `/impeccable animate`** — add the missing `prefers-reduced-motion` block to `WhatIsEsb`, matching the five stylesheets that already have one.
+6. **[P2] `/impeccable polish`** — finish the token migration in `DownloadPage.astro` (29 literals) and `DemoSection.astro` (22), and move the hero social-proof line's inline style into the stylesheet.

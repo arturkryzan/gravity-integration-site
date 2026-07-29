@@ -40,9 +40,12 @@ new/  — @@NNEW@@ patches, on top of "Translate the rest of the content"
   0010  Translate the last Polish label on the English contact page
   0011  Price the English site in euro: 0 / 799 / 1,799
   0012+  everything from here is described in the notes below rather
-         than listed by number: 0012-0016 and 0018 are packaging
-         tooling with no page changes, and 0017 removes the English
-         ROI calculator.
+         than listed by number. In short: 0012-0016, 0018 and 0019 are
+         packaging tooling with no page changes; 0017 removes the
+         English ROI calculator; 0020 rewrites the deploy run-book;
+         0021 loads the MailerLite pop-up on consent; 0022-0023 fix the
+         header menu control; and 0024-0026 are the three quality
+         passes — audit, harden, optimize.
 
 Until 0005 lands, the English pages build but carry noindex, stay out of
 the sitemap, and the language switcher doesn't offer them. That is what
@@ -92,6 +95,40 @@ its entry in this file.
 What you'll see: the English menu is Home / Download / Contact, with
 Pricing still in the secondary menu as before, and the English home
 page's "for business" block has one button instead of two.
+
+0020 replaces the deploy run-book with one written against your actual
+server rather than a generic Apache. 0021 loads the MailerLite pop-up
+again — Polish pages only, and only after the visitor accepts the
+consent banner, so the tag stays silent until then and withdrawal clears
+it. 0022 and 0023 fix the header: the MENU/CLOSE label no longer slides
+sideways when the menu opens, and the scrollbar gutter is reserved so
+the page doesn't shift underneath it.
+
+0024, 0025 and 0026 are three quality passes, each with its own report
+in the repo root:
+
+  0024  audit     → AUDIT.md. Measures 18 routes at four viewports for
+                    accessibility, performance, responsive behaviour and
+                    theming. Changes nothing but the audit harness
+                    itself; the report is the deliverable.
+  0025  harden    → clears every P1 accessibility finding. Focus rings
+                    on the hamburger and the rest of the controls,
+                    accessible names for the logo link and the five ROI
+                    sliders, and two contrast fixes.
+  0026  optimize  → OPTIMIZE.md. Total page weight across the 18 routes
+                    falls 67%, 18.1 MB to 6.0 MB. The 2.35 MB
+                    case-study GIF becomes a 1.28 MB MP4, 36 raster
+                    images become WebP, legacy.css is stripped from
+                    163 KB to 29 KB, four videos stop downloading before
+                    they're on screen, and the fonts ship woff2 only.
+                    Every one of those was gated against a 38-shot
+                    pixel diff of all 18 routes at two widths before it
+                    was kept.
+
+0026 also moves 4.5 MB of files nothing references out of public/ and
+into media-src/orphans/, and moves the originals of every re-encoded
+image there too. Nothing on the site points at them; they are kept in
+the repo so a future edit has the source to work from.
 
 full/  — @@NFULL@@ patches, on top of "Teach the codebase about locales"
 ----------------------------------------------------------------

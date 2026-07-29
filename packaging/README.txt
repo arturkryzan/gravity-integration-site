@@ -48,6 +48,40 @@ What to look at, in order
    local preview above you'll get python's own plain 404 instead.
 
 
+New since the last preview
+--------------------------
+Four things changed that you'll notice, and one you'll only notice on a
+slow connection.
+
+The MailerLite pop-up is back, on the Polish pages only, and only after
+the visitor accepts the consent banner. Until they do, nothing MailerLite
+loads at all — no script, no cookie. If they later withdraw consent it is
+cleared again. The pop-up itself is the one already configured in your
+MailerLite account; nothing there was changed.
+
+The header menu control was misaligned — the MENU label slid sideways as
+the menu opened, and the page shifted underneath it because the scrollbar
+disappeared. Both are fixed. The circle and the word now stay put.
+
+The site went on a diet. Across all 18 pages it now transfers 6.0 MB
+instead of 18.1 MB, a 67% cut, and the heaviest page — /case-studies/ —
+dropped from 2.8 MB to about 0.5 MB. The 2.35 MB animated GIF in the
+TipTopol case study is now a silent looping video that starts from a
+still frame; the customer logos and screenshots are WebP; the stylesheet
+is a fifth of its old size; the videos no longer download until you
+scroll to them; and the fonts ship in one format instead of three. Every
+one of those changes was checked by screenshotting all 18 pages at two
+widths before and after and comparing them pixel by pixel — the site
+looks identical, it just weighs a third of what it did. OPTIMIZE.md in
+the repo has the per-page numbers.
+
+There is also an accessibility pass in here: the keyboard focus ring is
+visible on every control including the hamburger, the logo link and the
+five calculator sliders have proper names for screen readers, and two
+pieces of washed-out grey text were darkened to pass contrast. AUDIT.md
+has the full report and the findings that are still open.
+
+
 There is no English calculator
 ------------------------------
 /en/roi-calculator/ is gone, at your call, and the Polish /kalkulator/ is

@@ -1,10 +1,14 @@
 The English site, as a replayable patch series
 ==============================================
 
-Why patches and not a push: this session's GitHub credentials get a 403
-on arturkryzan/gravity-integration-site, so nothing here can reach it.
-These patches carry the identical work; you apply them in your own clone
-and push from there.
+Why patches and not a push: this sandbox has no write credential for
+GitHub at all. It can read the repo anonymously — git fetch works — but
+git push dies with "could not read Username for 'https://github.com'"
+because there is no token to present and prompting is disabled. (An
+earlier version of this file blamed a 403. That was wrong, and measuring
+it rather than repeating it is what found the real cause.) These patches
+carry the identical work; you apply them in your own clone and push from
+there.
 
 There are two folders. Apply ONE of them, not both.
 

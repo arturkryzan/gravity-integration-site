@@ -1248,7 +1248,7 @@ const clients = [
      With JS off the form POSTs natively to MailerLite and the link still goes
      out — this layer keeps the visitor on the page and answers them. */
   import { mlAction } from '../lib/mailerlite';
-  import { mlSubmit, trackLead } from '../scripts/ml-forms';
+  import { mlSubmit, trackDownloadConversion, trackLead } from '../scripts/ml-forms';
   import { pick } from '../i18n/client';
 
   const FREE_MAIL = new Set([
@@ -1547,6 +1547,11 @@ const clients = [
       if (result.ok) {
         showDone(email);
         trackLead('download_link_requested');
+        /* The same moment, told to Google Ads as the campaign's conversion.
+           Separate call on purpose: generate_lead stays the one GA4 lead
+           metric shared by all four forms, while this addresses the download's
+           own conversion action — the number the Ads campaign bids against. */
+        trackDownloadConversion();
         return;
       }
 

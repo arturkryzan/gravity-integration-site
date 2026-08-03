@@ -114,6 +114,32 @@ export async function mlSubmit(
  * the intended outcome, not a gap: the event is recorded only for people who
  * agreed to be measured.
  */
+/**
+ * Record the gated software download as a native Google Ads conversion.
+ *
+ * This is the one event on the site addressed at the Ads tag rather than GA4.
+ * `send_to` carries the conversion action's own id — "AW-11029031415/<label>",
+ * created in the Ads UI and pasted into site.json as `adsDownloadConversion` —
+ * so it lands on exactly that action: GA4 ignores it, and no other Ads
+ * conversion can claim it. The conversion's value/currency live on the action
+ * in the Ads UI, not here, so pricing it differently never needs a deploy.
+ *
+ * Until the label exists the config is an empty string and this is a no-op —
+ * deliberately, because an unaddressed `conversion` event would fan out to the
+ * Ads tag as an *unlabelled* conversion, which is how phantom conversions
+ * appear in an account nobody configured (see trackLead above).
+ *
+ * Consent behaves exactly as it does for `generate_lead`: the gtag shim always
+ * exists, so with consent refused the event queues into dataLayer and reaches
+ * nothing, because no tag was ever loaded.
+ */
+export function trackDownloadConversion() {
+  const w = window as any;
+  const sendTo = w.giAdsDownloadTo;
+  if (!sendTo || typeof w.gtag !== 'function') return;
+  w.gtag('event', 'conversion', { send_to: sendTo });
+}
+
 export function trackLead(event?: string) {
   const w = window as any;
   if (event) w.dataLayer?.push({ event });

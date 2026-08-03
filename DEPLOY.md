@@ -118,10 +118,10 @@ breaks, but if you get cron mail you will now know why.
 
 ## Step 3 — upload the site
 
-`gravity-preview/` is already the built site: exactly what `npm run build`
-produces, plus the server files. There is nothing to compile and no Node needed.
-Upload the **contents** of that folder — not the folder itself — into the
-docroot. Twenty-five entries, 15 MB, 176 files:
+`gravity-deploy-20260730/` is already the built site: exactly what `npm run
+build` produces, plus the server files. There is nothing to compile and no Node
+needed. Upload the **contents** of that folder — not the folder itself — into
+the docroot. Twenty-five entries, 7.6 MB, 162 files:
 
 ```
 .htaccess          czym-jest-esb/     kontakt/           sitemap-0.xml
@@ -137,7 +137,7 @@ If you have shell access, this is the safe form of the command that used to be
 here — same `rsync`, no `--delete`:
 
 ```bash
-cd ~/Desktop/GRAVITY.nosync/gravity-preview
+cd ~/Desktop/SITES/gravity-integration/gravity-deploy-20260730
 rsync -av ./ user@server:/path/to/docroot/
 ```
 

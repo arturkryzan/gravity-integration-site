@@ -19,12 +19,20 @@
  *
  *   ORIGIN=http://127.0.0.1:8412 node scripts/verify-ads-conversion.mjs
  */
+import { readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const BASE = process.env.ORIGIN || 'http://127.0.0.1:8412';
 const GTM = /googletagmanager\.com/;
 const ML = /assets\.mailerlite\.com/;
 const TEST_SEND_TO = 'AW-11029031415/TESTLABEL';
+
+/* The expected send_to comes from site.json itself, so this harness states the
+   truth in either era: before the conversion action existed the value was ""
+   and scenario 1 asserted the no-op guard; now it asserts the real label. */
+const CONFIGURED = JSON.parse(
+  readFileSync(new URL('../src/data/site.json', import.meta.url), 'utf8'),
+).adsDownloadConversion;
 
 let pass = 0;
 const fails = [];
@@ -99,31 +107,44 @@ async function submitDownloadForm(page, { patient, sendTo }) {
   await page.waitForTimeout(300);
 }
 
-/* ============ 1. shipped default: empty label → no conversion ============ */
-console.log('\n=== empty adsDownloadConversion (shipped default) ===');
+/* ============ 1. the build as configured in site.json ============ */
+console.log(`\n=== site.json label: ${JSON.stringify(CONFIGURED)} ===`);
 {
   const { ctx, page, mlHits } = await fresh();
   await submitDownloadForm(page, { patient: true });
 
   assert('MailerLite got the submission', mlHits.length >= 1, true);
-  assert('giAdsDownloadTo is empty in the build', await page.evaluate(() => window.giAdsDownloadTo), '');
-  assert('generate_lead fired exactly once', (await events(page, 'generate_lead')).length, 1);
-  assert('no conversion event without a label', (await events(page, 'conversion')).length, 0);
+  assert('build carries the configured send_to', await page.evaluate(() => window.giAdsDownloadTo), CONFIGURED);
+  const conv = await events(page, 'conversion');
+  const lead = await events(page, 'generate_lead');
+  if (CONFIGURED) {
+    assert('conversion fired exactly once', conv.length, 1);
+    assert('addressed at the download conversion action', conv[0]?.send_to, CONFIGURED);
+  } else {
+    assert('no conversion event without a label', conv.length, 0);
+  }
+  assert('generate_lead fired exactly once', lead.length, 1);
+  assert('generate_lead addressed at GA4', lead[0]?.send_to, 'G-EWVWPJGYVM');
   await ctx.close();
 }
 
-/* ============ 2. label present → one addressed conversion ============ */
-console.log('\n=== label configured ===');
+/* ============ 2. the empty-config guard stays honest ============ */
+console.log('\n=== empty label → no conversion (guard) ===');
 {
   const { ctx, page } = await fresh();
-  await submitDownloadForm(page, { patient: true, sendTo: TEST_SEND_TO });
+  await page.goto(BASE + '/pobieranie/', { waitUntil: 'networkidle' });
+  await page.evaluate(() => { window.giAdsDownloadTo = ''; });
+  await page.click('.gi-consent-accept');
+  await page.fill('#dl-email', 'probe@firma-testowa.pl');
+  await page.fill('#dl-company', 'Firma Testowa');
+  await page.check('#dl-consent');
+  await page.waitForTimeout(2300);
+  await page.click('.dl-submit');
+  await page.waitForSelector('.dl-done[data-in]', { timeout: 5000 });
+  await page.waitForTimeout(300);
 
-  const conv = await events(page, 'conversion');
-  const lead = await events(page, 'generate_lead');
-  assert('conversion fired exactly once', conv.length, 1);
-  assert('addressed at the download conversion action', conv[0]?.send_to, TEST_SEND_TO);
-  assert('generate_lead still fired exactly once', lead.length, 1);
-  assert('generate_lead still addressed at GA4', lead[0]?.send_to, 'G-EWVWPJGYVM');
+  assert('generate_lead fired exactly once', (await events(page, 'generate_lead')).length, 1);
+  assert('no conversion event without a label', (await events(page, 'conversion')).length, 0);
   await ctx.close();
 }
 

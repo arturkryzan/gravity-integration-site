@@ -31,7 +31,7 @@
         },
         {
           "name": "Pojedyncze zastosowanie komercyjne",
-          "text": "<ul>\n<li>Jedno połączenie wykorzystywane komercyjnie.</li>\n<li>Pełne wsparcie.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
+          "text": "<ul>\n<li>Jedno zastosowanie komercyjne.</li>\n<li>Pełne wsparcie.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
           "price": "2999",
           "currency": "PLN",
           "btn": "Kup licencję",

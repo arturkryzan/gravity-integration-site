@@ -33,7 +33,7 @@
         },
         {
           "name": "A single commercial use case",
-          "text": "<ul>\n<li>One connection used commercially.</li>\n<li>Full support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
+          "text": "<ul>\n<li>One commercial use case.</li>\n<li>Full support.</li>\n<li>Net price per instance.</li>\n</ul>\n",
           "price": "799",
           "currency": "EUR",
           "btn": "Buy a licence",

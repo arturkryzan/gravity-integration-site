@@ -230,7 +230,17 @@ for (const r of ROUTES) {
         a.removeAttribute('download');           // don't start a real navigation
         a.setAttribute('href', 'javascript:void 0');
         a.click();
-        return w.dataLayer.slice(before).map((e) => JSON.stringify(e));
+        /* Count only what the site pushes. When the real gtag.js loads (the
+           harness accepts consent and this environment can reach Google),
+           GA4's enhanced measurement adds its own `gtm.linkClick` on every
+           anchor click — Google's bookkeeping, not ours, and not a second
+           lead. Without this filter the assertion passes only in sandboxes
+           that cannot reach googletagmanager.com, which is the wrong thing
+           to depend on. */
+        return w.dataLayer
+          .slice(before)
+          .filter((e) => !(e && typeof e.event === 'string' && e.event.startsWith('gtm.')))
+          .map((e) => JSON.stringify(e));
       });
       console.log(`          dataLayer after click: ${JSON.stringify(events)}`);
       if (events.length !== 1) fail(`[${r.locale}] click pushed ${events.length} events, expected 1`);

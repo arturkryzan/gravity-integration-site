@@ -70,6 +70,10 @@
           "ans": "<p>You can test your own or your clients' environments for as long as you need. The moment you decide to leave the testing stage, a licence purchase is required. If you plan to use gravity.integration for a single purpose — say, connecting an ERP system to logistics providers — you can use the special promotional licence. For multiple use cases, buy the full licence and build any number of connections without limits.<br />\nYou can do it straight from the software, or contact us <a href=\"/en/contact/\">here</a>.</p>\n"
         },
         {
+          "que": "What's the difference between \"A single commercial use case\" and the full commercial licence?",
+          "ans": "<p>The number of use cases — not the features. The installer and the software's capabilities are identical.</p>\n<p><strong>A single use case</strong> (799&nbsp;EUR net per year) covers one business purpose on one instance: for example feeding time-and-attendance records from an RCP system into your ERP, as <a href=\"/en/case-studies/#section2\">Kapitan Navi</a> does, or connecting an ERP to courier services, as <a href=\"/en/case-studies/#section0\">TIP-TOPOL</a> does. Technically that one purpose may take several projects and data flows — what matters is that they all serve the same goal.</p>\n<p><strong>The full commercial licence</strong> (1,799&nbsp;EUR net per year) removes that limit: on one instance you build any number of connections between any number of systems — ERP, WMS, CRM, e-commerce, couriers, e-invoicing — with priority support included.</p>\n<p>Rule of thumb: one specific task to automate → single use case; a data bus for the whole company → full licence. See both variants in practice in our <a href=\"/en/case-studies/\">case studies</a>.</p>\n"
+        },
+        {
           "que": "Can multiple users work under one gravity.integration licence?",
           "ans": "<p>Yes — a single licence is limited to one instance (an installation on one physical machine) and has no user limit. You'll only need further licences if you decide to run more instances.</p>\n"
         },

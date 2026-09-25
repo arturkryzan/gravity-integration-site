@@ -98,6 +98,7 @@ that is `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Running locally,
 | `audit-impeccable.mjs` | 18 routes × 4 viewports → `/tmp/audit-raw.json` | `ORIGIN=http://127.0.0.1:8501 node scripts/audit-impeccable.mjs` |
 | `shoot-routes.mjs` | screenshots for pixel diffing | `ORIGIN=http://127.0.0.1:8601 node scripts/shoot-routes.mjs` |
 | `diff-shots.mjs` | compares two shot directories | `node scripts/diff-shots.mjs A B /tmp/shots-diff` |
+| `verify-video-seam.mjs` | the `connect-systems` loop plays, fits its slot, and its decoded edge melts into `#f3f4fb` (≤1 level) on `/` and `/en/` | `ORIGIN=http://127.0.0.1:8412 node scripts/verify-video-seam.mjs` |
 
 `regress-pixels.mjs` **needs `HIDE=layout`**. Without it the footer switcher
 keeps a box the baseline never had, every mobile page grows ~15 px, and you get

@@ -57,9 +57,14 @@ const overrides = {
   slug={page.slug}
   draft={page.draft}
   bodyClass="home"
+  heroTone="mint"
 >
   <HomeHero h1={page.h1} />
-  <SectionRenderer sections={page.sections.slice(0, 3)} overrides={overrides} />
+  <SectionRenderer
+    sections={page.sections.slice(0, 3)}
+    overrides={overrides}
+    options={{ 2: { numbered: true } }}
+  />
   <DemoSection />
   <SectionRenderer sections={page.sections.slice(3)} startIndex={3} logoSections={[3]} />
 </Site>

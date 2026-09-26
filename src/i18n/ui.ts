@@ -99,8 +99,15 @@ const pl = {
      than describing the picture \u2014 a screen-reader user wants to know
      where it goes, not what it looks like. */
   'nav.logoHome': 'gravity.integration \u2014 strona główna',
-  /* First focusable element on every page; see .skip-link in site.css. */
+  /* First focusable element on every page; see .skip-link in base.css. */
   'nav.skipToContent': 'Przejdź do treści',
+  /* v2: accessible names for the landmarks the visible top bar introduced.
+     Names, not copy — nothing here is painted. */
+  'nav.aria': 'Nawigacja główna',
+  'nav.menuAria': 'Menu',
+  'nav.onThisPage': 'Na tej stronie',
+  'nav.footerAria': 'Mapa strony',
+  'int.jumpAria': 'Kategorie integracji',
 
   /* Accessibility ------------------------------------------------------ */
   'a11y.newTab': ' (otwiera się w nowej karcie)',
@@ -123,6 +130,7 @@ const pl = {
   'bar.download': 'Pobierz teraz',
   'bar.changelog': 'Sprawdź zmiany',
   'bar.close': 'Zamknij pasek z ogłoszeniem',
+  'bar.aria': 'Ogłoszenie',
 
   /* Home hero ----------------------------------------------------------- */
   'hero.sub':
@@ -396,6 +404,11 @@ const en: Partial<Record<UiKey, string>> = {
   'nav.menuClose': 'CLOSE',
   'nav.logoHome': 'gravity.integration \u2014 home',
   'nav.skipToContent': 'Skip to content',
+  'nav.aria': 'Main navigation',
+  'nav.menuAria': 'Menu',
+  'nav.onThisPage': 'On this page',
+  'nav.footerAria': 'Site map',
+  'int.jumpAria': 'Integration categories',
 
   /* Accessibility ------------------------------------------------------ */
   'a11y.newTab': ' (opens in a new tab)',
@@ -416,6 +429,7 @@ const en: Partial<Record<UiKey, string>> = {
   'bar.download': 'Download now',
   'bar.changelog': "See what's new",
   'bar.close': 'Close the announcement bar',
+  'bar.aria': 'Announcement',
 
   /* Home hero ----------------------------------------------------------- */
   'hero.sub':

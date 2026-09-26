@@ -1,18 +1,72 @@
 ---
+/* In-page section links, as a row of the system's outline pills, numbered.
+   Subpages carry them inside the hero (PageHero); /pobieranie/, whose hero
+   is a form, sets them in their own band under it. */
+import { localeOf, t } from '../i18n/ui';
+
 interface Props {
   items?: Array<{ label: string; anchor: string }>;
 }
 const { items = [] } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
 ---
 
-<section class="breadcrumbs d-none d-md-block">
-  <div class="container-fluid">
-    <div class="row">
-      <ul class="col-12 d-flex flex-wrap hover-underline">
-        {items.map((it) => (
-          <li><a data-scroll-to href={`#${it.anchor}`} set:html={it.label} /></li>
-        ))}
-      </ul>
-    </div>
-  </div>
-</section>
+{
+  items.length > 0 && (
+    <nav class="crumbs surface-white" aria-label={s('nav.onThisPage')}>
+      <div class="container">
+        <ol>
+          {items.map((it, i) => (
+            <li>
+              <a href={`#${it.anchor}`}>
+                <span class="label-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span set:html={it.label} />
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .crumbs {
+    padding-top: 24px;
+    border-bottom: 1px solid var(--mist-200);
+    padding-bottom: 24px;
+  }
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: var(--radius-pill);
+    font: 500 13px / 1.2 var(--font-sans);
+    color: var(--ink-900);
+    text-decoration: none;
+    transition:
+      background-color var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+  .crumbs a:hover {
+    background: var(--ink-900);
+    color: var(--on-ink);
+  }
+  .crumbs a:hover .label-num {
+    color: var(--mint-500);
+  }
+  .crumbs .label-num {
+    color: var(--muted);
+  }
+</style>

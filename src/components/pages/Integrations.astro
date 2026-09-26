@@ -18,9 +18,9 @@ const page = entry.data;
   path={page.url}
   slug={page.slug}
   draft={page.draft}
-  bodyClass={`page page-id-${page.wpId}`}
+  bodyClass={`page page-${page.slug}`}
 >
-  <PageHero h1={page.h1} circle={true} />
+  <PageHero h1={page.h1} />
   <IntegrationsGrid />
   <DemoSection variant="integracje" />
 </Site>

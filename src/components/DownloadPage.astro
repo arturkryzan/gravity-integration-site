@@ -63,30 +63,31 @@ const clients = [
 
 <div class="dl">
   {/* ============================== hero + form ============================== */}
-  <section id="section0" class="dl-hero">
-    <div class="dl-wrap dl-hero-grid">
-      <div class="dl-hero-copy" data-scroll data-scroll-opacity>
+  <section id="section0" class="dl-hero surface-mint">
+    <span class="mass dl-hero-mass" aria-hidden="true"></span>
+    <div class="container dl-hero-grid">
+      <div class="dl-hero-copy" data-reveal>
         <h1 class="dl-h1">{s('dl.h1')}</h1>
         <p class="dl-lede">
           {s('dl.lede')}
         </p>
         <ul class="dl-trust" role="list">
           <li>
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            <svg class="dl-trust-check" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10.5l3.2 3.2L15 6.5" /></svg>
             {s('dl.trust1')}
           </li>
           <li>
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            <svg class="dl-trust-check" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10.5l3.2 3.2L15 6.5" /></svg>
             {s('dl.trust2')}
           </li>
           <li>
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.2 3.2L15.5 6.4" /></svg>
+            <svg class="dl-trust-check" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10.5l3.2 3.2L15 6.5" /></svg>
             {s('dl.trust3')}
           </li>
         </ul>
       </div>
 
-      <div class="dl-card" data-scroll data-scroll-opacity>
+      <div class="dl-card" data-reveal>
         <form
           action={action}
           method="post"
@@ -242,8 +243,8 @@ const clients = [
   {crumbs.length > 0 && <Breadcrumbs items={crumbs} />}
 
   {/* ============================== 3 steps ============================== */}
-  <section id="section1" class="dl-steps" data-scroll data-scroll-opacity>
-    <div class="dl-wrap">
+  <section id="section1" class="dl-steps section surface-white" data-reveal>
+    <div class="container">
       <h2 class="dl-h2">{s('dl.steps.h2')}</h2>
       <ol class="dl-steps-list" role="list">
         {steps.map((s) => (
@@ -258,9 +259,9 @@ const clients = [
   </section>
 
   {/* ========================= what you download ========================= */}
-  <section id="section2" class="dl-proof">
-    <div class="dl-wrap dl-proof-grid">
-      <div class="dl-proof-copy" data-scroll data-scroll-opacity>
+  <section id="section2" class="dl-proof section surface-mist">
+    <div class="container dl-proof-grid">
+      <div class="dl-proof-copy" data-reveal>
         <h2 class="dl-h2">{s('dl.proof.h2')}</h2>
         <ul class="dl-caps" role="list">
           {capabilities.map((c) => (
@@ -274,7 +275,7 @@ const clients = [
           {s('dl.spec')}
         </p>
       </div>
-      <figure class="dl-shot" data-scroll data-scroll-opacity>
+      <figure class="dl-shot" data-reveal>
         <img
           {...asset('/media/kapitan-navi-gravity-integration-etl.png')}
           alt={s('dl.shot.alt')}
@@ -283,7 +284,7 @@ const clients = [
         />
       </figure>
     </div>
-    <div class="dl-wrap dl-clients" data-scroll data-scroll-opacity>
+    <div class="container dl-clients" data-reveal>
       <p class="dl-clients-h">{s('dl.clients.h')}</p>
       <ul class="dl-logos" role="list">
         {clients.map((c) => (
@@ -303,14 +304,14 @@ const clients = [
   </section>
 
   {/* ============================ documentation ============================ */}
-  <section id="section3" class="dl-docs">
-    <div class="dl-wrap dl-docs-grid">
-      <div class="dl-docs-copy" data-scroll data-scroll-opacity>
+  <section id="section3" class="dl-docs section surface-white">
+    <div class="container dl-docs-grid">
+      <div class="dl-docs-copy" data-reveal>
         <h2 class="dl-h2">{s('dl.docs.h2')}</h2>
         <p class="dl-docs-p" set:html={s('dl.docs.pHtml')} />
         <div class="dl-docs-actions">
           <a
-            class="dl-btn dl-btn-solid"
+            class="btn btn--primary btn--lg"
             href="https://docs.gravity-integration.com"
             target="_blank"
             rel="noopener"
@@ -318,7 +319,7 @@ const clients = [
             {s('dl.docs.open')}<span class="visually-hidden">{s('a11y.newTab')}</span>
           </a>
           <a
-            class="dl-btn dl-btn-ghost"
+            class="btn btn--secondary btn--lg"
             href="https://gravityintegration.com/manual/gravity_podrecznik_pl.pdf"
           >
             {s('dl.docs.pdf')}
@@ -331,233 +332,185 @@ const clients = [
         alt={s('dl.manual.alt')}
         loading="lazy"
         decoding="async"
-        data-scroll
-        data-scroll-opacity
+        data-reveal
       />
     </div>
   </section>
 
   {/* ============================= demo band ============================= */}
-  <section class="dl-demo" data-scroll data-scroll-opacity>
-    <div class="dl-wrap dl-demo-grid">
-      <p class="dl-demo-p">
-        {s('dl.band.p1')}<strong>{s('dl.band.strong')}</strong>{s('dl.band.p2')}
-      </p>
-      <a class="dl-btn dl-btn-solid" href={`${homeHref}#section-demo`}>{s('dl.band.cta')}</a>
+  <section class="dl-demo section surface-white">
+    <div class="container">
+      <div class="dl-demo-card surface-ink" data-reveal>
+        <p class="dl-demo-p">
+          {s('dl.band.p1')}<strong>{s('dl.band.strong')}</strong>{s('dl.band.p2')}
+        </p>
+        <a class="btn btn--accent btn--lg" href={`${homeHref}#section-demo`}>{s('dl.band.cta')}<span class="btn-dot" aria-hidden="true"></span></a>
+      </div>
     </div>
   </section>
 </div>
 
 <style>
-  /* Palette: the site's own tokens on two surfaces.
-     Measured contrast (WCAG):
-       hero lede  rgba(#fff,.84) on #0a0a12  → 13.5:1
-       trust      rgba(#fff,.92) on #0a0a12  → 16.2:1
-       card label rgba(#fff,.80) on #242538  → 8.6:1
-       input ink  #fff           on #16171f  → 18.9:1
-       placeholder rgba(#fff,.60) on #16171f → 11.3:1
-       micro      rgba(#fff,.72) on #242538  → 7.0:1
-       err        #ffc2c2        on #242538  → 8.0:1
-       button ink #0a0a12        on #27ea93  → 12.5:1
-       body       #464861        on #fff     → 8.9:1
-       spec       #5f6178        on #fff     → 6.0:1
-       green line #27ea93        on #242538  → 7.4:1 (non-text ok, text no) */
-  .dl {
-    --ink: var(--gi-text-on-light);
-    --body: var(--gi-bg-slate);
-    --muted: var(--gi-text-muted-slate);
-    --green: var(--gi-green);
-    --green-deep: var(--gi-green-deep);
-    --dark: var(--gi-bg-dark);
-    --card: var(--gi-bg-card-dark);
-    /* No global equivalents — these three are genuinely local to the dark
-       download well and its inline validation. */
-    --well: #16171f;
-    --well-focus: #1c1d29;
-    --line-dark: rgb(255 255 255 / 0.55);
-    --tint: var(--gi-bg-tint);
-    --line: var(--gi-line);
-    --err-text: #ffc2c2;
-    --err-line: #ff8f8f;
-    --hint: #ffd166;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    font-family: Epilogue, system-ui, sans-serif;
-    color: var(--body);
-  }
-  .dl-wrap {
-    max-width: var(--gi-container, 1140px);
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-  .dl-h2 {
-    margin: 0;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.2;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    color: var(--ink);
-    text-wrap: balance;
-    max-width: 34rem;
-  }
+  /* ---------------------------------------------------------------
+     v2. The hero is the mint field with the form card on it; the ink mass
+     is cropped bottom-right behind the card — mint over ink, white over
+     both, depth by colour alone. The H1 is ink on mint (the allowed pair):
+     next to a form, the headline has to read first, before the frame.
 
-  /* `hidden` vs. Astro's compounded scoped specificity — make it explicit. */
-  .dl [hidden] {
-    display: none !important;
-  }
+     Every class the runtime and the harness address (.dl-field[data-field],
+     .dl-err, .dl-hint, .dl-fill, .dl-submit, .dl-done, .dl-done-exe, the
+     ids) is unchanged from v1.
+     --------------------------------------------------------------- */
 
-  /* ------------------------------- hero ------------------------------- */
+  /* ================= hero ================= */
   .dl-hero {
-    background: var(--dark);
-    color: var(--gi-text-on-dark);
-    padding: calc(var(--gi-bar-h, 44px) + clamp(6rem, 11vw, 8.5rem)) 0 clamp(3rem, 6vw, 4.5rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding: clamp(48px, 7vw, 96px) 0 clamp(64px, 8vw, 112px);
+  }
+  .dl-hero-mass {
+    z-index: -1;
+    width: clamp(520px, 52vw, 820px);
+    right: clamp(-320px, -16vw, -140px);
+    bottom: clamp(-460px, -26vw, -240px);
   }
   .dl-hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(21rem, 27rem);
-    gap: clamp(2rem, 5vw, 4.5rem);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
   }
+  @media (min-width: 960px) {
+    .dl-h1 {
+      font-size: min(4.6vw, 56px);
+    }
+    .dl-hero-grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      align-items: center;
+      gap: clamp(40px, 6vw, 96px);
+    }
+  }
+  .dl-hero-copy {
+    display: grid;
+    gap: 24px;
+    align-content: start;
+  }
+  /* "gravity.integration" is one long word, so the size is set by it: the
+     line has to hold it whole. */
   .dl-h1 {
-    margin: 0 0 1.1rem;
-    font-size: clamp(2rem, 4.6vw, 3.1rem);
-    line-height: 1.08;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    color: var(--gi-text-on-dark);
+    font: 800 clamp(28px, 9.6vw, 56px) / 0.92 var(--font-sans);
+    letter-spacing: -0.06em;
+    color: var(--ink-900);
     text-wrap: balance;
-    max-width: 32rem;
   }
   .dl-lede {
-    margin: 0 0 1.75rem;
-    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-    line-height: 1.65;
-    color: rgb(255 255 255 / 0.84);
-    max-width: 30rem;
+    max-width: 34rem;
+    font: 400 var(--fs-body-lg) / 1.55 var(--font-sans);
+    color: var(--ink-900);
     text-wrap: pretty;
   }
   .dl-trust {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
-    gap: 0.7rem;
+    gap: 10px;
+    margin-top: 4px;
   }
   .dl-trust li {
-    display: grid;
-    grid-template-columns: 24px minmax(0, 1fr);
-    gap: 0.7rem;
+    display: flex;
     align-items: center;
-    font-size: 1rem;
-    font-weight: 500;
-    color: rgb(255 255 255 / 0.92);
+    gap: 12px;
+    font: 600 15px / 1.3 var(--font-sans);
+    color: var(--ink-900);
   }
-  .dl-trust svg {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    background: rgb(39 234 147 / 0.16);
-    padding: 3px;
-    box-sizing: border-box;
+  .dl-trust-check {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--ink-900);
     fill: none;
-    stroke: var(--green);
+    stroke: var(--mint-500);
     stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* ------------------------------- form ------------------------------- */
+  /* ================= the card ================= */
   .dl-card {
-    background: var(--card);
-    border: 1px solid rgb(255 255 255 / 0.08);
-    border-radius: var(--gi-radius-lg, 16px);
-    padding: clamp(1.5rem, 3vw, 2rem);
-    box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+    position: relative;
+    padding: clamp(24px, 3vw, 36px);
+    border-radius: var(--radius-xl);
+    background: var(--white);
+    color: var(--ink-900);
+    --focus-gap: var(--ink-900);
+    --focus-ring: var(--mint-500);
+    --underline: var(--mint-500);
   }
   .dl-form {
-    /* legacy.css ships a blanket `form{max-width:26.5625rem}` */
-    max-width: none;
     display: grid;
-    gap: 1.1rem;
+    gap: 18px;
   }
   .dl-card-h {
-    margin: 0 0 0.25rem;
-    font-size: 1.3rem;
-    line-height: 1.25;
-    font-weight: 700;
-    color: var(--gi-text-on-dark);
-    letter-spacing: -0.01em;
+    font: 800 var(--fs-h3) / 1.05 var(--font-sans);
+    letter-spacing: -0.045em;
+    margin-bottom: 4px;
+  }
+  .dl-field {
+    display: grid;
+    gap: 6px;
   }
   .dl-label {
-    display: block;
-    color: rgb(255 255 255 / 0.8);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
-    margin-bottom: 0.4rem;
+    font: 600 13px / 1.3 var(--font-sans);
+    color: var(--ink-900);
   }
   .dl-control {
     position: relative;
   }
   .dl-input {
     width: 100%;
-    box-sizing: border-box;
-    background: var(--well);
-    border: 1px solid var(--line-dark);
-    border-radius: 0.5rem;
-    padding: 0.7rem 2.4rem 0.7rem 1rem;
-    min-height: 2.9rem;
-    max-height: none;
-    color: var(--gi-text-on-dark);
-    font-family: inherit;
-    font-size: 1rem; /* ≥16px — smaller zooms the viewport on iOS */
-    line-height: 1.4;
+    min-height: 48px;
+    padding: 0 40px 0 14px;
+    border: 1.5px solid var(--mist-200);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--ink-900);
+    font: 400 16px / 1.3 var(--font-sans);
     transition:
-      border-color 0.18s var(--ease),
-      background-color 0.18s var(--ease),
-      box-shadow 0.18s var(--ease);
+      border-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
   }
   .dl-input::placeholder {
-    color: rgb(255 255 255 / 0.6);
+    color: var(--muted);
     opacity: 1;
   }
   .dl-input:hover {
-    background: var(--well-focus);
+    border-color: var(--slate-400);
   }
-  .dl-input:focus {
-    outline: none;
-  }
+  .dl-input:focus,
   .dl-input:focus-visible {
-    background: var(--well-focus);
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
-  }
-  .dl-input:-webkit-autofill,
-  .dl-input:-webkit-autofill:hover,
-  .dl-input:-webkit-autofill:focus {
-    -webkit-box-shadow: inset 0 0 0 40px var(--well-focus) !important;
-    -webkit-text-fill-color: var(--gi-text-on-dark) !important;
-    caret-color: var(--gi-text-on-dark);
+    outline: none;
+    border-color: var(--ink-900);
+    box-shadow:
+      0 0 0 2px var(--focus-gap),
+      0 0 0 5px var(--focus-ring);
   }
   .dl-field[data-state='invalid'] .dl-input {
-    border-color: var(--err-line);
-  }
-  .dl-field[data-state='invalid'] .dl-input:focus-visible {
-    box-shadow: 0 0 0 3px rgb(255 143 143 / 0.3);
+    border-color: var(--red-500);
   }
   .dl-field[data-state='valid'] .dl-input {
-    border-color: rgb(39 234 147 / 0.6);
+    border-color: var(--ink-900);
   }
   .dl-tick {
     position: absolute;
-    right: 0.85rem;
+    right: 13px;
     top: 50%;
-    width: 1.1rem;
-    height: 1.1rem;
-    margin-top: -0.55rem;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
     fill: none;
-    stroke: var(--green);
-    stroke-width: 2.2;
+    stroke: var(--mint-800);
+    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
     pointer-events: none;
@@ -572,88 +525,88 @@ const clients = [
   }
   .dl-field[data-state='valid'] .dl-tick path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.32s var(--ease);
+    transition: stroke-dashoffset var(--dur-slow) var(--ease-fall);
   }
   .dl-err {
-    color: var(--err-text);
-    font-size: 0.78rem;
-    line-height: 1.4;
-    font-weight: 500;
-    margin: 0.35rem 0 0;
+    font: 500 12px / 1.45 var(--font-sans);
+    color: var(--red-700);
   }
   .dl-hint {
-    color: var(--hint);
-    font-size: 0.78rem;
-    line-height: 1.45;
-    margin: 0.35rem 0 0;
+    display: flex;
+    gap: 8px;
+    font: 400 12px / 1.45 var(--font-sans);
+    color: var(--slate-600);
+  }
+  .dl-hint::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    margin-top: 0.45em;
+    border-radius: 50%;
+    background: var(--amber-500);
   }
   .dl-fill {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
-    margin-top: 0.35rem;
-    background: rgb(10 10 18 / 0.5);
-    color: var(--green);
-    border: 1px solid rgb(39 234 147 / 0.45);
-    border-radius: 999px;
-    padding: 0.3rem 0.75rem;
-    font: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    line-height: 1.3;
+    min-height: 32px;
+    margin-top: 2px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--mint-100);
+    color: var(--ink-900);
+    font: 600 12px / 1.2 var(--font-sans);
     cursor: pointer;
-    transition:
-      background-color 0.18s var(--ease),
-      border-color 0.18s var(--ease);
   }
   .dl-fill:hover {
-    background: rgb(10 10 18 / 0.72);
-    border-color: var(--green);
+    background: var(--mist-200);
   }
-  .dl-fill:focus-visible {
-    outline: 2px solid var(--green);
-    outline-offset: 2px;
+  .dl-hp {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
+
   .dl-consent {
     position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 20px 1fr;
     align-items: start;
-    gap: 0.65rem;
+    gap: 10px;
+    padding: 4px 0;
     cursor: pointer;
-    padding: 0.35rem 0;
-    text-transform: none;
-    letter-spacing: 0;
-    font-size: inherit;
   }
   .dl-consent input {
     position: absolute;
-    width: 1.25rem;
-    height: 1.25rem;
+    top: 4px;
+    left: 0;
+    width: 20px;
+    height: 20px;
     margin: 0;
     opacity: 0;
+    cursor: pointer;
   }
   .dl-check {
-    width: 1.25rem;
-    height: 1.25rem;
-    flex: none;
-    border: 1px solid var(--line-dark);
-    border-radius: 0.3rem;
-    background: var(--well);
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: var(--radius-sm);
+    background: var(--white);
     display: grid;
     place-items: center;
-    margin-top: 0.05rem;
-    transition:
-      background-color 0.18s var(--ease),
-      border-color 0.18s var(--ease),
-      box-shadow 0.18s var(--ease);
+    transition: background-color var(--dur-fast) ease;
   }
   .dl-check svg {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 14px;
+    height: 14px;
     fill: none;
-    stroke: var(--gi-bg-dark);
-    stroke-width: 2.6;
+    stroke: var(--mint-500);
+    stroke-width: 2.8;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -662,55 +615,49 @@ const clients = [
     stroke-dashoffset: 1;
   }
   .dl-consent input:checked + .dl-check {
-    background: var(--green);
-    border-color: var(--green);
+    background: var(--ink-900);
   }
   .dl-consent input:checked + .dl-check svg path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.3s var(--ease) 0.04s;
+    transition: stroke-dashoffset var(--dur-base) var(--ease-fall);
   }
   .dl-consent input:focus-visible + .dl-check {
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+    box-shadow:
+      0 0 0 2px var(--focus-gap),
+      0 0 0 5px var(--focus-ring);
   }
   .dl-field[data-state='invalid'] .dl-check {
-    border-color: var(--err-line);
+    border-color: var(--red-500);
   }
   .dl-consent-text {
-    color: rgb(255 255 255 / 0.8);
-    font-size: 0.82rem;
-    line-height: 1.5;
+    font: 400 13px / 1.5 var(--font-sans);
+    color: var(--slate-600);
   }
+
+  /* the view's one mint accent */
   .dl-submit {
     position: relative;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    min-height: 3.25rem;
-    background: var(--green);
-    color: var(--gi-bg-dark);
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.9rem 1.5rem;
-    font-family: inherit;
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-    text-indent: 0;
+    min-height: 52px;
+    padding: 0 28px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--mint-500);
+    color: var(--ink-900);
+    font: 600 15px / 1.15 var(--font-sans);
     cursor: pointer;
     transition:
-      background-color 0.18s var(--ease),
-      transform 0.18s var(--ease);
+      background-color var(--dur-fast) ease,
+      transform var(--dur-fast) ease;
   }
   .dl-submit:hover {
-    background: #4ff0a8;
+    background: var(--mint-600);
   }
   .dl-submit:active {
-    transform: translateY(1px);
-  }
-  .dl-submit:focus-visible {
-    outline: 2px solid var(--gi-text-on-dark);
-    outline-offset: 3px;
+    transform: scale(0.97);
   }
   .dl-submit-label,
   .dl-submit-pending {
@@ -718,7 +665,7 @@ const clients = [
     align-items: center;
     justify-content: center;
     gap: 0.5em;
-    transition: opacity 0.16s var(--ease);
+    transition: opacity var(--dur-fast) ease;
   }
   .dl-submit-pending {
     position: absolute;
@@ -735,18 +682,18 @@ const clients = [
     opacity: 1;
   }
   .dl-spinner {
-    width: 1.05rem;
-    height: 1.05rem;
+    width: 18px;
+    height: 18px;
     fill: none;
     stroke-width: 2.4;
     stroke-linecap: round;
     animation: dl-spin 0.75s linear infinite;
   }
   .dl-spinner circle {
-    stroke: rgb(10 10 18 / 0.25);
+    stroke: rgb(30 31 51 / 0.2);
   }
   .dl-spinner path {
-    stroke: var(--gi-bg-dark);
+    stroke: var(--ink-900);
   }
   @keyframes dl-spin {
     to {
@@ -754,472 +701,342 @@ const clients = [
     }
   }
   .dl-formerr {
-    color: var(--err-text);
-    font-size: 0.85rem;
-    line-height: 1.5;
-    margin: 0;
+    font: 500 13px / 1.5 var(--font-sans);
+    color: var(--red-700);
   }
   .dl-formerr :global(a) {
-    color: var(--err-text);
-    text-decoration: underline;
+    color: var(--red-700);
   }
   .dl-micro {
-    margin: 0;
-    color: rgb(255 255 255 / 0.72);
-    font-size: 0.8rem;
-    line-height: 1.5;
-  }
-  .dl-hp {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+    font: 400 13px / 1.5 var(--font-sans);
+    color: var(--muted);
   }
 
-  /* ----------------------------- success ----------------------------- */
+  /* ---- success ---- */
   .dl-done {
-    text-align: center;
-    padding: 0.5rem 0 0.25rem;
+    display: grid;
+    justify-items: start;
+    gap: 12px;
   }
   .dl-done:focus {
     outline: none;
   }
   .dl-done:focus-visible {
-    outline: 2px solid rgb(39 234 147 / 0.7);
+    outline: 3px solid var(--mint-500);
     outline-offset: 8px;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
   }
   .dl-done-tick {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
     fill: none;
-    stroke: var(--green);
-    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
-    margin-bottom: 1rem;
   }
-  .dl-done-tick circle,
+  .dl-done-tick circle {
+    fill: var(--ink-900);
+    stroke: var(--ink-900);
+    stroke-width: 2;
+  }
   .dl-done-tick path {
+    stroke: var(--mint-500);
+    stroke-width: 2.6;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
-  .dl-done[data-in] .dl-done-tick circle {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.6s var(--ease);
-  }
   .dl-done[data-in] .dl-done-tick path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.35s var(--ease) 0.34s;
+    transition: stroke-dashoffset var(--dur-slow) var(--ease-fall) 0.2s;
   }
   .dl-done-h {
-    color: var(--gi-text-on-dark);
-    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
-    font-weight: 700;
-    margin: 0 0 0.6rem;
+    font: 800 var(--fs-h3) / 1.05 var(--font-sans);
+    letter-spacing: -0.05em;
   }
   .dl-done-p {
-    color: rgb(255 255 255 / 0.86);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 0 auto 0.75rem;
-    max-width: 24rem;
+    font: 400 16px / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
   .dl-done-p strong {
-    color: var(--gi-text-on-dark);
+    color: var(--ink-900);
     font-weight: 600;
     word-break: break-word;
   }
-  /* Sits between the e-mail confirmation and the spam-folder note: a real
-     second option, not a footnote, so it reads at body size rather than the
-     note's 0.85rem. It stays a link and not a button because the e-mail
-     remains the recommended path — this is the escape hatch, not the CTA. */
   .dl-done-direct {
-    color: rgb(255 255 255 / 0.86);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0 auto 0.75rem;
-    max-width: 24rem;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: var(--mint-100);
+    font: 400 var(--fs-body) / 1.5 var(--font-sans);
+    color: var(--ink-900);
   }
   .dl-done-exe {
-    color: var(--green);
     font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-    border-radius: 3px;
-    transition: color 0.18s var(--ease);
-  }
-  .dl-done-exe:hover {
-    color: var(--gi-text-on-dark);
-  }
-  .dl-done-exe:focus-visible {
-    outline: 2px solid var(--green);
-    outline-offset: 3px;
+    color: var(--ink-900);
+    text-decoration-color: var(--ink-900);
   }
   .dl-done-note {
-    color: rgb(255 255 255 / 0.72);
-    font-size: 0.85rem;
-    line-height: 1.55;
-    margin: 0 auto;
-    max-width: 24rem;
-  }
-  .dl-done-note a {
-    color: var(--green);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    font: 400 13px / 1.55 var(--font-sans);
+    color: var(--slate-600);
   }
   .dl-done[data-in] .dl-done-h,
   .dl-done[data-in] .dl-done-p,
   .dl-done[data-in] .dl-done-direct,
   .dl-done[data-in] .dl-done-note {
-    animation: dl-rise 0.5s var(--ease) both;
+    animation: dl-rise var(--dur-slow) var(--ease-fall) both;
   }
   .dl-done[data-in] .dl-done-p {
-    animation-delay: 0.07s;
+    animation-delay: 60ms;
   }
   .dl-done[data-in] .dl-done-direct {
-    animation-delay: 0.14s;
+    animation-delay: 120ms;
   }
   .dl-done[data-in] .dl-done-note {
-    animation-delay: 0.21s;
+    animation-delay: 180ms;
   }
   @keyframes dl-rise {
     from {
       opacity: 0;
-      transform: translateY(0.5rem);
-    }
-    to {
-      opacity: 1;
-      transform: none;
+      transform: translateY(8px);
     }
   }
 
-  /* ------------------------------- steps ------------------------------- */
-  .dl-steps {
-    padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+  /* ================= steps ================= */
+  .dl-h2 {
+    max-width: 18em;
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.055em;
+    color: var(--fg);
+    text-wrap: balance;
   }
   .dl-steps-list {
     list-style: none;
-    margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
-    padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(1.5rem, 3.5vw, 2.75rem);
-    counter-reset: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  @media (min-width: 860px) {
+    .dl-steps-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 40px;
+    }
   }
   .dl-step {
     position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+  /* the steps are joined by a hairline from one numbered satellite to the
+     next */
+  @media (min-width: 860px) {
+    .dl-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 60px;
+      right: -28px;
+      height: 1px;
+      background: var(--mist-200);
+    }
   }
   .dl-step-n {
-    display: inline-grid;
+    display: grid;
     place-items: center;
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 8px;
     border-radius: 50%;
-    background: rgb(39 234 147 / 0.15);
-    color: var(--green-deep);
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin-bottom: 0.9rem;
-  }
-  /* connector between the numbers — the sequence is the point */
-  .dl-step:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    top: 1.2rem;
-    left: 3.2rem;
-    right: -1.4rem;
-    height: 1px;
-    background: var(--line);
+    background: var(--ink-900);
+    color: var(--mint-500);
+    font: 500 14px / 1 var(--font-mono);
   }
   .dl-step-h {
-    margin: 0 0 0.5rem;
-    font-size: 1.15rem;
-    line-height: 1.3;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.008em;
+    font: 600 var(--fs-h4) / 1.2 var(--font-sans);
+    letter-spacing: -0.03em;
   }
   .dl-step-p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--body);
-    text-wrap: pretty;
+    font: 400 16px / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
 
-  /* ------------------------------- proof ------------------------------- */
-  .dl-proof {
-    background: var(--tint);
-    padding: clamp(3rem, 6vw, 4.5rem) 0;
-  }
+  /* ================= what you download ================= */
   .dl-proof-grid {
     display: grid;
-    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
-    gap: clamp(2rem, 4.5vw, 4rem);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
     align-items: center;
+  }
+  @media (min-width: 960px) {
+    .dl-proof-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
+  }
+  .dl-proof-copy {
+    display: grid;
+    gap: 24px;
   }
   .dl-caps {
     list-style: none;
-    margin: 1.5rem 0 0;
-    padding: 0;
     display: grid;
-    gap: 1rem;
+    gap: 14px;
   }
   .dl-caps li {
     display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: 8px minmax(0, 1fr);
+    gap: 14px;
     align-items: start;
-    font-size: 1.0625rem;
-    line-height: 1.62;
-    color: var(--body);
+    font: 400 16px / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
   .dl-caps :global(strong) {
-    color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--ink-900);
   }
   .dl-dot {
     width: 8px;
     height: 8px;
+    margin-top: 0.62em;
     border-radius: 50%;
-    background: var(--green);
-    margin-top: 0.62rem;
-    box-shadow: 0 0 0 4px rgb(39 234 147 / 0.15);
+    background: var(--ink-900);
   }
   .dl-spec {
-    margin: 1.5rem 0 0;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--muted);
+    font: 400 14px / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
   .dl-shot {
-    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
   }
   .dl-shot img {
-    display: block;
     width: 100%;
-    height: auto;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
   }
   .dl-clients {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem 2rem;
+    gap: 16px 24px;
+    margin-top: clamp(40px, 5vw, 64px);
+    padding-top: 32px;
+    border-top: 1px solid var(--mist-200);
   }
   .dl-clients-h {
-    margin: 0;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--muted);
+    font: 500 12px / 1.3 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--slate-600);
   }
   .dl-logos {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1rem;
+    gap: 10px;
   }
   .dl-logos a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gi-bg-light);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.6rem 1rem;
-    min-height: 44px;
-    transition: border-color 0.18s var(--ease);
+    display: grid;
+    place-items: center;
+    width: 112px;
+    height: 56px;
+    padding: 8px 14px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    transition: transform 0.2s var(--ease-fall);
   }
   .dl-logos a:hover {
-    border-color: var(--green);
-  }
-  .dl-logos a:focus-visible {
-    outline: 2px solid var(--green-deep);
-    outline-offset: 2px;
+    transform: translateY(-3px);
   }
   .dl-logos img {
-    display: block;
     width: auto;
-    height: 34px;
+    max-width: 100%;
+    max-height: 36px;
+    object-fit: contain;
   }
   .dl-cases-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--green-deep);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .dl-cases-link:focus-visible {
-    outline: 2px solid var(--green-deep);
-    outline-offset: 3px;
+    font: 600 14px / 1.2 var(--font-sans);
+    color: var(--ink-900);
+    text-underline-offset: 5px;
   }
 
-  /* ------------------------------- docs ------------------------------- */
-  .dl-docs {
-    padding: clamp(3rem, 6vw, 4.5rem) 0;
-  }
+  /* ================= documentation ================= */
   .dl-docs-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
-    gap: clamp(2rem, 4.5vw, 4rem);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
     align-items: center;
   }
+  @media (min-width: 960px) {
+    .dl-docs-grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
+  }
+  .dl-docs-copy {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
   .dl-docs-p {
-    margin: 1.1rem 0 1.6rem;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    color: var(--body);
-    max-width: 34rem;
-    text-wrap: pretty;
+    max-width: 36rem;
+    font: 400 var(--fs-body-lg) / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
   .dl-docs-p :global(strong) {
-    color: var(--ink);
+    font-weight: 600;
+    color: var(--ink-900);
   }
   .dl-docs-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .dl-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 700;
-    text-decoration: none;
-    letter-spacing: 0;
-    transition:
-      background-color 0.18s var(--ease),
-      border-color 0.18s var(--ease),
-      transform 0.18s var(--ease);
-  }
-  .dl-btn:active {
-    transform: translateY(1px);
-  }
-  .dl-btn-solid {
-    background: var(--green);
-    color: var(--gi-bg-dark);
-  }
-  .dl-btn-solid:hover {
-    background: #4ff0a8;
-    color: var(--gi-bg-dark);
-  }
-  .dl-btn-ghost {
-    border: 1.5px solid var(--ink);
-    color: var(--ink);
-    background: transparent;
-  }
-  .dl-btn-ghost:hover {
-    background: var(--ink);
-    color: var(--gi-text-on-dark);
-  }
-  .dl-btn:focus-visible {
-    outline: 2px solid var(--green-deep);
-    outline-offset: 3px;
+    gap: 10px;
+    margin-top: 4px;
   }
   .dl-docs-img {
-    display: block;
     width: 100%;
-    height: auto;
-    border-radius: 14px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-xl);
   }
 
-  /* ----------------------------- demo band ----------------------------- */
+  /* ================= demo band ================= */
   .dl-demo {
-    background: var(--dark);
-    padding: clamp(2.25rem, 4.5vw, 3.25rem) 0;
+    padding-top: 0;
   }
-  .dl-demo-grid {
+  .dl-demo-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 1.25rem 2rem;
+    gap: 24px 48px;
+    padding: clamp(28px, 4vw, 48px) clamp(28px, 5vw, 56px);
+    border-radius: var(--radius-xl);
   }
   .dl-demo-p {
-    margin: 0;
-    color: rgb(255 255 255 / 0.86);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    max-width: 38rem;
-    text-wrap: pretty;
+    max-width: 44rem;
+    font: 400 var(--fs-body-lg) / 1.55 var(--font-sans);
+    color: var(--on-ink-soft);
   }
   .dl-demo-p strong {
-    color: var(--gi-text-on-dark);
-  }
-  .dl-demo .dl-btn:focus-visible {
-    outline-color: var(--green);
+    font-weight: 800;
+    color: var(--mint-500);
   }
 
-  /* ------------------------------ reveal ------------------------------ */
-  .dl [data-scroll-opacity] {
-    transform: translateY(14px);
-    transition: transform 0.7s var(--ease);
-  }
-  .dl :global(.is-inview)[data-scroll-opacity] {
-    transform: none;
-  }
-  :global(html:not(.js)) .dl [data-scroll-opacity] {
-    transform: none;
+  @media (max-width: 959.98px) {
+    .dl-hero {
+      padding-bottom: 160px;
+    }
+    .dl-hero-mass {
+      width: 460px;
+      right: -160px;
+      bottom: -320px;
+    }
   }
 
-  /* ---------------------------- responsive ---------------------------- */
-  @media (max-width: 980px) {
-    .dl-hero-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .dl-card {
-      max-width: 34rem;
-    }
-    .dl-steps-list {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 1.75rem;
-      max-width: 34rem;
-    }
-    .dl-step:not(:last-child)::before {
-      display: none;
-    }
-    .dl-proof-grid,
-    .dl-docs-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .dl-docs-img {
-      max-width: 24rem;
-    }
-  }
-  @media (max-width: 560px) {
-    .dl-docs-actions {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .dl-btn {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .dl-demo-grid {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .dl-logos {
-      width: 100%;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .dl *,
     .dl *::before,
@@ -1233,12 +1050,8 @@ const clients = [
     }
     .dl-tick path,
     .dl-check svg path,
-    .dl-done-tick circle,
     .dl-done-tick path {
       stroke-dashoffset: 0 !important;
-    }
-    .dl [data-scroll-opacity] {
-      transform: none;
     }
   }
 </style>

@@ -1,0 +1,15 @@
+---
+/* One Lucide glyph, inline. Decorative by default — the accessible name
+   belongs to the control the icon sits in, not to the picture. */
+import { iconSvg, type IconName } from '../../lib/icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  size?: number;
+}
+const { name, class: className = '', size } = Astro.props;
+const style = size ? `width:${size}px;height:${size}px` : undefined;
+---
+
+<span class:list={['icon', className]} style={style} set:html={iconSvg(name)} />

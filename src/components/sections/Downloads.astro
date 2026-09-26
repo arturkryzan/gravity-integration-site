@@ -1,8 +1,12 @@
 ---
-/* ACF layout: downloads (theme inc/sections/downloads.php) */
-import { mediaSrc, mediaAlt, mediaRatio, mediaDims } from '../../lib/media';
+/* ACF layout: downloads. No page renders it any more — /pobieranie/ is built
+   by DownloadPage.astro — but the layout stays mapped in SectionRenderer, so
+   it keeps a v2 rendering: rows of copy with a download button beside an
+   image. */
+import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
-
+import { clean } from '../../lib/html';
+import Icon from '../ui/Icon.astro';
 import { localeOf, t } from '../../i18n/ui';
 const s = t(localeOf(Astro.currentLocale));
 
@@ -13,98 +17,78 @@ interface Props {
 const { index, downloads } = Astro.props;
 ---
 
-<section
-  id={`section${index}`}
-  data-scroll
-  data-scroll-repeat
-  style="background-color: #FAFAFA;"
-  class="py-10 mt-100"
->
-  {index !== 0 && (
-    <img
-      src="/theme/static/linesdownload.svg"
-      alt=""
-      width="295"
-      height="823"
-      loading="lazy"
-      decoding="async"
-      class="download-img"
-      data-scroll
-      data-scroll-delay=".1"
-      data-scroll-speed="-1"
-    />
-  )}
-
-  {downloads.map((row, i) => {
-    const file = row.file && typeof row.file === 'object' ? row.file : null;
-    const contact = row.contact && typeof row.contact === 'object' ? row.contact : null;
-    const img = row.img && typeof row.img === 'object' ? row.img : null;
-    return (
-      <div
-        class={`container-fluid py-10${i % 2 === 0 ? ' pe-lg-0' : ' ps-lg-0'}`}
-        id={`download${i}`}
-      >
-        <div class="row">
-          <div
-            class={`col-lg-4 offset-lg-1 pe-xl-0 order-2${i % 2 !== 0 ? ' order-lg-2' : ' order-lg-0'}`}
-            data-scroll
-            data-scroll-opacity
-          >
-            <div class="paragraph hover-underline">
-              {row.cat && (
-                <div class="btn mb-4 btn-text d-flex align-items-center">
-                  <svg class="me-3 mb-1" fill="none" height="6" viewBox="0 0 6 6" width="6" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="3" cy="3" fill="#464961" opacity=".5" r="3" />
-                  </svg>
-                  <span class="opacity50">{row.cat}</span>
-                </div>
-              )}
-              <Fragment set:html={row.text ?? ''} />
-            </div>
-            {(file || contact) && (
-              <div class="d-flex flex-wrap align-items-center">
+<section id={`section${index}`} class="dl-rows section surface-white">
+  <div class="container dl-rows-in">
+    {
+      downloads.map((row, i) => {
+        const file = row.file && typeof row.file === 'object' ? row.file : null;
+        const contact = row.contact && typeof row.contact === 'object' ? row.contact : null;
+        const img = row.img && typeof row.img === 'object' ? row.img : null;
+        return (
+          <div class="dl-row" id={`download${i}`}>
+            <div class="dl-row-copy">
+              {row.cat && <span class="label">{row.cat}</span>}
+              <div class="prose" set:html={clean(row.text)} />
+              <div class="dl-row-actions">
                 {file && (
-                  <a
-                    class="btn btn-arrow btn-download mt-6 me-10"
-                    href={file.url}
-                    target={file.url?.startsWith('#') ? '_self' : '_blank'}
-                    rel={file.url?.startsWith('#') ? undefined : 'noopener'}
-                    data-scroll-to={file.url?.startsWith('#') ? true : undefined}
-                  >
-                    <span>{s('common.download')}</span>
-                    {!file.url?.startsWith('#') && (
-                      <span class="visually-hidden">{s('a11y.newTab')}</span>
-                    )}
+                  <a class="btn btn--primary" href={file.url} target={file.url?.startsWith('#') ? undefined : '_blank'} rel={file.url?.startsWith('#') ? undefined : 'noopener'}>
+                    {s('common.download')}
+                    <Icon name="download" size={16} />
+                    {!file.url?.startsWith('#') && <span class="visually-hidden">{s('a11y.newTab')}</span>}
                   </a>
                 )}
                 {contact && (
-                  <div class="hover-underline mt-6">
-                    <a
-                      class="btn btn-text me-10"
-                      href={contact.url}
-                      target={linkTarget(contact.url, contact.target)}
-                      rel={linkRel(linkTarget(contact.url, contact.target))}
-                    >
-                      <span>{contact.title}</span>
-                      {opensNewTab(contact.url, contact.target) && (
-                        <span class="visually-hidden">{s('a11y.newTab')}</span>
-                      )}
-                    </a>
-                  </div>
+                  <a
+                    class="btn btn--link"
+                    href={contact.url}
+                    target={linkTarget(contact.url, contact.target)}
+                    rel={linkRel(linkTarget(contact.url, contact.target))}
+                  >
+                    {contact.title}
+                    {opensNewTab(contact.url, contact.target) && <span class="visually-hidden">{s('a11y.newTab')}</span>}
+                  </a>
                 )}
               </div>
-            )}
-          </div>
-
-          <div class={`col-md-6 mb-5 mb-lg-0${i % 2 === 0 ? ' offset-lg-1' : ''}`}>
+            </div>
             {img && mediaSrc(img) && (
-              <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}`}>
-                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" {...(mediaDims(img) ?? {})} />
-              </div>
+              <figure class="dl-row-img">
+                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" decoding="async" {...(mediaDims(img) ?? {})} />
+              </figure>
             )}
           </div>
-        </div>
-      </div>
-    );
-  })}
+        );
+      })
+    }
+  </div>
 </section>
+
+<style>
+  .dl-rows-in {
+    display: grid;
+    gap: 96px;
+  }
+  .dl-row {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .dl-row {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+  }
+  .dl-row-copy {
+    display: grid;
+    gap: 16px;
+  }
+  .dl-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .dl-row-img {
+    overflow: hidden;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-xl);
+  }
+</style>

@@ -22,125 +22,135 @@ const [download, home, cases, contact] = await Promise.all([
 ]);
 ---
 
-<section class="nf">
-  <div class="nf-wrap">
-    <p class="nf-code" aria-hidden="true">4<span class="nf-dot"></span>4</p>
+<div class="nf-page">
+<section class="nf surface-mint">
+  <span class="nf-mass" aria-hidden="true"></span>
+  <span class="nf-sat" aria-hidden="true"></span>
+  <p class="nf-code" aria-hidden="true">404</p>
+  <div class="nf-in">
     <h1 class="nf-h">{s('nf.h')}</h1>
     <p class="nf-p" set:html={s('nf.pHtml')} />
     <nav class="nf-links" aria-label={s('nf.nav.aria')}>
-      <a class="nf-btn nf-btn-solid" href={download}>{s('nf.download')}</a>
-      <a class="nf-btn nf-btn-ghost" href={home}>{s('nav.home')}</a>
-      <a class="nf-btn nf-btn-ghost" href={cases}>{s('nf.cases')}</a>
-      <a class="nf-btn nf-btn-ghost" href={contact}>{s('nav.contact')}</a>
+      <a class="btn btn--primary btn--lg" href={download}>{s('nf.download')}<span class="btn-dot" aria-hidden="true"></span></a>
+      <a class="btn btn--secondary btn--lg" href={home}>{s('nav.home')}</a>
+      <a class="btn btn--secondary btn--lg" href={cases}>{s('nf.cases')}</a>
+      <a class="btn btn--secondary btn--lg" href={contact}>{s('nav.contact')}</a>
     </nav>
   </div>
 </section>
+</div>
 
 <style>
+  /* "A · Corner fall" — the page that lost its way falls into the mass.
+     The number sits on the mass in mint; the way out sits on the field. */
+  /* The frame is a panel on the white page, so the mass is cropped by the
+     panel — and the page ends on white before the ink footer, like every
+     other page. */
+  .nf-page {
+    padding: 8px var(--gutter) clamp(64px, 8vw, 96px);
+  }
   .nf {
-    background: var(--gi-bg-dark, #0a0a12);
-    color: var(--gi-text-on-dark);
-    min-height: 82vh;
-    display: grid;
-    place-items: center;
-    padding: calc(var(--gi-bar-h, 44px) + 7rem) 1.5rem 5rem;
-    font-family: Epilogue, system-ui, sans-serif;
-  }
-  .nf-wrap {
-    max-width: 38rem;
-    text-align: center;
-  }
-  /* The "0" is the brand's green sphere — the same dot the logo carries. */
-  .nf-code {
-    margin: 0 0 1rem;
-    font-size: clamp(4.5rem, 12vw, 6rem);
-    line-height: 1;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--gi-text-on-dark);
-    display: inline-flex;
+    --d: max(560px, 54vw);
+    --edge: clamp(28px, 6vw, 88px);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    max-width: calc(var(--container) + 2 * var(--gutter) + 96px);
+    margin-inline: auto;
+    min-height: clamp(560px, 72vh, 780px);
+    display: flex;
     align-items: center;
-    gap: 0.08em;
+    padding: clamp(40px, 6vw, 80px) var(--edge);
+    border-radius: var(--radius-xl);
   }
-  .nf-dot {
-    width: 0.72em;
-    height: 0.72em;
+  .nf-mass {
+    position: absolute;
+    z-index: -1;
+    width: var(--d);
+    aspect-ratio: 1;
     border-radius: 50%;
-    background: radial-gradient(circle at 32% 30%, #6ef5b8, var(--gi-green, #27ea93) 58%, #0d9e63);
-    box-shadow: 0 0 34px rgb(39 234 147 / 0.45);
+    background: var(--ink-900);
+    left: 50%;
+    top: 16%;
+  }
+  .nf-sat {
+    position: absolute;
+    z-index: -1;
+    width: calc(var(--d) * 0.07);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+    left: 44%;
+    top: 9%;
+  }
+  /* The number is centred on the mass and sized from it, so it stays well
+     inside the circle (the system asks for 8% in from its edge) at every
+     width — set independently, its corner crossed the edge onto the field,
+     mint on mint. */
+  .nf-code {
+    position: absolute;
+    z-index: 0;
+    left: calc(50% + var(--d) / 2);
+    top: calc(16% + var(--d) / 2);
+    translate: -50% -50%;
+    font: 800 calc(var(--d) * 0.3) / 0.8 var(--font-sans);
+    letter-spacing: -0.07em;
+    color: var(--mint-500);
+    white-space: nowrap;
+  }
+  .nf-in {
+    position: relative;
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+  /* 38vw keeps the copy's longest lines clear of the mass's left edge from
+     900px up (42vw let the paragraph touch it at 900–1000). */
+  @media (min-width: 900px) {
+    .nf-in > * {
+      max-width: min(520px, 38vw);
+    }
   }
   .nf-h {
-    margin: 0 0 0.9rem;
-    font-size: clamp(1.35rem, 3.4vw, 1.9rem);
-    line-height: 1.25;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    color: var(--gi-text-on-dark);
+    max-width: 11em;
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: -0.055em;
     text-wrap: balance;
   }
   .nf-p {
-    margin: 0 auto 2rem;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    color: rgb(255 255 255 / 0.84);
-    max-width: 32rem;
-    text-wrap: pretty;
-  }
-  /* :global() because the paragraph is set:html — its anchor carries no
-     scoping attribute. */
-  .nf-p :global(a) {
-    color: var(--gi-green, #27ea93);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    max-width: 30rem;
+    font: 400 var(--fs-body-lg) / 1.6 var(--font-sans);
+    color: var(--ink-900);
   }
   .nf-links {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
+    gap: 10px;
+    max-width: 34rem;
+    margin-top: 8px;
   }
-  .nf-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    padding: 0.7rem 1.4rem;
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition:
-      background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .nf-btn:active {
-    transform: translateY(1px);
-  }
-  .nf-btn-solid {
-    background: var(--gi-green, #27ea93);
-    color: var(--gi-bg-dark);
-  }
-  .nf-btn-solid:hover {
-    background: #4ff0a8;
-    color: var(--gi-bg-dark);
-  }
-  .nf-btn-ghost {
-    border: 1.5px solid rgb(255 255 255 / 0.4);
-    color: var(--gi-text-on-dark);
-  }
-  .nf-btn-ghost:hover {
-    border-color: var(--gi-green, #27ea93);
-    color: var(--gi-green, #27ea93);
-  }
-  .nf-btn:focus-visible {
-    outline: 2px solid var(--gi-green, #27ea93);
-    outline-offset: 3px;
-  }
-  @media (max-width: 560px) {
-    .nf-links {
-      flex-direction: column;
-      align-items: stretch;
+  /* One column: the mass rises from the panel's bottom edge, centred, and
+     the number sits in the middle of its cap. */
+  @media (max-width: 899.98px) {
+    .nf {
+      display: block;
+      padding-bottom: 300px;
+    }
+    .nf-mass {
+      left: 50%;
+      translate: -50% 0;
+      top: auto;
+      bottom: calc(var(--d) * -0.55);
+    }
+    .nf-sat {
+      display: none;
+    }
+    .nf-code {
+      left: 50%;
+      top: auto;
+      bottom: 40px;
+      translate: -50% 0;
+      font-size: calc(var(--d) * 0.22);
     }
   }
 </style>

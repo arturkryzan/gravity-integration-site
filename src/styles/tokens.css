@@ -1,111 +1,145 @@
 /* ============================================================
-   gravity.integration — design tokens
-   Single source of truth. #27EA93/#27EB93 unified to #27EA93.
+   gravity.integration — design tokens, v2.0 "Mass"
+   ------------------------------------------------------------
+   The brand block below is copied verbatim from the design
+   system's own token export (2_0/Gravity Design System.html,
+   section 08). Everything after it is the site's layer on top:
+   values the design system uses on its own page but never
+   named, and the roles this site needs (surfaces, z-index,
+   container).
+
+   One idea runs through the whole system: mass. Mint is the
+   field, ink is the mass, and nothing else competes.
    ============================================================ */
 :root {
-  /* brand */
-  --gi-green: #27ea93;            /* primary accent (unified) */
-  --gi-green-rgb: 39 234 147;
-  /* Green text on light. #0d9e6d measured 3.43:1 on #fff — large-text-only, but
-     it ships on 12–13px links and badges. Darkened to clear 4.5:1 on BOTH light
-     surfaces (5.36:1 on #fff, 4.88:1 on #f3f4fb) at the same hue. */
-  --gi-green-deep: #097a53;
+  /* ---- brand (verbatim) ---------------------------------------------- */
+  --mint-500: #01ec90;
+  --mint-600: #00c878;
+  --mint-800: #007f4d;
+  --mint-100: #d9fceb;
+  --ink-900: #1e1f33;
+  --ink-700: #2e3048;
+  --slate-600: #464862;
+  --slate-400: #8b8da6;
+  --mist-100: #eef0f4;
+  --mist-200: #d9dbe3;
+  --white: #ffffff;
+  --on-ink: #f4f5f8;
+  --red-500: #e5484d;
+  --amber-500: #f0b429;
 
-  /* Negative / "before" counterpart to the green. Two roles, because one value
-     can't do both: --gi-red is a *surface* (the calculator's current-state bar,
-     which carries near-black labels), --gi-red-deep is red *text on light*
-     (form validation). The theme's #dc3232 measured 4.21:1 on #f3f4fb — fine on
-     pure white, failing on the light-section background it also renders over. */
-  --gi-red: #ef4444;
-  --gi-red-deep: #c62828;
+  /* ---- aliases (verbatim) --------------------------------------------- */
+  --color-field: var(--mint-500);
+  --color-mass: var(--ink-900);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--slate-600);
+  --color-accent: var(--mint-500);
+  --color-accent-hover: var(--mint-600);
+  --surface-page: var(--mist-100);
+  --surface-card: var(--white);
+  --border: var(--mist-200);
+
+  /* ---- type (verbatim, fonts self-hosted — see Site.astro) ------------- */
+  --font-sans: 'Epilogue', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-display: 800 96px/0.84 var(--font-sans);
+  --track-display: -0.065em;
+  --text-h1: 800 56px/0.92 var(--font-sans);
+  --track-h1: -0.055em;
+  --text-h2: 800 40px/1 var(--font-sans);
+  --track-h2: -0.05em;
+  --text-h3: 600 28px/1.1 var(--font-sans);
+  --track-h3: -0.035em;
+  --text-body: 400 16px/1.55 var(--font-sans);
+  --text-label: 500 12px/1 var(--font-mono);
+  --track-label: 0.08em;
+
+  /* ---- space & shape (verbatim) --------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* ---- motion (verbatim) ---------------------------------------------- */
+  --ease-fall: cubic-bezier(0.55, 0, 0.1, 1);
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+
+  /* ================================================================
+     The site's layer
+     ================================================================ */
+
+  /* Values the design-system page itself uses but its token block never
+     named. Each is measured against the surface it is allowed on:
+
+       --muted       #6e7089  4.84:1 on white — captions and mono labels on
+                              WHITE only. On mist it drops to 4.24:1, so on
+                              mist the same role is --slate-600 (7.79:1).
+       --on-ink-soft #c9cbd6  10.0:1 on ink, 7.96:1 on ink-700 — body copy
+                              on ink. --slate-400 is 4.97:1 on ink but 3.96:1
+                              on ink-700, so it is for ink-900 only.
+       --red-700     #c2363b  5.41:1 on white — error TEXT on light. The
+                              brand red (#e5484d, 3.91:1) is for dots and
+                              borders, never for words on white.
+       --red-300     #ff8a8f  7.15:1 on ink — error text on ink.
+
+     Mint as text is only ever --mint-800 on white (5.07:1). On mist it is
+     4.44:1 — under the floor — so mint-coloured labels never sit on mist. */
+  --muted: #6e7089;
+  --on-ink-soft: #c9cbd6;
+  --red-700: #c2363b;
+  --red-300: #ff8a8f;
+  --red-100: #fce4e5;
+  --amber-100: #fdf1d6;
+
+  /* The design system's type scale, fluid. Each step is the system's own
+     size from ~1200px up and steps down with the viewport; headings use
+     these and nothing else. (DS §03: display 96, H1 56, H2 40, H3 28,
+     H4 20, body-lg 18, body 16, label 12.) */
+  --fs-display: clamp(52px, 7vw, 96px);
+  --fs-h1: clamp(36px, 4.6vw, 56px);
+  --fs-h2: clamp(28px, 3.4vw, 40px);
+  --fs-h3: clamp(22px, 2.4vw, 28px);
+  --fs-h4: 20px;
+  --fs-body-lg: 18px;
+  --fs-body: 16px;
 
   /* surfaces */
-  --gi-bg-dark: #0a0a12;          /* darkest (hero, SVG scenes) */
-  --gi-bg-dark-alt: #111119;      /* dark section alt */
-  --gi-bg-slate: #464861;         /* demo-form section */
-  --gi-bg-card-dark: #242538;     /* calculator cards */
-  --gi-bg-calc: #1a1b2e;          /* calculator section */
-  --gi-bg-light: #ffffff;
-  /* The light side of the system was never finished. Only the surface (#fff)
-     had a name, so every light-section component — EsbArticle, CaseStudies,
-     IntegrationsGrid, DownloadPage — independently re-declared the same two
-     values locally: a tinted panel behind quoted/boxed content and a hairline
-     rule. Four copies of one decision is the definition of drift, so they get
-     names here and the components point at them. */
-  --gi-bg-tint: #f3f4fb;          /* light panels: FAQ rows, callouts, cards */
-  --gi-line: #e4e5ef;             /* hairline rules on light surfaces */
+  --surface-ink: var(--ink-900);
+  --surface-ink-raised: var(--ink-700);
 
-  /* text */
-  --gi-text-on-dark: #ffffff;
-  --gi-text-muted-on-dark: rgb(255 255 255 / 0.75);
-  /* Heading/ink colour on light surfaces. Was #1a1a2e, which had exactly one
-     consumer (Footer.astro) while five components carried a local `--ink:
-     #14152a` across 19 call sites — the same role, declared twice, and the
-     copy the system named was the one almost nothing used. Unified onto the
-     value that actually ships. The footer moves from 17.06:1 to 17.94:1 on
-     white, which is a change no eye can see and no threshold cares about. */
-  --gi-text-on-light: #14152a;
-  --gi-text-muted-on-light: rgb(0 0 0 / 0.55);
-  /* Muted text on light that has to stay in the slate family rather than go
-     neutral: secondary copy in the light sections, and the pricing card's
-     currency unit sitting directly under the --gi-bg-slate figure, which must
-     read as a step down from it rather than as a different colour.
-     --gi-text-muted-on-light is a black transparency (≈#737373, 4.76:1) and
-     goes grey next to slate, which is why nothing uses it here.
+  /* layout — the system's container: 1200px with 24px gutters */
+  --container: 1200px;
+  --gutter: 24px;
+  --measure: 68ch;
+  --section-y: clamp(64px, 9vw, 120px);
 
-     This role had drifted into three values and no name: site.css hard-coded
-     #6b6d84 while calling it "the documented muted token" (a value chosen as a
-     token, described as one, then never declared); EsbArticle and
-     IntegrationsGrid declared #6b6d84 locally; CaseStudies and DownloadPage
-     declared #5f6178. Three call sites each — a tie on usage, so the tie is
-     broken the way this file has broken it twice already (--gi-green-deep,
-     --gi-red-deep): when two candidates serve one role, take the darker.
-     #6b6d84 measures 4.62:1 on --gi-bg-tint, 0.12 above the floor, and
-     EsbArticle uses it on exactly that panel. #5f6178 is 6.06:1 on white and
-     5.52:1 on the tint, and stays lighter than --gi-bg-slate, so the pricing
-     unit is still a clear step down from the figure above it. */
-  --gi-text-muted-slate: #5f6178;
+  /* header height, read by sticky sub-navigation and scroll-margin */
+  --header-h: 72px;
 
-  /* Slate lift — the fullscreen menu stacks three columns and separates them
-     by stepping the slate surface, not by drawing borders. The base tone is
-     --gi-bg-slate; these are the two steps above it. They were literals in
-     site.css with the ramp explained only in a comment, which is a token the
-     system needed and never got. */
-  --gi-bg-slate-lift-1: #565971;
-  --gi-bg-slate-lift-2: #6b6d81;
+  /* z-index — semantic and ordered */
+  --z-decor: 1;
+  --z-raised: 2;
+  --z-sticky: 10;
+  --z-header: 20;
+  --z-menu: 25;
+  --z-consent: 35;
+  --z-modal: 40;
+}
 
-  /* typography */
-  --gi-font-heading: 'Epilogue', system-ui, sans-serif;
-  --gi-font-ui: 'Inter', system-ui, sans-serif;
-
-  /* Measure — the width at which running prose stays readable. The ported
-     theme never had one, so body copy simply took whatever the Bootstrap
-     column gave it: 111ch on /kontakt/, 99ch on the newsletter block, 88ch
-     in the integrations grid. Comfortable reading is 65–75ch; 68 sits in
-     the middle of that band. It is a `ch`, so it tracks the font size of
-     whatever it is applied to instead of freezing a pixel width. */
-  --gi-measure: 68ch;
-
-  /* layout */
-  --gi-container: 1140px;
-  --gi-radius: 10px;
-  --gi-radius-lg: 16px;
-
-  /* announcement bar */
-  --gi-bar-h: 44px;
-
-  /* ---- z-index scale ----------------------------------------------------
-     Semantic, ordered, and matched to the layers the ported theme already
-     established (decor 1–6, breadcrumbs 10, header 20) so nothing restacks.
-     The fullscreen menu sits *below* the header on purpose: the header owns
-     the logo and the CLOSE control, which must stay visible over the menu. */
-  --gi-z-decor: 2;      /* circles, line art, section backdrops */
-  --gi-z-raised: 4;     /* content lifted above its own decoration */
-  --gi-z-sticky: 10;    /* breadcrumbs / per-page section nav */
-  --gi-z-menu: 15;      /* fullscreen nav overlay */
-  --gi-z-header: 20;    /* fixed site header */
-  --gi-z-bar: 30;       /* announcement bar — pinned above the header */
-  --gi-z-consent: 35;   /* cookie bar — over the page, under a real modal */
-  --gi-z-modal: 40;
-  --gi-z-toast: 50;
+@media (max-width: 599.98px) {
+  :root {
+    --gutter: 20px;
+    --header-h: 64px;
+  }
 }

@@ -1,0 +1,40 @@
+---
+/* The wordmark: Epilogue 800, lowercase, tracked −0.045em, line height
+   0.92, breaking after the dot onto two lines. Live text rather than an
+   image, so it is as sharp as the type around it and costs nothing — the
+   face is already loaded for the headings.
+
+   `tone="ink"` is the primary (ink on mint or light); `tone="reversed"`
+   is on ink, where the dot turns mint. The single-line form is for heights
+   under 40px, which nothing on this site needs. Never below 14px, never in
+   caps. */
+interface Props {
+  tone?: 'ink' | 'reversed';
+  size?: number;
+  class?: string;
+}
+const { tone = 'ink', size = 20, class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={['wordmark', `wordmark--${tone}`, className]}
+  style={`--wm-size:${size}px`}
+  aria-hidden="true"><span>gravity<span class="wordmark-dot">.</span></span><span>integration</span></span
+>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    font: 800 var(--wm-size) / 0.92 var(--font-sans);
+    letter-spacing: -0.045em;
+    color: var(--ink-900);
+    white-space: nowrap;
+  }
+  .wordmark--reversed {
+    color: var(--on-ink);
+  }
+  .wordmark--reversed .wordmark-dot {
+    color: var(--mint-500);
+  }
+</style>

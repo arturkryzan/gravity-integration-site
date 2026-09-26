@@ -153,16 +153,13 @@ export function trackLead(event?: string) {
 }
 
 /* ---------------------------------------------------------------------------
-   The two CF7-shaped forms (/kontakt/ and the footer newsletter).
+   The two simple forms (/kontakt/ and the newsletter band).
 
-   These inherit the WordPress theme's form styling, so the runtime speaks that
-   markup's own vocabulary — `.wpcf7-response-output` for the form-level
-   message, `.wpcf7-not-valid-tip` for the field-level one — rather than
-   inventing classes the stylesheet has never heard of.
-
-   One deviation: the theme hides `.wpcf7-not-valid-tip` inside a checkbox row
-   (`opacity: 0`), which would make a missing consent silently unreportable.
-   The consent error therefore goes to the response output, which is visible.
+   v2 markup: the message area is `.form-output`, the submit is a <button
+   class="form-submit"> whose `.form-submit-label` carries the text, the
+   e-mail input sits in a `.form-control` wrapper that receives the inline
+   `.form-tip`. The tone of a message is a data attribute; the colours belong
+   to the stylesheet of the surface the form is on, not to this file.
 --------------------------------------------------------------------------- */
 
 const MSG = pick({
@@ -184,21 +181,6 @@ const MSG = pick({
   },
 });
 
-/* Set inline because legacy.css already colours `.wpcf7-response-output`, and
-   an inline declaration avoids a specificity fight with a minified vendor blob
-   we don't otherwise touch. Inline styles still resolve custom properties, so
-   the success tone can point at the design system rather than restate it:
-   --gi-bg-slate (#464861) is the slate value, and every light-surface component
-   in the system already aliases it as `--body` and uses it as body-text colour,
-   so this is the same role, not a background token pressed into text duty.
-   --gi-red-deep is not the right partner here — it's tuned for the dark
-   surfaces. #8c1d18 stays a documented one-off: it is the only value that
-   clears 4.5:1 on *both* surfaces these forms render on (5.76:1 on the green
-   contact band, 8.31:1 on the light newsletter band), which no existing token
-   does. */
-const INK = 'var(--gi-bg-slate)';
-const ERR = '#8c1d18';
-
 const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 export interface MlSimpleFormOptions {
@@ -211,31 +193,32 @@ export interface MlSimpleFormOptions {
 }
 
 export function initMlSimpleForm(form: HTMLFormElement, opts: MlSimpleFormOptions) {
-  const out = form.querySelector<HTMLElement>('.wpcf7-response-output');
-  const submit = form.querySelector<HTMLInputElement>('.wpcf7-submit');
+  const out = form.querySelector<HTMLElement>('.form-output');
+  const submit = form.querySelector<HTMLButtonElement>('.form-submit');
+  const submitLabel = submit?.querySelector<HTMLElement>('.form-submit-label') ?? submit;
   const email = form.querySelector<HTMLInputElement>('input[type="email"]');
   const consent = form.querySelector<HTMLInputElement>('input[data-ml-consent]');
-  if (!email || !submit) return;
+  if (!email || !submit || !submitLabel) return;
 
   // Native validation stays on with JS off (the markup carries `required` and
   // no `novalidate`); with JS on we take over so the messages are ours and in
   // the page's language regardless of browser locale.
   form.noValidate = true;
 
-  const emailWrap = email.closest<HTMLElement>('.wpcf7-form-control-wrap');
+  const emailWrap = email.closest<HTMLElement>('.form-control');
   let tip: HTMLElement | null = null;
 
   function say(msg: string, tone: 'ok' | 'err') {
     if (!out) return;
     out.textContent = msg;
-    out.style.color = tone === 'ok' ? INK : ERR;
-    out.style.fontWeight = tone === 'err' ? '600' : '';
+    out.dataset.tone = tone;
     out.hidden = false;
   }
 
   function clearSay() {
     if (!out) return;
     out.textContent = '';
+    delete out.dataset.tone;
     out.hidden = true;
   }
 
@@ -244,7 +227,7 @@ export function initMlSimpleForm(form: HTMLFormElement, opts: MlSimpleFormOption
     if (msg) {
       if (!tip) {
         tip = document.createElement('span');
-        tip.className = 'wpcf7-not-valid-tip';
+        tip.className = 'form-tip';
         tip.setAttribute('role', 'alert');
         emailWrap.appendChild(tip);
       }
@@ -309,13 +292,13 @@ export function initMlSimpleForm(form: HTMLFormElement, opts: MlSimpleFormOption
 
     submit.disabled = true;
     form.dataset.status = 'submitting';
-    const original = submit.value;
-    submit.value = MSG.sending;
+    const original = submitLabel.textContent ?? '';
+    submitLabel.textContent = MSG.sending;
 
     const result = await mlSubmit(opts.action, payload);
 
     submit.disabled = false;
-    submit.value = original;
+    submitLabel.textContent = original;
 
     if (result.ok) {
       form.dataset.status = 'sent';

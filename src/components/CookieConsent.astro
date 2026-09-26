@@ -28,17 +28,19 @@
       one click each — the only difference is fill colour. There is no × that
       quietly means "ask me again on every page", and no pre-ticked anything.
 
-   Placement is the bottom edge on purpose: the announcement bar owns the top,
-   is `position: fixed`, and main.js measures its height into `--gi-bar-h` to
-   offset the body and the header. Anything else pinned up there would either
-   corrupt that measurement or sit on top of the bar. */
+   Placement is the bottom edge on purpose: the top belongs to the
+   announcement bar and the sticky header, and a panel pinned there would sit
+   on the page's own navigation.
+
+   A <div role="dialog">, not an <aside>: ARIA in HTML does not allow the
+   dialog role on <aside>, and the role is what a screen reader announces. */
 import site from '../data/site.json';
 import { localeOf, t } from '../i18n/ui';
 const s = t(localeOf(Astro.currentLocale));
 ---
 
 <!-- COOKIE CONSENT -->
-<aside
+<div
   id="gi-consent"
   role="dialog"
   aria-modal="false"
@@ -60,170 +62,139 @@ const s = t(localeOf(Astro.currentLocale));
       </button>
     </div>
   </div>
-</aside>
+</div>
 <!-- END COOKIE CONSENT -->
 
 <style>
-  /* legacy.css carries the old theme's HTML5 reset, which includes
-     `aside{display:block}` — an author rule, so it outranks the UA's
-     `[hidden]{display:none}` and the `hidden` attribute silently stops working.
-     Restore it explicitly; the whole no-flash story depends on it. */
-  #gi-consent[hidden] {
-    display: none;
-  }
-
+  /* v2: an ink card floating over the bottom edge — the system's toasts are
+     always ink. It is ink-700, the system's "card on ink", so it still has
+     an edge where it floats over an ink section or the hero's mass. Both
+     answers are filled pills of identical geometry, side by side: refusing
+     costs exactly what accepting costs. Accept is the view's one mint
+     accent; reject is ink-900 with an on-ink label. */
   #gi-consent {
     position: fixed;
-    inset: auto 0 0;
-    z-index: var(--gi-z-consent, 35);
-    background: var(--gi-bg-dark, #0a0a12);
-    color: var(--gi-text-on-dark, #fff);
-    border-top: 1px solid rgb(var(--gi-green-rgb, 39 234 147) / 0.4);
-    box-shadow: 0 -18px 44px rgb(0 0 0 / 0.38);
-    font-family: var(--gi-font-heading, Epilogue, system-ui, sans-serif);
-  }
-
-  /* The reveal is a state class, not the default: with JS off nothing shows
-     (and nothing loads either), and for anyone who already answered the bar
-     never paints at all rather than flashing in and out. */
-  #gi-consent {
-    transform: translateY(100%);
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 16px;
+    z-index: var(--z-consent);
+    max-width: 880px;
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    background: var(--ink-700);
+    color: var(--on-ink);
+    font-family: var(--font-sans);
+    /* The reveal is a state class, not the default: with JS off nothing shows
+       (and nothing loads either), and for anyone who already answered the bar
+       never paints at all. */
     opacity: 0;
+    transform: translateY(24px);
     transition:
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.35s ease-out;
+      opacity var(--dur-base) var(--ease-fall),
+      transform var(--dur-slow) var(--ease-fall);
   }
   #gi-consent.is-in {
-    transform: translateY(0);
     opacity: 1;
+    transform: none;
   }
-
   .gi-consent-inner {
-    max-width: var(--gi-container, 1140px);
-    margin: 0 auto;
-    padding: 1.35rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 28px;
+    padding: 20px 24px;
   }
-
   .gi-consent-copy {
     flex: 1 1 auto;
+    min-width: 0;
   }
-  /* The cap was here, on the wrapper, and it read `68ch` — the right number on
-     the wrong element. `ch` resolves against the font of the element it is
-     written on, and the wrapper inherits the panel's 16px while the paragraph
-     inside it sets at 14px. So a box sized to 68 of the wrapper's characters
-     handed the paragraph 78 of its own, and the measure check kept reporting
-     78ch on a rule that says 68. That was written off as a deliberate
-     exception; it was a unit resolving against the wrong font.
-
-     Cap the children instead, the same shape `.paragraph > p` uses in
-     site.css, so each one counts in the type size it is actually set in. The
-     h2 gets the same cap and is unaffected — it is one short line — but it
-     inherits the correct behaviour if the title ever grows.
-
-     This costs 26px: at 1440 the body goes from 78ch/4 lines to 68ch/5, and
-     the bar from 154px to 180px. Worth paying, and not a close call — this is
-     the one paragraph on the site the reader is being asked to make a decision
-     about, so its legibility outranks 26px of a panel they dismiss with one
-     click. Below 1024 the cap never binds (the column is 340–459px, well under
-     68ch at 13–14px), so every mobile layout is untouched; the whole change is
-     desktop-only and was verified as such against 38 screenshots. */
+  /* Capped on the children, so each counts `ch` in its own type size. */
   .gi-consent-copy > * {
-    max-width: var(--gi-measure);
+    max-width: var(--measure);
   }
-
   #gi-consent h2 {
-    margin: 0 0 0.35rem;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 6px;
+    font: 600 15px / 1.3 var(--font-sans);
     letter-spacing: -0.01em;
-    color: var(--gi-text-on-dark, #fff);
+    color: var(--on-ink);
   }
-
+  #gi-consent h2::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mint-500);
+  }
   #gi-consent p {
     margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.55;
-    /* 75% white on #0a0a12 measures ~11.4:1 — muted without going washed out */
-    color: var(--gi-text-muted-on-dark, rgb(255 255 255 / 0.75));
+    font: 400 13px / 1.55 var(--font-sans);
+    color: var(--on-ink-soft);
     text-wrap: pretty;
   }
-
-  /* :global() because the paragraph is set:html — the anchor inside it never
-     receives Astro's scoping attribute, and a scoped `a` would silently stop
-     matching it. */
+  /* :global() because the paragraph is set:html. */
   #gi-consent :global(a) {
-    color: var(--gi-green, #27ea93);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
+    color: var(--on-ink);
+    text-decoration-color: var(--mint-500);
   }
   #gi-consent :global(a:hover) {
-    text-decoration-thickness: 2px;
+    color: var(--mint-500);
   }
-
+  /* Two equal columns: refusing is exactly as big as accepting, whichever
+     label happens to be longer. */
   .gi-consent-actions {
     flex: 0 0 auto;
-    display: flex;
-    gap: 0.65rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
-
-  /* Both actions are filled buttons of identical geometry. Rejecting must cost
-     the same click and read at the same weight as accepting; only the surface
-     tells them apart. */
   .gi-consent-btn {
     min-height: 44px;
-    min-width: 10.5rem;
-    padding: 0.7rem 1.5rem;
-    border: 2px solid transparent;
-    border-radius: 2rem;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.15;
+    min-width: 9.5rem;
+    padding: 0 20px;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-pill);
+    font: 600 14px / 1.15 var(--font-sans);
     cursor: pointer;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
+    transition: background-color var(--dur-fast) ease;
   }
-
+  .gi-consent-btn:active {
+    transform: scale(0.97);
+  }
   .gi-consent-accept {
-    background: var(--gi-green, #27ea93);
-    color: var(--gi-bg-dark, #0a0a12); /* 12.5:1 */
+    background: var(--mint-500);
+    color: var(--ink-900);
   }
-  .gi-consent-accept:hover,
-  .gi-consent-accept:focus-visible {
-    background: #4df0a9;
+  .gi-consent-accept:hover {
+    background: var(--mint-600);
   }
-
   .gi-consent-reject {
-    background: var(--gi-bg-card-dark, #242538);
-    color: var(--gi-text-on-dark, #fff); /* 14.6:1 */
-    border-color: rgb(255 255 255 / 0.28);
+    background: var(--ink-900);
+    color: var(--on-ink);
+    border-color: var(--slate-400);
   }
-  .gi-consent-reject:hover,
-  .gi-consent-reject:focus-visible {
-    background: #32334a;
-    border-color: rgb(255 255 255 / 0.5);
+  .gi-consent-reject:hover {
+    background: var(--slate-600);
   }
-
-  /* The UA's blue ring all but vanishes on #0a0a12 — use the brand green. */
   #gi-consent :focus-visible {
-    outline: 2px solid var(--gi-green, #27ea93);
-    outline-offset: 3px;
+    outline: 3px solid var(--mint-500);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--white);
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 760px) {
+    #gi-consent {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+    }
     .gi-consent-inner {
       flex-direction: column;
       align-items: stretch;
-      gap: 1.1rem;
-      padding: 1.15rem 1.25rem calc(1.15rem + env(safe-area-inset-bottom, 0px));
+      gap: 14px;
+      padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
     }
     .gi-consent-actions {
       display: grid;
@@ -231,56 +202,33 @@ const s = t(localeOf(Astro.currentLocale));
     }
     .gi-consent-btn {
       min-width: 0;
-      padding: 0.7rem 0.75rem;
+      padding: 0 10px;
     }
   }
-
-  /* A phone-height budget, not just a phone-width one. Stacked, this bar was
-     eating ~34% of a 375×812 screen — at which point it stops being a bar and
-     starts being a wall, and a wall is what trains people to hit the green
-     button without reading. Tightening the leading, the gaps and the padding
-     (and keeping the two actions side by side, which they fit at this width)
-     brings it under a third with no words removed: the paragraph is the legal
-     substance, so it shrinks, it doesn't get truncated. */
+  /* A phone-height budget: the paragraph is the legal substance, so it
+     tightens rather than being truncated. */
   @media (max-width: 575.98px) {
-    .gi-consent-inner {
-      gap: 0.85rem;
-      padding: 1rem 1.1rem calc(1rem + env(safe-area-inset-bottom, 0px));
-    }
     #gi-consent h2 {
-      margin-bottom: 0.2rem;
-      font-size: 0.9375rem;
+      font-size: 14px;
+      margin-bottom: 4px;
     }
     #gi-consent p {
-      font-size: 0.8125rem;
+      font-size: 12.5px;
       line-height: 1.5;
     }
-    .gi-consent-actions {
-      gap: 0.5rem;
-    }
-    .gi-consent-btn {
-      padding: 0.7rem 0.5rem;
-      font-size: 0.8125rem;
-      letter-spacing: 0;
-    }
   }
-
-  /* Below ~340px two columns would break "Tylko niezbędne" across lines, which
-     costs more height than stacking does. */
   @media (max-width: 340px) {
     .gi-consent-actions {
       grid-template-columns: 1fr;
     }
   }
-
   @media (prefers-reduced-motion: reduce) {
     #gi-consent {
       transition: none;
       transform: none;
       opacity: 1;
     }
-    .gi-consent-btn,
-    #gi-consent :global(a) {
+    .gi-consent-btn {
       transition: none;
     }
   }

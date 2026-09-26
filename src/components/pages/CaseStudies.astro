@@ -8,18 +8,14 @@ import { getPage } from '../../i18n/routes';
 import { localeOf } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CaseStudyList from '../../components/CaseStudies.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import DemoSection from '../../components/DemoSection.astro';
-import heroes from '../../data/page_heroes.json';
 import { parseCaseStudies } from '../../lib/case-studies';
 
 const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('case-studies', lang);
 const page = entry.data;
-const hero = (heroes as Record<string, any>)['case-studies'] ?? {};
-const heroAlt = lang === 'en' ? (hero.alt_en ?? hero.alt) : hero.alt;
 const studies = parseCaseStudies(page.sections as any[]);
 const crumbs = studies
   .map((s) => ({ label: s.nav, anchor: s.anchor }))
@@ -32,10 +28,9 @@ const crumbs = studies
   path={page.url}
   slug={page.slug}
   draft={page.draft}
-  bodyClass={`page page-id-${page.wpId}`}
+  bodyClass={`page page-${page.slug}`}
 >
-  <PageHero h1={page.h1} img={hero.local} alt={heroAlt} circle={hero.circle} />
-  <Breadcrumbs items={crumbs} />
+  <PageHero h1={page.h1} crumbs={crumbs} />
   <CaseStudyList studies={studies} />
   {page.newsletter && <Newsletter />}
   <DemoSection />

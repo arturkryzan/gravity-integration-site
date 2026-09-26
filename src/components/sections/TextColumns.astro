@@ -1,5 +1,9 @@
 ---
-/* ACF layout: text_columns */
+/* ACF layout: text_columns — two columns of copy. Used as the opening of
+   /cennik/ and /kalkulator/, where it reads as the page's lede: larger type,
+   two measures side by side. */
+import { clean } from '../../lib/html';
+
 interface Props {
   index: number;
   text0?: string;
@@ -8,19 +12,28 @@ interface Props {
 const { index, text0 = '', text1 = '' } = Astro.props;
 ---
 
-<section data-scroll data-scroll-repeat data-scroll-offset="100%, 50%">
-  <div class="container-fluid pt-10 mb-5">
-    <div class="row mb-lg-10" id={`section${index}`}>
-      {text0 && (
-        <div class="col-lg-5 paragraph pt-5 pb-5 mb-10" data-scroll data-scroll-opacity>
-          <Fragment set:html={text0} />
-        </div>
-      )}
-      {text1 && (
-        <div class="col-lg-5 offset-lg-1 paragraph pt-5 pb-5 mb-10" data-scroll data-scroll-opacity>
-          <Fragment set:html={text1} />
-        </div>
-      )}
-    </div>
+<section id={`section${index}`} class="tc section">
+  <div class="container tc-grid">
+    {text0 && <div class="prose prose--lg tc-col" data-reveal set:html={clean(text0)} />}
+    {text1 && <div class="prose prose--lg tc-col" data-reveal set:html={clean(text1)} />}
   </div>
 </section>
+
+<style>
+  .tc {
+    padding-bottom: clamp(48px, 6vw, 80px);
+  }
+  .tc-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px 64px;
+  }
+  @media (min-width: 900px) {
+    .tc-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .tc-col :global(p) {
+    color: var(--ink-900);
+  }
+</style>

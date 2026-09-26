@@ -1,0 +1,136 @@
+---
+/* The two audience panels on the home page — "Dla programistów…" and
+   "Dla biznesu…". They replace v1's two animated network scenes (dark
+   fields, glowing nodes: the imagery the design system rules out) and keep
+   their words exactly: four lines each, the third one the accent.
+
+   They are a pair of mirrored frames from the system's key-visual set:
+     dev → "C · Inverted": ink field, the mass in mint cropped top-left, the
+           satellite bottom-right, type on the field, right-aligned.
+     biz → "A · Corner fall": mint field, the ink mass cropped bottom-right,
+           the satellite top-left, type on the mass.
+   On ink the words are #F4F5F8 and the accent is mint — the system's rule
+   for type on the mass.
+
+   The geometry is proportional — the type is sized in container units, the
+   circles in percentages of the frame — so one set of numbers holds at
+   every width. It is set so the longest line in either language ("myślicieli
+   i działów IT") stays inside the biz mass by more than the system's 8%,
+   and the dev lines stay the same distance clear of theirs. */
+import { localeOf, t } from '../i18n/ui';
+
+interface Props {
+  variant: 'dev' | 'biz';
+}
+const { variant } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
+
+const lines =
+  variant === 'dev'
+    ? [s('svg.dev.l1'), s('svg.dev.l2'), s('svg.dev.l3'), s('svg.dev.l4')]
+    : [s('svg.biz.l1'), s('svg.biz.l2'), s('svg.biz.l3'), s('svg.biz.l4')];
+---
+
+<figure class:list={['aud', `aud--${variant}`]} data-reveal>
+  <span class="aud-mass" aria-hidden="true"></span>
+  <span class="aud-sat" aria-hidden="true"></span>
+  <p class="aud-lines">
+    <span>{lines[0]}</span>
+    <span>{lines[1]}</span>
+    <span class="aud-accent">{lines[2]}</span>
+    <span class="aud-last">{lines[3]}</span>
+  </p>
+</figure>
+
+<style>
+  .aud {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    aspect-ratio: 1.45;
+    border-radius: var(--radius-xl);
+    container-type: inline-size;
+  }
+  .aud-mass,
+  .aud-sat {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .aud-lines {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font: 800 clamp(18px, 6.6cqi, 40px) / 0.98 var(--font-sans);
+    letter-spacing: -0.05em;
+    color: var(--on-ink);
+  }
+  .aud-accent {
+    color: var(--mint-500);
+  }
+  .aud-last {
+    font-weight: 300;
+    letter-spacing: -0.03em;
+  }
+
+  /* ---- dev: C · Inverted ---- */
+  .aud--dev {
+    background: var(--ink-900);
+  }
+  .aud--dev .aud-mass {
+    width: 64%;
+    left: -40%;
+    top: -46%;
+    background: var(--mint-500);
+  }
+  .aud--dev .aud-sat {
+    width: 5.5%;
+    right: 9%;
+    bottom: 12%;
+    background: var(--mint-500);
+  }
+  .aud--dev .aud-lines {
+    right: 9%;
+    top: 50%;
+    translate: 0 -50%;
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  /* ---- biz: A · Corner fall ---- */
+  .aud--biz {
+    background: var(--mint-500);
+  }
+  .aud--biz .aud-mass {
+    width: 140%;
+    left: 10%;
+    top: 22%;
+    background: var(--ink-900);
+  }
+  .aud--biz .aud-sat {
+    width: 7%;
+    left: 9%;
+    top: 12%;
+    background: var(--ink-900);
+  }
+  .aud--biz .aud-lines {
+    right: 7%;
+    bottom: 9%;
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  /* The fall: once in view, the mass settles into place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .aud .aud-mass {
+      transition: transform var(--dur-slow) var(--ease-fall);
+    }
+    :global(html.js) .aud--dev:not(.is-inview) .aud-mass {
+      transform: translate(-8%, -8%);
+    }
+    :global(html.js) .aud--biz:not(.is-inview) .aud-mass {
+      transform: translate(6%, 8%);
+    }
+  }
+</style>

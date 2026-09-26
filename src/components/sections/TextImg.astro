@@ -1,43 +1,156 @@
 ---
-/* ACF layout: text_img (theme inc/sections/text_img.php). Also used as spacer sections. */
-import { mediaSrc, mediaAlt, mediaDims, mediaRatio } from '../../lib/media';
+/* ACF layout: text_img — copy beside an image, or copy alone.
+
+   Two of the images this layout carries were v1's brand artwork, not
+   content: a 3D sphere render beside "Witajcie w przyszłości" and a
+   typographic claim beside "O nas". The design system rules out renders and
+   illustrations, so the render goes and its section is copy alone; the
+   claim is words, so it becomes a key-visual frame with its words set live
+   in it. Any other image is shown as itself.
+
+   `document` is the long-form mode for the privacy policy: one column at a
+   reading measure, no media. */
+import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
+import { clean } from '../../lib/html';
+import MassPanel from '../ui/MassPanel.astro';
 
 interface Props {
   index: number;
   text?: string;
   img?: Record<string, any> | '' | null;
   img_placement?: string;
+  document?: boolean;
 }
-const { index, text = '', img, img_placement = '' } = Astro.props;
-const image = img && typeof img === 'object' ? img : null;
-const imgClass = img_placement !== 'left' ? ' offset-lg-1' : ' ms-lg-auto me-lg-auto';
-const textClass = img_placement !== 'left' ? ' order-2 mt-5 mt-lg-0' : '';
+const { index, text = '', img, img_placement = '', document = false } = Astro.props;
+
+/* v1's renders were decoration, not content. A render with no words has no
+   v2 equivalent — a frame with nothing in it beside the copy reads as a
+   missing image, and it would put a second mass in the hero's frame — so
+   those sections are copy alone. The claim is words, so it keeps them. */
+const DROPPED = new Set(['media/etl-text.png', 'media/img.png']);
+const ARTWORK: Record<string, { variant: 'fall' | 'inverted'; lines?: string[] }> = {
+  'media/CM_CLAIM.png': { variant: 'inverted', lines: ['FUTURE', 'TECH', 'FORMULA'] },
+};
+const raw = img && typeof img === 'object' ? img : null;
+const image = raw && !DROPPED.has(raw.file) ? raw : null;
+const art = image?.file ? ARTWORK[image.file] : undefined;
+
+/* v1 semantics, kept: 'left' means the copy is on the left. */
+const mediaFirst = img_placement !== 'left';
 ---
 
-<section id={`section${index}`} data-scroll data-scroll-repeat data-scroll-offset="100%, 0">
-  <div class="container-fluid pt-10 mb-lg-5">
-    <div class="row align-items-center pt-5">
-      <div class={`col-lg-5 offset-lg-1${textClass}`}>
-        {text && (
-          <div class="paragraph" data-scroll data-scroll-opacity>
-            <Fragment set:html={text} />
-          </div>
-        )}
-      </div>
-
-      {image && mediaSrc(image) && (
-        <div class={`col-8 col-sm-6 col-lg-4 mt-10 mt-lg-0${imgClass}`}>
-          <div
-            class="ratio bg-gray"
-            style={`--bs-aspect-ratio: ${mediaRatio(image)}`}
-            data-scroll
-            data-scroll-delay=".1"
-            data-scroll-speed="1"
-          >
-            <img src={mediaSrc(image)} alt={mediaAlt(image)} loading="lazy" class="lazyload" {...(mediaDims(image) ?? {})} />
-          </div>
+<section id={`section${index}`} class:list={['ti section', { 'ti--doc': document }]}>
+  <div class:list={['container', 'ti-grid', { 'ti-grid--solo': !image, 'ti-grid--media-first': image && mediaFirst }]}>
+    {text && <div class:list={['prose', 'ti-prose', { 'prose--lg': !document }]} data-reveal set:html={clean(text)} />}
+    {
+      image && (
+        <div class:list={['ti-media', { 'ti-media--claim': art?.lines }]}>
+          {art ? (
+            <MassPanel variant={art.variant} lines={art.lines} ratio="4 / 5" />
+          ) : (
+            mediaSrc(image) && (
+              <figure class="ti-frame" data-reveal>
+                <img src={mediaSrc(image)} alt={mediaAlt(image)} loading="lazy" decoding="async" {...(mediaDims(image) ?? {})} />
+              </figure>
+            )
+          )}
         </div>
-      )}
-    </div>
+      )
+    }
   </div>
 </section>
+
+<style>
+  .ti-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .ti-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(48px, 7vw, 112px);
+    }
+    .ti-grid--media-first {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+    .ti-grid--media-first .ti-media {
+      order: -1;
+    }
+  }
+  .ti-grid--solo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ti-media {
+    max-width: 480px;
+    width: 100%;
+    justify-self: center;
+  }
+  /* One column: a frame spans the column like everything else in it. The
+     claim keeps its portrait poster shape, so it keeps a poster's width. */
+  @media (max-width: 899.98px) {
+    .ti-media {
+      max-width: none;
+      justify-self: stretch;
+    }
+    .ti-media--claim {
+      max-width: 440px;
+      justify-self: start;
+    }
+  }
+  .ti-frame {
+    overflow: hidden;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-xl);
+    background: var(--mist-100);
+  }
+  .ti-frame img {
+    width: 100%;
+  }
+
+  /* The registration panel on /kontakt/ arrives as a bare <div> of facts
+     (its inline styling is presentation and was removed): it becomes the
+     system's recessed surface. */
+  .ti-prose > :global(div) {
+    margin-top: 32px;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--mist-100);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+  }
+  /* its first line is the panel's title — a label */
+  .ti-prose > :global(div > p:first-child:not(:only-child)) {
+    font: 500 12px / 1.3 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--slate-600);
+    margin-bottom: 12px;
+  }
+  .ti-prose > :global(div > p + p) {
+    margin-top: 8px;
+  }
+  /* the generator's note at the foot of the privacy policy */
+  .ti-prose > :global(.disclaimer) {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--slate-600);
+  }
+
+  /* ---- the document mode ---- */
+  .ti--doc {
+    padding-top: clamp(48px, 6vw, 80px);
+  }
+  .ti--doc .ti-prose {
+    max-width: 760px;
+  }
+  .ti--doc .ti-prose :global(h2) {
+    font-size: var(--fs-h3);
+    letter-spacing: -0.04em;
+    padding-top: 8px;
+  }
+  .ti--doc .ti-prose :global(h2:not(:first-child)) {
+    margin-top: 56px;
+  }
+</style>

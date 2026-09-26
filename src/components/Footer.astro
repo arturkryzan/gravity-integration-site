@@ -1,105 +1,247 @@
 ---
+/* Footer: ink — anything heavy is ink — with the mass inverted to mint and
+   cropped into the top-left corner, the way the design system closes its own
+   page. It carries the whole site map, because the top bar deliberately
+   doesn't. */
 import LangSwitch from './LangSwitch.astro';
+import Wordmark from './ui/Wordmark.astro';
+import Icon from './ui/Icon.astro';
+import site from '../data/site.json';
+import { isOffered, linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
 
 interface Props {
-  /** The page's language-neutral key, threaded down from Site.astro so the
-   *  switcher can offer this same page in the other language. */
+  /** The page's language-neutral key, so the switcher can offer this page in
+   *  the other language. */
   slug?: string;
 }
 const { slug } = Astro.props;
 
-const s = t(localeOf(Astro.currentLocale));
+const lang = localeOf(Astro.currentLocale);
+const s = t(lang);
 const year = new Date().getFullYear();
+
+const link = async (k: string) => (isOffered(k, lang) ? await linkUrl(k, lang) : null);
+const [home, integracje, technologia, cennik, cases, esb, kalkulator, kontakt, pobieranie, privacy] =
+  await Promise.all(
+    [
+      'home',
+      'integracje',
+      'technologia',
+      'cennik',
+      'case-studies',
+      'czym-jest-esb',
+      'kalkulator',
+      'kontakt',
+      'pobieranie',
+      'polityka-prywatnosci',
+    ].map(link),
+  );
+
+const product = [
+  [integracje, s('nav.integrations')],
+  [technologia, s('nav.technology')],
+  [esb, s('nav.whatIsEsb')],
+  [kalkulator, s('nav.roiCalculator')],
+  [cennik, s('nav.pricing')],
+].filter(([h]) => h) as Array<[string, string]>;
+const company = [
+  [cases, s('nav.caseStudies')],
+  [pobieranie, s('nav.download')],
+  [kontakt, s('nav.contact')],
+].filter(([h]) => h) as Array<[string, string]>;
 ---
 
-<footer data-scroll-section>
-  <div class="container-fluid">
-    <div class="row py-6 align-items-center">
-      <div class="col-5 col-sm-6">
-        <a href="/" class="logo d-inline-block">
-          <img src="/theme/static/logo-dark.svg" alt="gravity.integration" width="222" height="48" loading="lazy" decoding="async" />
-        </a>
-      </div>
-      <div class="col-7 col-sm-6 text-end text-epi fs-10">
-        <div class="gi-footer-meta">
-          {/* First in the row, so the reader who wants the other language finds
-              it before the consent control and the copyright. The flex parent
-              handles the gap, so when the switcher renders nothing the row
-              simply has one fewer item — no empty slot to collapse. */}
-          <LangSwitch slug={slug} class="gi-lang-row" />
-          {/* Withdrawing consent has to be as easy as giving it, so the way back
-              to the cookie bar lives in the footer of every page. It's a real
-              <button>: it performs an action, it doesn't navigate. With JS off
-              it never appears, which is correct — with JS off nothing was ever
-              loaded to consent to. */}
-          <button type="button" class="gi-consent-link" data-consent-open hidden>
-            {s('footer.cookieSettings')}
-          </button>
-          <span class="gi-footer-copy">{s('footer.copyright')} {year} Caffeine Minds sp. z o.o.</span>
-        </div>
-      </div>
+<footer class="site-footer surface-ink">
+  <span class="mass site-footer-mass" style="--mass-color: var(--mint-500)" aria-hidden="true"></span>
+
+  <div class="container site-footer-grid">
+    <div class="site-footer-brand">
+      <a href={home ?? '/'} class="site-footer-logo" aria-label={s('nav.logoHome')}>
+        <Wordmark tone="reversed" size={34} />
+      </a>
+      {
+        pobieranie && (
+          <a class="btn btn--secondary" href={pobieranie}>
+            {s('hero.download')}
+            <span class="btn-dot" aria-hidden="true" />
+          </a>
+        )
+      }
+    </div>
+
+    <nav class="site-footer-nav" id="footer-nav" aria-label={s('nav.footerAria')}>
+      <ul>
+        {product.map(([h, label]) => <li><a href={h}>{label}</a></li>)}
+      </ul>
+      <ul>
+        {company.map(([h, label]) => <li><a href={h}>{label}</a></li>)}
+        <li>
+          <a href={site.docs} target="_blank" rel="noopener">
+            {s('nav.docs')}<Icon name="arrow-up-right" size={14} /><span class="visually-hidden">{s('a11y.newTab')}</span>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        {privacy && <li><a href={privacy} hreflang="pl">{s('nav.privacy')}</a></li>}
+        <li>
+          <a href={site.linkedin} target="_blank" rel="noopener" aria-label={s('a11y.linkedin')}>
+            <Icon name="linkedin" size={16} />LinkedIn
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="site-footer-legal">
+    <span class="site-footer-copy">{s('footer.copyright')} {year} Caffeine Minds sp. z o.o.</span>
+    <div class="site-footer-meta">
+      <LangSwitch slug={slug} class="site-footer-lang" />
+      {/* Withdrawing consent has to be as easy as giving it, so the way back
+          to the cookie bar is on every page. A real <button>: it performs an
+          action. Rendered hidden and revealed by script — with JS off nothing
+          was ever loaded to consent to. */}
+      <button type="button" class="gi-consent-link" data-consent-open hidden>
+        {s('footer.cookieSettings')}
+      </button>
+    </div>
     </div>
   </div>
 </footer>
 
-<style>
-  /* The row is laid out by the wrapper, never by `display` on the button
-     itself. Astro scopes *every* compound selector, so a rule like
-     `.col-7 .gi-consent-link` emits as `.col-7[data-astro-cid-x]
-     .gi-consent-link[data-astro-cid-x]` — specificity (0,4,0), which silently
-     outranks `.gi-consent-link[data-astro-cid-x][hidden]` at (0,3,0) and kills
-     the `hidden` attribute. Keeping display off the button entirely is what
-     makes `hidden` the single source of truth for whether it shows. */
-  .gi-footer-meta {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-  }
-
-  .gi-consent-link[hidden] {
-    display: none;
-  }
-
-  .gi-consent-link {
-    /* 44px of target without 44px of visual weight: the padding is vertical
-       breathing room, the negative margin keeps the baseline where the
-       copyright expects it. */
-    padding: 0.9rem 0;
-    margin-block: -0.9rem;
-    background: none;
-    border: 0;
-    font: inherit;
-    color: var(--gi-text-on-light, #1a1a2e);
-    text-decoration: underline;
-    text-underline-offset: 0.25em;
-    text-decoration-thickness: 1px;
-    cursor: pointer;
-  }
-  .gi-consent-link:hover {
-    text-decoration-thickness: 2px;
-  }
-  .gi-consent-link:focus-visible {
-    outline: 2px solid var(--gi-green-deep, #097a53);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-
-  @media (max-width: 575.98px) {
-    .gi-footer-meta {
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.35rem;
-    }
-  }
-</style>
-
 <script is:inline>
-  /* Rendered `hidden` so the no-JS footer doesn't offer a control that can't
-     work — CookieConsent.astro is what actually reopens the bar. */
   document.querySelectorAll('.gi-consent-link[data-consent-open]').forEach(function (el) {
     el.hidden = false;
   });
 </script>
+
+<style>
+  /* The wordmark must start below the mass — the logo stays on the field,
+     never on the mass. The mass is fixed-size, so the room above the
+     wordmark is too: 216px clears the 560px mass's lowest point (200px)
+     however few links the locale's site map has (English has one fewer,
+     and with the brand block bottom-aligned to the links it rode up into
+     the mass at 980–1140px). Below 900px the mass is 380px and ends at 110. */
+  .site-footer {
+    position: relative;
+    overflow: hidden;
+    padding-top: 150px;
+  }
+  @media (min-width: 900px) {
+    .site-footer {
+      padding-top: 216px;
+    }
+  }
+  .site-footer-mass {
+    width: 560px;
+    left: -200px;
+    top: -360px;
+  }
+  /* Below 900px the brand block sits at the top of a one-column footer,
+     right under the crop; the smaller mass keeps clear of the wordmark. */
+  @media (max-width: 899.98px) {
+    .site-footer-mass {
+      width: 380px;
+      left: -150px;
+      top: -270px;
+    }
+  }
+
+  .site-footer-grid {
+    position: relative;
+    z-index: var(--z-raised);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    padding-bottom: 56px;
+  }
+  @media (min-width: 900px) {
+    .site-footer-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      align-items: end;
+    }
+  }
+
+  .site-footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .site-footer-logo {
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  .site-footer-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px 32px;
+  }
+  .site-footer-nav ul {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    align-content: start;
+  }
+  .site-footer-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    color: var(--on-ink);
+    font: 600 15px / 1.2 var(--font-sans);
+    text-decoration: none;
+  }
+  .site-footer-nav a:hover {
+    color: var(--mint-500);
+  }
+
+  .site-footer-legal {
+    position: relative;
+    z-index: var(--z-raised);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 20px;
+    padding-bottom: 28px;
+    border-top: 1px solid var(--ink-700);
+    font-size: 12px;
+    color: var(--slate-400);
+  }
+  .site-footer-copy {
+    font: 400 13px / 1.4 var(--font-sans);
+  }
+  .site-footer-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .site-footer-meta :global(.site-footer-lang),
+  .gi-consent-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--on-ink-soft);
+    font: 500 12px / 1 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: var(--mint-500);
+    text-underline-offset: 5px;
+    cursor: pointer;
+  }
+  .site-footer-meta :global(.site-footer-lang:hover),
+  .gi-consent-link:hover {
+    color: var(--mint-500);
+  }
+  /* Astro scopes every compound selector, so a `display` here would outrank
+     `[hidden]`; base.css's `[hidden]{display:none !important}` settles it. */
+</style>

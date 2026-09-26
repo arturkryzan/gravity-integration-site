@@ -75,25 +75,42 @@ if (img.src.toLowerCase().endsWith('.gif') && !img.motion) {
 }
 
 <style>
-  /* The video inherits the still's frame so a study that mixes the two reads as
-     one set of figures. `display:block` kills the inline-baseline gap, and the
-     `width:100%` + `height:auto` pair is what lets the UA derive the box from
-     the width/height attributes — which is why those attributes are required
-     above rather than optional. */
-  .cs-motion video {
+  /* A screenshot or diagram: the system's framed image — radius 16, a
+     hairline, no shadow. A logo asset: a small white plate, the same one the
+     study header uses. Both keep their intrinsic ratio, so nothing shifts. */
+  .cs-shot {
+    overflow: hidden;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+  .cs-shot img,
+  .cs-shot video {
     display: block;
     width: 100%;
     height: auto;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
-    /* The letterbox behind a video that hasn't painted its first frame yet.
-       It's a surface, not text, so it takes the .cs alias rather than
-       --gi-text-on-light directly — same value, correct role. */
-    background: var(--ink);
   }
-  :global(.cs-payoff) .cs-motion video {
-    border-color: rgb(255 255 255 / 0.12);
-    box-shadow: none;
+  :global(.surface-ink) .cs-shot {
+    border-color: var(--ink-700);
+  }
+  .cs-mark {
+    justify-self: start;
+    display: grid;
+    place-items: center;
+    max-width: 280px;
+    padding: 16px 24px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+  .cs-mark img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 72px;
+    object-fit: contain;
+  }
+  .cs-motion video {
+    background: var(--ink-900);
   }
 </style>

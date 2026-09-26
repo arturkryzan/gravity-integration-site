@@ -51,105 +51,113 @@ const GI = {
 };
 ---
 
-<section id="scroll-calc" data-scroll data-scroll-repeat data-scroll-call="spyCalc" data-scroll-offset="100%, 50%">
-  <div class="container-fluid pt-10 pb-10" style="background:var(--gi-bg-calc);">
-    <div class="row">
-      <div class="col-12" data-scroll data-scroll-opacity>
+<section id="scroll-calc" class="roi-band section surface-white">
+  <div class="container">
 
 <!-- is:global is required, not incidental: the breakdown rows are injected by the
      inline script below, so they never carry Astro's scoping attribute. Scoped,
      every `.gi-breakdown tr/td` rule silently missed the generated rows. Every
      selector here is namespaced under #gi-roi-calculator / .gi-*. -->
 <style is:global>
-#gi-roi-calculator{--roi-green:var(--gi-green);--roi-dark:var(--gi-bg-calc);--roi-card:var(--gi-bg-card-dark);--roi-border:var(--gi-bg-slate);--roi-text:#c8cad0;--roi-white:var(--gi-text-on-dark);font-family:Epilogue,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:0 1rem;color:var(--roi-text)}
-#gi-roi-calculator h2{color:var(--roi-white);font-size:2rem;font-weight:700;text-align:center;margin:2rem 0 3rem}
-.gi-calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem}
-@media(max-width:768px){.gi-calc-grid{grid-template-columns:1fr}}
-.gi-calc-card{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:2rem}
-.gi-calc-card h3{color:var(--roi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
-.gi-slider-group{margin-bottom:1.5rem}
-.gi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.85rem;color:var(--roi-text)}
-/* The caption is a real <label for> now — the five sliders had no accessible
-   name at all before, so a screen reader announced five identical "slider"s.
-   Clicking it focuses the slider, so it should look clickable. */
-.gi-slider-label label{cursor:pointer;margin:0}
-.gi-slider-value{font-weight:700;color:var(--roi-green);font-size:1rem;min-width:80px;text-align:right}
-/* The input is 32px tall (the real touch target); the visible 6px track is
-   drawn by the track pseudo-elements. Thumb offset centres it on the track. */
-.gi-range{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;outline:none;cursor:pointer}
-.gi-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--roi-border)}
-.gi-range::-moz-range-track{height:6px;border-radius:3px;background:var(--roi-border)}
-.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--roi-green);cursor:pointer;border:2px solid var(--roi-dark);transition:box-shadow .18s cubic-bezier(.16,1,.3,1)}
-.gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--roi-green);cursor:pointer;border:2px solid var(--roi-dark);transition:box-shadow .18s cubic-bezier(.16,1,.3,1)}
-/* Every other control on this page answers the pointer; these five didn't.
-   The keyboard reader got a ring on :focus-visible and the mouse reader got
-   nothing but `cursor:pointer`, which promises the thumb is grabbable without
-   ever confirming the pointer is actually on it — and the thumb is 20px inside
-   a 32px row, so "am I on it?" is a real question. Same ring as focus, at
-   lower alpha so the two states read as a sequence rather than as the same
-   thing. Ordered before :focus-visible deliberately: equal specificity, so a
-   focused *and* hovered thumb has to resolve to the focus ring, not the
-   hover one. `hover: hover` keeps it off touch, where a hover state that
-   sticks after a drag is just a ring that won't go away.
-   Each vendor pseudo-element gets its own rule: one unknown selector in a
-   list invalidates the whole list, so pairing them would silently drop both. */
-@media (hover: hover) {
-  .gi-range:hover::-webkit-slider-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.18)}
-  .gi-range:hover::-moz-range-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.18)}
+/* v2: the calculator is the system's heavy frame — an ink panel with the
+   mint mass cropped into its corner. Inputs are ink-700 cards; results are
+   metrics, so they are set like the system's stat: large, mint on ink.
+   The "today" bar is slate, not red — tone is a dot, never a fill — and the
+   gravity bar is a mint field.
+
+   Still is:global: the breakdown rows are injected by the inline script
+   and never carry Astro's scoping attribute. Every selector is namespaced
+   under #gi-roi-calculator / .gi-*. */
+#gi-roi-calculator{position:relative;overflow:hidden;isolation:isolate;padding:clamp(28px,5vw,64px);border-radius:var(--radius-xl);background:var(--ink-900);color:var(--on-ink-soft);font-family:var(--font-sans)}
+#gi-roi-calculator .gi-roi-mass{position:absolute;z-index:-1;width:clamp(300px,34vw,480px);aspect-ratio:1;border-radius:50%;background:var(--mint-500);right:clamp(-220px,-12vw,-120px);top:clamp(-300px,-17vw,-170px);pointer-events:none}
+#gi-roi-calculator h2{max-width:18em;margin:0 0 16px;color:var(--on-ink);font:800 clamp(30px,3.6vw,46px)/1 var(--font-sans);letter-spacing:-.05em;text-wrap:balance}
+/* "gravity.integration" is one 263px word at 30px — wider than the panel on
+   a 320px phone. Below 600px the heading scales with the viewport. */
+@media (max-width:599.98px){#gi-roi-calculator h2{font-size:clamp(22px,7.4vw,30px)}}
+/* One column: the heading would run under the mass, so the mass shrinks
+   and the panel opens room above the heading for it. */
+@media (max-width:899.98px){
+  #gi-roi-calculator{padding-top:140px}
+  #gi-roi-calculator .gi-roi-mass{width:280px;right:-110px;top:-170px}
 }
-.gi-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
-.gi-range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgb(39 234 147/.3)}
-@media (prefers-reduced-motion: reduce) {
+#gi-roi-calculator .gi-roi-disclaimer{max-width:var(--measure);margin:0 0 clamp(32px,4vw,48px);font:400 14px/1.6 var(--font-sans);color:var(--on-ink-soft)}
+.gi-calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:768px){.gi-calc-grid{grid-template-columns:1fr}}
+.gi-calc-card{padding:24px;border-radius:var(--radius-lg);background:var(--ink-700)}
+.gi-calc-card h3{margin:0 0 20px;font:500 12px/1.3 var(--font-mono);letter-spacing:var(--track-label);text-transform:uppercase;color:var(--mint-500)}
+.gi-slider-group{margin-bottom:18px}
+.gi-slider-group:last-child{margin-bottom:0}
+.gi-slider-label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;font:400 14px/1.4 var(--font-sans);color:var(--on-ink-soft)}
+.gi-slider-label label{cursor:pointer;margin:0}
+.gi-slider-value{min-width:80px;text-align:right;font:500 15px/1 var(--font-mono);color:var(--on-ink)}
+/* 32px tall input = the real touch target; the visible 4px track is drawn by
+   the pseudo-elements, filled to the thumb by --pct (set by the script). */
+.gi-range{-webkit-appearance:none;appearance:none;width:100%;height:32px;margin:0;background:transparent;outline:none;cursor:pointer;--pct:50%}
+.gi-range::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(to right,var(--mint-500) var(--pct),var(--ink-900) var(--pct))}
+.gi-range::-moz-range-track{height:4px;border-radius:2px;background:var(--ink-900)}
+.gi-range::-moz-range-progress{height:4px;border-radius:2px;background:var(--mint-500)}
+.gi-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-8px;border-radius:50%;background:var(--mint-500);border:3px solid var(--ink-700);cursor:pointer;transition:box-shadow var(--dur-fast) ease}
+.gi-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--mint-500);border:3px solid var(--ink-700);cursor:pointer;transition:box-shadow var(--dur-fast) ease}
+@media (hover:hover){
+  .gi-range:hover::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--ink-900)}
+  .gi-range:hover::-moz-range-thumb{box-shadow:0 0 0 4px var(--ink-900)}
+}
+/* The focus ring is drawn on the thumb — the system's white gap + mint ring. */
+.gi-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--white),0 0 0 5px var(--mint-500)}
+.gi-range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 2px var(--white),0 0 0 5px var(--mint-500)}
+.gi-range:focus-visible{box-shadow:none;outline:none}
+@media (prefers-reduced-motion:reduce){
   .gi-range::-webkit-slider-thumb{transition:none}
   .gi-range::-moz-range-thumb{transition:none}
 }
-.gi-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
+.gi-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
 @media(max-width:768px){.gi-kpi-row{grid-template-columns:1fr}}
-.gi-kpi{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:1.5rem;text-align:center}
-.gi-kpi-value{font-size:2rem;font-weight:800;color:var(--roi-green);line-height:1.2}
-.gi-kpi-label{font-size:.8rem;color:var(--roi-text);margin-top:.3rem}
-.gi-chart-container{background:var(--roi-card);border:1px solid var(--roi-border);border-radius:1rem;padding:2rem;margin-bottom:2.5rem}
-.gi-chart-container h3{color:var(--roi-white);font-size:1.1rem;font-weight:600;margin:0 0 1.5rem 0}
-.gi-bar-wrap{display:flex;align-items:center;margin-bottom:1rem;gap:1rem}
-.gi-bar-label{width:100px;font-size:.8rem;color:var(--roi-text);text-align:right;flex-shrink:0}
-.gi-bar-track{flex:1;background:var(--roi-border);border-radius:6px;height:32px;position:relative;overflow:hidden}
-/* Bar labels sit *inside* the fill, so they inherit whichever bar they're on.
-   --roi-dark (#1a1b2e) on the red bar measures exactly 4.500:1 — passing on paper
-   with zero headroom, and 12px bold is not "large text". Use the darkest ink
-   token instead: 5.24:1 on red, 12.5:1 on green. Same near-black reading. */
-.gi-bar-fill{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.75rem;font-weight:700;color:var(--gi-bg-dark,#0a0a12);transform:translateX(-100%);transition:transform .5s ease}
-.gi-bar-fill.current{background:var(--gi-red,#ef4444)}
-.gi-bar-fill.gravity{background:var(--roi-green)}
-.gi-breakdown{width:100%;border-collapse:collapse;margin-bottom:2rem}
-.gi-breakdown th,.gi-breakdown td{padding:.75rem 1rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--roi-border)}
-.gi-breakdown th{color:var(--roi-text);font-weight:600}
-.gi-breakdown td{color:var(--roi-white)}
-.gi-breakdown .gi-savings{color:var(--roi-green);font-weight:700}
-.gi-cta-box{text-align:center;padding:2rem 0 1rem}
-/* Phone: a four-column money table can't fit ~310px of usable width, so restack
-   each row as a card — phase as the card title, the three figures as labelled
-   rows. ARIA roles are set in the markup/JS so the table semantics survive the
-   display:block flattening for screen readers. */
+.gi-kpi{padding:24px;border-radius:var(--radius-lg);background:var(--ink-700)}
+.gi-kpi-value{font:800 clamp(34px,3.6vw,48px)/.9 var(--font-sans);letter-spacing:-.05em;color:var(--mint-500)}
+.gi-kpi-label{margin-top:12px;font:500 11px/1.4 var(--font-mono);letter-spacing:var(--track-label);text-transform:uppercase;color:var(--on-ink-soft)}
+.gi-chart-container{margin-bottom:28px;padding:24px;border-radius:var(--radius-lg);background:var(--ink-700)}
+.gi-chart-container h3{margin:0 0 20px;font:500 12px/1.3 var(--font-mono);letter-spacing:var(--track-label);text-transform:uppercase;color:var(--mint-500)}
+.gi-bar-wrap{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.gi-bar-wrap:last-child{margin-bottom:0}
+.gi-bar-label{width:88px;flex-shrink:0;text-align:right;font:500 12px/1.2 var(--font-mono);color:var(--on-ink-soft)}
+.gi-bar-track{position:relative;flex:1;height:36px;overflow:hidden;border-radius:var(--radius-pill);background:var(--ink-900)}
+.gi-bar-fill{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:14px;border-radius:var(--radius-pill);font:500 12px/1 var(--font-mono);color:var(--ink-900);transform:translateX(-100%);transition:transform var(--dur-slow) var(--ease-fall)}
+.gi-bar-fill.current{background:var(--slate-400)}
+.gi-bar-fill.gravity{background:var(--mint-500)}
 @media(prefers-reduced-motion:reduce){.gi-bar-fill{transition:none}}
+/* Narrow phones: the value sits inside the fill, right-aligned, and a fill at
+   half of a 120px track is too short to show "15 dni" whole. The label moves
+   above the bar and the track takes the full width. */
+@media(max-width:419.98px){
+  .gi-bar-wrap{flex-wrap:wrap;gap:6px 16px}
+  .gi-bar-label{width:100%;text-align:left}
+}
+.gi-breakdown{width:100%;margin-bottom:8px;border-collapse:collapse}
+.gi-breakdown th,.gi-breakdown td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--ink-700)}
+.gi-breakdown th{font:500 11px/1.3 var(--font-mono);letter-spacing:var(--track-label);text-transform:uppercase;color:var(--on-ink-soft)}
+.gi-breakdown td{font:400 14px/1.4 var(--font-sans);color:var(--on-ink);font-variant-numeric:tabular-nums}
+.gi-breakdown .gi-savings{color:var(--mint-500);font-weight:600}
+.gi-cta-box{display:flex;justify-content:flex-start;padding-top:24px}
 @media(max-width:600px){
   .gi-breakdown,.gi-breakdown thead,.gi-breakdown tbody,.gi-breakdown tr,.gi-breakdown th,.gi-breakdown td{display:block}
   .gi-breakdown{border-collapse:separate}
   .gi-breakdown thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-  .gi-breakdown tr{border:1px solid var(--roi-border);border-radius:.75rem;padding:.15rem .9rem .5rem;margin-bottom:.75rem}
-  .gi-breakdown td{border-bottom:none;padding:.4rem 0;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;text-align:right}
-  .gi-breakdown td:first-child{font-weight:700;color:var(--roi-white);text-align:left;border-bottom:1px solid var(--roi-border);padding-bottom:.5rem;margin-bottom:.15rem}
-  .gi-breakdown td[data-label]::before{content:attr(data-label);color:var(--roi-text);font-weight:600;font-size:.78rem;text-align:left}
+  .gi-breakdown tr{margin-bottom:10px;padding:4px 16px 10px;border-radius:var(--radius-md);background:var(--ink-700)}
+  .gi-breakdown td{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:6px 0;border-bottom:none;text-align:right}
+  .gi-breakdown td:first-child{margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid var(--ink-900);font-weight:600;text-align:left}
+  .gi-breakdown td[data-label]::before{content:attr(data-label);font:500 11px/1.3 var(--font-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--on-ink-soft);text-align:left}
 }
 </style>
 
 <div id="gi-roi-calculator">
+  <span class="gi-roi-mass" aria-hidden="true"></span>
   <h2>{s('roi.h2')}</h2>
   {/* `max-width:640px` was a pixel width picked by eye and frozen against a
       font size it doesn't know: at this paragraph's 14.4px it resolves to
       78ch. It is centred with `margin: 0 auto`, so the token just makes the
       centred block narrower — there is no panel to re-lay-out, which is why
       the earlier note calling this an unavoidable exception was wrong. */}
-  <p style="text-align:center;color:var(--roi-text);font-size:.9rem;max-width:var(--gi-measure);margin:0 auto 3rem;line-height:1.7;opacity:.85;">{s('roi.disclaimer')}</p>
+  <p class="gi-roi-disclaimer">{s('roi.disclaimer')}</p>
 
   <div class="gi-calc-grid">
     <div class="gi-calc-card">
@@ -204,7 +212,7 @@ const GI = {
   </table>
 
   <div class="gi-cta-box">
-    <a class="btn btn-arrow btn-arrow-green" href={ctaHref}><span>{s('roi.cta')}</span></a>
+    <a class="btn btn--accent btn--lg" href={ctaHref}>{s('roi.cta')}<span class="btn-dot" aria-hidden="true"></span></a>
   </div>
 </div>
 
@@ -225,6 +233,8 @@ const GI = {
        already unambiguous from their labels and get no valuetext. */
     sl.r.setAttribute("aria-valuetext",fmt(R)+GI.pln);
     sl.tl.setAttribute("aria-valuetext",fmt(TL)+GI.pln);
+    /* fill the track up to the thumb */
+    Object.values(sl).forEach(function(r){var p=(r.value-r.min)/(r.max-r.min)*100;r.style.setProperty("--pct",p+"%")});
     var dd=D*DS,td=D*TS,dpd=D*DPS,md=D*MS;
     var cDev=dd*T*R,cTest=td*T*R,cDep=dpd*T*R,cMnt=md*T*R;
     var cTot=(cDev+cTest+cDep+cMnt)*P+TL;
@@ -257,7 +267,7 @@ const GI = {
     }
     var h="";
     rows.forEach(function(r){h+=row(r[0], r[1], r[2])});
-    h+=row(GI.rowTotal, cTot, gTot, " style=\"border-top:2px solid var(--gi-bg-slate);font-weight:700\"");
+    h+=row(GI.rowTotal, cTot, gTot, " style=\"border-top:2px solid var(--mint-500);font-weight:600\"");
     document.getElementById("gi-tbody").innerHTML=h;
   }
   Object.values(sl).forEach(function(s){s.addEventListener("input",calc)});
@@ -265,7 +275,5 @@ const GI = {
 })();
 </script>
 
-      </div>
-    </div>
   </div>
 </section>

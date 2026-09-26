@@ -1,11 +1,22 @@
 ---
 /* Full site shell: head + announcement bar + header/nav + main + footer.
    Mirrors the live WP body structure (theme head.php/header.php/footer.php). */
+/* Type: Epilogue (300/400/600/800) for everything, JetBrains Mono (400/500)
+   for labels, metrics and code — the design system's two faces, self-hosted
+   rather than pulled from Google Fonts, so no third party learns about a
+   visitor before the consent bar has been answered. Fontsource declares
+   every subset with a unicode-range, so the browser fetches only the files a
+   page actually paints — Polish letters come from latin-ext. */
+import '@fontsource/epilogue/300.css';
 import '@fontsource/epilogue/400.css';
 import '@fontsource/epilogue/600.css';
+import '@fontsource/epilogue/800.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import epilogue400 from '@fontsource/epilogue/files/epilogue-latin-400-normal.woff2?url';
+import epilogue800 from '@fontsource/epilogue/files/epilogue-latin-800-normal.woff2?url';
 import '../styles/tokens.css';
-import '../styles/legacy.css';
-import '../styles/site.css';
+import '../styles/base.css';
 import site from '../data/site.json';
 import { localeOf, t, LOCALE_TAG, OG_LOCALE, DEFAULT_LOCALE } from '../i18n/ui';
 import { alternates } from '../i18n/routes';
@@ -25,6 +36,10 @@ interface Props {
    *  prose on an English URL in Google's results. */
   draft?: boolean;
   bodyClass?: string;
+  /** What the top of the page is painted in. The header sits on it until
+   *  the page scrolls, so it takes the same colour: mint for the brand
+   *  heroes, mist for the quiet ones. */
+  heroTone?: 'mint' | 'mist' | 'white' | 'ink';
   ogImage?: string;
   /** override for special pages — the 404 sets `noindex,follow` */
   robots?: string;
@@ -36,7 +51,8 @@ const {
   slug,
   draft = false,
   bodyClass = '',
-  ogImage = '/og-homehero.png',
+  heroTone = 'mint',
+  ogImage,
   robots = draft ? 'noindex,follow' : 'index,follow',
 } = Astro.props;
 const canonical = new URL(path, site.siteUrl).href;
@@ -57,6 +73,9 @@ const xDefault = alts.find((a) => a.lang === DEFAULT_LOCALE);
    down to it, and the 404 (which belongs to no locale) falls back to Polish. */
 const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
+/* The share image carries the home headline, so each language has its own
+   (scripts/build-brand.mjs renders both). */
+const shareImage = ogImage ?? (lang === 'en' ? '/og-gravity-en.png' : '/og-gravity.png');
 ---
 
 <!doctype html>
@@ -91,29 +110,26 @@ const s = t(lang);
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, site.siteUrl).href} />
+    <meta property="og:image" content={new URL(shareImage, site.siteUrl).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:locale" content={OG_LOCALE[lang]} />
 
-    {/* The body font is declared inside legacy.css, so the browser cannot even
-        learn it exists until that sheet has been fetched and parsed — and on
-        five routes the measured LCP element is text set in it. Preloading the
-        one face that every page uses moves the request to the start of the
-        waterfall instead of the end of it. Only the Regular is preloaded:
-        UltraLight is used by exactly one element (the homepage h1), and
-        preloading a font 17 routes do not paint would trade one problem for a
-        smaller copy of itself. `crossorigin` is required even same-origin —
-        fonts are fetched in CORS mode, and a preload without it downloads the
-        file twice. */}
-    <link
-      rel="preload"
-      href="/fonts/Telegraf-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicons/favicon-32x32.png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon-152x152.png" />
+    {/* The two faces nearly every page paints above the fold: 800 for the
+        headline and the wordmark, 400 for the body. Preloaded so the request
+        starts with the document rather than after the stylesheet is parsed.
+        `crossorigin` is required even same-origin — fonts are fetched in CORS
+        mode, and a preload without it downloads the file twice. */}
+    <link rel="preload" href={epilogue800} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={epilogue400} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#01ec90" />
+    {/* The mark: mint, with the mass cropped bottom-right and the satellite
+        top-left. New file names rather than new files under the old ones —
+        /favicons/ is cached for a month. */}
+    <link rel="icon" href="/favicons/mark.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicons/mark-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/favicons/mark-180.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <script
@@ -123,7 +139,7 @@ const s = t(lang);
         '@type': 'Organization',
         name: site.company.name,
         url: site.siteUrl,
-        logo: new URL('/favicons/favicon-196x196.png', site.siteUrl).href,
+        logo: new URL('/favicons/mark-512.png', site.siteUrl).href,
         sameAs: [site.linkedin],
       })}
     />
@@ -324,20 +340,15 @@ const s = t(lang);
     </script>
     <slot name="head" />
   </head>
-  <body class={bodyClass}>
+  <body class={bodyClass} data-hero={heroTone}>
     {/* Before the announcement bar, not after it: the skip link only helps if
-        it is the FIRST thing Tab reaches, and the bar carries a link of its
-        own. Everything between here and <main> is one dismissible bar, the
-        logo, the menu button and — once opened — a ten-item nav. */}
+        it is the FIRST thing Tab reaches, and the bar carries links of its
+        own. */}
     <a class="skip-link" href="#main">{s('nav.skipToContent')}</a>
     {/* `tabindex="-1"` on the target is supposed to be enough — the UA is meant
-        to focus a focusable fragment target. Measured here, it is not: the hash
-        updates and the page scrolls, but document.activeElement stays on the
-        link, so the very next Tab walks back into the nav the reader just asked
-        to skip. Safari has never done it at all. So move focus explicitly
-        rather than trusting the UA. Inline and tiny so it is live before the
-        first Tab can happen; without JS the anchor still scrolls, which is the
-        pre-existing behaviour, not a regression. */}
+        to focus a focusable fragment target. Measured, it is not: the hash
+        updates and the page scrolls, but focus stays on the link, so the next
+        Tab walks straight back into the nav. So move focus explicitly. */}
     <script is:inline>
       document.querySelector('.skip-link')?.addEventListener('click', function () {
         var m = document.getElementById('main');
@@ -345,15 +356,11 @@ const s = t(lang);
       });
     </script>
     <AnnouncementBar />
-    <div class="page-container">
-      <Header slug={slug} />
-      {/* tabindex="-1" makes <main> a legal focus target for the skip link;
-          the script above is what actually moves the caret to it. */}
-      <main id="main" tabindex="-1" data-scroll-section>
-        <slot />
-      </main>
-      <Footer slug={slug} />
-    </div>
+    <Header slug={slug} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer slug={slug} />
     <CookieConsent />
     <script src="../scripts/main.js"></script>
   </body>

@@ -1,46 +1,243 @@
 ---
-/* ACF layout: pricing (theme inc/sections/pricing.php + components/price-item.php) */
+/* ACF layout: pricing.
+   The three licences are the system's cards: white with a hairline, and the
+   unlimited licence as the "stat" card — ink, with the mint mass cropped into
+   it — because it is the heavy one. Prices are set like the system's
+   metrics: Epilogue 800 at display size, the currency in mono. The
+   implementation offer (no price) closes the row as the "CTA" card: a mint
+   field and nothing else — the unlimited licence right above it already
+   carries the frame's mass.
+
+   Price strings are rendered exactly as the content has them ("2999",
+   "1,799"). The Stripe links still point at PLN checkouts on the English
+   site — Artur's decision, recorded in CLAUDE.md; do not "fix" it. */
+import { clean } from '../../lib/html';
+import Icon from '../ui/Icon.astro';
+
 interface Props {
   index: number;
   pricing: Array<Record<string, any>>;
 }
 const { index, pricing } = Astro.props;
+
+const priced = pricing.filter((p) => p.price !== '' && p.currency);
+const offers = pricing.filter((p) => !(p.price !== '' && p.currency));
+const featured = priced.length - 1;
 ---
 
-<section id={`scroll${index}`} data-scroll data-scroll-repeat>
-  <div class="container-fluid bg-green pricing py-8 py-lg-0">
-    <div class="pricing-lines d-none d-lg-block" data-scroll data-scroll-opacity>
-      <div class="circle" data-scroll data-scroll-delay=".2" data-scroll-speed="1"></div>
-      <div class="circle" data-scroll data-scroll-delay=".1" data-scroll-speed="1"></div>
-      <img src="/theme/static/linespricing0.svg" alt="" width="217" height="40" loading="lazy" decoding="async" data-scroll data-scroll-delay=".5" data-scroll-speed="-1" />
-      <img src="/theme/static/linespricing1.svg" alt="" width="193" height="49" loading="lazy" decoding="async" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
-    </div>
+<section id={`section${index}`} class="pr section surface-mist">
+  <div class="container pr-in">
+    <ol class="pr-grid">
+      {
+        priced.map((item, i) => {
+          const hot = i === featured;
+          const free = String(item.price).trim() === '0';
+          return (
+            <li class:list={['pr-card', { 'pr-card--hot surface-ink': hot }]} data-reveal style={`transition-delay:${i * 60}ms`}>
+              {hot && <span class="mass pr-mass" style="--mass-color: var(--mint-500)" aria-hidden="true" />}
+              <span class="label-num">{String(i + 1).padStart(2, '0')}</span>
+              <h2 class="pr-name" set:html={clean(item.name)} />
+              <div class="pr-text prose" set:html={clean(item.text)} />
+              <div class="pr-foot">
+                <p class="pr-price">
+                  <span class="pr-amount">{item.price}</span>
+                  <span class="pr-currency">{item.currency}</span>
+                </p>
+                {item.btn && item.btn_link && (
+                  <a
+                    class:list={['btn btn--lg btn--block', hot ? 'btn--accent' : free ? 'btn--secondary' : 'btn--primary']}
+                    href={item.btn_link}
+                  >
+                    {item.btn}
+                    {free ? <Icon name="download" size={16} /> : <Icon name="arrow-right" size={16} class="btn-arrow" />}
+                  </a>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
 
-    <div class="row pt-10" id={`section${index}`}>
-      {pricing.map((item) => (
-        <div class="col-lg-4 py-8 price-item">
-          <div class="bg-white pt-10 px-10 pb-8 text-center h-100 d-flex flex-column" data-scroll data-scroll-opacity>
-            <img src="/theme/static/logo_small.svg" alt="gravity.integration" width="111" height="24" loading="lazy" decoding="async" class="mx-auto mb-6" />
-            <h2 class="h3 ff-main lh-1-2 mb-6" set:html={item.name} />
-            <div class="paragraph mb-5">
-              <Fragment set:html={item.text ?? ''} />
-            </div>
-            <div class="mt-auto">
-              {item.price !== '' && item.currency && (
-                <div class="d-flex justify-content-center h1 price-item-value">
-                  <span>{item.price}</span>
-                  <span>&nbsp; {item.currency}</span>
-                </div>
-              )}
-              {item.btn && item.btn_link && (
-                <a class="btn btn-arrow btn-arrow-white mt-6 mx-auto" href={item.btn_link}>
-                  <span>{item.btn}</span>
-                </a>
-              )}
-            </div>
+    {
+      offers.map((item) => (
+        <div class="pr-offer surface-mint" data-reveal>
+          <div class="pr-offer-copy">
+            <h2 class="pr-name pr-offer-name" set:html={clean(item.name)} />
+            <div class="pr-offer-text prose" set:html={clean(item.text)} />
           </div>
+          {item.btn && item.btn_link && (
+            <a class="btn btn--primary btn--lg" href={item.btn_link}>
+              {item.btn}
+              <Icon name="arrow-right" size={16} class="btn-arrow" />
+            </a>
+          )}
         </div>
-      ))}
-    </div>
+      ))
+    }
   </div>
 </section>
+
+<style>
+  .pr-in {
+    display: grid;
+    gap: 12px;
+  }
+  /* Three licences: a row of three, or a column. In between, two per row
+     and the odd one out — the unlimited licence — takes the full row, laid
+     out wide: price and button side by side. */
+  .pr-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 640px) and (max-width: 899.98px) {
+    .pr-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .pr-card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+    .pr-card:last-child:nth-child(odd) .pr-foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--rule);
+    }
+    .pr-card:last-child:nth-child(odd) .pr-price {
+      padding-top: 0;
+      border-top: 0;
+    }
+    .pr-card:last-child:nth-child(odd) .btn--block {
+      width: auto;
+      min-width: 240px;
+    }
+  }
+  @media (min-width: 900px) {
+    .pr-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .pr-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 28px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+  .pr-card--hot {
+    border-color: var(--ink-900);
+    background: var(--ink-900);
+  }
+  .pr-mass {
+    z-index: -1;
+    width: 220px;
+    right: -110px;
+    top: -124px;
+  }
+  .pr-card .label-num {
+    color: var(--muted);
+  }
+  .pr-card--hot .label-num {
+    color: var(--slate-400);
+  }
+  .pr-name {
+    min-height: 2.3em;
+    font: 600 var(--fs-h4) / 1.2 var(--font-sans);
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  .pr-text :global(p),
+  .pr-text :global(li) {
+    font-size: var(--fs-body);
+  }
+  .pr-foot {
+    display: grid;
+    gap: 20px;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+  .pr-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .pr-amount {
+    font: 800 clamp(56px, 5.6vw, 72px) / 0.85 var(--font-sans);
+    letter-spacing: -0.06em;
+    color: var(--fg);
+  }
+  .pr-currency {
+    font: 500 14px / 1 var(--font-mono);
+    letter-spacing: var(--track-label);
+    color: var(--fg-muted);
+  }
+  .pr-card--hot .pr-currency {
+    color: var(--mint-500);
+  }
+  /* the title stays clear of the mass cropped into the corner; on a narrow
+     phone the mass shrinks to a corner cap instead, so the title keeps the
+     width it needs for whole words */
+  .pr-card--hot .pr-name {
+    padding-right: 64px;
+  }
+  @media (max-width: 419.98px) {
+    .pr-card--hot .pr-name {
+      padding-right: 0;
+    }
+    .pr-mass {
+      width: 140px;
+      right: -70px;
+      top: -80px;
+    }
+  }
+
+  /* ---- the implementation offer ---- */
+  .pr-offer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+    padding: clamp(28px, 4vw, 48px);
+    border-radius: var(--radius-lg);
+  }
+  @media (min-width: 900px) {
+    .pr-offer {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+  .pr-offer-copy {
+    display: grid;
+    gap: 12px;
+    max-width: 36rem;
+  }
+  .pr-offer-name {
+    min-height: 0;
+    font-size: var(--fs-h3);
+    letter-spacing: -0.035em;
+  }
+  .pr-offer-text :global(p) {
+    color: var(--ink-900);
+  }
+  @media (min-width: 600px) {
+    .pr-offer > .btn {
+      justify-self: start;
+    }
+  }
+
+</style>

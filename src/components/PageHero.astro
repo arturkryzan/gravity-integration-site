@@ -1,44 +1,269 @@
 ---
-/* Subpage hero (theme page/hero.php): featured image + h1, optional circle decoration.
+/* Subpage hero.
  *
- * This image is the LCP element on every subpage that has one — it fills the
- * hero band above the fold. So it is the one <img> on the site that must NOT be
- * lazy, and the one worth `fetchpriority="high"`: without it the preload
- * scanner queues the hero behind the stylesheet and the fonts, which is exactly
- * backwards for the pixel the visitor is waiting on. The inherited `lazyload`
- * class is the old theme's JS hook, not the native attribute, and is left alone
- * so the theme CSS that keys off it still applies. */
-import { asset } from '../lib/media';
+ *   variant="mass"  → "A · Corner fall", compact: mint field, the ink mass
+ *                     cropped bottom-right, the H1 on it in mint at display
+ *                     size — subpage titles are one to three words, which
+ *                     is exactly what the display style is for. The page's
+ *                     section links sit on the field as outline pills.
+ *   variant="quiet" → "D · Quiet", for documents (the privacy policy): mist
+ *                     field, a small mint mass in the corner, the title in
+ *                     ink. The system's own rule: content and docs scale
+ *                     down.
+ *
+ * v1 put a 3D render behind every title and drew a circle around one word;
+ * the render is gone (the mass is the only graphic device) and the underline
+ * the content puts on that word is presentation, removed by clean(). */
+import { clean, textOf } from '../lib/html';
+import { localeOf, t } from '../i18n/ui';
 
 interface Props {
   h1: string;
+  crumbs?: Array<{ label: string; anchor: string }>;
+  variant?: 'mass' | 'quiet';
+  /** Legacy props, accepted and ignored: v2 heroes carry no image. */
   img?: string | null;
   alt?: string;
   circle?: boolean;
 }
-const { h1, img = null, alt = '', circle = false } = Astro.props;
+const { h1, crumbs = [], variant = 'mass' } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
+
+/* The content's h1 field is HTML that already contains the <h1> (and, on the
+   privacy policy, a lede paragraph after it). */
+const html = clean(h1);
+/* Display type is for one to three short words. A title carrying a long one
+   ("gravity.integration") steps down a size rather than breaking mid-word. */
+const longest = Math.max(...textOf(h1.replace(/<p[\s\S]*$/i, '')).split(/\s+/).map((w) => w.length));
+const long = longest > 11;
 ---
 
-<section class="hero hero-small d-flex align-items-end" data-scroll-section>
-  {
-    img && (
-      <img
-        {...asset(img)}
-        alt={alt}
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        class="lazyload img-fit h-100 w-100"
-      />
-    )
-  }
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 hero-text pb-10" data-scroll data-scroll-opacity>
-        <div class={`d-inline-block${circle ? ' hero-text-circle' : ''}`}>
-          <Fragment set:html={h1} />
-        </div>
-      </div>
-    </div>
+<section class:list={['phero', `phero--${variant}`, { 'phero--long': long }, variant === 'quiet' ? 'surface-mist' : 'surface-mint']}>
+  <span class="phero-mass" aria-hidden="true"></span>
+  {variant === 'mass' && <span class="phero-sat" aria-hidden="true" />}
+  <div class="container phero-in">
+    <div class="phero-title" set:html={html} />
+    {
+      crumbs.length > 0 && (
+        <nav class="phero-nav" aria-label={s('nav.onThisPage')}>
+          <ol>
+            {crumbs.map((c, i) => (
+              <li>
+                <a href={`#${c.anchor}`}>
+                  <span class="label-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span set:html={c.label} />
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
   </div>
 </section>
+
+<style>
+  .phero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ---------------- A · Corner fall ---------------- */
+  .phero--mass {
+    --d: max(640px, 62vw);
+    --mass-left: 47vw;
+    --c: 150px; /* mass centre, up from the bottom: the title block's middle */
+    --t-left: calc(var(--mass-left) + 7vw);
+    --edge: max(var(--gutter), (100vw - var(--container)) / 2);
+    min-height: clamp(400px, 34vw, 560px);
+    display: flex;
+    align-items: flex-end;
+  }
+  .phero-mass {
+    position: absolute;
+    z-index: -1;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+  }
+  .phero--mass .phero-mass {
+    width: var(--d);
+    left: var(--mass-left);
+    bottom: calc(var(--c) - var(--d) / 2);
+  }
+  .phero-sat {
+    position: absolute;
+    z-index: -1;
+    width: calc(var(--d) * 0.07);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+    left: calc(var(--mass-left) - 5vw);
+    top: 56px;
+  }
+  .phero-in {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 48px;
+    padding-bottom: 60px;
+  }
+  .phero--mass .phero-title {
+    grid-area: 1 / 1;
+    justify-self: end;
+    align-self: end;
+    width: calc(100vw - var(--t-left) - var(--edge));
+  }
+  .phero--mass .phero-title :global(h1) {
+    color: var(--mint-500);
+    font: 800 var(--fs-display) / 0.86 var(--font-sans);
+    letter-spacing: var(--track-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .phero--long.phero--mass .phero-title :global(h1) {
+    font-size: var(--fs-h1);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+  }
+  .phero--mass .phero-nav {
+    grid-area: 1 / 1;
+    align-self: end;
+    max-width: calc(var(--mass-left) - var(--edge) - 48px);
+  }
+
+  /* section links: the system's outline pills, numbered */
+  .phero-nav ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .phero-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: var(--radius-pill);
+    font: 500 13px / 1.2 var(--font-sans);
+    color: var(--ink-900);
+    text-decoration: none;
+    transition:
+      background-color var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+  .phero-nav a:hover {
+    background: var(--ink-900);
+    color: var(--mint-500);
+  }
+  .phero-nav a:hover .label-num {
+    color: var(--mint-500);
+  }
+  .phero-nav .label-num {
+    color: var(--ink-700);
+  }
+
+  /* Below 900px the frame turns over, as on the home page: the mass falls in
+     from the top behind the title (drawn from the title's own box, so it fits
+     a one-word title or a three-word one) and the field opens underneath for
+     the section links. */
+  @media (max-width: 899.98px) {
+    .phero--mass {
+      display: block;
+      min-height: 0;
+    }
+    .phero--mass .phero-mass,
+    .phero-sat {
+      display: none;
+    }
+    .phero-in {
+      padding-top: 0;
+      padding-bottom: 40px;
+    }
+    /* The title box spans the column. The mass is drawn from the box's own
+       width — diameter 2.2×, centred at 66% — so its lowest point sits right
+       of centre and it enters from the top-right: the corner fall, turned
+       for a narrow frame. Its arc climbs 0.22× the width by the time it
+       reaches the box's left edge, and the bottom padding is that same 22%
+       (+20px), so at every width the arc passes 48px under the last line of
+       the title where the title begins. Sized from the viewport instead, the
+       arc climbed faster than the padding grew, and from ~420px up the start
+       of the title stood on the field: mint on mint. */
+    .phero--mass .phero-title {
+      grid-area: auto;
+      justify-self: stretch;
+      width: auto;
+      position: relative;
+      padding: 40px 0 calc(22% + 20px);
+    }
+    .phero--mass .phero-title::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      left: 66%;
+      bottom: -28px;
+      width: 220%;
+      aspect-ratio: 1;
+      translate: -50% 0;
+      border-radius: 50%;
+      background: var(--ink-900);
+    }
+    .phero--mass .phero-title :global(h1) {
+      font-size: clamp(44px, 12vw, 72px);
+    }
+    .phero--long.phero--mass .phero-title :global(h1) {
+      font-size: clamp(30px, 8.4vw, 52px);
+    }
+    .phero--mass .phero-nav {
+      grid-area: auto;
+      max-width: none;
+      margin-top: 64px;
+    }
+  }
+
+  /* ---------------- D · Quiet ---------------- */
+  .phero--quiet .phero-mass {
+    width: clamp(260px, 30vw, 440px);
+    right: clamp(-160px, -8vw, -80px);
+    bottom: clamp(-220px, -13vw, -120px);
+    background: var(--mint-500);
+  }
+  .phero--quiet .phero-in {
+    padding-top: clamp(48px, 7vw, 96px);
+    padding-bottom: clamp(56px, 8vw, 104px);
+  }
+  .phero--quiet .phero-title {
+    max-width: 820px;
+    display: grid;
+    gap: 24px;
+  }
+  .phero--quiet .phero-title :global(h1) {
+    color: var(--ink-900);
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: var(--track-h1);
+    text-wrap: balance;
+  }
+  .phero--quiet .phero-title :global(.hero-lede) {
+    max-width: 44rem;
+    font: 400 var(--fs-body-lg) / 1.6 var(--font-sans);
+    color: var(--slate-600);
+    text-wrap: pretty;
+  }
+  /* Narrow frames: the lede would run into the corner mass, so the mass
+     shrinks to a cap under the copy and the frame opens room for it. */
+  @media (max-width: 899.98px) {
+    .phero--quiet .phero-in {
+      padding-bottom: 128px;
+    }
+    .phero--quiet .phero-mass {
+      width: 220px;
+      right: -50px;
+      bottom: -120px;
+    }
+  }
+</style>

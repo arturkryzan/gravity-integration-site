@@ -1,143 +1,221 @@
 ---
-/* ACF layout: text_img_link (theme inc/sections/text_img_link.php).
-   `overrides` lets a page replace a row's media (SVG hero / video) and add extra links,
-   replicating what snippets 12/30 did on the live site. */
+/* ACF layout: text_img_link — rows of copy beside a piece of media,
+   alternating sides. On the home page it renders two sections:
+
+     • the audience pair ("Pobierz, zainstaluj, integruj" / "Zastąp
+       konsultantów…"), whose media are the two AudiencePanel frames;
+     • the four use cases, whose media are the looping videos.
+
+   `overrides` lets a page swap a row's media and add links, replicating what
+   snippets 12/30 did on the live site. The videos are the current ones, kept
+   until the new set is made to match the system; until then they sit in a
+   framed panel rather than pretending to melt into a background they were
+   never rendered for. */
 import { mediaSrc, mediaAlt, mediaRatio, mediaDims } from '../../lib/media';
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
-import SvgHeroDevelopers from '../SvgHeroDevelopers.astro';
-import SvgHeroBusiness from '../SvgHeroBusiness.astro';
+import { clean } from '../../lib/html';
+import AudiencePanel from '../AudiencePanel.astro';
+import Icon from '../ui/Icon.astro';
+import { localeOf, t } from '../../i18n/ui';
 
 interface RowOverride {
   media?: 'svg-dev' | 'svg-biz' | { video: string };
   extraLinks?: Array<{ title: string; url: string }>;
 }
-import { localeOf, t } from '../../i18n/ui';
-const s = t(localeOf(Astro.currentLocale));
 
 interface Props {
   index: number;
   rows: Array<Record<string, any>>;
   overrides?: Record<number, RowOverride>;
+  /** Number the rows (01, 02 …) with a mono label. */
+  numbered?: boolean;
+  surface?: 'white' | 'mist';
 }
-const { index, rows, overrides = {} } = Astro.props;
+const { index, rows, overrides = {}, numbered = false, surface = 'white' } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
 ---
 
-<section id={`section${index}`} data-scroll data-scroll-repeat class="py-10 bg-light">
-  {index !== 0 && (
-    <img
-      src="/theme/static/linesdownload.svg"
-      alt=""
-      width="295"
-      height="823"
-      loading="lazy"
-      decoding="async"
-      class="download-img"
-      data-scroll
-      data-scroll-delay=".1"
-      data-scroll-speed="-1"
-    />
-  )}
-
-  {rows.map((row, i) => {
-    const ov = overrides[i] ?? {};
-    const link = row.link && typeof row.link === 'object' ? row.link : null;
-    const img = row.img && typeof row.img === 'object' ? row.img : null;
-    return (
-      <div class="container-fluid py-10">
-        <div class="row">
-          <div
-            class={`col-lg-4 offset-lg-1 pe-xl-0 order-2${i % 2 !== 0 ? ' order-lg-2' : ' order-lg-0'}`}
-            data-scroll
-            data-scroll-opacity
-          >
-            <div class="paragraph hover-underline">
-              <Fragment set:html={row.text ?? ''} />
+<section id={`section${index}`} class:list={['til section', `surface-${surface}`]}>
+  <div class="container til-rows">
+    {
+      rows.map((row, i) => {
+        const ov = overrides[i] ?? {};
+        const link = row.link && typeof row.link === 'object' ? row.link : null;
+        const img = row.img && typeof row.img === 'object' ? row.img : null;
+        const flip = i % 2 === 1;
+        const external = link ? opensNewTab(link.url, link.target) : false;
+        return (
+          <div class:list={['til-row', { 'til-row--flip': flip }]}>
+            <div class="til-copy" data-reveal>
+              {numbered && <span class="label-num til-num">{String(i + 1).padStart(2, '0')}</span>}
+              <div class="prose til-prose" set:html={clean(row.text)} />
+              {(link || ov.extraLinks?.length) && (
+                <div class="til-actions">
+                  {link && (
+                    <a
+                      class:list={['btn', external ? 'btn--secondary' : 'btn--primary']}
+                      href={link.url}
+                      target={linkTarget(link.url, link.target)}
+                      rel={linkRel(linkTarget(link.url, link.target))}
+                    >
+                      {link.title.trim()}
+                      {external ? (
+                        <Icon name="arrow-up-right" size={16} />
+                      ) : (
+                        <Icon name="arrow-right" size={16} class="btn-arrow" />
+                      )}
+                      {external && <span class="visually-hidden">{s('a11y.newTab')}</span>}
+                    </a>
+                  )}
+                  {ov.extraLinks?.map((l) => (
+                    <a
+                      class="btn btn--secondary"
+                      href={l.url}
+                      target={linkTarget(l.url)}
+                      rel={linkRel(linkTarget(l.url))}
+                    >
+                      {l.title}
+                      <Icon name="arrow-right" size={16} class="btn-arrow" />
+                      {opensNewTab(l.url) && <span class="visually-hidden">{s('a11y.newTab')}</span>}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-            {link && (
-              <a
-                class="btn btn-arrow btn-arrow-white mt-6 me-10"
-                href={link.url}
-                target={linkTarget(link.url, link.target)}
-                rel={linkRel(linkTarget(link.url, link.target))}
-              >
-                <span>{link.title} </span>
-                {opensNewTab(link.url, link.target) && (
-                  <span class="visually-hidden">{s('a11y.newTab')}</span>
-                )}
-              </a>
-            )}
-            {ov.extraLinks?.map((l) => (
-              <a
-                class="btn btn-arrow btn-arrow-white mt-6"
-                href={l.url}
-                target={linkTarget(l.url)}
-                rel={linkRel(linkTarget(l.url))}
-              >
-                <span>{l.title} </span>
-                {opensNewTab(l.url) && (
-                  <span class="visually-hidden">{s('a11y.newTab')}</span>
-                )}
-              </a>
-            ))}
-          </div>
 
-          <div class={`col-md-6 mb-5 mb-lg-0${i % 2 === 0 ? ' offset-lg-1' : ''}`}>
-            {ov.media === 'svg-dev' ? (
-              <SvgHeroDevelopers />
-            ) : ov.media === 'svg-biz' ? (
-              <SvgHeroBusiness />
-            ) : ov.media && typeof ov.media === 'object' ? (
-              <div class="ratio" style="--bs-aspect-ratio: 55.82%">
-                {/* No `autoplay` attribute — deliberately. Chrome starts
-                    fetching an autoplaying video as soon as it is eligible to
-                    play, and that overrides `preload="none"`: measured on the
-                    homepage, all four of these files downloaded in full on
-                    every cold load (1.1 MB, none of it above the fold) while
-                    the IntersectionObserver below never once reported them as
-                    intersecting. The observer was not lazy-loading anything;
-                    it was arriving after the fetch it meant to gate. Playback
-                    is now started from that observer instead, which is what
-                    makes `preload="none"` mean what it says. */}
-                <video
-                  loop
-                  muted
-                  playsinline
-                  preload="none"
-                  poster={`/video/${ov.media.video}-poster.jpg`}
-                  style="width:100%;height:100%;object-fit:cover;border-radius:0.5rem;"
-                >
-                  <source src={`/video/${ov.media.video}.webm`} type="video/webm" />
-                  <source src={`/video/${ov.media.video}.mp4`} type="video/mp4" />
-                </video>
-              </div>
-            ) : img && mediaSrc(img) ? (
-              <div class="ratio" style={` --bs-aspect-ratio: ${mediaRatio(img)}`}>
-                <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" {...(mediaDims(img) ?? {})} />
-              </div>
-            ) : null}
+            <div class="til-media">
+              {ov.media === 'svg-dev' ? (
+                <AudiencePanel variant="dev" />
+              ) : ov.media === 'svg-biz' ? (
+                <AudiencePanel variant="biz" />
+              ) : ov.media && typeof ov.media === 'object' ? (
+                <div class="til-frame" data-reveal>
+                  {/* No `autoplay` attribute — deliberately. An autoplaying
+                      video is fetched as soon as it is eligible to play, which
+                      overrides preload="none"; measured on v1, all four loops
+                      downloaded on every cold load. Playback is started from
+                      the IntersectionObserver below instead. */}
+                  <video
+                    loop
+                    muted
+                    playsinline
+                    preload="none"
+                    poster={`/video/${ov.media.video}-poster.jpg`}
+                    width="1440"
+                    height="804"
+                  >
+                    <source src={`/video/${ov.media.video}.webm`} type="video/webm" />
+                    <source src={`/video/${ov.media.video}.mp4`} type="video/mp4" />
+                  </video>
+                </div>
+              ) : img && mediaSrc(img) ? (
+                <div class="til-frame til-frame--img" style={`--ratio: ${mediaRatio(img)}`} data-reveal>
+                  <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" decoding="async" {...(mediaDims(img) ?? {})} />
+                </div>
+              ) : null}
+            </div>
           </div>
-        </div>
-      </div>
-    );
-  })}
+        );
+      })
+    }
+  </div>
 </section>
 
-<script>
-  /* These videos have no `autoplay` attribute (see the markup above), so this
-     script is now the only thing that ever starts them — which is the point:
-     with the attribute present the browser fetched all of them at load and
-     `preload="none"` did nothing. `load()` is what begins the download, so it
-     must not run until the element is actually near the viewport. */
-  const vids = document.querySelectorAll<HTMLVideoElement>('section video[preload="none"]');
+<style>
+  .til-rows {
+    display: grid;
+    gap: clamp(72px, 10vw, 128px);
+  }
+  .til-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .til-row {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
+    .til-row--flip {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+    .til-row--flip .til-copy {
+      order: 2;
+    }
+  }
+  @media (max-width: 899.98px) {
+    .til-media {
+      order: -1;
+    }
+  }
 
+  .til-copy {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .til-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .til-num::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--mist-200);
+  }
+  .til-prose :global(h2) {
+    font-size: var(--fs-h2);
+  }
+  .til-prose :global(p) {
+    font-size: var(--fs-body-lg);
+  }
+  .til-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  /* The current loops were rendered for v1's page colour; framed, their edge
+     is a panel rather than a near-miss. */
+  /* content-box, so the 1440/804 ratio is the video's own box and the
+     hairline sits outside it — with border-box the loop would be cropped by
+     object-fit to fit a box two pixels off its shape. */
+  .til-frame {
+    box-sizing: content-box;
+    overflow: hidden;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-xl);
+    background: rgb(243 244 251);
+    aspect-ratio: 1440 / 804;
+  }
+  .til-frame video,
+  .til-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .til-frame--img {
+    aspect-ratio: auto;
+    background: var(--mist-100);
+  }
+</style>
+
+<script>
+  /* These videos have no `autoplay` attribute, so this is the only thing that
+     ever starts them — `load()` begins the download, so it must not run until
+     the element is near the viewport. */
+  const vids = document.querySelectorAll<HTMLVideoElement>('.til-frame video[preload="none"]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const start = (v: HTMLVideoElement) => {
     v.load();
-    /* muted + playsinline are already on the element, so this satisfies the
-       autoplay policy; a rejected promise (a user agent that blocks it anyway,
-       or Save-Data) leaves the poster showing, which is a fine resting state. */
+    /* Reduced motion: load the poster and first frame, but don't loop. */
+    if (reduce.matches) return;
     v.play().catch(() => {});
   };
-
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
       (es) =>
@@ -150,9 +228,6 @@ const { index, rows, overrides = {} } = Astro.props;
     );
     vids.forEach((v) => io.observe(v));
   } else {
-    /* Without IntersectionObserver there is nothing to defer against, and a
-       silent poster on every row would look broken. Start them all — the old
-       eager behaviour, but only for the browsers that leave no alternative. */
     vids.forEach(start);
   }
 </script>

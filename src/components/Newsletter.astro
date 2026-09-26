@@ -1,45 +1,79 @@
 ---
-/* Newsletter section (theme inc/sections/newsletter.php + CF7 form 48).
-   Rendered on pages with the ACF `newsletter` flag.
+/* Newsletter section (theme newsletter.php + CF7 form 48), on pages with the
+   content's `newsletter` flag. Posts straight to MailerLite — form
+   "gravity.integration — Newsletter (www)", group GRAVITY. With JS off the
+   form posts natively; src/scripts/ml-forms.ts only improves it.
 
-   Posts straight to MailerLite — form "gravity.integration — Newsletter (www)",
-   feeding the GRAVITY group. Same shape as ContactForm: the `action` is the
-   MailerLite endpoint and the input is named `fields[email]`, so the no-JS
-   path works on its own and src/scripts/ml-forms.ts only improves it. */
+   v2: the system's CTA card — mint field, the ink mass cropped into the
+   corner away from the form. */
 import { mlAction } from '../lib/mailerlite';
-import { LOCALE_TAG, localeOf, t } from '../i18n/ui';
+import Icon from './ui/Icon.astro';
+import { localeOf, t } from '../i18n/ui';
+import { typeset, escapeHtml } from '../lib/html';
 const action = mlAction('newsletter');
-const lang = localeOf(Astro.currentLocale);
-const s = t(lang);
+const s = t(localeOf(Astro.currentLocale));
 ---
-<section class="newsletter bg-light" id="section" data-scroll data-scroll-repeat data-scroll-call="spy">
-	<div class="container-fluid pb-10 pt-8">
-		<div class="row my-10">
-			<div class="col-lg-8 offset-lg-1 mb-10 pb-6 paragraph hover-underline" data-scroll data-scroll-opacity><h2>{s('nl.h2')}</h2>
-<p>{s('nl.p')}</p>
-</div>
-			<div class="col-lg-8 offset-lg-1" data-scroll data-scroll-opacity>
-<div class="wpcf7" lang={LOCALE_TAG[lang]} dir="ltr" data-wpcf7-id="48">
-<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
-<form action={action} data-form="newsletter" method="post" target="_blank" class="wpcf7-form init" aria-label={s('nl.form.aria')} data-status="init">
 
-<div class="form-row mb-5"><label for="nemaiil">{s('form.emailLabel')}</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" autocomplete="email" inputmode="email" name="fields[email]" /></span></div>
-<div class="form-row mb-5 form-row-checkbox"><span class="wpcf7-form-control-wrap" data-name="acceptance-513"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-513" value="1" required data-ml-consent aria-invalid="false" /><span class="wpcf7-list-item-label">{s('nl.consent')}</span></label></span></span></span></div>
-<input type="hidden" name="ml-submit" value="1" />
-<input type="hidden" name="anticsrf" value="true" />
-<div class="form-row btn-arrow btn-arrow-submit"><input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value={s('nl.submit')} /></div><div class="wpcf7-response-output" role="status" aria-live="polite" hidden></div>
-</form>
-</div>
-</div>
-		</div>
-	</div>
+<section class="nl section surface-white" id="newsletter">
+  <div class="container">
+    <div class="nl-card surface-mint" data-reveal>
+      <span class="mass nl-mass" aria-hidden="true"></span>
+      <span class="satellite nl-sat" aria-hidden="true"></span>
+      <div class="nl-copy">
+        <h2 class="nl-h" set:html={typeset(escapeHtml(s('nl.h2')))} />
+        <p class="nl-p">{s('nl.p')}</p>
+      </div>
+      <form
+        action={action}
+        data-form="newsletter"
+        method="post"
+        target="_blank"
+        class="sform nl-form"
+        aria-label={s('nl.form.aria')}
+        data-status="init"
+      >
+        <div class="field">
+          <label class="field-label" for="nl-email">{s('form.emailLabel')}</label>
+          <div class="form-control">
+            <input
+              class="input"
+              id="nl-email"
+              type="email"
+              name="fields[email]"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              autocomplete="email"
+              inputmode="email"
+              maxlength="400"
+            />
+          </div>
+        </div>
+        <label class="check">
+          <input type="checkbox" name="acceptance-513" value="1" required data-ml-consent aria-invalid="false" />
+          <span class="check-box" aria-hidden="true">
+            <svg viewBox="0 0 20 20" focusable="false"><path d="M4.5 10.4 8.3 14.1 15.5 6.5"></path></svg>
+          </span>
+          <span>{s('nl.consent')}</span>
+        </label>
+        <input type="hidden" name="ml-submit" value="1" />
+        <input type="hidden" name="anticsrf" value="true" />
+        <div class="sform-actions">
+          <button type="submit" class="btn btn--primary btn--lg form-submit">
+            <span class="form-submit-label">{s('nl.submit')}</span>
+            <Icon name="mail" size={16} />
+          </button>
+        </div>
+        <div class="form-output" role="status" aria-live="polite" hidden></div>
+      </form>
+    </div>
+  </div>
 </section>
 
 <script>
   import { mlAction } from '../lib/mailerlite';
   import { initMlSimpleForm } from '../scripts/ml-forms';
   import { pick } from '../i18n/client';
-
   document.querySelectorAll<HTMLFormElement>('form[data-form="newsletter"]').forEach((form) =>
     initMlSimpleForm(form, {
       action: mlAction('newsletter'),
@@ -51,3 +85,70 @@ const s = t(lang);
     }),
   );
 </script>
+
+<style>
+  .nl-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding: clamp(28px, 5vw, 64px);
+    border-radius: var(--radius-xl);
+  }
+  @media (min-width: 900px) {
+    .nl-card {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      padding-bottom: clamp(160px, 16vw, 220px);
+    }
+  }
+  /* bottom-left, under the copy; the form keeps the field */
+  .nl-mass {
+    z-index: -1;
+    width: clamp(380px, 40vw, 600px);
+    left: clamp(-180px, -8vw, -80px);
+    bottom: clamp(-460px, -30vw, -300px);
+  }
+  /* the satellite sits opposite the crop: top-right */
+  .nl-sat {
+    z-index: -1;
+    width: 32px;
+    right: 28px;
+    top: 28px;
+  }
+  .nl-copy {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    max-width: 34rem;
+  }
+  .nl-h {
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+  .nl-p {
+    font: 400 var(--fs-body-lg) / 1.6 var(--font-sans);
+    color: var(--ink-900);
+  }
+  .nl-form .check {
+    color: var(--ink-900);
+    font-size: 12px;
+  }
+  @media (max-width: 899.98px) {
+    .nl-card {
+      padding-bottom: 170px;
+    }
+    .nl-mass {
+      width: 360px;
+      left: -120px;
+      bottom: -260px;
+    }
+    .nl-sat {
+      width: 24px;
+      right: 20px;
+      top: 20px;
+    }
+  }
+</style>

@@ -1,40 +1,141 @@
 ---
-/* ACF layout: faq (theme inc/sections/faq.php + components/accordion-item.php) */
+/* ACF layout: faq — native <details>, so it opens with a click, Enter or
+   Space and needs no script. One question per row on a hairline; the
+   control is the system's icon button, a plus that turns into a minus. */
+import { clean } from '../../lib/html';
+import { localeOf, t } from '../../i18n/ui';
+
 interface Props {
   index: number;
   faq: Array<{ que: string; ans: string }>;
+  surface?: 'white' | 'mist';
 }
-const { index, faq } = Astro.props;
+const { index, faq, surface = 'mist' } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
 ---
 
-<section data-scroll data-scroll-repeat>
-  <div class="container-fluid pt-100 pb-10 mb-lg-5 faq" style="background: #F8F8FC;">
-    <div class="row pt-10" id={`section${index}`}>
-      <div class="col-12">
-        {faq.map((item, i) => (
-          <div class="col-lg-8 accordion-item" data-scroll data-scroll-opacity>
-            <button
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={`#collapse${index}-${i}`}
-              aria-expanded="false"
-              aria-controls={`collapse${index}-${i}`}
-              class="btn-accordion"
-            >
-              <span set:html={item.que} />
-            </button>
-            <div class="collapse paragraph" id={`collapse${index}-${i}`}>
-              <div class="py-4 paragraph paragraph-small">
-                <Fragment set:html={item.ans} />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+<section id={`section${index}`} class:list={['faq section', `surface-${surface}`]}>
+  <div class="container faq-grid">
+    <div class="faq-side">
+      <h2 class="faq-h">{s('esb.faq')}</h2>
     </div>
-    <div class="faq-lines d-none d-lg-block" data-scroll data-scroll-opacity>
-      <div class="circle" data-scroll data-scroll-delay=".2" data-scroll-speed="1"></div>
-      <img src="/theme/static/linesfaq.svg" alt="" width="203" height="280" loading="lazy" class="lazyload" data-scroll data-scroll-delay=".1" data-scroll-speed="-1" />
+    <div class="faq-list">
+      {
+        faq.map((item) => (
+          <details class="faq-item">
+            <summary>
+              <span class="faq-q" set:html={clean(item.que)} />
+              <span class="faq-toggle" aria-hidden="true" />
+            </summary>
+            <div class="faq-a prose" set:html={clean(item.ans)} />
+          </details>
+        ))
+      }
     </div>
   </div>
 </section>
+
+<style>
+  .faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px 64px;
+  }
+  @media (min-width: 900px) {
+    .faq-grid {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    }
+  }
+  /* the same heading as the FAQ closing /czym-jest-esb/ */
+  .faq-h {
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: -0.06em;
+    color: var(--ink-900);
+  }
+  .faq-list {
+    border-top: 1px solid var(--mist-200);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--mist-200);
+  }
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 4px;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q {
+    font: 600 clamp(18px, 1.6vw, 20px) / 1.3 var(--font-sans);
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+    text-wrap: pretty;
+  }
+  .faq-toggle {
+    position: relative;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: 50%;
+    transition:
+      background-color var(--dur-fast) ease,
+      transform var(--dur-base) var(--ease-fall);
+  }
+  .faq-toggle::before,
+  .faq-toggle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 1.75px;
+    border-radius: 2px;
+    background: var(--ink-900);
+    translate: -50% -50%;
+    transition:
+      transform var(--dur-base) var(--ease-fall),
+      background-color var(--dur-fast) ease;
+  }
+  .faq-toggle::after {
+    transform: rotate(90deg);
+  }
+  .faq-item summary:hover .faq-toggle {
+    background: var(--ink-900);
+  }
+  .faq-item summary:hover .faq-toggle::before,
+  .faq-item summary:hover .faq-toggle::after {
+    background: var(--mint-500);
+  }
+  .faq-item[open] .faq-toggle {
+    background: var(--ink-900);
+  }
+  .faq-item[open] .faq-toggle::before {
+    background: var(--mint-500);
+  }
+  .faq-item[open] .faq-toggle::after {
+    transform: rotate(0deg);
+    background: var(--mint-500);
+  }
+  .faq-a {
+    padding: 0 60px 28px 0;
+  }
+  @media (max-width: 599.98px) {
+    .faq-a {
+      padding-right: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-toggle,
+    .faq-toggle::before,
+    .faq-toggle::after {
+      transition: none;
+    }
+  }
+</style>

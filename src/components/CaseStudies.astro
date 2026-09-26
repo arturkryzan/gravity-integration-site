@@ -1,17 +1,15 @@
 ---
 /* Dedicated layout for /case-studies/.
-   Copy is VERBATIM from src/content/pages/case-studies.json — parsed, never
-   rewritten (see src/lib/case-studies.ts for exactly what the parser does and
-   what it deliberately drops: the "•" glyphs and <br /> separators that were
-   standing in for markup the WordPress editor could not produce).
+   Copy is VERBATIM from the case-studies page JSON — parsed, never rewritten
+   (src/lib/case-studies.ts says exactly what the parser does and what it
+   drops: the "•" glyphs and <br /> separators that stood in for markup).
 
-   The old TextImgLink rendering put every paragraph in a 33%-wide column with
-   an alternating left/right zigzag, so the reading order jumped across the page
-   and half of it stayed blank. Here each study is a dossier: a header, a sticky
-   fact sheet in a fixed left column, one narrative column at a real measure,
-   and the "Rezultaty" stage promoted to a full-width dark payoff panel that
-   doubles as the boundary between studies. The 296px rail column runs through
-   both the light body and the dark panel, so the page has one vertical spine. */
+   v2: each study is a dossier on white — the client's logo on a plate, the
+   client in mono, the title as an H2 — then a fact sheet in a recessed mist
+   card that stays beside the story while it scrolls, the story at a reading
+   measure, and the payoff ("Rezultaty") as an ink panel with the wins
+   marked in mint ticks. No mass in it: four studies would put four
+   identical masses on one page, and the system allows one per frame. */
 import type { CsStudy } from '../lib/case-studies';
 import { localeOf, t } from '../i18n/ui';
 import CaseFigure from './CaseFigure.astro';
@@ -21,102 +19,88 @@ interface Props {
 }
 const { studies } = Astro.props;
 
-/* The outcome stage is the one a prospect scrolls for; it gets the dark panel.
-   Matched by heading rather than by position so a study without one (or with a
-   differently ordered one) still renders every stage. Localised because it
-   matches against the CONTENT's own heading — 'Rezultaty' in the Polish files,
-   'Results' in the English ones (Phase 4c). */
+/* The outcome stage is the one a prospect scrolls for; it gets the ink
+   panel. Matched by heading, localised: 'Rezultaty' / 'Results'. */
 const PAYOFF = t(localeOf(Astro.currentLocale))('cs.payoff');
 
-/* A hyphen is a line-break opportunity, so at narrow widths a title reads
-   "Integracja platformy e-" / "commerce cStore z Graffiti.ERP". No CSS property
-   suppresses that, so short compounds are wrapped in a nowrap span — markup,
-   not words. Long ones are left alone: a nowrap run wider than the column would
+/* Keep short hyphenated compounds ("e-commerce") on one line: markup, not
+   words. Long ones are left alone — a nowrap run wider than the column would
    trade a bad break for an overflow. */
 const keepCompounds = (html: string) =>
   html.replace(/(^|>)([^<]+)/g, (_m, lead: string, text: string) =>
     lead +
-      text.replace(/\p{L}+-\p{L}+/gu, (w) =>
-        w.length <= 16 ? `<span class="cs-nb">${w}</span>` : w,
-      ),
+      text.replace(/\p{L}+-\p{L}+/gu, (w) => (w.length <= 16 ? `<span class="cs-nb">${w}</span>` : w)),
   );
 ---
 
 <div class="cs">
   {
-    studies.map((study) => {
+    studies.map((study, n) => {
       const narrative = study.stages.filter((s) => s.heading !== PAYOFF);
       const payoff = study.stages.find((s) => s.heading === PAYOFF) ?? null;
       return (
         <article id={study.anchor} class="cs-study">
-          {/* NOT a <header>: legacy.css styles the bare `header` element as the
-              site's fixed navigation bar (`header{position:fixed;top:0}`), so a
-              semantic study header would be yanked to the top of the viewport. */}
-          <div class="cs-head" data-scroll data-scroll-opacity>
-            <div class="cs-wrap cs-head-in">
-              {study.logo && (
-                <div class="cs-mark cs-mark--client">
-                  <img
-                    src={study.logo.src}
-                    alt={study.logo.alt}
-                    width={study.logo.width}
-                    height={study.logo.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              )}
-              <h2 class="cs-h">
-                <span class="cs-client">{study.client}</span>
-                <span class="cs-title" set:html={keepCompounds(study.title)} />
-              </h2>
-            </div>
+          <div class="container cs-head" data-reveal>
+            {study.logo && (
+              <div class="cs-plate">
+                <img
+                  src={study.logo.src}
+                  alt={study.logo.alt}
+                  width={study.logo.width}
+                  height={study.logo.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+            <h2 class="cs-h">
+              <span class="cs-client">
+                <span class="label-num">{String(n + 1).padStart(2, '0')}</span>
+                {study.client}
+              </span>
+              <span class="cs-title" set:html={keepCompounds(study.title)} />
+            </h2>
           </div>
 
-          <div class="cs-body">
-            <div class="cs-wrap cs-grid">
-              {study.facts.length > 0 && (
-                <div class="cs-rail">
-                  <dl class="cs-facts">
-                    {study.facts.map((f) => (
-                      <div class="cs-fact">
-                        <dt set:html={f.label} />
-                        <dd set:html={f.value} />
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              )}
+          <div class="container cs-grid">
+            {study.facts.length > 0 && (
+              <aside class="cs-rail">
+                <dl class="cs-facts">
+                  {study.facts.map((f) => (
+                    <div class="cs-fact">
+                      <dt set:html={f.label} />
+                      <dd set:html={f.value} />
+                    </div>
+                  ))}
+                </dl>
+              </aside>
+            )}
 
-              <div class="cs-narrative">
-                {narrative.map((stage) => (
-                  <section class="cs-stage">
-                    {stage.heading && <h3 set:html={stage.heading} />}
-                    {stage.blocks.map((b) =>
-                      b.kind === 'p' ? (
-                        <p set:html={b.html} />
-                      ) : b.kind === 'ul' ? (
-                        <ul class="cs-list">
-                          {b.items.map((it) => (
-                            <li>
-                              <span class="cs-dot" aria-hidden="true" />
-                              <span set:html={it} />
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <CaseFigure img={b.img} />
-                      ),
-                    )}
-                  </section>
-                ))}
-              </div>
+            <div class="cs-narrative">
+              {narrative.map((stage) => (
+                <section class="cs-stage">
+                  {stage.heading && <h3 set:html={stage.heading} />}
+                  {stage.blocks.map((b) =>
+                    b.kind === 'p' ? (
+                      <p set:html={b.html} />
+                    ) : b.kind === 'ul' ? (
+                      <ul class="cs-list">
+                        {b.items.map((it) => (
+                          <li set:html={it} />
+                        ))}
+                      </ul>
+                    ) : (
+                      <CaseFigure img={b.img} />
+                    ),
+                  )}
+                </section>
+              ))}
             </div>
           </div>
 
           {payoff && (
-            <section class="cs-payoff" data-scroll data-scroll-opacity>
-              <div class="cs-wrap cs-grid">
+            <div class="container">
+              <section class="cs-payoff surface-ink" data-reveal>
                 <h3 class="cs-payoff-h" set:html={payoff.heading} />
                 <div class="cs-payoff-body">
                   {payoff.blocks.map((b) =>
@@ -127,14 +111,7 @@ const keepCompounds = (html: string) =>
                         {b.items.map((it) => (
                           <li>
                             <svg viewBox="0 0 20 20" aria-hidden="true" class="cs-check">
-                              <path
-                                d="M5 10.5l3.2 3.2L15 6.5"
-                                fill="none"
-                                stroke="#27ea93"
-                                stroke-width="2.4"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
+                              <path d="M5 10.5l3.2 3.2L15 6.5" />
                             </svg>
                             <span set:html={it} />
                           </li>
@@ -145,8 +122,8 @@ const keepCompounds = (html: string) =>
                     ),
                   )}
                 </div>
-              </div>
-            </section>
+              </section>
+            </div>
           )}
         </article>
       );
@@ -155,369 +132,210 @@ const keepCompounds = (html: string) =>
 </div>
 
 <style>
-  /* Local short names for the global tokens — see IntegrationsGrid. */
-  .cs {
-    --ink: var(--gi-text-on-light);
-    --body: var(--gi-bg-slate);
-    --muted: var(--gi-text-muted-slate);
-    --green: var(--gi-green);
-    --green-deep: var(--gi-green-deep);
-    --tint: var(--gi-bg-tint);
-    --line: var(--gi-line);
-    --dark: var(--gi-bg-dark);
-    --rail: 296px;
-    /* A deliberate local override of --gi-measure (68ch), not a second opinion
-       about it: the case-study column is a wide single-column article and reads
-       well a few characters longer. It was `39rem` — 624px, ~72 characters at
-       the 17px Epilogue this component sets — which froze a pixel width against
-       one assumed font size. Same intent, expressed in the unit that keeps it
-       true if the type scale ever moves. */
-    --measure: 72ch;
-    font-family: Epilogue, system-ui, sans-serif;
-    color: var(--body);
+  .cs-study {
+    padding-block: clamp(64px, 9vw, 112px);
+    scroll-margin-top: var(--header-h);
   }
-  .cs-wrap {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-  /* One grid for both the light body and the dark payoff: the fact sheet and
-     the "Rezultaty" heading sit in the same column, so the whole page reads
-     against a single vertical spine. */
-  .cs-grid {
-    display: grid;
-    grid-template-columns: var(--rail) minmax(0, 1fr);
-    gap: clamp(2rem, 4vw, 3.5rem);
-    align-items: start;
+  .cs-study + .cs-study {
+    border-top: 1px solid var(--mist-200);
   }
 
-  /* ---------- study header ---------- */
+  /* ---- head ---- */
   .cs-head {
-    padding: clamp(3.25rem, 7vw, 5.5rem) 0 clamp(1.75rem, 3vw, 2.5rem);
+    display: grid;
+    gap: 28px;
+    justify-items: start;
+    margin-bottom: clamp(40px, 5vw, 64px);
   }
-  .cs-head-in {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  .cs-plate {
+    display: grid;
+    place-items: center;
+    width: 176px;
+    height: 88px;
+    padding: 14px 20px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+  .cs-plate img {
+    width: auto;
+    max-width: 100%;
+    max-height: 56px;
+    object-fit: contain;
   }
   .cs-h {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    /* rem, not ch: `ch` here resolves against the h2's inherited 1rem, not
-       against the display size of the line it is actually constraining.
-       37.5rem (600px) is chosen against the copy: the longest single-line
-       title, "Integracja platformy e-commerce cStore z Graffiti.ERP", measures
-       590px, and anything narrower makes `text-wrap: balance` split it inside
-       the hyphen of "e-commerce". */
-    max-width: 37.5rem;
+    display: grid;
+    gap: 14px;
+    max-width: 880px;
   }
   .cs-client {
-    font-size: clamp(1.9rem, 4.4vw, 2.9rem);
-    line-height: 1.05;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    color: var(--ink);
-    text-wrap: balance;
-  }
-  .cs-title {
-    font-size: clamp(1.1rem, 2.1vw, 1.4rem);
-    line-height: 1.4;
-    font-weight: 500;
-    color: var(--body);
-    letter-spacing: -0.005em;
-    max-width: 37.5rem;
-    text-wrap: balance;
-  }
-  .cs-title :global(.cs-nb) {
-    white-space: nowrap;
-  }
-  /* The client mark is a brand asset, not an illustration — it gets a bounded
-     plate so it can never outweigh a 1900px product screenshot again. */
-  .cs-mark--client {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: var(--gi-bg-light);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 0.85rem 1.35rem;
-    box-shadow: 0 1px 2px rgb(20 21 42 / 0.04);
+    gap: 12px;
+    font: 500 12px / 1.2 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--mint-800);
   }
-  .cs-mark--client img {
-    display: block;
-    width: 100%;
-    max-width: 150px;
-    height: auto;
-  }
-
-  /* ---------- light body ---------- */
-  .cs-body {
-    padding-bottom: clamp(3rem, 6vw, 4.5rem);
-  }
-
-  /* ---------- fact sheet ---------- */
-  .cs-rail {
-    position: sticky;
-    /* clears the announcement bar + the site header, matching the
-       :target scroll-margin-top convention in site.css */
-    top: calc(var(--gi-bar-h, 44px) + 7rem);
-    background: var(--tint);
-    border-radius: 14px;
-    padding: 1.4rem 1.5rem;
-  }
-  .cs-facts {
-    margin: 0;
-    display: grid;
-    gap: 1rem;
-  }
-  .cs-fact + .cs-fact {
-    border-top: 1px solid var(--line);
-    padding-top: 1rem;
-  }
-  .cs-facts dt {
-    font-size: 0.8rem;
-    font-weight: 700;
+  .cs-client .label-num {
     color: var(--muted);
-    line-height: 1.3;
-    margin: 0 0 0.3rem;
   }
-  .cs-facts dd {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--ink);
-    font-weight: 500;
-  }
-
-  /* ---------- narrative ---------- */
-  /* The measure is capped on the text itself (--measure), not on the column,
-     so screenshots and diagrams can still use the column's full width instead
-     of being shrunk to reading width. */
-  .cs-narrative {
-    max-width: none;
-  }
-  .cs-stage + .cs-stage {
-    margin-top: clamp(2.25rem, 4vw, 3rem);
-  }
-  .cs-stage h3 {
-    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
-    line-height: 1.2;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.012em;
-    margin: 0 0 1rem;
-    max-width: 34rem;
+  .cs-title {
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.05em;
+    color: var(--ink-900);
     text-wrap: balance;
   }
-  .cs-stage p {
-    font-size: 1.0625rem;
-    line-height: 1.72;
-    color: var(--body);
-    margin: 0 0 1.15rem;
-    max-width: var(--measure);
-    text-wrap: pretty;
-  }
-  .cs-stage p:last-child {
-    margin-bottom: 0;
-  }
-  .cs-stage :global(strong) {
-    color: var(--ink);
-    font-weight: 700;
-  }
-  .cs-stage :global(a) {
-    color: var(--green-deep);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  .cs-title :global(.cs-nb),
+  .cs-narrative :global(.cs-nb) {
+    white-space: nowrap;
   }
 
-  /* Real <ul>/<li> — the source faked these with "•" inside a <p>, so wrapped
-     lines ran back under the bullet and screen readers announced a paragraph. */
+  /* ---- body ---- */
+  .cs-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  @media (min-width: 960px) {
+    .cs-grid {
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: clamp(48px, 6vw, 96px);
+      align-items: start;
+    }
+    .cs-rail {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+  }
+  .cs-facts {
+    display: grid;
+    gap: 16px;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--mist-100);
+  }
+  .cs-fact {
+    display: grid;
+    gap: 4px;
+  }
+  .cs-fact + .cs-fact {
+    padding-top: 16px;
+    border-top: 1px solid var(--mist-200);
+  }
+  .cs-fact dt {
+    font: 500 11px / 1.3 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--slate-600);
+  }
+  .cs-fact dd {
+    font: 600 15px / 1.45 var(--font-sans);
+    color: var(--ink-900);
+  }
+
+  .cs-narrative {
+    display: grid;
+    gap: 48px;
+    max-width: 760px;
+  }
+  .cs-stage {
+    display: grid;
+    gap: 16px;
+  }
+  .cs-stage h3 {
+    font: 600 var(--fs-h3) / 1.1 var(--font-sans);
+    letter-spacing: -0.035em;
+    color: var(--ink-900);
+  }
+  .cs-stage p {
+    font: 400 16px / 1.7 var(--font-sans);
+    color: var(--slate-600);
+  }
+  .cs-stage :global(strong) {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
   .cs-list {
     list-style: none;
-    margin: 0 0 1.35rem;
-    padding: 0;
     display: grid;
-    gap: 0.85rem;
-    max-width: var(--measure);
+    gap: 12px;
   }
   .cs-list li {
-    display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
-    gap: 0.75rem;
-    align-items: start;
-    font-size: 1.0625rem;
-    line-height: 1.62;
-    color: var(--body);
+    position: relative;
+    padding-left: 22px;
+    font: 400 16px / 1.65 var(--font-sans);
+    color: var(--slate-600);
   }
-  .cs-dot {
+  .cs-list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.62em;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--green);
-    margin-top: 0.62rem;
-    box-shadow: 0 0 0 4px rgb(39 234 147 / 0.15);
+    background: var(--mint-500);
   }
 
-  /* ---------- figures ---------- */
-  .cs-shot {
-    margin: 1.75rem 0 0;
-  }
-  .cs-shot img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: 0 12px 32px rgb(20 21 42 / 0.08);
-  }
-  .cs-mark {
-    margin: 1.75rem 0 0;
-    max-width: 380px;
-    background: var(--gi-bg-light);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 1.25rem 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  /* These assets are 800×400 canvases with the artwork inset, so sizing by
-     width (not by a height cap) is what actually fills the plate. */
-  .cs-mark img {
-    display: block;
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-  }
-  .cs-stage > :global(figure:first-child) {
-    margin-top: 0;
-  }
-
-  /* ---------- dark payoff panel ---------- */
+  /* ---- payoff ---- */
   .cs-payoff {
-    background: var(--dark);
-    padding: clamp(3rem, 6vw, 4.5rem) 0;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    margin-top: clamp(48px, 6vw, 72px);
+    padding: clamp(28px, 5vw, 56px);
+    border-radius: var(--radius-xl);
+  }
+  @media (min-width: 960px) {
+    .cs-payoff {
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
   }
   .cs-payoff-h {
-    margin: 0;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.15;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    color: var(--gi-text-on-dark);
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.055em;
+    color: var(--mint-500);
   }
   .cs-payoff-body {
-    max-width: none;
+    display: grid;
+    gap: 20px;
+    max-width: 760px;
   }
   .cs-payoff-body p {
-    font-size: 1.0625rem;
-    line-height: 1.72;
-    color: rgb(255 255 255 / 0.86);
-    margin: 0 0 1.15rem;
-    max-width: var(--measure);
+    font: 400 16px / 1.65 var(--font-sans);
+    color: var(--on-ink-soft);
   }
   .cs-wins {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
-    gap: 1rem;
-    max-width: var(--measure);
+    gap: 14px;
   }
   .cs-wins li {
     display: grid;
-    grid-template-columns: 26px minmax(0, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 12px;
     align-items: start;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: rgb(255 255 255 / 0.92);
+    font: 400 16px / 1.55 var(--font-sans);
+    color: var(--on-ink);
   }
   .cs-wins :global(strong) {
-    color: var(--gi-text-on-dark);
-    font-weight: 700;
+    font-weight: 600;
   }
   .cs-check {
     width: 24px;
     height: 24px;
-    border-radius: 7px;
-    background: rgb(39 234 147 / 0.16);
-    padding: 3px;
-    box-sizing: border-box;
-    margin-top: 1px;
-  }
-  .cs-payoff .cs-mark,
-  .cs-payoff .cs-shot {
-    margin-top: 1.9rem;
-    border-color: rgb(255 255 255 / 0.12);
-  }
-  .cs-payoff .cs-shot img {
-    border-color: rgb(255 255 255 / 0.12);
-    box-shadow: none;
-  }
-
-  /* ---------- reveal (site grammar: [data-scroll-opacity] -> .is-inview) ---------- */
-  .cs-head,
-  .cs-payoff {
-    transform: translateY(14px);
-    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .cs-head:global(.is-inview),
-  .cs-payoff:global(.is-inview) {
-    transform: none;
-  }
-  :global(html:not(.js)) .cs-head,
-  :global(html:not(.js)) .cs-payoff {
-    transform: none;
-  }
-
-  /* ---------- responsive ---------- */
-  @media (max-width: 980px) {
-    .cs-grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: clamp(1.5rem, 4vw, 2.25rem);
-    }
-    .cs-rail {
-      position: static;
-      top: auto;
-    }
-    .cs-facts {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem 2rem;
-    }
-    .cs-fact + .cs-fact {
-      border-top: 0;
-      padding-top: 0;
-    }
-    .cs-narrative,
-    .cs-payoff-body {
-      max-width: none;
-    }
-  }
-  @media (max-width: 560px) {
-    .cs-facts {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .cs-fact + .cs-fact {
-      border-top: 1px solid var(--line);
-      padding-top: 1rem;
-    }
-    .cs-h {
-      max-width: none;
-    }
-    .cs-mark {
-      max-width: 100%;
-      padding: 1rem 1.25rem;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cs-head,
-    .cs-payoff {
-      transform: none;
-      transition: none;
-    }
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--ink-700);
+    fill: none;
+    stroke: var(--mint-500);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 </style>

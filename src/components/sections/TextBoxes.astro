@@ -1,96 +1,174 @@
 ---
-/* ACF layout: text_boxes (theme inc/sections/text_boxes.php) */
-import { mediaSrc, mediaAlt, mediaDims, asset } from '../../lib/media';
+/* ACF layout: text_boxes — /technologia/'s "Narzędzia jutra" and its four
+   technologies. The same frame as the home page's technology band — ink,
+   the mint mass cropped into the corner, ink-700 cards with Lucide icons —
+   because it is the same four technologies. v1's dark 3D backdrop and line
+   art are gone with the rest of the renders. */
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
-
+import { clean } from '../../lib/html';
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
 import { localeOf, t } from '../../i18n/ui';
+
 const s = t(localeOf(Astro.currentLocale));
 
 interface Props {
   index: number;
   text?: string;
   boxes: Array<Record<string, any>>;
+  /** false when the band follows a quote, whose horizon is already the mass */
+  mass?: boolean;
 }
-const { index, text = '', boxes } = Astro.props;
+const { index, text = '', boxes, mass = true } = Astro.props;
+
+const iconFor = (html: string): IconName => {
+  const t = html.toLowerCase();
+  if (t.includes('always')) return 'infinity';
+  if (t.includes('signal')) return 'bell-ring';
+  if (t.includes('chain')) return 'workflow';
+  return 'brain-circuit';
+};
 ---
 
-<section data-scroll data-scroll-repeat data-scroll-offset="100%, 50%">
-  <div class="container-fluid pt-lg-10 mb-lg-5">
-    <div class="row mb-lg-10 py-100" id={`section${index}`}>
-      {text && (
-        <>
-          <div
-            class="col-lg-5 offset-lg-1 paragraph pb-lg-6 hover-underline mb-lg-10"
-            data-scroll
-            data-scroll-opacity
-          >
-            <Fragment set:html={text} />
-          </div>
-          <div
-            class="boxes-decorative ratio"
-            data-scroll
-            data-scroll-delay=".1"
-            data-scroll-speed="-1"
-            style=" --bs-aspect-ratio: 84%;"
-          >
-            <img src="/theme/static/lines.svg" alt="" width="279" height="235" loading="lazy" class="lazyload" />
-          </div>
-        </>
-      )}
-    </div>
-
-    <div class="row position-relative pb-100">
-      <div class="col-8 boxes-img d-none d-md-block">
-        <div
-          class="ratio"
-          style=" --bs-aspect-ratio: 59.85%;"
-          data-scroll
-          data-scroll-delay=".1"
-          data-scroll-speed="-1"
-        >
-          <img {...asset('/theme/content/img.jpg')} alt="" loading="lazy" class="lazyload" />
-        </div>
-      </div>
-      {boxes?.length > 0 && (
-        <>
-          <div class="col-1 offset-2 pt-10 bg-white position-relative zIndex2 d-none d-lg-block">
-            <div class="pt-10" />
-          </div>
-          <div class="col-lg-8 pt-lg-10 bg-white position-relative zIndex2">
-            <div class="row boxes">
-              {boxes.map((box) => {
-                const icon = box.icon && typeof box.icon === 'object' ? box.icon : null;
-                const link = box.link && typeof box.link === 'object' ? box.link : null;
-                return (
-                  <div class="col-md-6 paragraph hover-underline pt-10 pb-4">
-                    <div data-scroll data-scroll-opacity>
-                      {icon && mediaSrc(icon) && (
-                        <div class="ratio bg-gray mb-4" style="height:  24px; --bs-aspect-ratio: 100%;">
-                          <img src={mediaSrc(icon)} alt={mediaAlt(icon)} loading="lazy" class="lazyload" {...(mediaDims(icon) ?? {})} />
-                        </div>
-                      )}
-                      <Fragment set:html={box.text ?? ''} />
-                      {link && (
-                        <a
-                          class="btn btn-text"
-                          href={link.url}
-                          target={linkTarget(link.url, link.target)}
-                          rel={linkRel(linkTarget(link.url, link.target))}
-                        >
-                          <span>{link.title}</span>
-                          {opensNewTab(link.url, link.target) && (
-                            <span class="visually-hidden">{s('a11y.newTab')}</span>
-                          )}
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+<section id={`section${index}`} class:list={['tb section surface-ink', { 'tb--massless': !mass }]}>
+  {mass && <span class="mass tb-mass" style="--mass-color: var(--mint-500)" aria-hidden="true" />}
+  <div class="container tb-in">
+    {text && <div class="tb-head prose" data-reveal set:html={clean(text)} />}
+    <ul class="tb-grid">
+      {
+        boxes.map((box, i) => {
+          const link = box.link && typeof box.link === 'object' ? box.link : null;
+          return (
+            <li class="tb-card" data-reveal style={`transition-delay:${i * 60}ms`}>
+              <div class="tb-top">
+                <span class="tb-icon">
+                  <Icon name={iconFor(box.text ?? '')} size={24} />
+                </span>
+                <span class="label-num">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <div class="tb-text" set:html={clean(box.text)} />
+              {link && (
+                <a
+                  class="btn btn--link"
+                  href={link.url}
+                  target={linkTarget(link.url, link.target)}
+                  rel={linkRel(linkTarget(link.url, link.target))}
+                >
+                  {link.title}
+                  {opensNewTab(link.url, link.target) && <span class="visually-hidden">{s('a11y.newTab')}</span>}
+                </a>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
   </div>
 </section>
+
+<style>
+  .tb {
+    overflow: hidden;
+  }
+  .tb-mass {
+    width: clamp(320px, 38vw, 560px);
+    right: clamp(-220px, -12vw, -120px);
+    top: clamp(-360px, -22vw, -180px);
+  }
+  @media (max-width: 899.98px) {
+    .tb:not(.tb--massless) {
+      padding-top: 150px;
+    }
+    .tb-mass {
+      width: 300px;
+      right: -110px;
+      top: -180px;
+    }
+  }
+  .tb-in {
+    position: relative;
+    z-index: var(--z-raised);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 64px);
+  }
+  .tb-head {
+    max-width: 720px;
+  }
+  .tb-head :global(h2) {
+    color: var(--mint-500);
+    font-size: var(--fs-h1);
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+  .tb-head :global(p) {
+    font-size: 18px;
+    color: var(--on-ink-soft);
+  }
+  .tb-head :global(strong) {
+    color: var(--on-ink);
+  }
+  /* the same four technologies as the home band: 4, 2×2 or 1 */
+  .tb-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 600px) {
+    .tb-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .tb-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .tb-card {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--ink-700);
+  }
+  .tb-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .tb-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--ink-900);
+    color: var(--on-ink);
+  }
+  /* slate-400 is 3.95:1 on ink-700 — under AA for 12px — so the count
+     steps up to on-ink-soft here (it keeps slate-400 on ink-900). */
+  .tb-card .label-num {
+    color: var(--on-ink-soft);
+  }
+  /* The box copy is "<p><strong>Title</strong></p><p>text</p>" — the first
+     paragraph is the card's heading. */
+  .tb-text :global(p) {
+    font: 400 var(--fs-body) / 1.55 var(--font-sans);
+    color: var(--on-ink-soft);
+  }
+  .tb-text :global(p + p) {
+    margin-top: 12px;
+  }
+  .tb-text :global(p:first-child) {
+    font: 600 20px / 1.2 var(--font-sans);
+    letter-spacing: -0.025em;
+    color: var(--on-ink);
+  }
+  .tb-text :global(strong) {
+    font-weight: 600;
+    color: var(--on-ink);
+  }
+</style>

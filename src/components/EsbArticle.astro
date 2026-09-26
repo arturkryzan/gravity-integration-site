@@ -1,10 +1,12 @@
 ---
-/* Dedicated editorial layout for /czym-jest-esb/ — the SEO cornerstone page.
-   Copy is pulled VERBATIM from esb-content.json (extracted from the CMS content,
-   not rewritten). Only presentation changes: real hierarchy, designed lists,
-   a meaningful point-to-point-vs-ESB diagram, a distinct pull-quote, cleaner FAQ. */
-/* One content file per language, picked off the URL's locale — same shape,
-   same renderer. WhatIsEsb.astro makes the same choice for the breadcrumbs. */
+/* /czym-jest-esb/ — the SEO cornerstone, as an editorial page.
+   Copy is VERBATIM from esb-content(.en).json; only presentation changes.
+
+   v2: a reading measure on white, the recessed mist band for the diagram and
+   the benefits, the statement set on the mint field over the mass's horizon.
+   The diagram draws the argument in the system's own terms — on the left
+   every system tied to every other, on the right every system falling into
+   one mass. */
 import esbPl from '../data/esb-content.json';
 import esbEn from '../data/esb-content.en.json';
 import { localeOf, t } from '../i18n/ui';
@@ -13,117 +15,102 @@ const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
 const esb = lang === 'en' ? esbEn : esbPl;
 
-/* ---- diagram geometry: 6 systems in a hexagon ---- */
-const R = 132;
+/* ---- diagram geometry: six systems in a hexagon ---- */
+const R = 136;
 const cx = 190;
-const cy = 175;
+const cy = 178;
 const labels = ['ERP', 'WMS', 'CRM', 'e‑Commerce', 'MES', 'API'];
 const nodes = labels.map((label, i) => {
   const a = (-90 + i * 60) * (Math.PI / 180);
   return { label, x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) };
 });
-/* full mesh edges (point-to-point) */
 const mesh: Array<[number, number]> = [];
-for (let i = 0; i < nodes.length; i++)
-  for (let j = i + 1; j < nodes.length; j++) mesh.push([i, j]);
-const NW = 64; // node box half-width
-const NH = 17; // node box half-height
+for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) mesh.push([i, j]);
+const NW = 58;
+const NH = 17;
 ---
 
 <article class="esb">
   {/* ---------- intro / definition ---------- */}
-  <section id="section0" class="esb-band">
-    <div class="esb-wrap esb-prose">
-      <p class="esb-lede" set:html={esb.intro[0]} />
-      <p set:html={esb.intro[1]} />
-    </div>
-  </section>
-
-  {/* ---------- point-to-point vs ESB diagram ---------- */}
-  <section class="esb-band esb-band--tint">
-    <div class="esb-wrap">
-      <div class="esb-diagram">
-        <figure class="esb-panel">
-          <figcaption><span class="esb-tag esb-tag--warn">{s('esb.tag.p2p')}</span></figcaption>
-          <svg viewBox="0 0 380 350" role="img" aria-label={s('esb.aria.p2p')}>
-            {mesh.map(([i, j]) => (
-              <line
-                x1={nodes[i].x} y1={nodes[i].y}
-                x2={nodes[j].x} y2={nodes[j].y}
-                stroke="#c3c6da" stroke-width="1.5"
-              />
-            ))}
-            {nodes.map((n) => (
-              <g>
-                <rect
-                  x={n.x - NW} y={n.y - NH} width={NW * 2} height={NH * 2}
-                  rx="9" fill="#fff" stroke="#464861" stroke-width="1.5"
-                />
-                <text x={n.x} y={n.y + 4.5} text-anchor="middle" class="esb-node-t">{n.label}</text>
-              </g>
-            ))}
-          </svg>
-        </figure>
-
-        <figure class="esb-panel">
-          <figcaption><span class="esb-tag esb-tag--ok">{s('esb.tag.bus')}</span></figcaption>
-          <svg viewBox="0 0 380 350" role="img" aria-label={s('esb.aria.bus')}>
-            {nodes.map((n) => (
-              <line x1={n.x} y1={n.y} x2={cx} y2={cy} stroke="#27ea93" stroke-width="2" />
-            ))}
-            {/* central bus / hub */}
-            <circle cx={cx} cy={cy} r="42" fill="#27ea93" />
-            <circle cx={cx} cy={cy} r="42" fill="none" stroke="#0a0a12" stroke-opacity="0.06" stroke-width="1" />
-            <text x={cx} y={cy - 2} text-anchor="middle" class="esb-hub-t">ESB</text>
-            <text x={cx} y={cy + 14} text-anchor="middle" class="esb-hub-s">{s('esb.hub.sub')}</text>
-            {nodes.map((n) => (
-              <g>
-                <rect
-                  x={n.x - NW} y={n.y - NH} width={NW * 2} height={NH * 2}
-                  rx="9" fill="#fff" stroke="#464861" stroke-width="1.5"
-                />
-                <text x={n.x} y={n.y + 4.5} text-anchor="middle" class="esb-node-t">{n.label}</text>
-              </g>
-            ))}
-          </svg>
-        </figure>
+  <section id="section0" class="section esb-intro">
+    <div class="container">
+      <div class="esb-prose" data-reveal>
+        <p class="esb-lede" set:html={esb.intro[0]} />
+        <p set:html={esb.intro[1]} />
       </div>
     </div>
   </section>
 
-  {/* ---------- pull quote ---------- */}
-  <section id="section1" class="esb-quote">
-    <div class="esb-wrap">
-      <blockquote set:html={esb.quote} />
+  {/* ---------- point-to-point vs ESB ---------- */}
+  <section class="section surface-mist esb-diagram-band">
+    <div class="container esb-diagram">
+      <figure class="esb-panel" data-reveal>
+        <figcaption><span class="badge badge--dot esb-tag--warn">{s('esb.tag.p2p')}</span></figcaption>
+        <svg viewBox="0 0 380 356" role="img" aria-label={s('esb.aria.p2p')}>
+          {mesh.map(([i, j]) => (
+            <line x1={nodes[i].x} y1={nodes[i].y} x2={nodes[j].x} y2={nodes[j].y} class="esb-edge-p2p" />
+          ))}
+          {nodes.map((n) => (
+            <g>
+              <rect x={n.x - NW} y={n.y - NH} width={NW * 2} height={NH * 2} rx={NH} class="esb-node" />
+              <text x={n.x} y={n.y + 4.5} text-anchor="middle" class="esb-node-t">{n.label}</text>
+            </g>
+          ))}
+        </svg>
+      </figure>
+
+      <figure class="esb-panel" data-reveal>
+        <figcaption><span class="badge badge--dot esb-tag--ok">{s('esb.tag.bus')}</span></figcaption>
+        <svg viewBox="0 0 380 356" role="img" aria-label={s('esb.aria.bus')}>
+          {nodes.map((n) => (
+            <line x1={n.x} y1={n.y} x2={cx} y2={cy} class="esb-edge-bus" />
+          ))}
+          <circle cx={cx} cy={cy} r="54" class="esb-hub" />
+          <text x={cx} y={cy + 4} text-anchor="middle" class="esb-hub-t">ESB</text>
+          <text x={cx} y={cy + 22} text-anchor="middle" class="esb-hub-s">{s('esb.hub.sub')}</text>
+          {nodes.map((n) => (
+            <g>
+              <rect x={n.x - NW} y={n.y - NH} width={NW * 2} height={NH * 2} rx={NH} class="esb-node" />
+              <text x={n.x} y={n.y + 4.5} text-anchor="middle" class="esb-node-t">{n.label}</text>
+            </g>
+          ))}
+        </svg>
+      </figure>
+    </div>
+  </section>
+
+  {/* ---------- the statement ---------- */}
+  <section id="section1" class="esb-quote surface-mint">
+    <span class="esb-quote-mass" aria-hidden="true"></span>
+    <div class="container">
+      <blockquote set:html={esb.quote} data-reveal />
     </div>
   </section>
 
   {/* ---------- how it works ---------- */}
-  <section id="section2" class="esb-band">
-    <div class="esb-wrap esb-prose">
-      <h2 set:html={esb.how.heading} />
-      {esb.how.paras.map((p) => (
-        <p set:html={p} />
-      ))}
+  <section id="section2" class="section">
+    <div class="container">
+      <div class="esb-prose" data-reveal>
+        <h2 set:html={esb.how.heading} />
+        {esb.how.paras.map((p) => <p set:html={p} />)}
+      </div>
     </div>
   </section>
 
   {/* ---------- why implement ESB ---------- */}
-  <section id="section3" class="esb-band esb-band--tint">
-    <div class="esb-wrap esb-split">
-      <div class="esb-prose">
+  <section id="section3" class="section surface-mist">
+    <div class="container esb-split">
+      <div class="esb-prose" data-reveal>
         <h2 set:html={esb.why.heading} />
-        {esb.why.paras.map((p) => (
-          <p set:html={p} />
-        ))}
+        {esb.why.paras.map((p) => <p set:html={p} />)}
       </div>
-      <div class="esb-benefits">
+      <div class="esb-benefits card" data-reveal>
         <p class="esb-list-label" set:html={esb.why.listLabel} />
         <ul>
           {esb.why.benefits.map((b) => (
             <li>
               <svg viewBox="0 0 20 20" aria-hidden="true" class="esb-check">
-                <path d="M5 10.5l3.2 3.2L15 6.5" fill="none" stroke="#097a53" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M5 10.5l3.2 3.2L15 6.5" />
               </svg>
               <span set:html={b} />
             </li>
@@ -134,51 +121,55 @@ const NH = 17; // node box half-height
   </section>
 
   {/* ---------- when do you need ESB ---------- */}
-  <section id="section4" class="esb-band">
-    <div class="esb-wrap esb-prose">
-      <h2 set:html={esb.when.heading} />
-      {esb.when.paras.map((p) => (
-        <p set:html={p} />
-      ))}
-      <p class="esb-list-label" set:html={esb.when.listLabel} />
-      <ul class="esb-signals">
-        {esb.when.signals.map((s) => (
-          <li>
-            <span class="esb-sig-mark" aria-hidden="true"></span>
-            <span set:html={s} />
-          </li>
-        ))}
-      </ul>
+  <section id="section4" class="section">
+    <div class="container">
+      <div class="esb-prose" data-reveal>
+        <h2 set:html={esb.when.heading} />
+        {esb.when.paras.map((p) => <p set:html={p} />)}
+        <p class="esb-list-label" set:html={esb.when.listLabel} />
+        <ul class="esb-signals">
+          {esb.when.signals.map((sig) => (
+            <li set:html={sig} />
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
   {/* ---------- ESB vs alternatives ---------- */}
-  <section id="section5" class="esb-band esb-band--tint">
-    <div class="esb-wrap esb-prose">
-      <h2 set:html={esb.alt.heading} />
-      {esb.alt.paras.map((p) => (
-        <p set:html={p} />
-      ))}
+  <section id="section5" class="section surface-mist">
+    <div class="container">
+      <div class="esb-prose" data-reveal>
+        <h2 set:html={esb.alt.heading} />
+        {esb.alt.paras.map((p) => <p set:html={p} />)}
+      </div>
     </div>
   </section>
 
   {/* ---------- FAQ ---------- */}
-  <section id="section6" class="esb-faq">
-    <div class="esb-wrap">
-      <h2>{s('esb.faq')}</h2>
+  <section id="section6" class="section">
+    <div class="container esb-faq">
+      <div>
+        <h2 class="esb-faq-h">{s('esb.faq')}</h2>
+      </div>
       <div class="esb-faq-list">
-        {esb.faq.map((f, i) => (
-          <details class="esb-faq-item" open={i === 0}>
-            <summary set:html={f.q} />
-            <div class="esb-faq-a" set:html={f.a} />
-          </details>
-        ))}
+        {
+          esb.faq.map((f, i) => (
+            <details class="esb-faq-item" open={i === 0}>
+              <summary>
+                <span set:html={f.q} />
+                <span class="esb-faq-toggle" aria-hidden="true" />
+              </summary>
+              <div class="esb-faq-a" set:html={f.a} />
+            </details>
+          ))
+        }
       </div>
     </div>
   </section>
 </article>
 
-{/* FAQ structured data — SEO win, uses the existing Q&A verbatim */}
+{/* FAQ structured data — uses the existing Q&A verbatim */}
 <script
   type="application/ld+json"
   set:html={JSON.stringify({
@@ -196,302 +187,300 @@ const NH = 17; // node box half-height
 />
 
 <style>
-  /* Local short names for the global tokens — see IntegrationsGrid. */
-  .esb {
-    --ink: var(--gi-text-on-light);
-    --body: var(--gi-bg-slate);
-    --muted: var(--gi-text-muted-slate);
-    --green: var(--gi-green);
-    --green-deep: var(--gi-green-deep);
-    --tint: var(--gi-bg-tint);
-    --line: var(--gi-line);
-    font-family: Epilogue, system-ui, sans-serif;
-    color: var(--body);
-  }
-  .esb-wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
   .esb-prose {
-    max-width: 720px;
+    display: grid;
+    gap: 18px;
+    max-width: 760px;
   }
-  .esb-band {
-    padding: clamp(3rem, 7vw, 5.5rem) 0;
-  }
-  .esb-band--tint {
-    background: var(--tint);
-  }
-
-  /* ---- prose ---- */
   .esb-prose h2 {
-    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
-    line-height: 1.18;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.01em;
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.05em;
+    color: var(--ink-900);
     text-wrap: balance;
-    margin: 0 0 1.25rem;
+    margin-bottom: 6px;
   }
   .esb-prose p {
-    font-size: 1.0625rem;
-    line-height: 1.72;
-    color: var(--body);
-    margin: 0 0 1.15rem;
-  }
-  .esb-prose p:last-child {
-    margin-bottom: 0;
-  }
-  .esb-lede {
-    font-size: clamp(1.2rem, 2.4vw, 1.4rem) !important;
-    line-height: 1.55 !important;
-    color: var(--ink) !important;
-    font-weight: 500;
-  }
-  .esb-prose :global(a) {
-    color: var(--green-deep);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    font: 400 var(--fs-body-lg) / 1.65 var(--font-sans);
+    color: var(--slate-600);
+    text-wrap: pretty;
   }
   .esb-prose :global(strong) {
-    color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .esb-prose :global(a) {
+    color: var(--ink-900);
+  }
+  .esb-intro .esb-lede {
+    font: 400 clamp(18px, 1.7vw, 20px) / 1.55 var(--font-sans);
+    letter-spacing: -0.015em;
+    color: var(--ink-900);
   }
 
   /* ---- diagram ---- */
   .esb-diagram {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1rem, 3vw, 2.5rem);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 800px) {
+    .esb-diagram {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   .esb-panel {
-    margin: 0;
-    background: var(--gi-bg-light);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 1.25rem 1rem 0.5rem;
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+    padding: 24px 24px 12px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
   }
   .esb-panel figcaption {
-    text-align: center;
-    margin-bottom: 0.25rem;
-  }
-  .esb-tag {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 0.28rem 0.85rem;
-    border-radius: 20px;
-  }
-  /* The "before" pill was two invented values (#8a8ca3 on #eef0f6 = 2.90:1, well
-     under AA at 12.8px). It reads as the muted counterpart to the green .esb-tag--ok
-     pill, so use the muted ink on the light-panel surface instead — now both
-     named: --gi-text-muted-slate on --gi-bg-tint, 5.52:1 at 12.8px, same
-     "quieter option" tone, actually readable. */
-  .esb-tag--warn {
-    color: var(--gi-text-muted-slate);
-    background: var(--gi-bg-tint);
-  }
-  .esb-tag--ok {
-    color: var(--green-deep);
-    background: rgba(39, 234, 147, 0.12);
+    justify-self: start;
   }
   .esb-panel svg {
     width: 100%;
+    max-width: 440px;
     height: auto;
-    display: block;
+  }
+  .esb-tag--warn::before {
+    background: var(--red-500);
+  }
+  .esb-tag--ok::before {
+    background: var(--mint-600);
+  }
+  .esb-edge-p2p {
+    stroke: var(--slate-400);
+    stroke-width: 1.25;
+  }
+  .esb-edge-bus {
+    stroke: var(--ink-900);
+    stroke-width: 1.75;
+  }
+  .esb-node {
+    fill: var(--white);
+    stroke: var(--ink-900);
+    stroke-width: 1.5;
   }
   .esb-node-t {
-    font: 700 12px Epilogue, sans-serif;
-    fill: var(--gi-bg-slate);
+    font: 500 12px var(--font-mono);
+    letter-spacing: 0.04em;
+    fill: var(--ink-900);
+  }
+  .esb-hub {
+    fill: var(--ink-900);
   }
   .esb-hub-t {
-    font: 800 17px Epilogue, sans-serif;
-    fill: var(--gi-bg-dark);
+    font: 800 22px var(--font-sans);
+    letter-spacing: -0.04em;
+    fill: var(--mint-500);
   }
-  /* The hub's second line is 9.5px in a 380-unit viewBox — it renders *below*
-     9.5px on any panel narrower than that, so it is normal text and owes 4.5:1.
-     At 0.6 alpha over the green hub it measured 4.53:1: passing on paper with
-     no headroom, at the smallest type on the page. 0.75 is the alpha the muted
-     text tokens already use (--gi-text-muted-on-dark), lands at 7.18:1, and is
-     still a clear tonal step below the solid-ink "ESB" above it. */
   .esb-hub-s {
-    font: 600 9.5px Epilogue, sans-serif;
-    fill: rgba(10, 10, 18, 0.75);
-    letter-spacing: 0.02em;
+    font: 500 10px var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: var(--slate-400);
   }
 
-  /* ---- pull quote ---- */
+  /* ---- the statement: mint field over the mass's horizon ---- */
   .esb-quote {
-    background: var(--gi-bg-dark);
-    padding: clamp(3.5rem, 8vw, 6rem) 0;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: clamp(72px, 10vw, 128px);
+    padding-bottom: clamp(140px, 18vw, 240px);
+  }
+  .esb-quote-mass {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: 0;
+    width: max(160vw, 900px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+    translate: -50% calc(100% - clamp(64px, 9vw, 150px));
   }
   .esb-quote blockquote {
+    max-width: 26ch;
     margin: 0 auto;
-    max-width: 900px;
+    font: 800 var(--fs-h1) / 0.96 var(--font-sans);
+    letter-spacing: -0.055em;
     text-align: center;
-    font-size: clamp(1.5rem, 3.6vw, 2.4rem);
-    line-height: 1.35;
-    font-weight: 600;
-    color: var(--gi-text-on-dark);
-    letter-spacing: -0.01em;
     text-wrap: balance;
-    position: relative;
-    padding-top: 2.25rem;
-  }
-  .esb-quote blockquote::before {
-    content: '\201C';
-    position: absolute;
-    top: -0.55em;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 4.5rem;
-    line-height: 1;
-    color: var(--green);
+    color: var(--ink-900);
   }
 
-  /* ---- benefits (why) ---- */
+  /* ---- why: prose + the benefits card ---- */
   .esb-split {
     display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
   }
-  .esb-list-label {
-    font-weight: 700;
-    color: var(--ink);
-    margin: 0 0 1rem;
-    font-size: 1.0625rem;
+  @media (min-width: 960px) {
+    .esb-split {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: start;
+      gap: clamp(48px, 6vw, 96px);
+    }
+  }
+  .esb-benefits {
+    display: grid;
+    gap: 18px;
+    padding: 28px;
+  }
+  .esb-list-label,
+  .esb-prose .esb-list-label {
+    margin-top: 8px;
+    font: 500 12px / 1.3 var(--font-mono);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--mint-800);
   }
   .esb-benefits ul {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
-    gap: 0.95rem;
+    gap: 14px;
   }
   .esb-benefits li {
     display: grid;
-    grid-template-columns: 26px 1fr;
-    gap: 0.65rem;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 12px;
     align-items: start;
-    font-size: 1rem;
-    line-height: 1.55;
-    color: var(--body);
+    font: 400 var(--fs-body) / 1.55 var(--font-sans);
+    color: var(--ink-900);
   }
   .esb-check {
     width: 24px;
     height: 24px;
-    border-radius: 7px;
-    background: rgba(39, 234, 147, 0.14);
-    padding: 3px;
-    box-sizing: border-box;
-    margin-top: 1px;
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--ink-900);
+    fill: none;
+    stroke: var(--mint-500);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  /* ---- signals (when) ---- */
+  /* ---- when: warning signs, marked amber — the system's "pending" ---- */
   .esb-signals {
     list-style: none;
-    margin: 0.25rem 0 0;
-    padding: 0;
     display: grid;
-    gap: 0.8rem;
-    max-width: 720px;
+    gap: 12px;
   }
   .esb-signals li {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    gap: 0.75rem;
-    align-items: start;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--body);
+    position: relative;
+    padding: 14px 16px 14px 40px;
+    border: 1px solid var(--mist-200);
+    border-radius: var(--radius-md);
+    font: 400 16px / 1.5 var(--font-sans);
+    color: var(--ink-900);
   }
-  .esb-sig-mark {
+  .esb-signals li::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 21px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--green);
-    margin-top: 0.6rem;
-    box-shadow: 0 0 0 4px rgba(39, 234, 147, 0.15);
+    background: var(--amber-500);
   }
 
   /* ---- FAQ ---- */
   .esb-faq {
-    padding: clamp(3rem, 7vw, 5.5rem) 0;
-    background: var(--tint);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px 64px;
   }
-  .esb-faq h2 {
-    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
-    color: var(--ink);
-    font-weight: 700;
-    margin: 0 0 1.75rem;
+  @media (min-width: 900px) {
+    .esb-faq {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    }
+  }
+  .esb-faq-h {
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: -0.06em;
   }
   .esb-faq-list {
-    max-width: 820px;
+    border-top: 1px solid var(--mist-200);
   }
   .esb-faq-item {
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--mist-200);
   }
   .esb-faq-item summary {
-    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0;
+    font: 600 clamp(18px, 1.6vw, 20px) / 1.3 var(--font-sans);
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
     cursor: pointer;
-    padding: 1.25rem 3rem 1.25rem 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--ink);
-    position: relative;
-    transition: color 0.2s ease;
+    list-style: none;
+    border-radius: 4px;
   }
   .esb-faq-item summary::-webkit-details-marker {
     display: none;
   }
-  .esb-faq-item summary::after {
+  .esb-faq-toggle {
+    position: relative;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: 50%;
+    transition: background-color var(--dur-fast) ease;
+  }
+  .esb-faq-toggle::before,
+  .esb-faq-toggle::after {
     content: '';
     position: absolute;
-    right: 4px;
+    left: 50%;
     top: 50%;
-    width: 14px;
-    height: 14px;
-    transform: translateY(-50%);
-    background:
-      linear-gradient(var(--green-deep), var(--green-deep)) center/14px 2.2px no-repeat,
-      linear-gradient(var(--green-deep), var(--green-deep)) center/2.2px 14px no-repeat;
-    transition: transform 0.25s ease;
+    width: 12px;
+    height: 1.75px;
+    border-radius: 2px;
+    background: var(--ink-900);
+    translate: -50% -50%;
+    transition: transform var(--dur-base) var(--ease-fall);
   }
-  .esb-faq-item[open] summary::after {
-    background:
-      linear-gradient(var(--green-deep), var(--green-deep)) center/14px 2.2px no-repeat;
+  .esb-faq-toggle::after {
+    transform: rotate(90deg);
   }
-  .esb-faq-item summary:hover {
-    color: var(--green-deep);
+  .esb-faq-item summary:hover .esb-faq-toggle,
+  .esb-faq-item[open] .esb-faq-toggle {
+    background: var(--ink-900);
+  }
+  .esb-faq-item summary:hover .esb-faq-toggle::before,
+  .esb-faq-item summary:hover .esb-faq-toggle::after,
+  .esb-faq-item[open] .esb-faq-toggle::before,
+  .esb-faq-item[open] .esb-faq-toggle::after {
+    background: var(--mint-500);
+  }
+  .esb-faq-item[open] .esb-faq-toggle::after {
+    transform: rotate(0deg);
   }
   .esb-faq-a {
-    padding: 0 3rem 1.4rem 0;
-    font-size: 1.03rem;
-    line-height: 1.7;
-    color: var(--body);
+    padding: 0 60px 28px 0;
+    max-width: 760px;
+    font: 400 16px / 1.7 var(--font-sans);
+    color: var(--slate-600);
   }
-  /* Answers ran 82ch open. Cap the paragraphs rather than the wrapper, whose
-     border-box width already carries 3rem of right padding. */
-  .esb-faq-a :global(p) {
-    max-width: var(--gi-measure);
-  }
-  .esb-faq-a :global(a) {
-    color: var(--green-deep);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* ---- responsive ---- */
-  @media (max-width: 800px) {
-    .esb-split {
-      grid-template-columns: 1fr;
+  @media (max-width: 599.98px) {
+    .esb-faq-a {
+      padding-right: 0;
     }
   }
-  @media (max-width: 560px) {
-    .esb-diagram {
-      grid-template-columns: 1fr;
+  @media (prefers-reduced-motion: reduce) {
+    .esb-faq-toggle,
+    .esb-faq-toggle::before,
+    .esb-faq-toggle::after {
+      transition: none;
     }
   }
 </style>

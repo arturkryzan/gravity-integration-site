@@ -20,8 +20,11 @@ interface Props {
   startIndex?: number;
   /** global section indices that are client-logo walls (icons variant) */
   logoSections?: number[];
+  /** per-section-index presentation options passed straight to the layout
+      component (e.g. `{ 2: { numbered: true } }`) */
+  options?: Record<number, Record<string, any>>;
 }
-const { sections, overrides = {}, startIndex = 0, logoSections = [] } = Astro.props;
+const { sections, overrides = {}, startIndex = 0, logoSections = [], options = {} } = Astro.props;
 ---
 
 {
@@ -29,9 +32,19 @@ const { sections, overrides = {}, startIndex = 0, logoSections = [] } = Astro.pr
     const index = startIndex + i;
     const layout = s.acf_fc_layout;
     if (layout === 'text_img_link')
-      return <TextImgLink index={index} rows={s.rows ?? []} overrides={overrides[index]} />;
+      return (
+        <TextImgLink index={index} rows={s.rows ?? []} overrides={overrides[index]} {...(options[index] ?? {})} />
+      );
     if (layout === 'text_img')
-      return <TextImg index={index} text={s.text} img={s.img} img_placement={s.img_placement} />;
+      return (
+        <TextImg
+          index={index}
+          text={s.text}
+          img={s.img}
+          img_placement={s.img_placement}
+          {...(options[index] ?? {})}
+        />
+      );
     if (layout === 'icons')
       return (
         <Icons
@@ -43,17 +56,26 @@ const { sections, overrides = {}, startIndex = 0, logoSections = [] } = Astro.pr
           variant={logoSections.includes(index) ? 'logos' : 'default'}
         />
       );
-    if (layout === 'quote') return <Quote index={index} bg={s.bg} text={s.text} />;
+    if (layout === 'quote') return <Quote index={index} bg={s.bg} text={s.text} {...(options[index] ?? {})} />;
     if (layout === 'text_boxes')
-      return <TextBoxes index={index} text={s.text} boxes={s.boxes ?? []} />;
+      /* After a quote, the quote's horizon is this band's mass — one mass
+         per frame — so the band doesn't bring its own. */
+      return (
+        <TextBoxes
+          index={index}
+          text={s.text}
+          boxes={s.boxes ?? []}
+          mass={sections[i - 1]?.acf_fc_layout !== 'quote'}
+        />
+      );
     if (layout === 'text_columns')
-      return <TextColumns index={index} text0={s.text0} text1={s.text1} />;
+      return <TextColumns index={index} text0={s.text0} text1={s.text1} {...(options[index] ?? {})} />;
     if (layout === 'pricing') return <Pricing index={index} pricing={s.pricing ?? []} />;
-    if (layout === 'faq') return <Faq index={index} faq={s.faq ?? []} />;
+    if (layout === 'faq') return <Faq index={index} faq={s.faq ?? []} {...(options[index] ?? {})} />;
     if (layout === 'downloads') return <Downloads index={index} downloads={s.downloads ?? []} />;
     if (layout === 'contact_form') return <ContactForm />;
     if (layout === 'links') return <Links index={index} text={s.text} links={s.links ?? []} />;
-    if (layout === 'space') return <div class="pt-100" />;
+    if (layout === 'space') return <div class="section" />;
     return null;
   })
 }

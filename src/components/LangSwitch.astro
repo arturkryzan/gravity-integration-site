@@ -38,8 +38,11 @@ interface Props {
    *  translation to point at — it falls through to the home-page case. */
   slug?: string;
   class?: string;
+  /** The top bar shows the two-letter code ("EN"); everywhere else names the
+   *  language in full. The accessible name is the same either way. */
+  short?: boolean;
 }
-const { slug, class: className = '' } = Astro.props;
+const { slug, class: className = '', short = false } = Astro.props;
 
 const lang = localeOf(Astro.currentLocale);
 /* Two locales, so "the other one" is unambiguous. If a third is ever added this
@@ -58,36 +61,15 @@ const s = t(lang);
 {
   href && (
     <a href={href} hreflang={other} aria-label={s('lang.switchTo')} class:list={['gi-lang', className]}>
-      <span lang={other}>{LOCALE_NAME[other]}</span>
+      <span lang={other}>{short ? other.toUpperCase() : LOCALE_NAME[other]}</span>
     </a>
   )
 }
 
 <style>
-  /* Deliberately inherits colour and size from wherever it is placed — the nav
-     panel is white-on-dark, the footer dark-on-light, and the switcher is the
-     same small link in both. */
+  /* Inherits colour and size from wherever it is placed — the bar, the menu
+     and the footer each style it as one of their own links. */
   .gi-lang {
     color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 0.25em;
-  }
-  .gi-lang:hover {
-    text-decoration-thickness: 2px;
-  }
-  /* The footer row is 10px type, so the switcher's own box is 10px tall — fine
-     to read, not a target. `.gi-lang-row` borrows the trick the consent link
-     beside it already uses (see Footer.astro): vertical padding for the target,
-     an equal negative margin so nothing on the row moves. Deliberately NOT
-     applied in the nav panel, where the switcher is a block item in a stack and
-     the padding would push the links under it down. */
-  .gi-lang-row {
-    display: inline-block;
-    padding: 0.9rem 0;
-    margin-block: -0.9rem;
-  }
-  .gi-lang:focus-visible {
-    outline: 2px solid var(--gi-green-deep, #097a53);
-    outline-offset: 3px;
   }
 </style>

@@ -1,0 +1,145 @@
+---
+/* A key-visual frame from the design system (§04), for the places v1 showed
+   a 3D render or a typographic image. Decorative unless it carries words.
+
+     fall     → "A · Corner fall": mint field, ink mass bottom-right,
+                satellite top-left. Type, if any, sits on the mass in mint.
+     inverted → "C · Inverted": ink field, mint mass top-left, satellite
+                bottom-right. Type sits on the field in #F4F5F8.
+     quiet    → "D · Quiet": mist field, mint mass bottom-right, no
+                satellite. Type in ink, top-left.
+*/
+interface Props {
+  variant?: 'fall' | 'inverted' | 'quiet';
+  /** Lines of text set in the frame (already-existing copy only). */
+  lines?: string[];
+  /** Portrait, square or landscape frame. */
+  ratio?: string;
+  class?: string;
+}
+const { variant = 'fall', lines = [], ratio = '4 / 5', class: className = '' } = Astro.props;
+const decorative = lines.length === 0;
+---
+
+<div
+  class:list={['mp', `mp--${variant}`, className]}
+  style={`aspect-ratio:${ratio}`}
+  aria-hidden={decorative ? 'true' : undefined}
+  data-reveal
+>
+  <span class="mp-mass"></span>
+  {variant !== 'quiet' && <span class="mp-sat" />}
+  {
+    lines.length > 0 && (
+      <p class="mp-lines">
+        {lines.map((l) => (
+          <span>{l}</span>
+        ))}
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .mp {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    width: 100%;
+    border-radius: var(--radius-xl);
+    container-type: inline-size;
+  }
+  /* On a phone a decorative frame shouldn't cost a screen of scrolling. */
+  @media (max-width: 899.98px) {
+    .mp[aria-hidden='true'] {
+      aspect-ratio: 16 / 9 !important;
+    }
+  }
+  .mp-mass,
+  .mp-sat {
+    position: absolute;
+    z-index: -1;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  .mp-lines {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font: 800 clamp(24px, 13cqi, 64px) / 0.9 var(--font-sans);
+    letter-spacing: -0.05em;
+  }
+
+  .mp--fall {
+    background: var(--mint-500);
+  }
+  .mp--fall .mp-mass {
+    width: 130%;
+    left: 34%;
+    top: 30%;
+    background: var(--ink-900);
+  }
+  .mp--fall .mp-sat {
+    width: 8%;
+    left: 14%;
+    top: 12%;
+    background: var(--ink-900);
+  }
+  .mp--fall .mp-lines {
+    left: 50%;
+    right: 8%;
+    bottom: 10%;
+    color: var(--mint-500);
+  }
+
+  .mp--inverted {
+    background: var(--ink-900);
+  }
+  .mp--inverted .mp-mass {
+    width: 120%;
+    left: -60%;
+    top: -60%;
+    background: var(--mint-500);
+  }
+  .mp--inverted .mp-sat {
+    width: 8%;
+    right: 12%;
+    bottom: 12%;
+    background: var(--mint-500);
+  }
+  .mp--inverted .mp-lines {
+    right: 12%;
+    top: 46%;
+    text-align: right;
+    align-items: flex-end;
+    color: var(--on-ink);
+  }
+
+  .mp--quiet {
+    background: var(--mist-100);
+  }
+  .mp--quiet .mp-mass {
+    width: 80%;
+    left: 62%;
+    top: 58%;
+    background: var(--mint-500);
+  }
+  .mp--quiet .mp-lines {
+    left: 12%;
+    top: 12%;
+    color: var(--ink-900);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .mp .mp-mass {
+      transition: transform var(--dur-slow) var(--ease-fall);
+    }
+    :global(html.js) .mp--fall:not(.is-inview) .mp-mass,
+    :global(html.js) .mp--quiet:not(.is-inview) .mp-mass {
+      transform: translate(8%, 8%);
+    }
+    :global(html.js) .mp--inverted:not(.is-inview) .mp-mass {
+      transform: translate(-8%, -8%);
+    }
+  }
+</style>

@@ -1,42 +1,87 @@
 ---
 /* Contact form section (was CF7 form 91 on /kontakt/).
-   Now posts straight to MailerLite — form "gravity.integration — Kontakt (www)",
-   which feeds the GRAVITY group. There is no server in this build, so the
-   `action` is the MailerLite endpoint itself and the inputs are named
-   `fields[…]`: with JS off the browser posts natively and the subscription
-   still lands. src/scripts/ml-forms.ts upgrades that to an in-page result.
+   Posts straight to MailerLite — form "gravity.integration — Kontakt (www)",
+   group GRAVITY. There is no server in this build, so the `action` is the
+   MailerLite endpoint and the inputs are named `fields[…]`: with JS off the
+   browser posts natively and the subscription still lands;
+   src/scripts/ml-forms.ts upgrades that to an in-page result.
+   The radio rides along as the `typ_zapytania` custom field. Its VALUES stay
+   Polish in both locales — they are data, not copy.
 
-   The radio ("Użytek komercyjny" / "Darmowa konsultacja") rides along as the
-   `typ_zapytania` custom field, so the two intents stay distinguishable in
-   MailerLite without splitting the group. */
+   v2: a mint field with the mass — the system's CTA frame — and its own
+   controls: radios, the 44px input, the checkbox, an ink button. */
 import { mlAction } from '../../lib/mailerlite';
-import { LOCALE_TAG, localeOf, t } from '../../i18n/ui';
+import Icon from '../ui/Icon.astro';
+import { localeOf, t } from '../../i18n/ui';
 const action = mlAction('contact');
-const lang = localeOf(Astro.currentLocale);
-const s = t(lang);
+const s = t(localeOf(Astro.currentLocale));
 ---
-<section class="contact bg-green" id="section1" data-scroll data-scroll-repeat data-scroll-call="spy1">
-	<div class="container-fluid pt-10 pb-10 pt-lg-100 pb-lg-100">
-		<div class="row py-10 py-lg-5">
-			<div class="col-lg-8 offset-lg-1 paragraph hover-underline" data-scroll data-scroll-opacity>
-				<h2 class="pb-4">{s('cf.h2')}</h2>
-			</div>
-			<div class="col-lg-8 offset-lg-1" data-scroll data-scroll-opacity>
-<div class="wpcf7" lang={LOCALE_TAG[lang]} dir="ltr" data-wpcf7-id="91">
-<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
-<form action={action} data-form="contact" method="post" target="_blank" class="wpcf7-form init" aria-label={s('cf.form.aria')} data-status="init">
 
-<div class="form-row form-row-radio form-row-checkbox mb-10"><span class="wpcf7-form-control-wrap" data-name="typ_zapytania"><span class="wpcf7-form-control wpcf7-radio"><span class="wpcf7-list-item first"><label><input type="radio" name="fields[typ_zapytania]" value="Użytek komercyjny" checked="checked" /><span class="wpcf7-list-item-label">{s('cf.radio.commercial')}</span></label></span><span class="wpcf7-list-item last"><label><input type="radio" name="fields[typ_zapytania]" value="Darmowa konsultacja" /><span class="wpcf7-list-item-label">{s('cf.radio.consult')}</span></label></span></span></span></div>
-<div class="form-row mb-5"><label for="nemaiil">{s('form.emailLabel')}</label><span class="wpcf7-form-control-wrap" data-name="email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="nemaiil" required aria-required="true" aria-invalid="false" value="" type="email" autocomplete="email" inputmode="email" name="fields[email]" /></span></div>
-<div class="form-row mb-5 form-row-checkbox"><span class="wpcf7-form-control-wrap" data-name="acceptance-500"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-500" value="1" required data-ml-consent aria-invalid="false" /><span class="wpcf7-list-item-label">{s('cf.consent')}</span></label></span></span></span></div>
-<input type="hidden" name="ml-submit" value="1" />
-<input type="hidden" name="anticsrf" value="true" />
-<div class="form-row btn-arrow btn-arrow-submit"><input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value={s('cf.submit')} /></div><div class="wpcf7-response-output" role="status" aria-live="polite" hidden></div>
-</form>
-</div>
-</div>
-		</div>
-	</div>
+<section class="cf section surface-mint" id="section1">
+  <span class="mass cf-mass" aria-hidden="true"></span>
+  <div class="container cf-grid">
+    <h2 class="cf-h" data-reveal>{s('cf.h2')}</h2>
+    <form
+      action={action}
+      data-form="contact"
+      method="post"
+      target="_blank"
+      class="sform cf-form"
+      aria-label={s('cf.form.aria')}
+      data-status="init"
+      data-reveal
+    >
+      <fieldset class="sform-choices">
+        <label class="radio">
+          <input type="radio" name="fields[typ_zapytania]" value="Użytek komercyjny" checked />
+          <span class="radio-dot"></span>
+          {s('cf.radio.commercial')}
+        </label>
+        <label class="radio">
+          <input type="radio" name="fields[typ_zapytania]" value="Darmowa konsultacja" />
+          <span class="radio-dot"></span>
+          {s('cf.radio.consult')}
+        </label>
+      </fieldset>
+
+      <div class="field">
+        <label class="field-label" for="cf-email">{s('form.emailLabel')}</label>
+        <div class="form-control">
+          <input
+            class="input"
+            id="cf-email"
+            type="email"
+            name="fields[email]"
+            required
+            aria-required="true"
+            aria-invalid="false"
+            autocomplete="email"
+            inputmode="email"
+            maxlength="400"
+          />
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" name="acceptance-500" value="1" required data-ml-consent aria-invalid="false" />
+        <span class="check-box" aria-hidden="true">
+          <svg viewBox="0 0 20 20" focusable="false"><path d="M4.5 10.4 8.3 14.1 15.5 6.5"></path></svg>
+        </span>
+        <span>{s('cf.consent')}</span>
+      </label>
+
+      <input type="hidden" name="ml-submit" value="1" />
+      <input type="hidden" name="anticsrf" value="true" />
+
+      <div class="sform-actions">
+        <button type="submit" class="btn btn--primary btn--lg form-submit">
+          <span class="form-submit-label">{s('cf.submit')}</span>
+          <Icon name="send" size={16} />
+        </button>
+      </div>
+      <div class="form-output" role="status" aria-live="polite" hidden></div>
+    </form>
+  </div>
 </section>
 
 <script>
@@ -55,3 +100,48 @@ const s = t(lang);
     }),
   );
 </script>
+
+<style>
+  .cf {
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* Bottom-left, under the heading's column: the form keeps the field. */
+  .cf-mass {
+    z-index: -1;
+    width: clamp(420px, 46vw, 720px);
+    left: clamp(-300px, -16vw, -160px);
+    bottom: clamp(-560px, -34vw, -300px);
+  }
+  .cf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  @media (min-width: 900px) {
+    .cf-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+  .cf-h {
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: -0.06em;
+  }
+  .cf-form {
+    padding-bottom: 8px;
+  }
+  .cf-form .check {
+    color: var(--ink-900);
+  }
+  @media (max-width: 899.98px) {
+    .cf {
+      padding-bottom: 200px;
+    }
+    .cf-mass {
+      width: 420px;
+      left: -140px;
+      bottom: -300px;
+    }
+  }
+</style>

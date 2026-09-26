@@ -1,12 +1,19 @@
 ---
-/* ACF layout: icons (theme inc/sections/icons.php).
-   variant="default" → tech tiles (blob + small icon + heading + text).
-   variant="logos"   → client logo wall (real logo sizing, grayscale→color, case links). */
-import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
-import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
+/* ACF layout: icons.
+   variant="default" → the technology band: ink (anything heavy is ink), the
+                       four technologies as ink-700 cards, Lucide icons.
+   variant="logos"   → the client wall: white, the house bordered-cell grid,
+                       logos in grey until pointed at, case-study links.
 
-import { localeOf, t } from '../../i18n/ui';
-const s = t(localeOf(Astro.currentLocale));
+   v1's band was green with hand-drawn blob outlines morphing behind each
+   icon; the system allows no patterns or illustrations and makes mint a field
+   rather than a tint, so the band turns to ink and the mass carries the
+   brand. The `bg` field in the content is the old theme's colour and is
+   ignored. */
+import { mediaSrc, mediaAlt, mediaDims } from '../../lib/media';
+import { clean } from '../../lib/html';
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
 
 interface Props {
   index: number;
@@ -16,32 +23,18 @@ interface Props {
   link?: Record<string, any> | '' | null;
   variant?: 'default' | 'logos';
 }
-const { index, bg = '', text = '', icons, link, variant = 'default' } = Astro.props;
-const l = link && typeof link === 'object' ? link : null;
-const BLOB =
-  'M52.7,-59C68.3,-49.7,81,-33.1,85.8,-13.9C90.5,5.2,87.4,26.9,75.7,40.5C64,54,43.8,59.3,26,61.6C8.1,63.9,-7.3,63.2,-22.1,58.7C-36.9,54.2,-51.1,45.9,-56.7,33.9C-62.4,21.8,-59.6,5.9,-57.2,-10.6C-54.9,-27.1,-53.1,-44.1,-43.7,-54.5C-34.2,-65,-17.1,-68.8,0.7,-69.6C18.5,-70.5,37.1,-68.4,52.7,-59Z';
+const { index, text = '', icons, variant = 'default' } = Astro.props;
 
-/* Blob morph targets, lifted verbatim from the theme's src/js/initAnimations.js.
-   The live site drove these with a GSAP timeline (repeat:-1, 4s linear legs:
-   start → start → middle → end → start, staggered by index/10). GSAP is gone in
-   the rebuild, so the same morph runs as native SMIL — every path here shares the
-   BLOB's exact command signature (M + 9×C + Z), which is what makes `d`
-   interpolation legal without a morph plugin.
-   The theme picked `middle`/`end` at random per tile; a static build can't, so
-   they're assigned deterministically — offset by 3 so no tile repeats a shape and
-   the four blobs never travel in lockstep. */
-const MORPH = [
-  'M42.4,-52.3C52.7,-42,57.1,-26.4,58.8,-11.2C60.5,4.1,59.6,19,51.7,27.2C43.8,35.4,28.9,37,14.8,43.4C0.6,49.7,-12.8,60.9,-17.3,55.7C-21.8,50.5,-17.3,29,-14.5,16.7C-11.8,4.4,-10.7,1.3,-12.9,-5C-15,-11.3,-20.3,-20.9,-18.7,-32.7C-17.1,-44.6,-8.5,-58.6,3.8,-63.1C16.1,-67.6,32.2,-62.6,42.4,-52.3Z',
-  'M47.9,-52.3C64,-43.7,80.2,-30.3,78.3,-17.3C76.5,-4.3,56.5,8.4,42,15.6C27.5,22.8,18.5,24.5,8.7,31.4C-1.2,38.3,-12,50.3,-22.7,51.2C-33.4,52.2,-44.1,41.9,-48.1,30.1C-52,18.4,-49.2,5.1,-48.5,-10.3C-47.9,-25.7,-49.4,-43.2,-41.7,-53.3C-34,-63.5,-17,-66.2,-0.5,-65.6C15.9,-65,31.9,-61,47.9,-52.3Z',
-  'M16.4,-15.5C24.2,-12.9,35.7,-10.6,43.7,-2.2C51.7,6.2,56.2,20.6,49.4,24.8C42.5,28.9,24.3,22.7,12.6,21.1C0.9,19.6,-4.3,22.7,-14.9,25.5C-25.6,28.3,-41.7,30.9,-52.5,24.4C-63.4,17.9,-68.8,2.4,-69.7,-15.7C-70.6,-33.8,-66.8,-54.5,-54.4,-56.3C-42,-58.1,-21,-41,-8.4,-31C4.3,-21,8.5,-18.1,16.4,-15.5Z',
-  'M47.8,-55C58.5,-48.1,61.2,-29.7,66.2,-10.3C71.3,9.1,78.8,29.5,72,41.8C65.1,54,43.9,58.3,24.6,63.6C5.2,68.9,-12.3,75.3,-25.3,70.3C-38.3,65.2,-46.8,48.6,-57.1,32.3C-67.3,16,-79.3,-0.1,-76.8,-13.4C-74.3,-26.8,-57.4,-37.6,-42.2,-43.6C-27,-49.7,-13.5,-51.1,2.5,-54.1C18.6,-57.2,37.2,-61.8,47.8,-55Z',
-  'M49.2,-60.1C63.2,-47,73.3,-30.9,77.4,-12.9C81.4,5.1,79.4,24.9,69.9,39.5C60.5,54.2,43.6,63.8,26,69.4C8.4,74.9,-10,76.3,-27.7,71.8C-45.5,67.2,-62.6,56.6,-71.8,41.2C-81.1,25.8,-82.4,5.5,-77.8,-12.5C-73.2,-30.6,-62.7,-46.4,-48.7,-59.4C-34.8,-72.5,-17.4,-82.8,0.1,-83C17.7,-83.2,35.3,-73.2,49.2,-60.1Z',
-  'M55.9,-67.1C70.7,-54.2,79.7,-34.9,83.6,-14.5C87.6,6,86.5,27.7,76.8,44.3C67.1,60.8,48.8,72.4,29,79.6C9.1,86.9,-12.4,89.9,-31.7,84.1C-51,78.4,-68.2,63.8,-78.5,45.5C-88.8,27.2,-92.3,5.2,-87.9,-14.8C-83.5,-34.7,-71.2,-52.5,-55.3,-65.1C-39.3,-77.8,-19.6,-85.4,0.5,-85.9C20.6,-86.5,41.1,-80,55.9,-67.1Z',
-];
-const blobCycle = (i: number) =>
-  `${BLOB};${BLOB};${MORPH[i % MORPH.length]};${MORPH[(i + 3) % MORPH.length]};${BLOB}`;
+/* The four technologies, each to the Lucide glyph that says what it does. */
+const iconFor = (title: string): IconName => {
+  const t = title.toLowerCase();
+  if (t.includes('always')) return 'infinity';
+  if (t.includes('signal')) return 'bell-ring';
+  if (t.includes('chain')) return 'workflow';
+  return 'brain-circuit';
+};
 
-/* extract an embedded case-study <a> from a tile's text field */
+/* an embedded case-study <a> inside a logo tile's text field */
 const linkOf = (html: string | undefined) => {
   if (!html) return null;
   const m = html.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/s);
@@ -52,31 +45,28 @@ const stripTags = (s: string) => (s || '').replace(/<[^>]+>/g, '').trim();
 
 {
   variant === 'logos' ? (
-    <section class="gi-clients" id={`section${index}`} data-scroll data-scroll-repeat>
-      <div class="container-fluid py-10">
-        <div class="row pt-10">
-          <div class="col-lg-8 mx-auto text-center paragraph gi-clients-head" data-scroll data-scroll-opacity>
-            <Fragment set:html={text} />
-          </div>
-        </div>
-        <div class="gi-logo-wall" data-scroll data-scroll-opacity>
+    <section class="logos section surface-white" id={`section${index}`}>
+      <div class="container">
+        <div class="logos-head prose" data-reveal set:html={clean(text)} />
+        <div class="logos-wall" data-reveal>
           {icons.map((tile) => {
             const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
             const cs = linkOf(tile.text);
             return (
-              <div class="gi-logo-cell">
+              <div class:list={['logos-cell', { 'logos-cell--case': cs }]}>
                 {img && mediaSrc(img) && (
                   <img
-                    class="gi-logo"
+                    class="logos-img"
                     src={mediaSrc(img)}
                     alt={mediaAlt(img) || stripTags(tile.title)}
                     title={stripTags(tile.title)}
                     loading="lazy"
+                    decoding="async"
                     {...(mediaDims(img) ?? {})}
                   />
                 )}
                 {cs && (
-                  <a class="gi-logo-link" href={cs.url}>
+                  <a class="logos-link" href={cs.url}>
                     {cs.label}
                   </a>
                 )}
@@ -87,217 +77,194 @@ const stripTags = (s: string) => (s || '').replace(/<[^>]+>/g, '').trim();
       </div>
     </section>
   ) : (
-    <section
-      class="icons"
-      style={`background-color: ${bg}`}
-      id={`section${index}`}
-      data-scroll
-      data-scroll-repeat
-    >
-      <div class="container-fluid py-10">
-        <div class="row pt-10">
-          <div class="col-md-6 mx-auto paragraph" data-scroll data-scroll-opacity>
-            <Fragment set:html={text} />
-          </div>
-        </div>
-        <div class="row pb-md-6">
-          {icons.map((tile, i) => {
-            const img = tile.icon && typeof tile.icon === 'object' ? tile.icon : null;
-            return (
-              <div
-                class="col-md-6 col-lg-3 text-center paragraph hover-underline pt-10 mt-10 mt-lg-0"
-                data-scroll
-                data-scroll-opacity
-              >
-                <div data-scroll data-scroll-opacity class="position-relative">
-                  <svg
-                    class="icons-svg"
-                    viewBox="0 0 200 200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path stroke="#F3F4FB" stroke-width="1" fill="none" d={BLOB} transform="translate(100 100)">
-                      <animate
-                        attributeName="d"
-                        values={blobCycle(i)}
-                        keyTimes="0;0.25;0.5;0.75;1"
-                        dur="16s"
-                        begin={`${i / 10}s`}
-                        calcMode="linear"
-                        repeatCount="indefinite"
-                      />
-                    </path>
-                  </svg>
-                  {img && mediaSrc(img) && (
-                    <div class="ratio mb-4 mx-auto" style="width:  26px; height:  24px; --bs-aspect-ratio: 100%;">
-                      <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" class="lazyload" {...(mediaDims(img) ?? {})} />
-                    </div>
-                  )}
-                  <strong class="mb-2">{tile.title}</strong>
-                  <Fragment set:html={tile.text ?? ''} />
-                </div>
+    <section class="tech section surface-ink" id={`section${index}`}>
+      <span class="mass tech-mass" style="--mass-color: var(--mint-500)" aria-hidden="true" />
+      <div class="container tech-in">
+        <div class="tech-head prose" data-reveal set:html={clean(text)} />
+        <ul class="tech-grid">
+          {icons.map((tile, i) => (
+            <li class="tech-card" data-reveal style={`transition-delay:${i * 60}ms`}>
+              <div class="tech-top">
+                <span class="tech-icon">
+                  <Icon name={iconFor(tile.title)} size={24} />
+                </span>
+                <span class="label-num">{String(i + 1).padStart(2, '0')}</span>
               </div>
-            );
-          })}
-
-          {l && (
-            <div class="col-12 mt-10 pt-6 d-flex justify-content-center" data-scroll data-scroll-opacity>
-              <a
-                class="btn btn-arrow btn-text"
-                href={l.url}
-                target={linkTarget(l.url, l.target)}
-                rel={linkRel(linkTarget(l.url, l.target))}
-              >
-                <span>{l.title}</span>
-                {opensNewTab(l.url, l.target) && (
-                  <span class="visually-hidden">{s('a11y.newTab')}</span>
-                )}
-              </a>
-            </div>
-          )}
-        </div>
+              <h3 class="tech-title">{tile.title}</h3>
+              <div class="tech-text" set:html={clean(tile.text)} />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
 }
 
 <style>
-  .gi-clients {
-    background: var(--gi-bg-light);
+  /* ---- technology band ---- */
+  .tech {
+    overflow: hidden;
   }
-  .gi-clients-head {
-    margin-bottom: 1rem;
+  .tech-mass {
+    width: clamp(320px, 38vw, 560px);
+    right: clamp(-220px, -12vw, -120px);
+    top: clamp(-360px, -22vw, -180px);
   }
-  .gi-logo-wall {
-    max-width: 1080px;
-    margin: 2.5rem auto 0;
+  /* The headline is mint; it must never cross the mint mass. On narrow
+     screens the arc gets its own room above the heading. */
+  @media (max-width: 899.98px) {
+    .tech {
+      padding-top: 150px;
+    }
+    .tech-mass {
+      width: 300px;
+      right: -110px;
+      top: -180px;
+    }
+  }
+  .tech-in {
+    position: relative;
+    z-index: var(--z-raised);
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    border-top: 1px solid #ececf3;
-    border-left: 1px solid #ececf3;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 64px);
   }
-  .gi-logo-cell {
-    border-right: 1px solid #ececf3;
-    border-bottom: 1px solid #ececf3;
-    min-height: 132px;
-    padding: 1.5rem 1.25rem;
+  /* wide enough for "Technologie, których nie znajdziesz" (bound with
+     no-break spaces in the copy) to hold one line at 56px */
+  .tech-head {
+    max-width: 920px;
+  }
+  /* Headlines on the mass are mint. */
+  .tech-head :global(h2) {
+    color: var(--mint-500);
+    font-size: var(--fs-h1);
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+  /* The copy binds "których nie znajdziesz" with no-break spaces: 347px at
+     34px, wider than a 320px phone's column. Below 600px the size follows
+     the viewport so the bound phrase always fits on one line. */
+  @media (max-width: 599.98px) {
+    .tech-head :global(h2) {
+      font-size: clamp(26px, 8.2vw, 34px);
+    }
+  }
+  .tech-head :global(p) {
+    font-size: 18px;
+    color: var(--on-ink-soft);
+  }
+  /* Four technologies: one row of four, two of two, or a column — never a
+     row of three with one left over. */
+  .tech-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 600px) {
+    .tech-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .tech-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .tech-card {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--ink-700);
+  }
+  .tech-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .tech-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--ink-900);
+    color: var(--on-ink);
+  }
+  /* slate-400 is 3.95:1 on ink-700 — under AA for 12px — so the count
+     steps up to on-ink-soft here (it keeps slate-400 on ink-900). */
+  .tech-card .label-num {
+    color: var(--on-ink-soft);
+  }
+  .tech-title {
+    font: 600 20px / 1.2 var(--font-sans);
+    letter-spacing: -0.025em;
+    color: var(--on-ink);
+  }
+  .tech-text {
+    font: 400 var(--fs-body) / 1.55 var(--font-sans);
+    color: var(--on-ink-soft);
+  }
+
+  /* ---- client wall ---- */
+  .logos-head {
+    max-width: 720px;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .logos-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(50%, 176px), 1fr));
+    border-top: 1px solid var(--mist-200);
+    border-left: 1px solid var(--mist-200);
+  }
+  .logos-cell {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
+    gap: 14px;
+    min-height: 136px;
+    padding: 24px 16px;
+    border-right: 1px solid var(--mist-200);
+    border-bottom: 1px solid var(--mist-200);
   }
-  .gi-logo {
-    max-width: 148px;
-    max-height: 52px;
+  @media (max-width: 599.98px) {
+    .logos-cell {
+      min-height: 104px;
+      padding: 18px 10px;
+    }
+  }
+  .logos-img {
     width: auto;
-    height: auto;
+    max-width: 128px;
+    max-height: 56px;
     object-fit: contain;
     filter: grayscale(1);
-    opacity: 0.62;
+    opacity: 0.75;
     transition:
-      filter 0.25s ease,
-      opacity 0.25s ease,
-      transform 0.25s ease;
+      filter var(--dur-base) ease,
+      opacity var(--dur-base) ease;
   }
-  .gi-logo-cell:hover .gi-logo {
-    filter: grayscale(0);
+  .logos-cell:hover .logos-img {
+    filter: none;
     opacity: 1;
-    transform: translateY(-2px);
   }
-  .gi-logo-link {
-    /* inline-flex + min-height instead of bare inline text: the link is a
-       standalone action in the wall, so it gets a real 44px touch target */
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--gi-green-deep);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: opacity 0.2s ease;
+  .logos-link {
+    font: 600 13px / 1.2 var(--font-sans);
+    color: var(--ink-900);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
-  .gi-logo-link:focus-visible {
-    outline: 2px solid var(--gi-green-deep);
-    outline-offset: 2px;
+  .logos-link:hover {
+    color: var(--mint-800);
   }
-  .gi-logo-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  @media (max-width: 900px) {
-    .gi-logo-wall {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  @media (max-width: 600px) {
-    .gi-logo-wall {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .gi-logo-cell {
-      min-height: 108px;
-      padding: 1.1rem 0.75rem;
-    }
-    .gi-logo {
-      max-width: 120px;
-      max-height: 42px;
-    }
-  }
+
   @media (prefers-reduced-motion: reduce) {
-    .gi-logo {
+    .logos-img {
       transition: none;
     }
   }
 </style>
-
-<script>
-  /* Blob morph control.
-     The morph itself is declarative SMIL in the markup above, so it works with
-     JS off — this only *gates* it, which CSS cannot do for SMIL:
-       1. prefers-reduced-motion: reduce → frozen at t=0, i.e. the static blob
-          the page shipped before this animation existed.
-       2. off-screen → paused. The tech-tiles band is one section of a long page;
-          four continuously morphing paths have no business burning raster work
-          while the visitor is reading the hero or the pricing table.
-     Both use pauseAnimations()/unpauseAnimations() rather than stripping the
-     <animate> nodes, so a mid-session change to the OS motion setting is
-     reversible without re-authoring the DOM. */
-  const svgs = Array.from(document.querySelectorAll<SVGSVGElement>('svg.icons-svg'));
-  if (svgs.length) {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const visible = new WeakSet<SVGSVGElement>();
-
-    const sync = (svg: SVGSVGElement) => {
-      if (mq.matches) {
-        svg.setCurrentTime(0);
-        svg.pauseAnimations();
-      } else if (visible.has(svg)) {
-        svg.unpauseAnimations();
-      } else {
-        svg.pauseAnimations();
-      }
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            const svg = e.target as SVGSVGElement;
-            if (e.isIntersecting) visible.add(svg);
-            else visible.delete(svg);
-            sync(svg);
-          }
-        },
-        { rootMargin: '200px 0px' }
-      );
-      svgs.forEach((svg) => io.observe(svg));
-    } else {
-      svgs.forEach((svg) => visible.add(svg));
-    }
-
-    svgs.forEach(sync);
-    mq.addEventListener('change', () => svgs.forEach(sync));
-  }
-</script>

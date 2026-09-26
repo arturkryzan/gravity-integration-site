@@ -1,26 +1,33 @@
 ---
-/* Site header: logo + hamburger + full-screen nav.
-   Markup ported 1:1 from the live theme (nav.php + rendered output).
-
-   Labels come from the ui.ts dictionary and hrefs from linkUrl(), so an
-   English page gets an English nav that links to published English pages —
-   and falls back to the Polish URL for anything not yet translated (the rule
-   is documented on linkUrl). The privacy policy is Polish-only by decision, so
-   its link never localises; the label names it in the reader's language and
-   says which language the document is in, and the anchor carries hreflang="pl"
-   so that is machine-readable rather than only stated in the text.
-
-   A page the locale doesn't offer at all — the ROI calculator in English —
-   gets no entry in `href`, so its <li> renders as nothing. See NOT_OFFERED in
-   routes.ts for why that is a different case from the privacy policy. */
+/* Site header, v2: a visible top bar.
+ *
+ * v1 hid the whole site behind a MENU button and a fullscreen overlay. The
+ * buyers this site speaks to arrive with one question — does it connect MY
+ * system, and what does it cost — so the pages that answer it are on the bar:
+ * integrations, technology, pricing, proof, the ESB explainer, contact. The
+ * download is the one action every page points at, so it is the bar's only
+ * button.
+ *
+ * Below 1100px the links fold into a fullscreen ink menu. It is a modal
+ * <dialog>: showModal() gives focus containment, inert background and Escape
+ * for free, which three hand-rolled listeners in v1 only approximated. With
+ * JS off the menu button is hidden and the link row scrolls sideways instead,
+ * so no visitor is ever left without navigation.
+ *
+ * Labels come from ui.ts and hrefs from linkUrl(), so an English page links
+ * to English pages; a page the locale doesn't offer (the ROI calculator in
+ * English) has no href and renders no item. The privacy policy is Polish-only
+ * by decision — its link carries hreflang="pl". */
 import LangSwitch from './LangSwitch.astro';
+import Wordmark from './ui/Wordmark.astro';
+import Icon from './ui/Icon.astro';
+import site from '../data/site.json';
 import { isOffered, linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
 
 interface Props {
-  /** Passed through to the language switcher so it can offer *this* page in the
-   *  other language rather than dumping the reader on a home page. Site.astro
-   *  supplies it; the 404 doesn't have one. */
+  /** Threaded to the language switcher so it can offer *this* page in the
+   *  other language. The 404 has none. */
   slug?: string;
 }
 const { slug } = Astro.props;
@@ -28,148 +35,568 @@ const { slug } = Astro.props;
 const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
 
-/* One lookup per nav target; the keys are the language-neutral slugs. */
 const NAV_SLUGS = [
   'home',
-  'kalkulator',
-  'pobieranie',
-  'kontakt',
+  'integracje',
   'technologia',
-  'czym-jest-esb',
   'cennik',
   'case-studies',
-  'integracje',
+  'czym-jest-esb',
+  'kalkulator',
+  'kontakt',
+  'pobieranie',
   'polityka-prywatnosci',
 ] as const;
-/* Partial, not Record: a slug this locale doesn't offer is simply absent, and
-   the markup tests for it. Filtering here rather than in the markup keeps the
-   two nav lists free of locale conditions — they ask "is there a link?", not
-   "which language is this?" */
+type NavSlug = (typeof NAV_SLUGS)[number];
+
 const href = Object.fromEntries(
   await Promise.all(
     NAV_SLUGS.filter((k) => isOffered(k, lang)).map(async (k) => [k, await linkUrl(k, lang)]),
   ),
-) as Partial<Record<(typeof NAV_SLUGS)[number], string>>;
+) as Partial<Record<NavSlug, string>>;
 
-const year = new Date().getFullYear();
-
-/* `aria-current="page"` was hard-coded onto the home link, which meant it was
-   true on 1 of the 18 routes and a lie on the other 17: a screen reader
-   announced "Strona główna, current page" while the reader was on /cennik/.
-   That is worse than having no current-page marker at all, because the marker
-   is the thing the reader trusts to tell them where they are.
-
-   The cause wasn't the one attribute, it was that "which page am I on" had no
-   implementation — the attribute was a hand-placed decoration, so it could
-   only ever be right by luck. Derive it once from the URL and let every nav
-   link ask the same question. Trailing slashes are normalised because the
-   routes ship with one and the home route is bare "/". */
+/* "Which page am I on" derived once from the URL, so aria-current is true on
+   exactly one link rather than hand-placed. */
 const here = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const current = (url?: string) =>
   url && (url.replace(/\/+$/, '') || '/') === here ? 'page' : undefined;
+
+/* The bar. Order follows the buyer's questions: does it connect my systems,
+   what is it, what does it cost, who runs it, what is an ESB, how do I talk
+   to you. */
+const bar: Array<[NavSlug, string]> = [
+  ['integracje', s('nav.integrations')],
+  ['technologia', s('nav.technology')],
+  ['cennik', s('nav.pricing')],
+  ['case-studies', s('nav.caseStudies')],
+  ['czym-jest-esb', s('nav.whatIsEsb')],
+  ['kontakt', s('nav.contact')],
+];
+
+/* The menu carries everything, including the pages that don't earn a place
+   on the bar. */
+const menu: Array<[NavSlug, string]> = [
+  ['home', s('nav.home')],
+  ['integracje', s('nav.integrations')],
+  ['technologia', s('nav.technology')],
+  ['cennik', s('nav.pricing')],
+  ['case-studies', s('nav.caseStudies')],
+  ['czym-jest-esb', s('nav.whatIsEsb')],
+  ['kalkulator', s('nav.roiCalculator')],
+  ['kontakt', s('nav.contact')],
+];
+const homeHref = href.home ?? '/';
+const year = new Date().getFullYear();
 ---
-<header data-scroll-section>
-	<div class="container-fluid pb-lg-0">
-		<div class="row align-items-center">
-			<div class="col-6">
-				{/* The mark is an inline <svg> of bare <path>s — no text node, no
-				    <title> — so the link had no accessible name at all and read as
-				    "link" on every page. The footer's logo is an <img> and already
-				    carried one through its alt. */}
-				<a href="/" class="logo d-inline-block" aria-label={s('nav.logoHome')}>
-					<svg width="260" height="56" viewBox="0 0 222 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M48.9939 18.76V30.7918C48.9939 33.9848 47.4263 35.8648 43.059 35.8648C39.4842 35.8648 37.5637 34.303 37.3439 31.5611H39.2412C39.3858 33.1519 40.3981 34.3493 43.059 34.3493C45.8934 34.3493 47.0735 33.3659 47.0735 30.7976V28.1714C46.2579 29.7332 44.7597 30.4852 42.602 30.4852C38.8363 30.4852 37.0547 28.1309 37.0547 24.4346C37.0547 20.7383 38.8363 18.4071 42.602 18.4071C44.7886 18.4071 46.2579 19.269 47.0735 20.8077V18.76H48.9939ZM47.0735 24.4519C47.0735 21.2068 45.6042 19.9342 43.059 19.9342C40.3229 19.9342 39.0099 21.2068 39.0099 24.4519C39.0099 27.6971 40.3056 28.987 43.059 28.987C45.6042 28.987 47.0735 27.7144 47.0735 24.4519ZM58.0004 18.5922V20.4895H57.4972C53.9455 20.3681 53.1762 22.9595 53.1762 26.3493V30.7686H51.2499V18.76H53.1762V21.9299C53.8934 19.9342 55.2875 18.5922 57.5666 18.5922H58.0004ZM70.2521 18.76V30.7686H68.3316V28.4548C67.5102 30.1613 66.0178 31.1446 63.7676 31.1446C59.9961 31.1446 58.2665 28.4548 58.2665 24.7817C58.2665 21.1085 60.0019 18.4187 63.7676 18.4187C66.0004 18.4187 67.5102 19.4021 68.3316 21.1085V18.7947L70.2521 18.76ZM68.3316 24.7643C68.3316 21.3746 66.7177 19.9342 64.1494 19.9342C61.4133 19.9342 60.2101 21.5192 60.2101 24.7643C60.2101 28.0094 61.4133 29.5886 64.1494 29.5886C66.7177 29.5886 68.3316 28.1483 68.3316 24.7643ZM83.2904 18.76L78.5644 30.7686H76.0135L71.2875 18.76H73.3005L77.3497 29.0853L81.3988 18.76H83.2904ZM84.1118 14.7976H86.5876V16.7759H84.1118V14.7976ZM84.3779 18.76H86.2983V30.7686H84.3779V18.76ZM89.584 27.9574V20.2466H87.2991V19.188L89.7517 18.6096L90.469 16.1107H91.5044V18.7773H95.4379V20.2466H91.4755V29.2068H95.2933V30.7686H92.4589C90.1393 30.7686 89.5435 29.8778 89.5435 27.9574H89.584ZM107.979 18.76L102.333 32.7585C101.593 34.679 101.113 35.5698 98.9491 35.5698H96.67V34.008H100.008L101.327 30.7686H100.644L95.8891 18.76H97.9021L101.581 28.0152L101.986 29.1721L102.35 28.0152L106.07 18.76H107.979ZM108.123 28.6515H110.622V30.7686H108.123V28.6515ZM111.635 14.7686H114.105V16.7759H111.635V14.7686ZM111.895 18.731H113.815V30.7686H111.895V18.731ZM126.935 23.0752V30.7686H125.008V23.324C125.008 20.7498 123.851 19.9805 122.116 19.9805C119.449 19.9805 118.032 22.0456 118.032 26.1815V30.7686H116.112V18.76H118.032V21.9067C118.778 19.7202 120.271 18.3724 122.66 18.3724C125.645 18.3724 126.917 20.0094 126.917 23.1041L126.935 23.0752ZM130.006 27.9284V20.2466H127.727V19.188L130.174 18.6096L130.897 16.1107H131.927V18.7773H135.895V20.2466H131.927V29.2068H135.75V30.7686H132.916C130.59 30.7686 129.989 29.8778 129.989 27.9574L130.006 27.9284ZM146.076 27.0376H147.811C147.574 28.8655 146.18 31.1215 142.194 31.1215C138.064 31.1215 136.236 28.3334 136.236 24.7065C136.236 21.0796 138.209 18.3435 142.194 18.3435C145.798 18.3435 147.834 20.8193 147.834 24.3247C147.843 24.6051 147.827 24.8857 147.788 25.1634H138.133C138.278 28.4548 139.869 29.658 142.264 29.658C144.658 29.658 145.7 28.5821 146.058 27.0665L146.076 27.0376ZM138.197 23.7231H145.983C145.885 20.9639 144.468 19.807 142.235 19.807C140.002 19.807 138.446 20.9176 138.18 23.752L138.197 23.7231ZM160.994 18.731V30.7629C160.994 33.9559 159.432 35.807 155.059 35.807C151.484 35.807 149.564 34.2451 149.344 31.5033H151.241C151.386 33.094 152.398 34.2914 155.059 34.2914C157.893 34.2914 159.073 33.308 159.073 30.7397V28.1714C158.258 29.7332 156.76 30.4852 154.602 30.4852C150.836 30.4852 149.055 28.1309 149.055 24.4346C149.055 20.7383 150.836 18.4071 154.602 18.4071C156.789 18.4071 158.258 19.269 159.073 20.8077V18.76L160.994 18.731ZM159.068 24.4519C159.068 21.2068 157.598 19.9342 155.053 19.9342C152.317 19.9342 151.004 21.2068 151.004 24.4519C151.004 27.6971 152.3 28.987 155.053 28.987C157.587 28.987 159.068 27.7144 159.068 24.4519ZM169.995 18.5922V20.4895H169.48C165.922 20.3681 165.159 22.9595 165.159 26.3493V30.7686H163.233V18.76H165.159V21.9299C165.876 19.9342 167.27 18.5922 169.549 18.5922H169.995ZM182.246 18.76V30.7686H180.326V28.4548C179.504 30.1613 178.012 31.1446 175.762 31.1446C171.99 31.1446 170.261 28.4548 170.261 24.7817C170.261 21.1085 171.996 18.4187 175.762 18.4187C177.995 18.4187 179.504 19.4021 180.326 21.1085V18.7947L182.246 18.76ZM180.326 24.7643C180.326 21.3746 178.712 19.9342 176.144 19.9342C173.407 19.9342 172.204 21.5192 172.204 24.7643C172.204 28.0094 173.407 29.5886 176.144 29.5886C178.7 29.5886 180.314 28.1483 180.314 24.7643H180.326ZM185.729 27.9574V20.2466H183.449V19.188L185.896 18.6096L186.619 16.1107H187.649V18.7773H191.611V20.2466H187.649V29.2068H191.461V30.7686H188.627C186.319 30.7686 185.717 29.8778 185.717 27.9574H185.729ZM192.838 14.7976H195.313V16.7759H192.838V14.7976ZM193.104 18.76H195.024V30.7686H193.104V18.76ZM196.829 24.7354C196.829 21.1605 198.819 18.3724 202.88 18.3724C206.94 18.3724 208.907 21.1837 208.907 24.7354C208.907 28.2871 206.911 31.1504 202.88 31.1504C198.848 31.1504 196.817 28.3449 196.817 24.7354H196.829ZM202.88 29.5886C205.593 29.5886 206.964 28.1251 206.964 24.7643C206.964 21.4035 205.593 19.9342 202.88 19.9342C200.167 19.9342 198.773 21.3746 198.773 24.7643C198.773 28.154 200.138 29.5886 202.868 29.5886H202.88ZM221.28 23.1041V30.7686H219.342V23.324C219.342 20.7498 218.214 19.9805 216.45 19.9805C213.783 19.9805 212.366 22.0456 212.366 26.1815V30.7686H210.446V18.76H212.366V21.9067C213.112 19.7202 214.605 18.3724 216.994 18.3724C219.996 18.3724 221.269 20.0094 221.269 23.1041H221.28Z" fill="white"/>
-<path d="M10.6762 32.3536C12.3286 33.3086 14.2271 33.752 16.1316 33.6279C18.0361 33.5038 19.861 32.8176 21.3755 31.6562C22.89 30.4948 24.026 28.9104 24.6399 27.1033C25.2538 25.2962 25.318 23.3476 24.8243 21.504C24.3306 19.6604 23.3013 18.0047 21.8665 16.7461C20.4317 15.4876 18.6559 14.6829 16.7637 14.4337C14.8715 14.1846 12.9479 14.5022 11.2362 15.3464C9.52453 16.1906 8.10167 17.5235 7.1476 19.1764C5.86883 21.3919 5.52219 24.0245 6.18386 26.4955C6.84554 28.9665 8.46138 31.0736 10.6762 32.3536Z" fill="#27EA93"/>
-<path d="M26.6882 7.79826C27.4575 7.88099 28.234 7.73363 28.9195 7.37483C29.605 7.01603 30.1687 6.46193 30.5392 5.78265C30.9097 5.10337 31.0703 4.32945 31.0007 3.55884C30.9312 2.78823 30.6346 2.05558 30.1485 1.45361C29.6624 0.851645 29.0086 0.40742 28.2699 0.177163C27.5312 -0.053094 26.7408 -0.0590325 25.9988 0.160099C25.2567 0.379231 24.5963 0.813582 24.1012 1.40818C23.6061 2.00278 23.2986 2.73089 23.2174 3.50036C23.1629 4.0105 23.2094 4.52638 23.3544 5.01852C23.4993 5.51066 23.7398 5.96942 24.0621 6.36857C24.3844 6.76771 24.7823 7.09943 25.2329 7.34474C25.6835 7.59006 26.178 7.74417 26.6882 7.79826Z" fill="#27EA93" class="logo-path0"/>
-<path d="M3.49284 47.9775C4.26215 48.0603 5.0387 47.9129 5.72422 47.5541C6.40974 47.1953 6.9734 46.6412 7.34388 45.9619C7.71435 45.2826 7.87498 44.5087 7.80543 43.7381C7.73587 42.9675 7.43927 42.2349 6.95316 41.6329C6.46705 41.0309 5.81328 40.5867 5.0746 40.3564C4.33591 40.1262 3.54552 40.1202 2.80346 40.3394C2.0614 40.5585 1.40103 40.9929 0.90593 41.5875C0.410828 42.1821 0.103252 42.9102 0.0221295 43.6796C-0.0324147 44.1898 0.0141104 44.7057 0.159046 45.1978C0.303981 45.6899 0.544485 46.1487 0.86681 46.5478C1.18914 46.947 1.58696 47.2787 2.03755 47.524C2.48814 47.7693 2.98266 47.9234 3.49284 47.9775Z" fill="#27EA93" class="logo-path1" />
-</svg>
-				</a>
-			</div>
-			<div class="col-6 text-end position-relative">
-				<button aria-expanded="false" class="hamburger d-flex align-items-center">
-					<span class="btn btn-text me-4">{s('nav.menuOpen')}</span>
-					<span class="btn btn-text me-4">{s('nav.menuClose')}</span>
-					<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="20" cy="20" r="19.5" stroke="white"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M25.3692 11.9118C25.7554 11.9533 26.1451 11.8792 26.4892 11.699C26.8332 11.5187 27.1159 11.2404 27.3016 10.8992C27.4873 10.5581 27.5675 10.1695 27.5321 9.78278C27.4967 9.39602 27.3473 9.02846 27.1028 8.7267C26.8583 8.42493 26.5297 8.20254 26.1587 8.08771C25.7877 7.97287 25.3909 7.97076 25.0187 8.08164C24.6465 8.19252 24.3156 8.4114 24.0679 8.71055C23.8202 9.00969 23.6669 9.37563 23.6274 9.762C23.5746 10.2778 23.7283 10.7935 24.0547 11.1964C24.3811 11.5992 24.8537 11.8565 25.3692 11.9118ZM17.3556 24.1754C18.182 24.6528 19.1315 24.8744 20.0839 24.8121C21.0363 24.7499 21.9488 24.4066 22.7061 23.8257C23.4634 23.2448 24.0314 22.4524 24.3383 21.5487C24.6452 20.6449 24.6772 19.6705 24.4303 18.7486C24.1834 17.8266 23.6686 16.9986 22.951 16.3693C22.2335 15.74 21.3454 15.3376 20.3991 15.213C19.4529 15.0884 18.4909 15.2472 17.6349 15.6694C16.7789 16.0915 16.0674 16.758 15.5902 17.5846C14.9516 18.693 14.7788 20.0095 15.1098 21.2451C15.4407 22.4808 16.2484 23.5346 17.3556 24.1754ZM14.8813 31.7711C14.5386 31.953 14.1497 32.0292 13.7638 31.99H13.752C13.2365 31.9346 12.7639 31.6774 12.4375 31.2745C12.1111 30.8717 11.9574 30.356 12.0102 29.8402C12.0494 29.4542 12.2022 29.0886 12.4492 28.7895C12.6962 28.4903 13.0264 28.2712 13.398 28.1597C13.7695 28.0482 14.1658 28.0494 14.5367 28.1632C14.9076 28.2769 15.2364 28.498 15.4816 28.7986C15.7269 29.0993 15.8774 29.4658 15.9143 29.852C15.9512 30.2382 15.8727 30.6266 15.6889 30.9682C15.505 31.3098 15.224 31.5892 14.8813 31.7711Z" fill="white"/>
-</svg>
-					<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M14 14L26 26" stroke="white"/>
-<path d="M14 26L26 14" stroke="white"/>
-<circle cx="20" cy="20" r="19.5" stroke="white"/>
-</svg>
-				</button>
-			</div>
-		</div>
-	</div>
+
+<header class="site-header" data-header>
+  <div class="container site-header-in">
+    <a href={homeHref} class="site-logo" aria-label={s('nav.logoHome')}>
+      <Wordmark size={20} />
+    </a>
+
+    <nav class="site-nav" aria-label={s('nav.aria')}>
+      <ul>
+        {
+          bar.map(
+            ([k, label]) =>
+              href[k] && (
+                <li>
+                  <a href={href[k]} aria-current={current(href[k])}>
+                    {label}
+                  </a>
+                </li>
+              ),
+          )
+        }
+      </ul>
+    </nav>
+
+    <div class="site-actions">
+      <LangSwitch slug={slug} class="site-lang" short />
+      {
+        href.pobieranie && (
+          <a class="btn btn--primary btn--sm site-cta" href={href.pobieranie} aria-current={current(href.pobieranie)}>
+            {s('hero.download')}
+            <span class="btn-dot" aria-hidden="true" />
+          </a>
+        )
+      }
+      <button
+        type="button"
+        class="menu-btn"
+        aria-haspopup="dialog"
+        aria-controls="site-menu"
+        aria-expanded="false"
+        data-menu-open
+      >
+        <span class="menu-btn-label">{s('nav.menuOpen')}</span>
+        <span class="menu-btn-icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
 </header>
-<section class="nav-main">
-	<div class="container-fluid h-100 pe-lg-0">
-		<div class="row h-100 me-lg-0">
-			<div class="col-md-5 col-pull">
-				<span class="overlay"></span>
-				<img src="/theme/static/linesmenu.svg" alt="" width="793" height="390" loading="lazy" decoding="async" class="img-lines" role="presentation" aria-hidden="true">
-				<div class="col-pull-inner d-flex flex-column col">
-					<div class="nav-big">
-						<ul>
-							<li><a href={href.home} aria-current={current(href.home)}>{s('nav.home')}</a></li>
-{href.kalkulator && <li><a href={href.kalkulator} aria-current={current(href.kalkulator)}>{s('nav.roiCalculator')}</a></li>}
-{/* Download is the one item in this list the whole site is pointed at, so it
-    is the one item that carries the brand green. The class is the hook; the
-    colour and the inverted hover live in site.css next to the rest of the
-    nav-big rules. */}
-<li><a class="nav-download" href={href.pobieranie} aria-current={current(href.pobieranie)}>{s('nav.download')}</a></li>
-<li><a href={href.kontakt} aria-current={current(href.kontakt)}>{s('nav.contact')}</a></li>
-						</ul>
-					</div>	
-				</div>
-			</div>
 
-			<div class="col-md-5 col-pull d-flex justify-content-md-center">
-				<span class="overlay"></span>
-				<div class="col-pull-inner d-inline-flex justify-content-between flex-column">
-					<div class="nav-medium">
-						<ul>
-							<li><a href={href.technologia} aria-current={current(href.technologia)}>{s('nav.technology')}</a></li>
-<li><a href={href['czym-jest-esb']} aria-current={current(href['czym-jest-esb'])}>{s('nav.whatIsEsb')}</a></li>
-<li><a href={href.cennik} aria-current={current(href.cennik)}>{s('nav.pricing')}</a></li>
-<li><a href={href['case-studies']} aria-current={current(href['case-studies'])}>{s('nav.caseStudies')}</a></li>
-<li><a href="https://docs.gravity-integration.com" target="_blank" rel="noopener">{s('nav.docs')}<span class="visually-hidden">{s('a11y.newTab')}</span></a></li>
-<li><a href={href.integracje} aria-current={current(href.integracje)}>{s('nav.integrations')}</a></li>
-						</ul>
-					</div>	
-					<div class="nav-small paragraph hover-underline py-10 d-none d-md-block">
-						{/* The switcher carries its own `d-block`, so when it renders nothing
-						    (no published translation) it leaves no gap and no stray <br> —
-						    unlike the privacy link below, which is glued to one. */}
-						<LangSwitch slug={slug} class="mb-4 d-block" />
-						<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block" aria-current={current(href['polityka-prywatnosci'])}>{s('nav.privacy')}</a><br>
-						{s('footer.copyright')} {year} gravity.integration					</div>		
-				</div>
-			</div>
+<dialog id="site-menu" class="site-menu surface-ink" aria-label={s('nav.menuAria')}>
+  <span class="mass site-menu-mass" style="--mass-color: var(--mint-500)" aria-hidden="true"></span>
+  <div class="container site-menu-top">
+    <a href={homeHref} class="site-logo" aria-label={s('nav.logoHome')}>
+      <Wordmark size={20} tone="reversed" />
+    </a>
+    <button type="button" class="menu-btn menu-btn--close" data-menu-close>
+      <span class="menu-btn-label">{s('nav.menuClose')}</span>
+      <Icon name="x" size={18} />
+    </button>
+  </div>
+  <div class="container site-menu-body">
+    <nav aria-label={s('nav.aria')}>
+      <ol class="site-menu-list">
+        {
+          menu.map(
+            ([k, label], i) =>
+              href[k] && (
+                <li>
+                  <a href={href[k]} aria-current={current(href[k])}>
+                    <span class="label-num" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ),
+          )
+        }
+      </ol>
+    </nav>
+    <div class="site-menu-aside">
+      {
+        href.pobieranie && (
+          <a class="btn btn--accent btn--lg" href={href.pobieranie}>
+            {s('hero.download')}
+            <span class="btn-dot" aria-hidden="true" />
+          </a>
+        )
+      }
+      <ul class="site-menu-meta">
+        <li>
+          <a href={site.docs} target="_blank" rel="noopener">
+            {s('nav.docs')}
+            <Icon name="arrow-up-right" size={16} />
+            <span class="visually-hidden">{s('a11y.newTab')}</span>
+          </a>
+        </li>
+        {
+          href['polityka-prywatnosci'] && (
+            <li>
+              <a href={href['polityka-prywatnosci']} hreflang="pl" aria-current={current(href['polityka-prywatnosci'])}>
+                {s('nav.privacy')}
+              </a>
+            </li>
+          )
+        }
+        <li><LangSwitch slug={slug} /></li>
+        <li>
+          <a href={site.linkedin} target="_blank" rel="noopener" aria-label={s('a11y.linkedin')} class="site-menu-social">
+            <Icon name="linkedin" size={18} />
+            LinkedIn
+          </a>
+        </li>
+      </ul>
+      <p class="site-menu-copy">{s('footer.copyright')} {year} gravity.integration</p>
+    </div>
+  </div>
+</dialog>
 
-			<div class="col-md-2 col-pull d-flex flex-column flex-md-row justify-content-md-end">
-				<span class="overlay"></span>
-				  
-<ul class="d-flex flex-md-column socials">
-	
-			<li class="me-6 me-md-0 mb-md-6">
-			<a href="https://www.linkedin.com/showcase/gravityintegration/about/?viewAsMember=true" target="_blank" rel="noopener" aria-label={s('a11y.linkedin')} class="d-inline-block">
-				<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<circle cx="20" cy="20" r="19.5" stroke="white"/>
-					<path d="M14.4773 12.7695C13.5631 12.7695 12.815 13.5176 12.815 14.4319C12.815 15.3462 13.5631 16.0942 14.4773 16.0942C15.3916 16.0942 16.1397 15.3462 16.1397 14.4319C16.1397 13.5176 15.3916 12.7695 14.4773 12.7695ZM27.1111 20.541C26.9033 18.7124 26.0721 17.5903 23.5786 17.5903C22.1241 17.5903 21.1682 18.1306 20.7527 18.8786H20.7111V17.5903H18.0098V19.4189V27.1903H20.7942V22.4111C20.7942 21.1643 21.0436 19.9591 22.5812 19.9591C24.1189 19.9591 24.2436 21.3721 24.2436 22.5358V27.2319H27.1111V21.9124C27.1942 21.4137 27.1527 20.9565 27.1111 20.541ZM12.7734 20.1254V27.1903H16.1397V19.5436V17.5488H12.7734V20.1254Z" fill="white"/>
-				</svg>
-			</a>
-		</li>
-	</ul>		
-				<div class="nav-small paragraph hover-underline pt-5 d-block d-md-none">
-					{/* The mobile twin of the block above — the nav's two columns collapse
-					    at md, and each keeps its own copy rather than one moving. */}
-					<LangSwitch slug={slug} class="mb-4 d-block" />
-					<a href={href['polityka-prywatnosci']} hreflang="pl" class="mb-4 d-inline-block" aria-current={current(href['polityka-prywatnosci'])}>{s('nav.privacy')}</a><br>
-					{s('footer.copyright')} {year} gravity.integration				</div>
-			</div>
-		</div>
-	</div>
-</section>
+<style>
+  /* ---- the bar ------------------------------------------------------------
+     Sticky, not fixed: it sits in flow under the announcement bar, so nothing
+     has to measure anything to avoid overlapping. At the top of the page it
+     takes the colour of the hero beneath it (body[data-hero]); once the page
+     moves it turns white with the system's one allowed line — 1px mist-200. */
+  .site-header {
+    --header-bg: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--header-bg);
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color var(--dur-base) ease,
+      border-color var(--dur-base) ease,
+      transform var(--dur-slow) var(--ease-fall);
+  }
+  :global(body[data-hero='mint']) .site-header {
+    --header-bg: var(--mint-500);
+    --focus-gap: transparent;
+    --focus-ring: var(--ink-900);
+    --underline: var(--ink-900);
+  }
+  :global(body[data-hero='mist']) .site-header {
+    --header-bg: var(--mist-100);
+  }
+  :global(body[data-hero='ink']) .site-header {
+    --header-bg: var(--ink-900);
+  }
+  :global(body.header-solid) .site-header {
+    --header-bg: var(--white);
+    --focus-gap: var(--ink-900);
+    --focus-ring: var(--mint-500);
+    --underline: var(--mint-500);
+    border-bottom-color: var(--mist-200);
+  }
+  :global(body.header-hidden) .site-header {
+    transform: translateY(-100%);
+  }
 
+  .site-header-in {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: var(--header-h);
+  }
+
+  .site-logo {
+    display: inline-flex;
+    flex: none;
+    padding: 6px 0;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  /* ---- links ---- */
+  .site-nav {
+    margin-left: auto;
+  }
+  .site-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
+  .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: var(--radius-pill);
+    font: 600 14px / 1 var(--font-sans);
+    letter-spacing: -0.01em;
+    color: var(--ink-900);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-fast) ease;
+  }
+  .site-nav a:hover {
+    background: var(--nav-hover, var(--mist-100));
+    color: var(--ink-900);
+  }
+  :global(body[data-hero='mint']:not(.header-solid)) .site-nav a:hover {
+    --nav-hover: var(--mint-600);
+  }
+  /* Current page: an ink pill, the same shape as the hover, one level
+     heavier — so "where am I" reads before any link is touched. */
+  .site-nav a[aria-current='page'] {
+    background: var(--ink-900);
+    color: var(--on-ink);
+  }
+
+  .site-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  :global(.site-lang) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 10px;
+    border-radius: var(--radius-pill);
+    font: 500 12px / 1 var(--font-mono);
+    letter-spacing: var(--track-label);
+    color: var(--ink-900);
+    text-decoration: none;
+  }
+  :global(.site-lang:hover) {
+    background: var(--mist-100);
+    color: var(--ink-900);
+  }
+  :global(body[data-hero='mint']:not(.header-solid) .site-lang:hover) {
+    background: var(--mint-600);
+  }
+
+  /* ---- menu button ---- */
+  .menu-btn {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink-900);
+    font: 500 12px / 1 var(--font-mono);
+    letter-spacing: var(--track-label);
+    transition: background-color var(--dur-fast) ease;
+  }
+  .menu-btn:hover {
+    background: var(--mist-100);
+  }
+  :global(body[data-hero='mint']:not(.header-solid)) .menu-btn:hover {
+    background: var(--mint-600);
+  }
+  .menu-btn-icon {
+    display: grid;
+    gap: 4px;
+    width: 16px;
+  }
+  .menu-btn-icon span {
+    display: block;
+    height: 1.75px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  @media (max-width: 1099.98px) {
+    .site-nav {
+      display: none;
+    }
+    .site-actions {
+      margin-left: auto;
+    }
+    .menu-btn {
+      display: inline-flex;
+    }
+  }
+
+  /* Phones: the download is one thumb away in the hero and in the menu, and
+     the bar is too narrow for the wordmark, a button and the menu. */
+  @media (max-width: 479.98px) {
+    .site-cta {
+      display: none;
+    }
+    :global(.site-lang) {
+      padding: 0 8px;
+    }
+  }
+
+  /* No script, no dialog: show the links as a scrolling row instead. */
+  :global(html.no-js) .menu-btn {
+    display: none;
+  }
+  @media (max-width: 1099.98px) {
+    :global(html.no-js) .site-nav {
+      display: block;
+      order: 3;
+      flex-basis: 100%;
+      overflow-x: auto;
+      margin: 0 calc(-1 * var(--gutter));
+      padding: 0 var(--gutter) 8px;
+    }
+    :global(html.no-js) .site-header-in {
+      flex-wrap: wrap;
+    }
+  }
+
+  /* ---- the menu ---------------------------------------------------------
+     Ink, with the mass inverted to mint — the one inverted frame in the
+     sequence. It fills the viewport: a dialog in the top layer, above the
+     header, so it brings its own logo and close control. */
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition:
+      opacity var(--dur-base) var(--ease-fall),
+      transform var(--dur-slow) var(--ease-fall),
+      overlay var(--dur-slow) allow-discrete,
+      display var(--dur-slow) allow-discrete;
+  }
+  .site-menu[open] {
+    opacity: 1;
+    transform: none;
+  }
+  @starting-style {
+    .site-menu[open] {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+  }
+  .site-menu::backdrop {
+    background: var(--ink-900);
+  }
+
+  .site-menu-mass {
+    width: max(560px, 70vmax);
+    right: -24vmax;
+    bottom: -38vmax;
+  }
+  /* The mass is pinned to the viewport's corner and the menu's content is
+     not, so on a one-column phone menu, or any screen short enough for the
+     list to reach the bottom, the two meet: links and the mint button on
+     the mint mass. The menu is UI, and the system's rule for UI is to scale
+     down — there, it goes. */
+  @media (max-width: 759.98px), (max-height: 799.98px) {
+    .site-menu-mass {
+      display: none;
+    }
+  }
+
+  .site-menu-top {
+    position: relative;
+    z-index: var(--z-raised);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-h);
+  }
+  .menu-btn--close {
+    display: inline-flex;
+    border-color: var(--on-ink);
+    color: var(--on-ink);
+  }
+  .menu-btn--close:hover {
+    background: var(--ink-700);
+  }
+
+  .site-menu-body {
+    position: relative;
+    z-index: var(--z-raised);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding-top: clamp(24px, 6vh, 64px);
+    padding-bottom: 48px;
+  }
+  @media (min-width: 760px) {
+    .site-menu-body {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .site-menu-list {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+  }
+  .site-menu-list a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 6px 0;
+    color: var(--on-ink);
+    text-decoration: none;
+    font: 800 clamp(30px, 6.2vw, 46px) / 1.05 var(--font-sans);
+    letter-spacing: -0.05em;
+  }
+  .site-menu-list .label-num {
+    min-width: 2ch;
+    color: var(--slate-400);
+    transform: translateY(-0.9em);
+  }
+  .site-menu-list a:hover,
+  .site-menu-list a[aria-current='page'] {
+    color: var(--mint-500);
+  }
+
+  .site-menu-aside {
+    display: grid;
+    gap: 28px;
+    align-content: start;
+    justify-items: start;
+  }
+  .site-menu-meta {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+  }
+  .site-menu-meta a,
+  .site-menu-meta :global(.gi-lang) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    color: var(--on-ink);
+    font: 600 15px / 1.2 var(--font-sans);
+    text-decoration: underline;
+    text-decoration-color: var(--mint-500);
+    text-underline-offset: 5px;
+  }
+  .site-menu-meta a:hover,
+  .site-menu-meta :global(.gi-lang:hover) {
+    color: var(--mint-500);
+  }
+  .site-menu-copy {
+    font: 400 13px / 1.4 var(--font-sans);
+    color: var(--slate-400);
+  }
+
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-menu {
+      transition: none;
+    }
+    .site-menu,
+    .site-menu[open] {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  /* The menu. <dialog>.showModal() does the hard parts — top layer, inert
+     page, focus containment, Escape — so this only opens, closes, keeps the
+     button's state honest and returns focus where it came from. */
+  const dialog = document.getElementById('site-menu') as HTMLDialogElement | null;
+  const openers = document.querySelectorAll<HTMLButtonElement>('[data-menu-open]');
+  if (dialog && typeof dialog.showModal === 'function') {
+    let opener: HTMLButtonElement | null = null;
+    const setExpanded = (v: boolean) =>
+      openers.forEach((b) => b.setAttribute('aria-expanded', String(v)));
+
+    openers.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        opener = btn;
+        dialog.showModal();
+        document.documentElement.classList.add('menu-open');
+        setExpanded(true);
+      }),
+    );
+    const close = () => dialog.close();
+    dialog.querySelector('[data-menu-close]')?.addEventListener('click', close);
+    /* A link inside the menu may point at the page it is on (an anchor, or
+       the current page) — close either way so the reader sees where they
+       went. */
+    dialog.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('menu-open');
+      setExpanded(false);
+      opener?.focus();
+    });
+    /* The menu is for narrow screens; if the window grows past the bar's
+       breakpoint while it is open, the bar is back and the menu is noise. */
+    const wide = window.matchMedia('(min-width: 1100px)');
+    wide.addEventListener('change', (e) => {
+      if (e.matches && dialog.open) close();
+    });
+  } else {
+    openers.forEach((b) => (b.hidden = true));
+  }
+</script>

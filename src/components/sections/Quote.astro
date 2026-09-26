@@ -1,19 +1,55 @@
 ---
-/* ACF layout: quote */
+/* ACF layout: quote — one sentence, set as a statement.
+   Mint field, ink type (the allowed pair), the mass rising from the bottom
+   edge as a horizon: the system's "B · Horizon", the frame it keeps for
+   single statements. The content's `bg` is v1's colour and is ignored. */
+import { clean } from '../../lib/html';
+
 interface Props {
   index: number;
   bg?: string;
   text?: string;
 }
-const { index, bg = '', text = '' } = Astro.props;
+const { index, text = '' } = Astro.props;
 ---
 
-<section id={`section${index}`} data-scroll data-scroll-repeat data-scroll-offset="100%, 0">
-  <div class="container-fluid py-10" style={`background-color: ${bg}`}>
-    <div class="row py-10">
-      <div class="col-md-10 mx-auto paragraph text-center px-xl-10" data-scroll data-scroll-opacity>
-        <h3><Fragment set:html={text} /></h3>
-      </div>
-    </div>
+<section id={`section${index}`} class="qt surface-mint">
+  <span class="qt-mass" aria-hidden="true"></span>
+  <div class="container qt-in">
+    <blockquote class="qt-text" data-reveal set:html={clean(text)} />
   </div>
 </section>
+
+<style>
+  .qt {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: clamp(72px, 10vw, 128px);
+    padding-bottom: clamp(140px, 18vw, 240px);
+  }
+  .qt-mass {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: 0;
+    width: max(160vw, 900px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+    translate: -50% calc(100% - clamp(64px, 9vw, 150px));
+  }
+  .qt-in {
+    display: flex;
+    justify-content: center;
+  }
+  .qt-text {
+    max-width: 22ch;
+    margin: 0;
+    font: 800 var(--fs-h1) / 0.96 var(--font-sans);
+    letter-spacing: -0.055em;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--ink-900);
+  }
+</style>

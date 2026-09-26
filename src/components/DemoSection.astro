@@ -50,9 +50,10 @@ const fields = [
 ] as const;
 ---
 
-<section id="section-demo" class="demo-section">
-  <div class="container-fluid">
-    <div class="demo-intro">
+<section id="section-demo" class="demo-section section surface-mist">
+  <div class="container">
+    <div class="demo-panel surface-ink">
+    <div class="demo-intro" data-reveal>
       {variant === 'integracje' ? (
         <>
           <h2 class="demo-h2">{s('demo.h2.integrations')}</h2>
@@ -63,7 +64,7 @@ const fields = [
       ) : (
         <>
           <h2 class="demo-h2">
-            {s('demo.h2.line1')}<br />
+            {s('demo.h2.line1')}
             <span class="demo-h2-accent">{s('demo.h2.accent')}</span>
           </h2>
           <p class="demo-lede">
@@ -188,190 +189,167 @@ const fields = [
         </p>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
 <style>
   /* ---------------------------------------------------------------
-     Palette. Every value below was measured against the surface it
-     actually renders on, not guessed:
+     v2. The section is mist; on it sits one ink panel — ink over mist is
+     how the system makes depth. No mass: the panel sits directly above the
+     footer, whose mass is the frame's one. The form is a white card on the
+     ink: the system's
+     inputs are drawn for light surfaces, and a white card is the one place
+     on this panel where they read exactly as specified.
 
-       section  #464861            card  #535568            well  #393b4d
-       label      rgba(#fff,.80) on card → 5.38:1
-       consent    rgba(#fff,.80) on card → 5.38:1
-       optional   rgba(#fff,.65) on card → 4.18:1
-       placeholder rgba(#fff,.60) on well → 5.15:1
-       input ink  #ffffff        on well → 11.05:1
-       error text #ffc2c2        on card → 4.77:1
-       error line #ff8f8f        on card → 3.32:1  (non-text, 3:1 floor)
-       hint       #ffd166        on card → 5.06:1
-       green line #27ea93        on card → 4.61:1
-       button ink #0a0a12        on green → 12.47:1 (the house rule)
-
-     The old file's well was rgba(#fff,.10), i.e. *lighter* than the card.
-     No white-alpha placeholder can clear 4.5:1 on it (0.70 alpha tops out at
-     3.70 and by then it no longer reads as placeholder). Darkening the well
-     instead of lightening the text fixes the placeholder, the error red and
-     the green focus accent in one move — and a recessed well is the more
-     honest affordance anyway. --------------------------------------------- */
-  .demo-section {
-    --f-surface: var(--gi-bg-slate);
-    --f-card: #535568;
-    --f-well: #393b4d;
-    --f-well-focus: #3f4155;
-    --f-line: rgb(255 255 255 / 0.55);
-    --f-ink: var(--gi-text-on-dark);
-    --f-label: rgb(255 255 255 / 0.8);
-    /* 0.65 composited to 4.19:1 over the panel's rgb(83 85 104) — under AA,
-       and "(optional)" is exactly the word someone deciding whether to fill a
-       field needs to read. 0.78 gives 4.86:1 and stays quieter than the 0.8
-       label it follows. */
-    --f-optional: rgb(255 255 255 / 0.78);
-    --f-placeholder: rgb(255 255 255 / 0.6);
-    --f-err-text: #ffc2c2;
-    --f-err-line: #ff8f8f;
-    --f-hint: #ffd166;
-    --f-green: var(--gi-green);
-    --f-ink-on-green: var(--gi-bg-dark);
-    --f-ease: cubic-bezier(0.16, 1, 0.3, 1);
-
-    background-color: var(--f-surface);
-    padding: clamp(3rem, 7vw, 5rem) 0;
+     Everything the script addresses (.demo-field[data-field], .demo-err,
+     .demo-hint, .demo-fill, .demo-submit, .demo-done, the ids) is unchanged
+     from v1, so the smart-form behaviour and its harness carry over.
+     --------------------------------------------------------------- */
+  .demo-panel {
     position: relative;
-    overflow: clip;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: clamp(32px, 6vw, 72px);
+    border-radius: var(--radius-xl);
+  }
+  @media (min-width: 960px) {
+    .demo-panel {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      align-items: start;
+      gap: clamp(40px, 5vw, 80px);
+    }
   }
 
   .demo-intro {
-    max-width: 40rem;
-    margin: 0 auto clamp(1.75rem, 4vw, 2.5rem);
-    text-align: center;
+    display: grid;
+    gap: 20px;
+    align-content: start;
+    max-width: 30rem;
   }
   .demo-h2 {
-    color: var(--gi-text-on-dark);
-    font-size: clamp(1.6rem, 4.2vw, 2.2rem);
-    font-weight: 700;
-    line-height: 1.25;
-    margin: 0 0 0.75rem;
+    display: grid;
+    gap: 6px;
+    color: var(--on-ink);
+    font: 800 var(--fs-h2) / 1 var(--font-sans);
+    letter-spacing: -0.05em;
     text-wrap: balance;
   }
-  .demo-h2-accent { color: var(--f-green); }
+  .demo-h2-accent {
+    color: var(--mint-500);
+  }
+  /* "gravity.integration" is one 263px word at 30px; a 320px phone gives the
+     panel 216px. Below 600px the size follows the viewport and the panel's
+     padding tightens, so the word always fits its line. */
+  @media (max-width: 599.98px) {
+    .demo-panel {
+      padding: 24px;
+    }
+    .demo-h2 {
+      font-size: clamp(24px, 7.6vw, 30px);
+    }
+  }
   .demo-lede {
-    color: rgb(255 255 255 / 0.82);
-    font-size: 1.05rem;
-    line-height: 1.6;
-    margin: 0;
+    font: 400 var(--fs-body-lg) / 1.6 var(--font-sans);
+    color: var(--on-ink-soft);
     text-wrap: pretty;
   }
 
   .demo-card {
-    background: var(--f-card);
-    border-radius: var(--gi-radius-lg, 16px);
-    padding: clamp(1.5rem, 4vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
-    max-width: 40rem;
-    margin: 0 auto;
     position: relative;
+    padding: clamp(24px, 3vw, 32px);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    color: var(--ink-900);
+    --focus-gap: var(--ink-900);
+    --focus-ring: var(--mint-500);
+    --underline: var(--mint-500);
   }
-
-  /* The `hidden` attribute is only a UA-stylesheet `display:none`, so any
-     author rule that sets `display` on the same element silently outranks it.
-     Half this component is toggled with `hidden` — the form itself on success,
-     the inferred-company pill, the field hints — so the reset has to be
-     explicit and has to win. Without it the success panel rendered *under* a
-     still-visible form and an empty pill sat below Firma at rest. */
-  .demo-section [hidden] { display: none !important; }
 
   /* ---- grid ---- */
   .demo-form {
-    /* legacy.css ships a blanket `form{max-width:26.5625rem}` for the theme's
-       own narrow contact form. It was silently squeezing this one to 425px
-       inside a 640px card — the dead gutter on the right in the screenshot. */
-    max-width: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 1.25rem;
+    gap: 18px 16px;
     align-items: start;
   }
-  .demo-field-full { grid-column: 1 / -1; }
+  .demo-field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .demo-field-full {
+    grid-column: 1 / -1;
+  }
   @media (max-width: 640px) {
-    .demo-form { grid-template-columns: 1fr; }
+    .demo-form {
+      grid-template-columns: 1fr;
+    }
   }
 
-  /* ---- labels ---- */
   .demo-label {
-    display: block;
-    color: var(--f-label);
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
-    margin-bottom: 0.4rem;
+    font: 600 13px / 1.3 var(--font-sans);
+    color: var(--ink-900);
   }
   .demo-optional {
-    color: var(--f-optional);
+    margin-left: 0.25em;
     font-weight: 400;
-    margin-left: 0.3em;
+    color: var(--muted);
   }
 
-  /* ---- inputs ---- */
-  .demo-control { position: relative; }
+  /* ---- inputs: the system's, 44px, radius 10 ---- */
+  .demo-control {
+    position: relative;
+  }
   .demo-input {
     width: 100%;
-    box-sizing: border-box;
-    background: var(--f-well);
-    border: 1px solid var(--f-line);
-    /* legacy.css: input,textarea{border-radius:0} */
-    border-radius: 0.5rem;
-    padding: 0.7rem 2.4rem 0.7rem 1rem;
-    min-height: 2.9rem;
-    max-height: none;
-    color: var(--f-ink);
-    font-family: inherit;
-    font-size: 1rem; /* ≥16px — anything smaller zooms the viewport on iOS */
-    line-height: 1.4;
+    min-height: 44px;
+    padding: 0 40px 0 14px;
+    border: 1.5px solid var(--mist-200);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--ink-900);
+    font: 400 16px / 1.3 var(--font-sans);
     transition:
-      border-color 0.18s var(--f-ease),
-      background-color 0.18s var(--f-ease),
-      box-shadow 0.18s var(--f-ease);
+      border-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
   }
-  .demo-input::placeholder { color: var(--f-placeholder); opacity: 1; }
-  .demo-input:hover { background: var(--f-well-focus); }
-  .demo-input:focus { outline: none; }
+  .demo-input::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+  .demo-input:hover {
+    border-color: var(--slate-400);
+  }
+  .demo-input:focus,
   .demo-input:focus-visible {
-    background: var(--f-well-focus);
-    border-color: var(--f-green);
-    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+    outline: none;
+    border-color: var(--ink-900);
+    box-shadow:
+      0 0 0 2px var(--focus-gap),
+      0 0 0 5px var(--focus-ring);
   }
-  /* Chrome/Safari autofill paints an opaque #fff plate over the field, which on
-     a dark form means white text on white. There is no non-!important way to
-     beat the UA stylesheet here. */
-  .demo-input:-webkit-autofill,
-  .demo-input:-webkit-autofill:hover,
-  .demo-input:-webkit-autofill:focus {
-    -webkit-box-shadow: inset 0 0 0 40px var(--f-well-focus) !important;
-    -webkit-text-fill-color: var(--f-ink) !important;
-    caret-color: var(--f-ink);
-  }
-
   .demo-field[data-state='invalid'] .demo-input {
-    border-color: var(--f-err-line);
+    border-color: var(--red-500);
   }
-  .demo-field[data-state='invalid'] .demo-input:focus-visible {
-    box-shadow: 0 0 0 3px rgb(255 143 143 / 0.3);
+  .demo-field[data-state='valid'] .demo-input {
+    border-color: var(--ink-900);
   }
-  .demo-field[data-state='valid'] .demo-input { border-color: rgb(39 234 147 / 0.6); }
 
   /* ---- the tick: draws itself, never bounces ---- */
   .demo-tick {
     position: absolute;
-    right: 0.85rem;
+    right: 13px;
     top: 50%;
-    width: 1.1rem;
-    height: 1.1rem;
-    margin-top: -0.55rem;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
     fill: none;
-    stroke: var(--f-green);
-    stroke-width: 2.2;
+    stroke: var(--mint-800);
+    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
     pointer-events: none;
@@ -381,95 +359,89 @@ const fields = [
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
-  .demo-field[data-state='valid'] .demo-tick { opacity: 1; }
+  .demo-field[data-state='valid'] .demo-tick {
+    opacity: 1;
+  }
   .demo-field[data-state='valid'] .demo-tick path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.32s var(--f-ease);
+    transition: stroke-dashoffset var(--dur-slow) var(--ease-fall);
   }
 
-  /* ---- messages ---- */
+  /* ---- messages: tone is a dot, never a fill ---- */
   .demo-err {
-    color: var(--f-err-text);
-    font-size: 0.78rem;
-    line-height: 1.4;
-    font-weight: 500;
-    margin: 0.35rem 0 0;
+    font: 500 12px / 1.45 var(--font-sans);
+    color: var(--red-700);
   }
   .demo-hint {
-    color: var(--f-hint);
-    font-size: 0.78rem;
-    line-height: 1.45;
-    margin: 0.35rem 0 0;
+    display: flex;
+    gap: 8px;
+    font: 400 12px / 1.45 var(--font-sans);
+    color: var(--slate-600);
   }
-  /* the inferred-company offer is a real button, not a div with a click handler */
+  .demo-hint::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    margin-top: 0.45em;
+    border-radius: 50%;
+    background: var(--amber-500);
+  }
   .demo-fill {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
-    margin-top: 0.35rem;
-    background: rgb(10 10 18 / 0.5);
-    color: var(--f-green);
-    border: 1px solid rgb(39 234 147 / 0.45);
-    border-radius: 999px;
-    padding: 0.3rem 0.75rem;
-    font: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    line-height: 1.3;
+    min-height: 32px;
+    margin-top: 2px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--mint-100);
+    color: var(--ink-900);
+    font: 600 12px / 1.2 var(--font-sans);
     cursor: pointer;
-    transition:
-      background-color 0.18s var(--f-ease),
-      border-color 0.18s var(--f-ease);
+    transition: background-color var(--dur-fast) ease;
   }
-  .demo-fill:hover { background: rgb(10 10 18 / 0.72); border-color: var(--f-green); }
-  .demo-fill:focus-visible {
-    outline: 2px solid var(--f-green);
-    outline-offset: 2px;
+  .demo-fill:hover {
+    background: var(--mist-200);
   }
 
-  /* ---- consent ---- */
+  /* ---- consent: the system's checkbox ---- */
   .demo-consent {
     position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 20px 1fr;
     align-items: start;
-    gap: 0.65rem;
+    gap: 10px;
+    padding: 4px 0;
     cursor: pointer;
-    /* min 44px tap height without a 44px-tall checkbox */
-    padding: 0.35rem 0;
-    text-transform: none;
-    letter-spacing: 0;
-    font-size: inherit;
   }
   .demo-consent input {
-    /* real checkbox, visually replaced — still focusable, still in the a11y tree */
     position: absolute;
-    width: 1.25rem;
-    height: 1.25rem;
+    top: 4px;
+    left: 0;
+    width: 20px;
+    height: 20px;
     margin: 0;
     opacity: 0;
+    cursor: pointer;
   }
   .demo-check {
-    width: 1.25rem;
-    height: 1.25rem;
-    flex: none;
-    border: 1px solid var(--f-line);
-    border-radius: 0.3rem;
-    background: var(--f-well);
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    border: 1.5px solid var(--ink-900);
+    border-radius: var(--radius-sm);
+    background: var(--white);
     display: grid;
     place-items: center;
-    margin-top: 0.05rem;
-    transition:
-      background-color 0.18s var(--f-ease),
-      border-color 0.18s var(--f-ease),
-      box-shadow 0.18s var(--f-ease);
+    transition: background-color var(--dur-fast) ease;
   }
   .demo-check svg {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 14px;
+    height: 14px;
     fill: none;
-    stroke: var(--f-ink-on-green);
-    stroke-width: 2.6;
+    stroke: var(--mint-500);
+    stroke-width: 2.8;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -478,51 +450,49 @@ const fields = [
     stroke-dashoffset: 1;
   }
   .demo-consent input:checked + .demo-check {
-    background: var(--f-green);
-    border-color: var(--f-green);
+    background: var(--ink-900);
   }
   .demo-consent input:checked + .demo-check svg path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.3s var(--f-ease) 0.04s;
+    transition: stroke-dashoffset var(--dur-base) var(--ease-fall);
   }
   .demo-consent input:focus-visible + .demo-check {
-    border-color: var(--f-green);
-    box-shadow: 0 0 0 3px rgb(39 234 147 / 0.28);
+    box-shadow:
+      0 0 0 2px var(--focus-gap),
+      0 0 0 5px var(--focus-ring);
   }
-  .demo-field[data-state='invalid'] .demo-check { border-color: var(--f-err-line); }
+  .demo-field[data-state='invalid'] .demo-check {
+    border-color: var(--red-500);
+  }
   .demo-consent-text {
-    color: var(--f-label);
-    font-size: 0.82rem;
-    line-height: 1.5;
+    font: 400 13px / 1.5 var(--font-sans);
+    color: var(--slate-600);
   }
 
-  /* ---- submit ---- */
+  /* ---- submit: the view's one mint accent ---- */
   .demo-submit {
     position: relative;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    min-height: 3rem;
-    background: var(--f-green);
-    color: var(--f-ink-on-green);
-    border: none;
-    border-radius: 0.5rem; /* legacy.css: button{border-radius:0} */
-    padding: 0.85rem 2rem;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-    text-indent: 0;
+    min-height: 52px;
+    padding: 0 28px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--mint-500);
+    color: var(--ink-900);
+    font: 600 15px / 1.15 var(--font-sans);
     cursor: pointer;
     transition:
-      background-color 0.18s var(--f-ease),
-      transform 0.18s var(--f-ease);
+      background-color var(--dur-fast) ease,
+      transform var(--dur-fast) ease;
   }
-  .demo-submit:hover { background: #4ff0a8; }
-  .demo-submit:active { transform: translateY(1px); }
-  .demo-submit:focus-visible {
-    outline: 2px solid var(--gi-text-on-dark);
-    outline-offset: 3px;
+  .demo-submit:hover {
+    background: var(--mint-600);
+  }
+  .demo-submit:active {
+    transform: scale(0.97);
   }
   .demo-submit-label,
   .demo-submit-pending {
@@ -530,97 +500,125 @@ const fields = [
     align-items: center;
     justify-content: center;
     gap: 0.5em;
-    transition: opacity 0.16s var(--f-ease);
+    transition: opacity var(--dur-fast) ease;
   }
   .demo-submit-pending {
     position: absolute;
     inset: 0;
     opacity: 0;
   }
-  .demo-submit[data-busy] { cursor: progress; }
-  .demo-submit[data-busy] .demo-submit-label { opacity: 0; }
-  .demo-submit[data-busy] .demo-submit-pending { opacity: 1; }
+  .demo-submit[data-busy] {
+    cursor: progress;
+  }
+  .demo-submit[data-busy] .demo-submit-label {
+    opacity: 0;
+  }
+  .demo-submit[data-busy] .demo-submit-pending {
+    opacity: 1;
+  }
   .demo-spinner {
-    width: 1.05rem;
-    height: 1.05rem;
+    width: 18px;
+    height: 18px;
     fill: none;
     stroke-width: 2.4;
     stroke-linecap: round;
     animation: demo-spin 0.75s linear infinite;
   }
-  .demo-spinner circle { stroke: rgb(10 10 18 / 0.25); }
-  .demo-spinner path { stroke: var(--f-ink-on-green); }
-  @keyframes demo-spin { to { transform: rotate(360deg); } }
+  .demo-spinner circle {
+    stroke: rgb(30 31 51 / 0.2);
+  }
+  .demo-spinner path {
+    stroke: var(--ink-900);
+  }
+  @keyframes demo-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   .demo-formerr {
-    color: var(--f-err-text);
-    font-size: 0.85rem;
-    line-height: 1.5;
-    margin: 0.75rem 0 0;
+    margin-top: 12px;
+    font: 500 13px / 1.5 var(--font-sans);
+    color: var(--red-700);
   }
-  .demo-formerr a { color: var(--f-err-text); text-decoration: underline; }
+  .demo-formerr a {
+    color: var(--red-700);
+  }
 
   /* ---- success ---- */
-  .demo-done { text-align: center; padding: 0.5rem 0 0.25rem; }
-  /* The panel is focused programmatically so a screen reader lands on the
-     confirmation instead of on whatever followed the vanished form. It is a
-     region, not a control, so the UA's stark white ring overstates it — a soft
-     green one, and only for keyboard. */
-  .demo-done:focus { outline: none; }
+  .demo-done {
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  .demo-done:focus {
+    outline: none;
+  }
   .demo-done:focus-visible {
-    outline: 2px solid rgb(39 234 147 / 0.7);
+    outline: 3px solid var(--mint-500);
     outline-offset: 8px;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
   }
   .demo-done-tick {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
     fill: none;
-    stroke: var(--f-green);
-    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
-    margin-bottom: 1rem;
   }
-  .demo-done-tick circle,
-  .demo-done-tick path { stroke-dasharray: 1; stroke-dashoffset: 1; }
-  .demo-done[data-in] .demo-done-tick circle {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.6s var(--f-ease);
+  .demo-done-tick circle {
+    fill: var(--ink-900);
+    stroke: var(--ink-900);
+    stroke-width: 2;
+  }
+  .demo-done-tick path {
+    stroke: var(--mint-500);
+    stroke-width: 2.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
   }
   .demo-done[data-in] .demo-done-tick path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.35s var(--f-ease) 0.34s;
+    transition: stroke-dashoffset var(--dur-slow) var(--ease-fall) 0.2s;
   }
   .demo-done-h {
-    color: var(--gi-text-on-dark);
-    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
-    font-weight: 700;
-    margin: 0 0 0.6rem;
+    font: 800 var(--fs-h3) / 1.05 var(--font-sans);
+    letter-spacing: -0.05em;
+    color: var(--ink-900);
   }
   .demo-done-p {
-    color: rgb(255 255 255 / 0.86);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 0 auto 0.75rem;
     max-width: 30rem;
+    font: 400 16px / 1.6 var(--font-sans);
+    color: var(--slate-600);
   }
-  .demo-done-p strong { color: var(--gi-text-on-dark); font-weight: 600; word-break: break-word; }
+  .demo-done-p strong {
+    color: var(--ink-900);
+    font-weight: 600;
+    word-break: break-word;
+  }
   .demo-done-note {
-    color: var(--f-optional);
-    font-size: 0.85rem;
-    line-height: 1.55;
-    margin: 0 auto;
     max-width: 30rem;
+    font: 500 12px / 1.6 var(--font-mono);
+    color: var(--muted);
   }
   .demo-done[data-in] .demo-done-h,
   .demo-done[data-in] .demo-done-p,
-  .demo-done[data-in] .demo-done-note { animation: demo-rise 0.5s var(--f-ease) both; }
-  .demo-done[data-in] .demo-done-p { animation-delay: 0.07s; }
-  .demo-done[data-in] .demo-done-note { animation-delay: 0.14s; }
+  .demo-done[data-in] .demo-done-note {
+    animation: demo-rise var(--dur-slow) var(--ease-fall) both;
+  }
+  .demo-done[data-in] .demo-done-p {
+    animation-delay: 60ms;
+  }
+  .demo-done[data-in] .demo-done-note {
+    animation-delay: 120ms;
+  }
   @keyframes demo-rise {
-    from { opacity: 0; transform: translateY(0.5rem); }
-    to { opacity: 1; transform: none; }
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
   }
 
   /* ---- honeypot ---- */
@@ -641,13 +639,15 @@ const fields = [
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
     }
-    /* the spinner is the one exception — it communicates "still working",
-       so it keeps turning, just slowly and without the whip. */
-    .demo-spinner { animation: demo-spin 2.4s linear infinite !important; }
+    /* the spinner keeps turning — it says "still working" — just slowly */
+    .demo-spinner {
+      animation: demo-spin 2.4s linear infinite !important;
+    }
     .demo-tick path,
     .demo-check svg path,
-    .demo-done-tick circle,
-    .demo-done-tick path { stroke-dashoffset: 0 !important; }
+    .demo-done-tick path {
+      stroke-dashoffset: 0 !important;
+    }
   }
 </style>
 

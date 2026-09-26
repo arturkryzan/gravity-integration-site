@@ -63,7 +63,7 @@ const jsonLd = JSON.stringify({
   path={page.url}
   slug={page.slug}
   draft={page.draft}
-  bodyClass={`page page-id-${page.wpId}`}
+  bodyClass={`page page-${page.slug}`}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={jsonLd} />

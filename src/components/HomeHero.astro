@@ -1,7 +1,32 @@
 ---
-/* Homepage hero (theme hero.php + snippet 24 overhaul), video re-encoded with poster. */
+/* Home hero — the design system's "A · Corner fall" at full size.
+ *
+ * Mint is the field; the mass falls into the frame from the bottom-right and
+ * is cropped by it; the satellite sits on the side opposite the crop. The H1
+ * sits on the mass in mint. The lead, the two CTAs and the customer line sit
+ * on the field in ink.
+ *
+ * The video that used to play here is gone by decision: a new vector
+ * animation will replace it. `.hero-mass` is that animation's slot — a
+ * circle with `overflow: hidden`, so whatever is mounted inside it (an inline
+ * SVG, a canvas, a Lottie player) is clipped to the mass and inherits its
+ * geometry, and the headline stays on top of it.
+ *
+ * Geometry. On desktop the mass, the satellite and the H1 are all anchored to
+ * the hero's BOTTOM edge and sized in vw, so their relation holds at every
+ * width and survives a short window: when the hero is capped by the viewport
+ * height, only the top of the mass is cropped further. The mass centre sits
+ * at the vertical middle of the headline block, which keeps the text roughly
+ * 8% of the diameter in from the edge on its first and last lines — the
+ * system's rule for type on the mass.
+ *
+ * Below 1000px the frame turns over: the mass falls in from the top, fills
+ * the width behind the headline (it is positioned against the headline's own
+ * box, so it fits a Polish or an English H1 without measuring anything), and
+ * the field opens underneath for the lead and the actions. */
 import { linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
+import { clean, typeset } from '../lib/html';
 
 interface Props {
   h1: string;
@@ -13,70 +38,204 @@ const s = t(lang);
 const downloadHref = await linkUrl('pobieranie', lang);
 ---
 
-<section class="hero bg-violet d-flex align-items-end" data-scroll-section>
-  <video
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="metadata"
-    poster="/video/homehero-poster.jpg"
-    class="img-fit h-100 w-100"
-    style="object-fit: cover;"
-  >
-    <source src="/video/homehero.webm" type="video/webm" />
-    <source src="/video/homehero.mp4" type="video/mp4" />
-  </video>
-  <div class="container-fluid">
-    <div class="row align-items-start">
-      <div class="col-lg-8 hero-text pb-6" data-scroll data-scroll-opacity>
-        <div class="d-inline-block hero-text-circle">
-          <h1 set:html={h1} />
-        </div>
+<section class="hero surface-mint" aria-labelledby="hero-h1">
+  <span class="hero-satellite" aria-hidden="true"></span>
+  <div class="container hero-grid">
+    <div class="hero-stage">
+      <div class="hero-mass" aria-hidden="true" data-mass-slot>
+        {/* The future vector animation mounts here. */}
       </div>
+      <h1 id="hero-h1" class="hero-h1" set:html={typeset(clean(h1))} />
     </div>
-    <div class="row pb-10">
-      <div class="col-lg-7" data-scroll data-scroll-opacity>
-        <p style="color:rgba(255,255,255,0.75);font-size:1.1rem;line-height:1.65;margin-bottom:1.5rem;">
-          {s('hero.sub')}
-        </p>
-        <div
-          style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;margin-bottom:1.25rem;"
-        >
-          <a class="btn btn-arrow btn-arrow-white" href={downloadHref}
-            ><span>{s('hero.download')}</span></a
-          >
-          <a class="btn btn-arrow btn-arrow-white" href="#section-demo" data-scroll-to
-            ><span>{s('hero.demo')}</span></a
-          >
-        </div>
-        {/* 0.4 alpha put this at 3.77:1 on the hero's #0a0a12 — a real 1.4.3 AA
-            failure at 12.8px, and it is the customer-names line, the one
-            piece of copy in the hero a skimmer is most likely to want.
-            0.55 reads 6.25:1 and still sits a clear step below the 0.75
-            sub-heading above it. */}
-        <p style="color:rgba(255,255,255,0.55);font-size:0.8rem;line-height:1.5;margin:0;">
-          {s('hero.social')}
-        </p>
+
+    <div class="hero-copy">
+      <p class="hero-lead">{s('hero.sub')}</p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary btn--lg" href={downloadHref}>
+          {s('hero.download')}
+          <span class="btn-dot" aria-hidden="true"></span>
+        </a>
+        <a class="btn btn--secondary btn--lg" href="#section-demo">{s('hero.demo')}</a>
       </div>
+      <p class="hero-social">{s('hero.social')}</p>
     </div>
-  </div>
-  <div
-    class="hero-decorative ratio"
-    data-scroll
-    data-scroll-delay=".1"
-    data-scroll-speed=".3"
-    style=" --bs-aspect-ratio: 93%;"
-  >
-    <img
-      src="/theme/static/lineshome.svg"
-      alt=""
-      width="110"
-      height="110"
-      role="presentation"
-      aria-hidden="true"
-      loading="lazy"
-      class="lazyload"
-    />
   </div>
 </section>
+
+<style>
+  .hero {
+    /* the desktop geometry, in one place */
+    --d: 64vw; /* mass diameter */
+    --mass-left: 42vw;
+    --c: 17.8vw; /* mass centre, measured up from the hero's bottom */
+    --h1-left: 49vw;
+    --h1-bottom: 6.8vw;
+    /* where the container's content box starts, for aligning to the mass */
+    --edge: max(var(--gutter), (100vw - var(--container)) / 2);
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: clamp(560px, min(54vw, calc(100svh - 120px)), 980px);
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .hero-mass {
+    position: absolute;
+    z-index: 0;
+    width: var(--d);
+    aspect-ratio: 1;
+    left: var(--mass-left);
+    bottom: calc(var(--c) - var(--d) / 2);
+    border-radius: 50%;
+    background: var(--ink-900);
+    overflow: hidden;
+  }
+
+  .hero-satellite {
+    position: absolute;
+    z-index: 0;
+    width: calc(var(--d) * 0.07);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ink-900);
+    left: calc(var(--mass-left) - 7vw);
+    bottom: 40vw;
+  }
+
+  .hero-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: var(--h1-bottom);
+  }
+
+  /* The stage is transparent to layout on desktop: the mass positions
+     against the hero, the headline against the grid. */
+  .hero-stage {
+    grid-area: 1 / 1;
+    display: contents;
+  }
+
+  /* On the mass, in mint. Long for a display line (the copy stays), so it is
+     set at H1 scale rather than the 96px display size. */
+  .hero-h1 {
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    justify-self: end;
+    width: calc(100vw - var(--h1-left) - var(--edge));
+    max-width: 700px;
+    color: var(--mint-500);
+    font: 800 var(--fs-h1) / 0.92 var(--font-sans);
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    align-self: end;
+    width: min(440px, calc(var(--mass-left) - var(--edge) - 56px));
+    display: grid;
+    gap: 24px;
+  }
+
+  .hero-lead {
+    font: 400 18px / 1.55 var(--font-sans);
+    color: var(--ink-900);
+    text-wrap: pretty;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* A sentence, so Epilogue: the system keeps mono for caps labels. */
+  .hero-social {
+    font: 400 14px / 1.5 var(--font-sans);
+    color: var(--ink-900);
+    text-wrap: pretty;
+  }
+
+  /* ---- entrance: the mass falls in, the satellite drops ---------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    /* The system's entry: 240–400ms on the fall curve. */
+    .hero-mass {
+      animation: mass-fall var(--dur-slow) var(--ease-fall) both;
+    }
+    .hero-satellite {
+      animation: satellite-drop var(--dur-slow) var(--ease-fall) 80ms both;
+    }
+    .hero-h1 {
+      animation: h1-rise var(--dur-slow) var(--ease-fall) 120ms both;
+    }
+  }
+  @keyframes mass-fall {
+    from {
+      transform: translate(5%, 9%);
+    }
+  }
+  @keyframes satellite-drop {
+    from {
+      transform: translate(-120%, -160%);
+      opacity: 0;
+    }
+  }
+  @keyframes h1-rise {
+    from {
+      transform: translateY(18px);
+      opacity: 0;
+    }
+  }
+
+  /* ---- below 1000px: the frame turns over ------------------------------- */
+  @media (max-width: 999.98px) {
+    .hero {
+      display: block;
+      min-height: 0;
+    }
+    .hero-grid {
+      padding-bottom: 64px;
+    }
+    .hero-stage {
+      grid-area: auto;
+      display: block;
+      position: relative;
+      padding: clamp(36px, 8vw, 64px) 0 clamp(64px, 12vw, 96px);
+    }
+    /* Anchored to the stage's bottom: the arc's lowest point sits 44px under
+       the headline box, and the circle is wide enough that every line of
+       text is inside it edge to edge. */
+    .hero-mass {
+      --d: max(190vw, 720px);
+      left: 50%;
+      bottom: -44px;
+      translate: -50% 0;
+    }
+    .hero-h1 {
+      grid-area: auto;
+      width: auto;
+      max-width: 640px;
+      justify-self: start;
+      font-size: clamp(34px, 8vw, 56px);
+    }
+    .hero-copy {
+      grid-area: auto;
+      width: auto;
+      max-width: 560px;
+      padding-top: 72px;
+    }
+    /* No satellite in the turned frame. Placed under the arc it either
+       grazed the mass (the arc's height there varies with the width) or,
+       at the system's 5–10% of a mass this size, crowded the copy; the
+       system allows one satellite at most, and none is one. */
+    .hero-satellite {
+      display: none;
+    }
+  }
+</style>

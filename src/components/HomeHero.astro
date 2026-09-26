@@ -1,16 +1,17 @@
 ---
-/* Home hero — the design system's "A · Corner fall" at full size.
+/* Home hero — the design system's "A · Corner fall" at full size, in motion.
  *
  * Mint is the field; the mass falls into the frame from the bottom-right and
  * is cropped by it; the satellite sits on the side opposite the crop. The H1
  * sits on the mass in mint. The lead, the two CTAs and the customer line sit
  * on the field in ink.
  *
- * The video that used to play here is gone by decision: a new vector
- * animation will replace it. `.hero-mass` is that animation's slot — a
- * circle with `overflow: hidden`, so whatever is mounted inside it (an inline
- * SVG, a canvas, a Lottie player) is clipped to the mass and inherits its
- * geometry, and the headline stays on top of it.
+ * The animation ("every tool falls in") is src/scripts/hero-fall.js; what
+ * it does is described there. This file holds the composition it starts and
+ * ends on, which is also the whole hero for anyone without it: reduced
+ * motion, no JavaScript, print. The inline script under the section hands
+ * the hero to the animation before first paint (`data-anim`), and takes it
+ * back if the animation hasn't arrived within 3s.
  *
  * Geometry. On desktop the mass, the satellite and the H1 are all anchored to
  * the hero's BOTTOM edge and sized in vw, so their relation holds at every
@@ -24,9 +25,11 @@
  * the width behind the headline (it is positioned against the headline's own
  * box, so it fits a Polish or an English H1 without measuring anything), and
  * the field opens underneath for the lead and the actions. */
+import { getCollection } from 'astro:content';
 import { linkUrl } from '../i18n/routes';
 import { localeOf, t } from '../i18n/ui';
 import { clean, typeset } from '../lib/html';
+import Icon from './ui/Icon.astro';
 
 interface Props {
   h1: string;
@@ -36,15 +39,67 @@ const { h1 } = Astro.props;
 const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
 const downloadHref = await linkUrl('pobieranie', lang);
+
+/* The connectors that fall into the mass, in order: the headline's three
+   (ERP, CRM, WMS) first, then the rest of the stack a buyer brings. Every
+   name is looked up in src/data/integrations.json and the build fails on one
+   that isn't there, so the animation can only ever name a connector the
+   directory lists. The category comes from the same file. */
+const FALLING = [
+  'Subiekt GT',
+  'Salesforce',
+  'Comarch WMS',
+  'BaseLinker',
+  'Shoper',
+  'Allegro',
+  'InPost',
+  'KSeF',
+  'Graffiti ERP',
+  'HubSpot CRM',
+  'Sente WMS',
+  'WooCommerce',
+  'Comarch ERP XL',
+  'Amazon',
+  'DPD',
+  'enova365',
+  'Shopify',
+  'Pipedrive',
+  'Apilo',
+  'SAP Business One',
+  'Akeneo PIM',
+  'PrestaShop',
+  'Symfonia ERP',
+  'Qguar WMS',
+];
+const CATEGORY: Record<string, string> = {
+  erp: 'ERP',
+  crm: 'CRM',
+  wms: 'WMS',
+  oms: 'OMS',
+  pim: 'PIM',
+  ecommerce: 'E-COMMERCE',
+  marketplace: 'MARKETPLACE',
+  courier: s('hero.cat.courier'),
+  invoice: s('hero.cat.invoice'),
+};
+/* The directory lists it as "Graffiti ERP"; the product's name is Graffiti.ERP. */
+const SHOWN_AS: Record<string, string> = { 'Graffiti ERP': 'Graffiti.ERP' };
+const directory = await getCollection('integrationCategories');
+const tools = FALLING.map((name) => {
+  const cat = directory.find((c) => c.data.items.some((it) => it.name === name));
+  if (!cat || !CATEGORY[cat.id]) {
+    throw new Error(`HomeHero: "${name}" is not a connector in src/data/integrations.json`);
+  }
+  return `${CATEGORY[cat.id]} · ${SHOWN_AS[name] ?? name}`.toLocaleUpperCase(lang === 'en' ? 'en-US' : 'pl-PL');
+});
 ---
 
-<section class="hero surface-mint" aria-labelledby="hero-h1">
+<section class="hero surface-mint" aria-labelledby="hero-h1" data-tools={JSON.stringify(tools)}>
   <span class="hero-satellite" aria-hidden="true"></span>
+  <canvas class="hero-fx" aria-hidden="true" hidden></canvas>
   <div class="container hero-grid">
     <div class="hero-stage">
-      <div class="hero-mass" aria-hidden="true" data-mass-slot>
-        {/* The future vector animation mounts here. */}
-      </div>
+      <div class="hero-mass" aria-hidden="true"></div>
       <h1 id="hero-h1" class="hero-h1" set:html={typeset(clean(h1))} />
     </div>
 
@@ -60,7 +115,26 @@ const downloadHref = await linkUrl('pobieranie', lang);
       <p class="hero-social">{s('hero.social')}</p>
     </div>
   </div>
+  <button type="button" class="hero-pause btn btn--secondary btn--sm surface-ink" aria-pressed="false" hidden>
+    <span class="visually-hidden">{s('hero.pause')}</span>
+    <Icon name="pause" class="hero-pause-i hero-pause-i--pause" size={16} />
+    <Icon name="play" class="hero-pause-i hero-pause-i--play" size={16} />
+  </button>
 </section>
+<script is:inline>
+  /* Before first paint: hand the hero to the animation, which starts from an
+     empty field. If src/scripts/hero-fall.js hasn't claimed it within 3s
+     (it never loaded), the static composition comes back. */
+  (function () {
+    var h = document.querySelector('section.hero');
+    if (!h || !window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    h.setAttribute('data-anim', 'pre');
+    setTimeout(function () {
+      if (h.getAttribute('data-anim') === 'pre') h.removeAttribute('data-anim');
+    }, 3000);
+  })();
+</script>
+<script src="../scripts/hero-fall.js"></script>
 
 <style>
   .hero {
@@ -102,6 +176,15 @@ const downloadHref = await linkUrl('pobieranie', lang);
     background: var(--ink-900);
     left: calc(var(--mass-left) - 7vw);
     bottom: 40vw;
+  }
+
+  /* The animation's moving parts — the satellite in the loop and the letters
+     of the connector's name — are drawn here, over the mass and under the
+     type. The script sizes it to the region they move through. */
+  .hero-fx {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
   }
 
   .hero-grid {
@@ -162,7 +245,29 @@ const downloadHref = await linkUrl('pobieranie', lang);
     text-wrap: pretty;
   }
 
-  /* ---- entrance: the mass falls in, the satellite drops ---------------- */
+  /* The stop control for the loop (WCAG 2.2.2: anything that moves for more
+     than five seconds next to other content can be stopped). It sits on the
+     mass, in the band under the headline, so it is the system's secondary
+     button on ink: an on-ink ring, the ink-700 step on hover, the system's
+     own focus ring. Shown only while there is a loop to stop. */
+  .hero-pause {
+    --btn-hover: var(--ink-700);
+    position: absolute;
+    z-index: 2;
+    right: var(--edge);
+    bottom: max(12px, calc((var(--h1-bottom) - 36px) / 2));
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+  /* the glyphs are Icon.astro's own elements, outside this file's scope */
+  .hero-pause[aria-pressed='false'] :global(.hero-pause-i--play),
+  .hero-pause[aria-pressed='true'] :global(.hero-pause-i--pause) {
+    display: none;
+  }
+
+  /* ---- entrance without the script: the mass falls in, the satellite drops */
   @media (prefers-reduced-motion: no-preference) {
     /* The system's entry: 240–400ms on the fall curve. */
     .hero-mass {
@@ -190,6 +295,70 @@ const downloadHref = await linkUrl('pobieranie', lang);
     from {
       transform: translateY(18px);
       opacity: 0;
+    }
+  }
+
+  /* ---- with the script: the states hero-fall.js moves the hero through ----
+     pre, ready  the empty field the mass will fall into; the headline is
+                 already there, in ink, because it is on the field
+     in          the mass is falling; the headline is cut into mint and ink
+                 exactly along the mass's edge (a hard-stop gradient clipped
+                 to the glyphs, moved with the mass every frame)
+     on          at rest: the static composition, the loop drawn over it
+     data-sat="fx" means the loop draws the satellite, so this one steps
+     aside; a frame where the loop can't run keeps it. */
+  .hero[data-anim] .hero-mass,
+  .hero[data-anim] .hero-satellite,
+  .hero[data-anim] .hero-h1 {
+    animation: none;
+  }
+  .hero[data-anim='pre'] .hero-mass,
+  .hero[data-anim='ready'] .hero-mass,
+  .hero[data-anim='pre'] .hero-satellite,
+  .hero[data-anim='ready'] .hero-satellite,
+  .hero[data-anim='in'] .hero-satellite,
+  .hero[data-sat='fx'] .hero-satellite {
+    visibility: hidden;
+  }
+  .hero[data-anim='pre'] .hero-h1,
+  .hero[data-anim='ready'] .hero-h1 {
+    color: var(--ink-900);
+  }
+  .hero[data-anim='in'] .hero-mass {
+    will-change: transform;
+  }
+  .hero[data-anim='in'] .hero-h1 {
+    color: transparent;
+    background: radial-gradient(
+      circle at var(--hx, -10000px) var(--hy, -10000px),
+      var(--mint-500) calc(var(--hr, 0px) - 0.5px),
+      var(--ink-900) calc(var(--hr, 0px) + 0.5px)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  .hero[data-anim='on']:not([data-sat]) .hero-satellite {
+    animation: satellite-drop var(--dur-slow) var(--ease-fall) both;
+  }
+  @media (forced-colors: active) {
+    .hero[data-anim='in'] .hero-h1 {
+      background: none;
+      color: CanvasText;
+    }
+  }
+  @media print {
+    .hero[data-anim] .hero-mass,
+    .hero[data-anim] .hero-satellite {
+      visibility: visible;
+      transform: none !important; /* the script's inline transform */
+    }
+    .hero[data-anim] .hero-h1 {
+      background: none;
+      color: var(--mint-500);
+    }
+    .hero-fx,
+    .hero-pause {
+      display: none;
     }
   }
 
@@ -233,8 +402,11 @@ const downloadHref = await linkUrl('pobieranie', lang);
     /* No satellite in the turned frame. Placed under the arc it either
        grazed the mass (the arc's height there varies with the width) or,
        at the system's 5–10% of a mass this size, crowded the copy; the
-       system allows one satellite at most, and none is one. */
-    .hero-satellite {
+       system allows one satellite at most, and none is one. The loop needs
+       one, so the turned frame has the entrance only. */
+    .hero-satellite,
+    .hero-fx,
+    .hero-pause {
       display: none;
     }
   }

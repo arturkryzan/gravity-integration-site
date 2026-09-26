@@ -201,7 +201,7 @@ left exactly as written.
 
 | Place | Variant | Notes |
 |---|---|---|
-| Home hero | A, full bleed | The H1 sits on the mass in mint. `.hero-mass[data-mass-slot]` is the slot for the vector animation that replaces v1's hero video. Below 1000px the frame turns over: the mass falls from the top behind the headline, and there is no satellite. |
+| Home hero | A, full bleed, animated | The H1 sits on the mass in mint. The animation that replaces v1's hero video is drawn from the frame itself (see Motion). Below 1000px the frame turns over: the mass falls from the top behind the headline, and there is no satellite. |
 | Page heroes (`PageHero.astro`) | A, compact | Below 900px the mass is drawn from the title box itself: diameter 220%, centred at 66%, with 22% + 20px bottom padding. The arc therefore passes 48px under the title's last line at every width. When it was sized from the viewport, the start of the title stood on the mint field from about 420px up. |
 | Privacy policy | D | |
 | Home audience panels | C (developers), A (business) | Proportional: the type is sized in container units and the circles in percentages. The longest line in either language stays more than 8% inside the mass. |
@@ -326,12 +326,55 @@ On the site:
   (IntersectionObserver). Content is visible by default and is hidden only once
   script is known to run. It is instant under `prefers-reduced-motion`, and
   print forces it visible.
-- **Masses** drift into place on reveal over `--dur-slow` (400ms), and the home
-  hero's mass, satellite and H1 enter on the same curve. v1-era durations of
-  600–900ms were brought down to the 400ms maximum.
+- **Masses** drift into place on reveal over `--dur-slow` (400ms). v1-era
+  durations of 600–900ms were brought down to the 400ms maximum.
 - **Header** hides and shows on scroll; the menu fades and settles 12px.
 - **Forms** draw their ticks with `stroke-dashoffset`. The submit spinner keeps
   turning under reduced motion, because it says "still working".
+
+**The home hero** is the key visual in motion, "every tool falls in"
+(`src/scripts/hero-fall.js`, with the states in `HomeHero.astro`). It is built
+from the frame's own parts and puts the system's colour rule in motion: type on
+the field is ink, type on the mass is mint, so whatever crosses the mass's edge
+changes colour exactly on the edge, through the middle of a letter if that is
+where the edge is.
+
+- **The entrance.** The headline is there from the first paint, in ink on the
+  empty field. The mass falls in from its crop corner (from the top below
+  1000px) over 1400ms (1100ms) on the fall curve, and as its edge sweeps the
+  headline, every letter turns mint along the line the edge cuts. The H1 is a
+  single element throughout: a hard-stop radial gradient clipped to its glyphs,
+  moved with the mass each frame, and plain mint again once the mass lands.
+  This is the one motion longer than §05's 400ms, because it is the key visual
+  playing, not an element entering.
+- **The loop, 1000px and wider.** A satellite falls in from the frame's edge to
+  the static design's place, with a connector's name beside it in the mono
+  label (`ERP · SUBIEKT GT`). The 24 names are looked up in
+  `src/data/integrations.json` at build time and the build fails on one the
+  directory doesn't list; the first three are the headline's ERP, CRM and WMS.
+  After 3.4s (4.2s the first time) the mass takes it: inverse-square gravity,
+  integrated at 240 Hz, sized so the fall takes 0.9s at any width, with a
+  sideways push that carries it over the crown. It crosses the edge ink outside
+  and mint inside, and sinks out of sight at most halfway between the edge and
+  the headline. The name follows, a letter at a time, nearest letter first.
+  The mass never moves: it is the heavy one. One satellite at a time, so the
+  frame never has two.
+- **Drawing.** The moving parts are two canvas passes over the same shapes:
+  ink clipped to the field, mint clipped to the mass. The canvas covers only
+  the region they move through, which is found by simulating the paths when
+  the layout changes.
+- **Touch.** A pointer near the satellite draws it a little toward itself;
+  clicking it hands it to the mass at once.
+- **Cost.** It sleeps on a timer between movements (no frames while nothing
+  moves), stops while the hero is off-screen or the tab hidden, and lands the
+  entrance at once if the hero leaves the view mid-fall. Measured at 1440: about
+  5% of one core while something moves, nothing while it waits.
+- **Access.** The pause button on the mass stops the loop (WCAG 2.2.2), as the
+  system's secondary button on ink with the system's focus ring. Reduced motion
+  gets the static composition, never handed over. The inline script under the
+  hero hands it to the animation before first paint and takes it back if the
+  script hasn't arrived within 3s; an error in it puts the static composition
+  back; print and forced colours get the static composition too.
 
 ## Behaviour carried over from v1
 
@@ -433,7 +476,7 @@ The target is WCAG 2.2 AA. Four harnesses check it (listed in `CLAUDE.md`):
 
 - `verify-axe.mjs`: axe-core over 20 routes at 1440 and 390, plus the consent
   panel and the open menu. Result: 0 violations.
-- `verify-harden-a11y.mjs` with `measure-focus-pairs.py`: 16 focus
+- `verify-harden-a11y.mjs` with `measure-focus-pairs.py`: 17 focus
   indicators, each measured against its backdrop at 3:1 or more, reached with
   a real Tab.
 - `verify-harden-names.mjs`: accessible names from Chrome's accessibility tree.

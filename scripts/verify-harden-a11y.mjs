@@ -57,6 +57,7 @@ const CASES = [
   ['/integracje/', '.int-jump a', 'clip'], // category pill
   ['/case-studies/', '.phero-nav a', 'clip'], // section pill on the mint hero
   ['/cennik/', '.pr-card--hot .btn', 'clip'], // accent button on ink
+  ['/', '.hero-pause', 'clip'], // the hero animation's stop control, on the mass (shown once the mass has landed)
 ];
 
 const PAD = 16;
@@ -82,6 +83,9 @@ for (const [route, sel, mode] of CASES) {
   });
   await page.addStyleTag({ content: FREEZE });
   await page.waitForTimeout(300);
+  /* a control that appears late (the hero's pause button waits for the
+     entrance to end) gets a moment to appear */
+  await page.waitForSelector(sel, { state: 'visible', timeout: 4000 }).catch(() => {});
 
   const exists = await page.evaluate((s) => !!document.querySelector(s), sel);
   if (!exists) {

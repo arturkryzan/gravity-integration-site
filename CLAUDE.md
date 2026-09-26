@@ -112,7 +112,8 @@ that is `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Running locally,
 | `verify-ads-conversion.mjs` | the download conversion guard and `generate_lead` | `12 passed, 0 failed` |
 | `verify-mailerlite-consent.mjs` | the MailerLite pop-up tag waits for consent and never loads on `/en/` | `clean — …` |
 | `verify-harden-names.mjs` | accessible names, from Chrome's accessibility tree | `all accessible names and announced values verified` |
-| `verify-harden-a11y.mjs` + `measure-focus-pairs.py` | 16 focus indicators, reached with a real Tab, ≥3:1 against their backdrop | `all focus indicators verified at >= 3.0:1` |
+| `verify-harden-a11y.mjs` + `measure-focus-pairs.py` | 17 focus indicators, reached with a real Tab, ≥3:1 against their backdrop | `all focus indicators verified at >= 3.0:1` |
+| `verify-hero-anim.mjs` | the home hero animation on Playwright's clock, 7 sizes × 2 locales: the hand-over and the 3s way back when the script never arrives, the entrance landing at rest, the loop, pause and resume, reduced motion (static, and switched on mid-run), the turned frame, a load scrolled away, crossing 1000px mid-loop, click-to-capture; writes frames to `OUT` | `232 passed, 0 failed` |
 | `verify-axe.mjs` | axe-core, WCAG 2.2 AA + best practice, 20 routes × 1440/390, the consent panel, the open menu | `0 violations` |
 | `verify-overflow.mjs` | no text off-screen, spilling, or cut by a clipping frame, 20 routes × 6 widths | `0 problems` |
 | `verify-video-seam.mjs` | the `connect-systems` loop plays, fits its frame uncropped, and its edge decodes to the frame's fill (≤1 level) | `22 passed, 0 failed` |

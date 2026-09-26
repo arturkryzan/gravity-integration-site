@@ -139,6 +139,11 @@ const pl = {
   'hero.demo': 'Umów 15\u2011min demo',
   'hero.social':
     'Wybierany przez Bispol, Frogum, Hewalex, Lindner i\u00A020+ innych firm produkcyjnych',
+  /* The hero animation's stop control (WCAG 2.2.2), and the two connector
+     categories whose names are words rather than acronyms. */
+  'hero.pause': 'Zatrzymaj animację',
+  'hero.cat.courier': 'KURIER',
+  'hero.cat.invoice': 'FAKTURY',
 
   /* Home page CTA (row override on section 0) --------------------------- */
   'home.roiCta': 'Policz korzyści',
@@ -438,6 +443,9 @@ const en: Partial<Record<UiKey, string>> = {
   'hero.demo': 'Book a 15\u2011min demo',
   'hero.social':
     'Chosen by Bispol, Frogum, Hewalex, Lindner and 20+ other manufacturing companies',
+  'hero.pause': 'Pause the animation',
+  'hero.cat.courier': 'COURIER',
+  'hero.cat.invoice': 'INVOICING',
 
   /* Home page CTA -------------------------------------------------------- */
   'home.roiCta': 'Calculate your savings',

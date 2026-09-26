@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const BASE = 'http://127.0.0.1:4321';
+const BASE = process.env.ORIGIN || 'http://127.0.0.1:4321';
 const EXEC = process.env.CHROME;
 const STAMP = Date.now().toString(36);
 const mail = (tag) => `artur.kryzan+ml-${tag}-${STAMP}@me.com`;
@@ -35,30 +35,30 @@ log('\n===== /kontakt/ =====');
 await page.goto(BASE + '/kontakt/', { waitUntil: 'networkidle' });
 
 // a) submit with nothing filled — expect an inline tip, no network call
-await page.click('form[data-form="contact"] .wpcf7-submit');
+await page.click('form[data-form="contact"] .form-submit');
 await page.waitForTimeout(300);
-log('empty-email tip :', await page.textContent('form[data-form="contact"] .wpcf7-not-valid-tip').catch(() => '(none)'));
+log('empty-email tip :', await page.textContent('form[data-form="contact"] .form-tip').catch(() => '(none)'));
 log('requests so far :', posts.length);
 
 // b) valid email, consent unchecked — expect the consent message in the output
 const contactMail = mail('contact');
 await page.fill('form[data-form="contact"] input[type=email]', contactMail);
-await page.click('form[data-form="contact"] .wpcf7-submit');
+await page.click('form[data-form="contact"] .form-submit');
 await page.waitForTimeout(300);
-log('no-consent msg  :', await page.textContent('form[data-form="contact"] .wpcf7-response-output'));
+log('no-consent msg  :', await page.textContent('form[data-form="contact"] .form-output'));
 log('requests so far :', posts.length);
 
 // c) full, valid submission
 await tick('form[data-form="contact"] input[value="Darmowa konsultacja"]');
 await tick('form[data-form="contact"] input[data-ml-consent]');
-await page.click('form[data-form="contact"] .wpcf7-submit');
+await page.click('form[data-form="contact"] .form-submit');
 await page.waitForFunction(
   () => document.querySelector('form[data-form="contact"]')?.dataset.status !== 'submitting',
   null, { timeout: 20000 },
 );
 await page.waitForTimeout(500);
 log('status          :', await page.getAttribute('form[data-form="contact"]', 'data-status'));
-log('output          :', await page.textContent('form[data-form="contact"] .wpcf7-response-output'));
+log('output          :', await page.textContent('form[data-form="contact"] .form-output'));
 log('email reset     :', JSON.stringify(await page.inputValue('form[data-form="contact"] input[type=email]')));
 log('submitted email :', contactMail);
 
@@ -68,14 +68,14 @@ await page.goto(BASE + '/kalkulator/', { waitUntil: 'networkidle' });
 const newsMail = mail('news');
 await page.fill('form[data-form="newsletter"] input[type=email]', newsMail);
 await tick('form[data-form="newsletter"] input[data-ml-consent]');
-await page.click('form[data-form="newsletter"] .wpcf7-submit');
+await page.click('form[data-form="newsletter"] .form-submit');
 await page.waitForFunction(
   () => document.querySelector('form[data-form="newsletter"]')?.dataset.status !== 'submitting',
   null, { timeout: 20000 },
 );
 await page.waitForTimeout(500);
 log('status          :', await page.getAttribute('form[data-form="newsletter"]', 'data-status'));
-log('output          :', await page.textContent('form[data-form="newsletter"] .wpcf7-response-output'));
+log('output          :', await page.textContent('form[data-form="newsletter"] .form-output'));
 log('submitted email :', newsMail);
 
 /* ---------- 3. DEMO ---------- */

@@ -4,7 +4,7 @@
    route and counting, which is exactly what we want to measure anyway. */
 import { chromium } from 'playwright';
 
-const BASE = 'http://127.0.0.1:4321';
+const BASE = process.env.ORIGIN || 'http://127.0.0.1:4321';
 /* A regex, not a glob: `**​/googletagmanager.com/**` looks right and matches
    nothing, because the real host is `www.googletagmanager.com` and `**​/`
    demands a slash immediately before the literal. */
@@ -303,7 +303,7 @@ console.log('\n=== generate_lead ===');
     el.checked = true;
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await page.click('form[data-form="newsletter"] .wpcf7-submit');
+  await page.click('form[data-form="newsletter"] .form-submit');
   await page.waitForTimeout(900);
 
   assert(
@@ -351,7 +351,7 @@ console.log('\n=== generate_lead ===');
     el.checked = true;
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await page.click('form[data-form="newsletter"] .wpcf7-submit');
+  await page.click('form[data-form="newsletter"] .form-submit');
   await page.waitForTimeout(900);
 
   assert(

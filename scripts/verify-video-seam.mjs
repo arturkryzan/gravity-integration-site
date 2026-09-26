@@ -1,7 +1,8 @@
-/* The use-case videos on the home page sit in a rounded 55.82% box on
- * section.bg-light. They are meant to have no visible frame: the video's own
- * edge has to decode to the page background, rgb(243,244,251), or the box and
- * its 8px radius show as a faint rectangle. The old use_02 missed by up to 4
+/* v2: the use-case videos on the home page sit in a framed panel
+ * (.til-frame, filled rgb(243,244,251) — the colour the current loops were
+ * rendered against). The video's own edge has to decode to that fill, or the
+ * loop shows as a faint rectangle inside its own frame. (v1 had no frame: the
+ * box sat on section.bg-light and the edge had to melt into the page.) The old use_02 missed by up to 4
  * levels (edge ≈ rgb(239,241,247)); this harness is what keeps the new one
  * honest.
  *
@@ -87,7 +88,10 @@ for (const path of ['/', '/en/']) {
     log('shot', shot.length);
     // Measure inside the page and return numbers, not pixels: shipping a
     // 1377x790 RGBA array to Node took ~25 s per sample.
-    const r = await page.evaluate(async ([b64, M, BG]) => {
+    /* The panel's corners are rounded; along the probe line they show the
+       panel's 1px border, which is not the video's edge. Skip the radius. */
+    const skip = await page.evaluate((s) => Math.ceil(parseFloat(getComputedStyle(document.querySelector(s).closest('.til-frame')).borderTopLeftRadius) || 0) * 2 + 8, sel);
+    const r = await page.evaluate(async ([b64, M, BG, SKIP]) => {
       const img = new Image();
       img.src = 'data:image/png;base64,' + b64;
       await img.decode();
@@ -104,21 +108,27 @@ for (const path of ['/', '/en/']) {
         const dd = Math.max(...px.map((ch, k) => Math.abs(ch - BG[k])));
         if (dd > worst) { worst = dd; where = px; }
       };
-      for (let x = inset + 20; x < W - inset - 20; x += 2) { probe(x, inset); probe(x, H - inset - 1); }
-      for (let y = inset + 20; y < H - inset - 20; y += 2) { probe(inset, y); probe(W - inset - 1, y); }
+      for (let x = inset + SKIP; x < W - inset - SKIP; x += 2) { probe(x, inset); probe(x, H - inset - 1); }
+      for (let y = inset + SKIP; y < H - inset - SKIP; y += 2) { probe(inset, y); probe(W - inset - 1, y); }
       // a checksum of the picture's centre, to prove each seek shows a new frame
       let sum = 0;
       for (let y = Math.floor(H * 0.3); y < H * 0.7; y += 3)
         for (let x = Math.floor(W * 0.3); x < W * 0.7; x += 3) { const i = (y * W + x) * 4; sum = (sum * 31 + d[i] + 7 * d[i + 1] + 13 * d[i + 2]) % 1000000007; }
       return { worst, where, outside: at(4, 4), sum };
-    }, [shot.toString('base64'), m * 2, BG]);
+    }, [shot.toString('base64'), m * 2, BG, skip]);
     const worst = r.worst, where = r.where ? [0, 0, r.where] : null;
     frameSums.add(r.sum);
     log('centre checksum', r.sum);
-    const outside = r.outside;
+    /* v2 frames the loop in a panel (.til-frame) instead of melting it into
+       the page, so "outside" is the panel's own fill, not the page: the edge
+       must decode to the panel colour, or the loop shows as a rectangle
+       inside its own frame. Read from the DOM — the 12px margin of this
+       screenshot now lands on the page, which is white by design. */
+    const panel = await page.evaluate((s) => getComputedStyle(document.querySelector(s).closest('.til-frame')).backgroundColor, sel);
+    const outside = (panel.match(/\d+/g) || []).slice(0, 3).map(Number);
     const outOk = outside.every((ch, k) => ch === BG[k]);
-    const msg = `[${path}] sample ${t} @${ct.toFixed(2)}s edge ring max|Δ| vs bg = ${worst}` + (where ? ` (e.g. rgb(${where[2]}))` : '');
-    if (worst <= TOL && outOk) ok(msg); else bad(msg + (outOk ? '' : ` — page outside reads rgb(${outside})`));
+    const msg = `[${path}] sample ${t} @${ct.toFixed(2)}s edge ring max|Δ| vs panel = ${worst}` + (where ? ` (e.g. rgb(${where[2]}))` : '');
+    if (worst <= TOL && outOk) ok(msg); else bad(msg + (outOk ? '' : ` — panel fill reads ${panel}`));
   }
   // guards against a frozen capture (a paused-and-seeked <video> repaints nothing);
   // two samples may legitimately share a frame, so allow one repeat

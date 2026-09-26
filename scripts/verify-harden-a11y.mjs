@@ -30,7 +30,7 @@ import { mkdirSync, writeFileSync } from 'fs';
 const ORIGIN = process.env.ORIGIN || 'http://127.0.0.1:8555';
 const OUT = '/tmp/harden-focus';
 mkdirSync(OUT, { recursive: true });
-const FREEZE = `*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}`;
+const FREEZE = `*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}html{scroll-behavior:auto!important}`;
 
 /* [route, selector, mode]
  * mode 'clip'  — pad a box around the control and diff that region.
@@ -38,17 +38,25 @@ const FREEZE = `*,*::before,*::after{animation:none!important;transition:none!im
  *                from top:-100% to top:1rem), so there is no useful box to pad.
  */
 const CASES = [
-  // the two rings this harden pass added
-  ['/', 'button.hamburger', 'clip'], // P1-3
-  ['/en/', 'button.hamburger', 'clip'], // P1-3, other locale
-  ['/technologia/', 'input#nemaiil', 'clip'], // P1-7
-  ['/kontakt/', 'input#nemaiil', 'clip'], // P1-7, the case byte-compare got wrong
-  ['/', 'a.skip-link', 'full'], // P2-8
-  ['/en/', 'a.skip-link', 'full'], // P2-8, other locale
-  // controls that already passed — regression guard, these must stay drawn
-  ['/technologia/', 'input.wpcf7-submit', 'clip'],
-  ['/cennik/', 'button.btn-accordion', 'clip'],
-  ['/', 'input#demo-consent', 'clip'],
+  /* v2 controls. The v1 cases (button.hamburger, input#nemaiil,
+     input.wpcf7-submit, button.btn-accordion) went with v1's markup; each has
+     a v2 successor below, plus the controls v2 added. */
+  ['/', '.site-header .site-cta', 'clip'], // the bar's one button (on mint)
+  ['/', '.site-nav a[href="/cennik/"]', 'clip'], // a bar link (on mint)
+  ['/en/', '.site-nav a[href="/en/pricing/"]', 'clip'], // other locale
+  ['/technologia/', 'form[data-form="newsletter"] input[type=email]', 'clip'], // successor of input#nemaiil
+  ['/kontakt/', 'form[data-form="contact"] input[type=email]', 'clip'], // successor of input#nemaiil
+  ['/kontakt/', 'form[data-form="contact"] input[type=radio]', 'clip'], // custom radio
+  ['/', 'a.skip-link', 'full'],
+  ['/en/', 'a.skip-link', 'full'],
+  ['/technologia/', 'form[data-form="newsletter"] .form-submit', 'clip'], // successor of input.wpcf7-submit
+  ['/cennik/', '.faq-item summary', 'clip'], // successor of button.btn-accordion
+  ['/', 'input#demo-consent', 'clip'], // custom checkbox, on white in the ink panel
+  ['/', '#demo-your-name', 'clip'], // text field in the demo card
+  ['/pobieranie/', '#dl-email', 'clip'], // text field on the mint hero's card
+  ['/integracje/', '.int-jump a', 'clip'], // category pill
+  ['/case-studies/', '.phero-nav a', 'clip'], // section pill on the mint hero
+  ['/cennik/', '.pr-card--hot .btn', 'clip'], // accent button on ink
 ];
 
 const PAD = 16;
@@ -118,7 +126,7 @@ for (const [route, sel, mode] of CASES) {
   rec.parked = await page.evaluate((s) => {
     const t = document.querySelector(s);
     const order = [
-      ...document.querySelectorAll('a[href],button,input:not([type=hidden]),select,textarea,[tabindex]:not([tabindex="-1"])'),
+      ...document.querySelectorAll('a[href],button,input:not([type=hidden]),select,textarea,summary,[tabindex]:not([tabindex="-1"])'),
     ].filter((e) => e.offsetWidth || e.offsetHeight || e.getClientRects().length);
     const i = order.indexOf(t);
     if (i > 0) {

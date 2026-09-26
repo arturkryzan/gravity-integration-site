@@ -23,21 +23,19 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME });
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 
-/* ---- logo link (P1-4): an <svg> of bare <path>s, no text node ---- */
+/* ---- logo links (P1-4) ----
+   v2 draws the wordmark as inline SVG in both the header and the footer, and
+   names each link with aria-label. Asked of Chrome's accessibility tree via
+   role + name, not read off the attribute: a stray aria-hidden ancestor or a
+   duplicate label would leave the attribute present and the link silent. */
 for (const [route, expect] of [['/', 'strona główna'], ['/en/', 'home']]) {
   await page.goto(ORIGIN + route, { waitUntil: 'load' });
   await page.waitForTimeout(400);
-  const name = await page.evaluate(() => {
-    const a = document.querySelector('header a.logo, a.logo');
-    return a ? a.getAttribute('aria-label') : null;
-  });
-  ok(!!name && name.includes(expect), `${route} logo link announces "${name}"`);
-  // the footer's logo is an <img alt>, deliberately left without aria-label
-  const footer = await page.evaluate(() => {
-    const l = [...document.querySelectorAll('a.logo')].pop();
-    return { hasImgAlt: !!l?.querySelector('img[alt]:not([alt=""])'), aria: l?.getAttribute('aria-label') };
-  });
-  ok(footer.hasImgAlt, `${route} footer logo still gets its name from <img alt> (aria-label=${footer.aria})`);
+  const re = new RegExp(expect, 'i');
+  const head = await page.locator('header.site-header').getByRole('link', { name: re }).count();
+  ok(head === 1, `${route} header logo link is announced with "${expect}" (${head} match)`);
+  const foot = await page.locator('footer.site-footer').getByRole('link', { name: re }).count();
+  ok(foot === 1, `${route} footer logo link is announced with "${expect}" (${foot} match)`);
 }
 
 /* ---- the five ROI sliders (P1-5) ----
@@ -117,13 +115,13 @@ const landed = await page.evaluate(() => document.activeElement?.id || document.
 ok(landed === 'main', `activating the skip link puts focus on #main (got "${landed}")`);
 
 /* ---- autocomplete (P2-3) without touching the MailerLite wire name ---- */
-for (const route of ['/kontakt/', '/technologia/']) {
+for (const [route, form] of [['/kontakt/', 'contact'], ['/technologia/', 'newsletter']]) {
   await page.goto(ORIGIN + route, { waitUntil: 'load' });
   await page.waitForTimeout(300);
-  const f = await page.evaluate(() => {
-    const e = document.querySelector('input#nemaiil');
+  const f = await page.evaluate((form) => {
+    const e = document.querySelector(`form[data-form="${form}"] input[type=email]`);
     return e ? { ac: e.getAttribute('autocomplete'), im: e.getAttribute('inputmode'), n: e.getAttribute('name') } : null;
-  });
+  }, form);
   ok(f?.ac === 'email' && f?.im === 'email', `${route} email field: autocomplete=${f?.ac} inputmode=${f?.im}`);
   ok(f?.n === 'fields[email]', `${route} MailerLite wire name untouched — name="${f?.n}"`);
 }

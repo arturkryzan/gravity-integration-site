@@ -1,9 +1,11 @@
 /* Verifies the two final changes against a production build, in a real engine.
  *
- * Change 1: the Pobieranie / Download item in the fullscreen nav-big menu is
- *           the brand green, and inverts to white on hover and on keyboard
- *           focus. Measured as computed colour + real contrast against the
- *           colour actually painted behind it, at three viewports.
+ * Change 1: the download is the site's one highlighted action — v1 marked it
+ *           brand green in the fullscreen menu; v2 makes it the top bar's
+ *           only button and the menu dialog's only accent button. Measured
+ *           as computed colour + real contrast against its own fill, hover
+ *           and keyboard-focus feedback, and the dialog's modal behaviour,
+ *           at three viewports.
  * Change 2: the direct-download link exists in the post-submit panel of both
  *           locales, points at the installer, is on-screen and in flow, and
  *           its dataLayer push fires exactly once per click without touching
@@ -41,80 +43,138 @@ const browser = await chromium.launch({
   args: ['--no-sandbox'],
 });
 
-/* ---- Change 1: the green nav item ---- */
+/* ---- Change 1, v2: the download is the one highlighted action ----
+   v1 hid the site behind a MENU overlay and marked its Download item brand
+   green. v2 has a visible top bar whose only button is the download; below
+   1100px the links fold into a <dialog> menu whose only accent button is,
+   again, the download. What carries over, measured the same way: the action
+   is reachable at every viewport, it is the single highlighted item, its
+   label has >= 4.5:1 against its own fill, and pointer and keyboard both get
+   feedback. New in v2, because the menu is now a modal: opening it moves
+   focus inside, Escape closes it, focus returns to the button that opened
+   it, and aria-expanded tells a screen reader which state it is in. */
+const DL_HREF = '/pobieranie/';
+const keyboardFocus = async (page, selector, max = 40) => {
+  await page.evaluate(() => document.activeElement?.blur());
+  for (let i = 0; i < max; i++) {
+    await page.keyboard.press('Tab');
+    if (await page.evaluate((sel) => document.activeElement?.matches(sel), selector)) return true;
+  }
+  return false;
+};
+const paint = (sel) => {
+  const el = document.querySelector(sel);
+  if (!el) return null;
+  const cs = getComputedStyle(el);
+  const r = el.getBoundingClientRect();
+  return {
+    color: cs.color,
+    bg: cs.backgroundColor,
+    fontSize: cs.fontSize,
+    outline: `${cs.outlineStyle} ${cs.outlineWidth} ${cs.outlineColor}`,
+    outlineW: parseFloat(cs.outlineWidth) || 0,
+    outlineStyle: cs.outlineStyle,
+    visible: cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0 && r.top < innerHeight && r.left >= 0 && r.right <= innerWidth,
+    href: el.getAttribute('href'),
+  };
+};
+
 for (const vp of VIEWPORTS) {
   const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
   await page.goto(`${ORIGIN}/`, { waitUntil: 'networkidle' });
+  const consent = await page.$('.gi-consent-accept');
+  if (consent) { await consent.click(); await page.waitForTimeout(300); }
+  await page.mouse.move(0, vp.height - 1);
 
-  // Open the fullscreen menu the way a visitor does, then settle the animation.
-  await page.click('button.hamburger');
-  await page.waitForTimeout(700);
-  await page.evaluate(() => {
-    for (const a of document.getAnimations()) { a.pause(); a.currentTime = 1e6; }
-  });
+  /* The bar. At 1440 and 768 the download is on it and is its only button;
+     on a phone the bar is too narrow and hides it by design — the hero and
+     the menu both carry it there. */
+  const cta = await page.evaluate(`(${paint.toString()})('.site-header .site-cta')`);
+  const barButtons = await page.evaluate(() => [...document.querySelectorAll('.site-header .btn')].filter((b) => getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0).length);
+  const expectOnBar = vp.width >= 480;
+  if (!cta) fail(`[${vp.name}] .site-cta NOT FOUND`);
+  else if (expectOnBar) {
+    if (!cta.visible) fail(`[${vp.name}] the download is not on the bar`);
+    else pass(`[${vp.name}] the download is on the bar`);
+    if (barButtons !== 1) fail(`[${vp.name}] ${barButtons} buttons on the bar — the download must be the only one`);
+    else pass(`[${vp.name}] it is the bar's only button`);
+    if (cta.href !== DL_HREF) fail(`[${vp.name}] bar download points at ${cta.href}`);
+    const cr = ratio(parse(cta.color), parse(cta.bg));
+    console.log(`[${vp.name}] bar CTA ${cta.color} on ${cta.bg} @${cta.fontSize} → ${cr.toFixed(2)}:1`);
+    if (cr < 4.5) fail(`[${vp.name}] bar CTA label ${cr.toFixed(2)}:1 < 4.5`);
+    else pass(`[${vp.name}] bar CTA label ${cr.toFixed(2)}:1`);
+    await page.hover('.site-header .site-cta');
+    await page.waitForTimeout(250);
+    const hov = await page.evaluate(`(${paint.toString()})('.site-header .site-cta')`);
+    await page.mouse.move(0, vp.height - 1);
+    await page.waitForTimeout(250);
+    if (hov.bg === cta.bg) fail(`[${vp.name}] bar CTA: hover changes nothing`);
+    else pass(`[${vp.name}] bar CTA hover ${cta.bg} → ${hov.bg}`);
+    const got = await keyboardFocus(page, '.site-header .site-cta');
+    const foc = await page.evaluate(`(${paint.toString()})('.site-header .site-cta')`);
+    console.log(`          focus-visible outline: ${foc.outline}`);
+    if (!got) fail(`[${vp.name}] bar CTA unreachable by Tab`);
+    else if (foc.outlineStyle === 'none' || foc.outlineW < 2) fail(`[${vp.name}] bar CTA has no focus ring (${foc.outline})`);
+    else pass(`[${vp.name}] bar CTA shows a ${foc.outlineW}px focus ring`);
+  } else {
+    if (cta.visible) fail(`[${vp.name}] the bar CTA shows on a phone bar that has no room for it`);
+    else pass(`[${vp.name}] phone bar leaves the download to the hero and the menu`);
+  }
 
-  const m = await page.evaluate(() => {
-    const a = document.querySelector('.nav-main .nav-big a.nav-download');
-    if (!a) return { found: false };
-    const r = a.getBoundingClientRect();
-    // Walk up for the first non-transparent painted background.
-    let el = a, bg = 'rgba(0, 0, 0, 0)';
-    while (el) {
-      const c = getComputedStyle(el).backgroundColor;
-      if (c && !/rgba\(0, 0, 0, 0\)|transparent/.test(c)) { bg = c; break; }
-      el = el.parentElement;
-    }
-    const sibs = [...document.querySelectorAll('.nav-main .nav-big a')].map((x) => ({
-      text: x.textContent.trim(),
-      color: getComputedStyle(x).color,
-      size: getComputedStyle(x).fontSize,
+  /* The menu, below 1100px. */
+  if (vp.width < 1100) {
+    const btn = '.site-header [data-menu-open]';
+    const before = await page.$eval(btn, (b) => b.getAttribute('aria-expanded'));
+    await page.mouse.move(0, vp.height - 1);
+    await page.focus(btn);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(500);
+    await page.evaluate(() => { for (const a of document.getAnimations()) { a.pause(); a.currentTime = 1e6; } });
+    const open = await page.evaluate(() => {
+      const d = document.getElementById('site-menu');
+      const accents = [...d.querySelectorAll('.btn--accent')];
+      return {
+        open: d.open,
+        modal: d.matches(':modal'),
+        focusInside: d.contains(document.activeElement),
+        expanded: document.querySelector('.site-header [data-menu-open]').getAttribute('aria-expanded'),
+        accents: accents.length,
+        dlHref: accents[0]?.getAttribute('href'),
+      };
+    });
+    if (!open.open || !open.modal) fail(`[${vp.name}] menu did not open as a modal dialog (open=${open.open} modal=${open.modal})`);
+    else pass(`[${vp.name}] menu opens as a modal dialog`);
+    if (!open.focusInside) fail(`[${vp.name}] focus did not move into the menu`);
+    else pass(`[${vp.name}] focus moves into the menu`);
+    if (before !== 'false' || open.expanded !== 'true') fail(`[${vp.name}] aria-expanded ${before} → ${open.expanded}`);
+    else pass(`[${vp.name}] aria-expanded false → true`);
+    if (open.accents !== 1) fail(`[${vp.name}] ${open.accents} accent buttons in the menu — the download must be the only one`);
+    else if (open.dlHref !== DL_HREF) fail(`[${vp.name}] the menu's accent button points at ${open.dlHref}`);
+    else pass(`[${vp.name}] the download is the menu's one accent button`);
+    const m = await page.evaluate(`(${paint.toString()})('#site-menu .btn--accent')`);
+    const cr = ratio(parse(m.color), parse(m.bg));
+    console.log(`[${vp.name}] menu CTA ${m.color} on ${m.bg} → ${cr.toFixed(2)}:1, visible=${m.visible}`);
+    if (!m.visible) fail(`[${vp.name}] the menu's download is off screen`);
+    if (cr < 4.5) fail(`[${vp.name}] menu CTA label ${cr.toFixed(2)}:1 < 4.5`);
+    else pass(`[${vp.name}] menu CTA label ${cr.toFixed(2)}:1`);
+    await page.screenshot({ path: `${OUT}/menu-${vp.name}.png` });
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(500);
+    const closed = await page.evaluate(() => ({
+      open: document.getElementById('site-menu').open,
+      back: document.activeElement?.matches('.site-header [data-menu-open]'),
+      expanded: document.querySelector('.site-header [data-menu-open]').getAttribute('aria-expanded'),
     }));
-    return {
-      found: true,
-      color: getComputedStyle(a).color,
-      fontSize: getComputedStyle(a).fontSize,
-      bg,
-      visible: r.width > 0 && r.height > 0 && r.top < innerHeight && r.left >= 0,
-      rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
-      sibs,
-    };
-  });
-
-  if (!m.found) { fail(`[${vp.name}] a.nav-download NOT FOUND in the open menu`); await page.close(); continue; }
-  if (!m.visible) fail(`[${vp.name}] a.nav-download not on screen: ${JSON.stringify(m.rect)}`);
-
-  const cr = ratio(parse(m.color), parse(m.bg));
-  const px = parseFloat(m.fontSize);
-  const need = px >= 24 ? 3 : 4.5; // 18.66px bold / 24px = "large text"
-  const greens = m.sibs.filter((s) => s.color === m.color).length;
-  console.log(`[${vp.name}] rest=${m.rect.w}x${m.rect.h} color=${m.color} on ${m.bg} @${m.fontSize} → ${cr.toFixed(2)}:1 (need ${need})`);
-  console.log(`          siblings: ${m.sibs.map((s) => `${s.text}=${s.color}`).join(' | ')}`);
-
-  if (!/39, 234, 147/.test(m.color)) fail(`[${vp.name}] nav-download colour is ${m.color}, expected rgb(39, 234, 147)`);
-  else pass(`[${vp.name}] nav-download is brand green`);
-  if (cr < need) fail(`[${vp.name}] green fails contrast: ${cr.toFixed(2)}:1 < ${need}`);
-  else pass(`[${vp.name}] green contrast ${cr.toFixed(2)}:1 ≥ ${need}`);
-  if (greens !== 1) fail(`[${vp.name}] ${greens} nav-big items share the green — it must be the only one`);
-  else pass(`[${vp.name}] green is unique in the list`);
-
-  // Hover and keyboard focus must both invert to white.
-  await page.hover('.nav-main .nav-big a.nav-download');
-  await page.waitForTimeout(300);
-  const hover = await page.evaluate(() =>
-    getComputedStyle(document.querySelector('.nav-main .nav-big a.nav-download')).color);
-  const focus = await page.evaluate(() => {
-    const a = document.querySelector('.nav-main .nav-big a.nav-download');
-    a.focus();
-    return { color: getComputedStyle(a).color, isFocus: a === document.activeElement };
-  });
-  console.log(`          hover=${hover} focus=${focus.color} (focused=${focus.isFocus})`);
-  if (hover === m.color) fail(`[${vp.name}] hover does not change colour — no pointer feedback`);
-  else pass(`[${vp.name}] hover inverts to ${hover}`);
-  if (!focus.isFocus) fail(`[${vp.name}] nav-download could not take focus`);
-  else if (focus.color === m.color) fail(`[${vp.name}] :focus-visible does not invert (${focus.color})`);
-  else pass(`[${vp.name}] focus inverts to ${focus.color}`);
-
-  await page.screenshot({ path: `${OUT}/menu-${vp.name}.png` });
+    if (closed.open) fail(`[${vp.name}] Escape did not close the menu`);
+    else if (!closed.back) fail(`[${vp.name}] focus did not return to the menu button`);
+    else if (closed.expanded !== 'false') fail(`[${vp.name}] aria-expanded stayed ${closed.expanded}`);
+    else pass(`[${vp.name}] Escape closes it, focus returns, aria-expanded false`);
+  } else {
+    const hidden = await page.$eval('.site-header [data-menu-open]', (b) => getComputedStyle(b).display === 'none');
+    if (!hidden) fail(`[${vp.name}] the menu button shows beside a full bar`);
+    else pass(`[${vp.name}] no menu button beside the full bar`);
+    await page.screenshot({ path: `${OUT}/bar-${vp.name}.png` });
+  }
   await page.close();
 }
 

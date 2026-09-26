@@ -8,7 +8,7 @@
    So: intercept the endpoint, assert the request, and script the reply. */
 import { chromium } from 'playwright';
 
-const BASE = 'http://127.0.0.1:4321';
+const BASE = process.env.ORIGIN || 'http://127.0.0.1:4321';
 const ENDPOINT = '**/assets.mailerlite.com/**';
 
 const FORM = {
@@ -79,7 +79,7 @@ console.log('\n=== happy path ===');
   await page.fill('form[data-form="contact"] input[type=email]', 'kontakt@firma.pl');
   await tick('form[data-form="contact"] input[value="Darmowa konsultacja"]');
   await tick('form[data-form="contact"] input[data-ml-consent]');
-  await page.click('form[data-form="contact"] .wpcf7-submit');
+  await page.click('form[data-form="contact"] .form-submit');
   await page.waitForFunction(
     () => document.querySelector('form[data-form="contact"]')?.dataset.status === 'sent',
     null, { timeout: 10000 },
@@ -94,13 +94,13 @@ console.log('\n=== happy path ===');
   assert('no consent leak', seen[0].body['acceptance-500'], undefined);
   assert(
     'success message',
-    await page.textContent('form[data-form="contact"] .wpcf7-response-output'),
+    await page.textContent('form[data-form="contact"] .form-output'),
     'Dziękujemy — zapytanie do nas dotarło. Odezwiemy się w ciągu jednego dnia roboczego.',
   );
   assert('field cleared', await page.inputValue('form[data-form="contact"] input[type=email]'), '');
   assert(
     'output visible',
-    await page.$eval('form[data-form="contact"] .wpcf7-response-output', (el) =>
+    await page.$eval('form[data-form="contact"] .form-output', (el) =>
       getComputedStyle(el).display !== 'none' && !el.hidden),
     true,
   );
@@ -109,7 +109,7 @@ console.log('\n=== happy path ===');
   await page.goto(BASE + '/kontakt/', { waitUntil: 'networkidle' });
   await page.fill('form[data-form="contact"] input[type=email]', 'domyslny@firma.pl');
   await tick('form[data-form="contact"] input[data-ml-consent]');
-  await page.click('form[data-form="contact"] .wpcf7-submit');
+  await page.click('form[data-form="contact"] .form-submit');
   await page.waitForFunction(
     () => document.querySelector('form[data-form="contact"]')?.dataset.status === 'sent',
     null, { timeout: 10000 },
@@ -120,7 +120,7 @@ console.log('\n=== happy path ===');
   await page.goto(BASE + '/kalkulator/', { waitUntil: 'networkidle' });
   await page.fill('form[data-form="newsletter"] input[type=email]', 'news@firma.pl');
   await tick('form[data-form="newsletter"] input[data-ml-consent]');
-  await page.click('form[data-form="newsletter"] .wpcf7-submit');
+  await page.click('form[data-form="newsletter"] .form-submit');
   await page.waitForFunction(
     () => document.querySelector('form[data-form="newsletter"]')?.dataset.status === 'sent',
     null, { timeout: 10000 },
@@ -131,7 +131,7 @@ console.log('\n=== happy path ===');
   assert('nothing else', Object.keys(seen[2].body).sort().join(','), 'anticsrf,fields[email],ml-submit');
   assert(
     'success message',
-    await page.textContent('form[data-form="newsletter"] .wpcf7-response-output'),
+    await page.textContent('form[data-form="newsletter"] .form-output'),
     'Jesteś na liście. Do zobaczenia w skrzynce raz w miesiącu.',
   );
 
@@ -175,7 +175,7 @@ console.log('\n=== rejected address ===');
   // passes our own regex, so only the server can reject it
   await page.fill('form[data-form="contact"] input[type=email]', 'ktos@niemadomeny.xx');
   await tick('form[data-form="contact"] input[data-ml-consent]');
-  await page.click('form[data-form="contact"] .wpcf7-submit');
+  await page.click('form[data-form="contact"] .form-submit');
   await page.waitForFunction(
     () => document.querySelector('form[data-form="contact"]')?.dataset.status === 'invalid',
     null, { timeout: 10000 },
@@ -183,12 +183,12 @@ console.log('\n=== rejected address ===');
   console.log(' contact');
   assert(
     'inline tip',
-    await page.textContent('form[data-form="contact"] .wpcf7-not-valid-tip'),
+    await page.textContent('form[data-form="contact"] .form-tip'),
     'Ten adres e-mail wygląda na nieprawidłowy. Sprawdź go i spróbuj ponownie.',
   );
   assert('aria-invalid', await page.getAttribute('form[data-form="contact"] input[type=email]', 'aria-invalid'), 'true');
   assert('value kept', await page.inputValue('form[data-form="contact"] input[type=email]'), 'ktos@niemadomeny.xx');
-  assert('submit re-enabled', await page.isEnabled('form[data-form="contact"] .wpcf7-submit'), true);
+  assert('submit re-enabled', await page.isEnabled('form[data-form="contact"] .form-submit'), true);
 
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(2200);
@@ -219,7 +219,7 @@ console.log('\n=== network failure ===');
   await page.goto(BASE + '/kalkulator/', { waitUntil: 'networkidle' });
   await page.fill('form[data-form="newsletter"] input[type=email]', 'news@firma.pl');
   await tick('form[data-form="newsletter"] input[data-ml-consent]');
-  await page.click('form[data-form="newsletter"] .wpcf7-submit');
+  await page.click('form[data-form="newsletter"] .form-submit');
   await page.waitForFunction(
     () => document.querySelector('form[data-form="newsletter"]')?.dataset.status === 'failed',
     null, { timeout: 10000 },
@@ -227,12 +227,12 @@ console.log('\n=== network failure ===');
   console.log(' newsletter');
   assert(
     'fallback message',
-    await page.textContent('form[data-form="newsletter"] .wpcf7-response-output'),
+    await page.textContent('form[data-form="newsletter"] .form-output'),
     'Nie udało się wysłać formularza. Napisz do nas na contact@caffeine-minds.com — odpowiemy tak samo szybko.',
   );
   assert('value kept', await page.inputValue('form[data-form="newsletter"] input[type=email]'), 'news@firma.pl');
-  assert('submit re-enabled', await page.isEnabled('form[data-form="newsletter"] .wpcf7-submit'), true);
-  assert('label restored', await page.inputValue('form[data-form="newsletter"] .wpcf7-submit'), 'Zapisz się');
+  assert('submit re-enabled', await page.isEnabled('form[data-form="newsletter"] .form-submit'), true);
+  assert('label restored', (await page.textContent('form[data-form="newsletter"] .form-submit-label')).trim(), 'Zapisz się');
 
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(2200);

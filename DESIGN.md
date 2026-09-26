@@ -1,127 +1,466 @@
 # Design
 
-Visual system for gravity.integration, migrated from the WordPress "gravity" theme (madebymade) and unified during the Astro rebuild. Single source of truth for tokens lives in `src/styles/tokens.css`; the ported theme CSS is `src/styles/legacy.css` and rebuild-era overrides are `src/styles/site.css`.
+The visual system of gravity-integration.com, v2: the site rebuilt onto the
+**gravity.integration design system v2.0, "Mass"** (September 2026). The copy is
+unchanged from v1. Everything visual was written again from scratch.
 
-## Theme
+- **Reference:** `2_0/Gravity Design System.html`, which sits outside the repo
+  next to it. Its sections are numbered 01–08, and this file cites them as
+  §01…§08.
+- **Source of truth in code:** `src/styles/tokens.css`. It holds the design
+  system's own token block, copied verbatim, plus the site's layer on top. The
+  surfaces, type classes and components live in `src/styles/base.css`, and
+  component-specific CSS is scoped in each `.astro` file.
+- **What v1 left behind:** the WordPress-era CSS (`legacy.css`, `site.css`,
+  Bootstrap grid classes), the Telegraf and Inter fonts, the 3D renders, the
+  two animated SVG hero scenes, SMIL blob morphs and hand-drawn line art. All
+  of it has been removed from the build. A few v1-only files are still in
+  `public/` and are listed under "Leftovers" at the end.
 
-Dark-forward B2B, not dark-mode-everywhere. The **hero and menu are near-black** (`#0a0a12`) with 3D-render product imagery (matte pond/sphere scenes) and neon-green highlights; the **content body is light** (`#f3f4fb` / white) with dark slate text. The signature move is a saturated brand green used as an accent and, occasionally, as a full surface (the homepage tech-tiles band, pricing). Color strategy is **committed**: green carries identity at the edges (hero CTAs, accents, one green section) over a restrained light body — not drenched, not timid.
+## The idea
 
-Physical scene: a Polish IT lead evaluating integration software on a desktop in an office, mid-workday — the site should read as engineered, fast, and trustworthy, closer to precision instrument than SaaS brochure.
+One idea runs through the system: mass. **Mint is the field and ink is the
+mass**, and nothing else competes with them. The design system has one graphic
+device, a single circle cropped by its frame (the mass). It can be joined by at
+most one small circle (the satellite). Surfaces are flat, with no gradients and
+no shadows; depth comes from colour, such as ink over mist or ink-700 cards on
+ink. There are no illustrations, patterns or renders. Icons appear only where
+they carry meaning (Lucide, see Components).
 
-## Color
+## Colour
 
-Defined in `src/styles/tokens.css`. Green is unified to a single value (`#27EA93`); the legacy `#27EB93`/`#01EC90` variants are fully retired — including the raster favicon set and the SVG logo/newsletter marks, which had the old green baked into their pixels.
+The palette, verbatim from §08:
 
-- Brand green — `#27EA93` (`--gi-green`). Primary accent, and only ever as a *surface* or on dark: hero CTAs, links-on-dark hover, the tech-tiles band, the ESB hub, focus/active states. It measures 1.58:1 on white, so it is never text on light.
-- Deep green — `#097a53` (`--gi-green-deep`). Green text on light backgrounds (links, list markers, badges, the "139+" number). Measured 5.36:1 on `#ffffff` and 4.88:1 on `#f3f4fb` — clears AA for normal text on **both** light surfaces, which the previous `#0d9e6d` did not (3.43:1 on white, large-text-only, while shipping on 12–13px badges).
-- Negative red — `#ef4444` (`--gi-red`) and `#c62828` (`--gi-red-deep`). The green's "before" counterpart, split by role because one value cannot do both: `--gi-red` is a *surface* (the ROI calculator's current-state bar, which carries near-black labels), `--gi-red-deep` is red *text on light* (form validation). The theme's `#dc3232` measured 4.21:1 on `#f3f4fb`, failing on the light-section background it renders over.
-- Dark surfaces — `#0a0a12` (`--gi-bg-dark`, hero/menu/solid-header), `#111119` (alt), `#1a1b2e` (`--gi-bg-calc`, ROI calculator), `#242538` (`--gi-bg-card-dark`, calculator cards).
-- Slate — `#464861` (`--gi-bg-slate`): the demo-form section background and the darkest of the menu's three tone columns; also the body text color inherited from the theme.
-- Ink — `#14152a` / `#1a1b2e`: headings and integration/tile names (crisper than slate on light).
-- Muted — `#6b6d84`: secondary text, captions, counts, category descriptions.
-- Light surfaces — `#ffffff` and `#f3f4fb` (`--gi-bg-light` / theme `bg-light`); alternating section backgrounds.
-- Hairlines — `#e4e5ef` / `#ececf3`: grid separators (integrations grid, clients wall), rules under headings.
-- Fullscreen menu columns — a three-tone dark ramp: `#6b6d81` → `#565971` → `#464861` (primary / secondary / meta), white text throughout, green hover.
+| Token | Value | Role |
+|---|---|---|
+| `--mint-500` | `#01EC90` | the field; accent button; mint type on ink |
+| `--mint-600` | `#00C878` | hover on mint |
+| `--mint-800` | `#007F4D` | mint as text on **white** only |
+| `--mint-100` | `#D9FCEB` | success tint |
+| `--ink-900` | `#1E1F33` | the mass; text; primary button; ink sections |
+| `--ink-700` | `#2E3048` | hover on ink; cards on ink; the consent toast |
+| `--slate-600` | `#464862` | body text on light |
+| `--slate-400` | `#8B8DA6` | captions on **ink-900** only |
+| `--mist-100` | `#EEF0F4` | page tint, recessed panels |
+| `--mist-200` | `#D9DBE3` | the one border: 1px on white |
+| `--on-ink` | `#F4F5F8` | text on ink |
+| `--red-500`, `--amber-500` | | tone dots, never fills |
 
-Contrast: body copy is dark slate/ink on light (well past AA); white text on the green tech band and on `#6b6d81`+ menu columns is used only at large sizes. Green-on-white is always `--gi-green-deep`, never `#27EA93`. Text sitting *on* the brand green is near-black ink `#0a0a12` (12.47:1), not white — this is the rule for the announcement bar, the ESB hub, and the calculator's green bar. Muted ink on green uses 0.75 alpha (7.18:1), matching the 0.75 the muted text tokens already use; 0.6 lands at 4.53:1 and is too close to the floor.
+The site's layer (`tokens.css`, below the verbatim block) names four values that
+the design system's own page uses but never exported: `--muted #6E7089`,
+`--on-ink-soft #C9CBD6`, `--red-700 #C2363B` and `--red-300 #FF8A8F`. Each one
+was measured against the surfaces it is allowed on.
+
+**Contrast, measured.** WCAG ratios for each colour on the surfaces it is
+allowed on:
+
+| Text colour | On white | On mist | On mint | On ink-900 | On ink-700 |
+|---|---|---|---|---|---|
+| ink-900 | 16.17 | 14.17 | 10.32 | | |
+| slate-600 | 8.88 | 7.79 | | | |
+| `--muted` | 4.84 | ✗ 4.24 | | | |
+| mint-800 | 5.07 | ✗ 4.44 | | | |
+| mint-500 | ✗ 1.57 | | | 10.32 | 8.21 |
+| on-ink | | | | 14.83 | 11.80 |
+| on-ink-soft | | | | 10.01 | 7.96 |
+| slate-400 | | | | 4.97 | ✗ 3.96 |
+| red-700 (error text) | 5.41 | | | | |
+| red-300 (error text) | | | | 7.15 | |
+
+The ✗ cells are the reason for the rules below. **Mint is never text on a light
+surface.** Mint-800 appears on white only. `--muted` is used on white only, and
+slate-600 takes that role on mist. Slate-400 is used on ink-900 only. The
+numbered counters on the ink-700 cards use on-ink-soft for this reason; axe
+flagged them at 3.95:1 when they used slate-400.
+
+**Surfaces carry their own roles.** `.surface-white`, `.surface-mist`,
+`.surface-mint` and `.surface-ink` (in `base.css`) set `--fg`, `--fg-muted`,
+`--label`, `--rule`, `--underline`, `--link-hover`, `--dot`, `--focus-gap` and
+`--focus-ring`. Components read these variables and never hard-code a colour
+that depends on the surface underneath. A white card inside an ink panel (the
+demo form, the download form) sets the light values on itself.
+
+**Never type on a mass of its own colour.** Mint text never sits over the mint
+mass, and ink text never sits over the ink mass. Where a frame carries both,
+the text stays on the field side. When the viewport narrows, the frame opens
+room above the text (extra padding) and the mass shrinks, so the two never
+cross. This rule was measured, not eyeballed, in the home tech band, the
+calculator, the newsletter card, the integrations stat, the pricing hot card,
+the quiet hero, the footer and the menu.
+
+## Focus
+
+The design system's ring is `0 0 0 2px #fff, 0 0 0 5px mint` (§05). That is
+right on ink. On a light surface, though, mint measures 1.57:1 and the white
+gap disappears, so the ring is read from the surface:
+
+- **On white and mist:** the inner 2px turns ink, giving element | ink |
+  mint. The ring still reads as the brand's, and the ink carries the
+  contrast.
+- **On mint:** the ring is 3px ink and the gap is transparent.
+- **On ink:** the ring is exactly as the design system specifies.
+
+It is implemented once as `:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus-gap) }`.
+
+The custom checkbox, radio and text-field rules read the same two variables.
+When they were hard-coded to white + mint they measured 1.57:1 on white and
+on mint, and `verify-harden-a11y.mjs` caught it. The calculator's slider
+thumbs draw the design system's own ring, because they sit on ink.
 
 ## Typography
 
-One family, multiple weights — **Epilogue** (Google/Fontsource, self-hosted; weights 400/600/700/800), used for both headings and body. Inter is loaded for legacy SVG/UI text and Telegraf ships from the old theme, but Epilogue is the voice. No serif; the contrast axis is weight and size, not family.
+The fonts are **Epilogue** (300 for long copy on ink, 400 body, 600 for H3/H4
+and buttons, 800 for display to H2) and **JetBrains Mono** (400/500). Both are
+self-hosted through `@fontsource`, and the 400 and 800 Latin files are
+preloaded.
 
-- Display / h1: fluid `clamp()`, geometric, tight but not cramped (letter-spacing ≥ -0.02em); the homepage hero H1 is the ceiling. `text-wrap: balance` on headings. The **subpage hero H1** scales `clamp(2rem, 7vw, 4rem)` (`site.css`, overriding the theme's flat `4rem`) with `overflow-wrap: break-word` as a backstop — sized against the longest title in the set ("Integracje gravity.integration"), which must fit 320px.
-- Section headings (h2): ~1.35–2.1rem `clamp()`, weight 700, ink color.
-- Body / `.paragraph`: Epilogue 400, 1rem–1.0625rem, line-height 1.7; measure capped ~720px on prose (ESB article) for readability.
-- Labels / counts / badges: 0.72–0.85rem, weight 600, muted or deep-green.
-- The theme's small uppercase tracked breadcrumb links are retained only as the per-page section nav (a functional jump-nav under the hero), not as decorative eyebrows.
+**The scale is the design system's, made fluid.** `tokens.css` defines it once,
+and headings use these values and nothing else:
 
-## Spacing & Layout
+| Token | Design system size | Fluid value | Used for |
+|---|---|---|---|
+| `--fs-display` | 96 · 800 · .84 | `clamp(52px, 7vw, 96px)` | page-hero titles (one to three words) |
+| `--fs-h1` | 56 · 800 · .92 | `clamp(36px, 4.6vw, 56px)` | the home headline; section statements (tech band, TextBoxes, FAQ, quote bands, contact, 404, download) |
+| `--fs-h2` | 40 · 800 · 1.0 | `clamp(28px, 3.4vw, 40px)` | content sections; headings inside panels (demo, newsletter, calculator, case studies, integration categories) |
+| `--fs-h3` | 28 · 600 · 1.1 | `clamp(22px, 2.4vw, 28px)` | case-study stages, card headings, privacy-policy sections |
+| `--fs-h4` | 20 · 600 · 1.2 | `20px` | card titles (technologies, licences, links, download steps) |
+| `--fs-body-lg` | 18 · 400 · 1.6 | `18px` | ledes |
+| `--fs-body` | 16 · 400 · 1.55 | `16px` | text, including text in cards |
 
-- Container: `max-width` 1140px (`--gi-container`), 1.5rem side padding; prose columns narrow to ~720px.
-- Section rhythm: fluid vertical padding, `clamp(3rem, 6-7vw, 5-6rem)`, alternating light / green / dark bands for cadence.
-- Radii: `--gi-radius` 10px (tiles, cards), `--gi-radius-lg` 16px (panels, diagram cards).
-- Grids: breakpoint-free `repeat(auto-fill, minmax(...))`. The **bordered-cell grid** (hairline `#ececf3` separators, no gap) is the house grid — used identically for the homepage client-logo wall and the integrations directory. Card-with-gap grids are avoided.
-- Horizontal clamp: `html, body { overflow-x: clip; overflow-y: visible }` in `site.css`. Decorative full-bleed elements (`.pricing-lines .circle`, `.faq-lines .circle`, `.hero-decorative`) are *meant* to run past the right edge; `clip` contains them without creating a scroll container, so `position: fixed`/`sticky` (bar, header) keep working. Never `overflow: hidden` here — that reintroduces the Locomotive-era clipping bug.
-- Stacking: a semantic z-index scale in `tokens.css`, applied in `site.css` — `--gi-z-decor` 2, `--gi-z-raised` 4, `--gi-z-sticky` 10 (breadcrumbs / section nav), `--gi-z-menu` 15, `--gi-z-header` 20, `--gi-z-bar` 30, `--gi-z-consent` 35 (cookie bar — over the page, under a real modal), `--gi-z-modal` 40, `--gi-z-toast` 50. No arbitrary values; the theme's `9999` is gone. The menu deliberately sits **below** the header (the header owns the logo and the CLOSE control, which must stay reachable while the menu is open) and **above** the breadcrumbs, which previously punched a white strip through the overlay.
-- Breakpoints in use: 600px (phone restacks), 768px (Bootstrap `md`), 900px (menu decoration), 1140px container. Every page is verified at 320 / 390 / 768 / 1440 with zero horizontal overflow (`verify-adapt.mjs`).
-- The site is built on Bootstrap 5 grid classes inherited from the theme (`container-fluid`, `col-*`, `.ratio` for aspect boxes). New components use native CSS grid/flex; `.ratio` aspect boxes must carry a **`%` unit** on `--bs-aspect-ratio` (see `src/lib/media.ts` `mediaRatio`).
+Button labels are 14px at every size (§06). Mono follows the §03 rule: eyebrows,
+labels, metrics, status and code, in capitals at 11–12px with +0.08em tracking,
+and never for sentences. The hero proof line, the download form's note, the
+spec line and both copyright lines are sentences, so they are set in Epilogue.
+
+**Narrow screens.** The Polish copy binds phrases with no-break spaces. For
+example, "których nie znajdziesz" is 347px at 34px, which is wider than a
+320px phone's 280px column. Where that happens, the size below 600px follows
+the viewport so the bound phrase fits:
+
+- the tech band heading uses `clamp(26px, 8.2vw, 34px)`;
+- the calculator heading uses `clamp(22px, 7.4vw, 30px)`;
+- the demo heading uses `clamp(24px, 7.6vw, 30px)` for "gravity.integration";
+- the download H1 uses `clamp(28px, 9.6vw, 56px)`.
+
+As a last resort, h1–h3 carry `overflow-wrap: break-word`, and buttons may wrap
+below 420px. That fallback fires only for the calculator's "Pobierz
+gravity.integration za darmo".
+
+**Line breaks in display headings** are handled by `typeset()` in `src/lib/html.ts`,
+which `clean()` applies to every h1–h3 in the content. It makes two changes,
+neither of which alters a character of the copy:
+
+- A spaced dash never starts a line: the space before the dash becomes a
+  no-break space. Without it, "ESB — integrate" broke into "ESB / — integrate".
+- A hyphenated compound of 16 characters or fewer stays whole, so
+  "next-generation" no longer breaks into "next- / generation".
+
+The Polish copy that already binds its dash to the next word (`–&nbsp;`) is
+left exactly as written.
+
+## Space and layout
+
+- **Container:** 1200px with 24px gutters (20px below 600px), as in §05.
+  Reading measure is 68ch.
+- **Section rhythm:** `--section-y: clamp(64px, 9vw, 120px)`. The design system
+  specifies 88–120px, and phones step down to 64px.
+- **Radii:** 6 (checks), 10 (inputs), 16 (cards), 24 (panels) and pill
+  (buttons).
+- **Grids** use `minmax(0, 1fr)` tracks. An `auto` or bare `1fr` track grows to
+  the min-content of an unbreakable phrase, and the frame around it, which is
+  `overflow: hidden` wherever a mass is cropped, then cuts the words off without
+  any visible overflow. `verify-overflow.mjs` exists because of this.
+- **Breakpoints:**
+  - 480: the header's download button hides.
+  - 600: phone restack.
+  - 640/900: pricing, two cards per row with the odd one spanning.
+  - 900: two-column splits; the page hero turns over.
+  - 960: download page.
+  - 1000: the home hero turns over.
+  - 1100: the top bar becomes the menu; the technology grids go to four
+    columns.
+
+## The mass
+
+**The design system's rules (§04):**
+
+- One mass per frame, and one satellite at most.
+- The satellite is 5–10% of the mass and sits on the side opposite the crop.
+- Type sits on the mass, at least 8% in from its edge.
+- The logo stays on the field.
+- UI scales down: Quiet, or no mass at all.
+
+**Variants:**
+
+- **A · Corner fall:** mint field, ink mass bottom-right.
+- **B · Horizon:** the mass rises from the bottom edge.
+- **C · Inverted:** ink field, mint mass top-left. One per sequence.
+- **D · Quiet:** mist field, mint mass, no satellite.
+
+**Where each is used:**
+
+| Place | Variant | Notes |
+|---|---|---|
+| Home hero | A, full bleed | The H1 sits on the mass in mint. `.hero-mass[data-mass-slot]` is the slot for the vector animation that replaces v1's hero video. Below 1000px the frame turns over: the mass falls from the top behind the headline, and there is no satellite. |
+| Page heroes (`PageHero.astro`) | A, compact | Below 900px the mass is drawn from the title box itself: diameter 220%, centred at 66%, with 22% + 20px bottom padding. The arc therefore passes 48px under the title's last line at every width. When it was sized from the viewport, the start of the title stood on the mint field from about 420px up. |
+| Privacy policy | D | |
+| Home audience panels | C (developers), A (business) | Proportional: the type is sized in container units and the circles in percentages. The longest line in either language stays more than 8% inside the mass. |
+| Home tech band, `/technologia/` TextBoxes | ink band, mint mass top-right | A TextBoxes band that follows a quote drops its mass, because the quote's horizon already is one. |
+| Quote bands | B | |
+| Pricing: unlimited licence | "stat" card: ink + mass | The implementation offer card is plain mint, because the stat card above it already holds the frame's mass. |
+| Newsletter card | mint + ink mass + satellite | |
+| Calculator | ink panel, mint mass | Below 900px the panel opens 140px above the heading for it. |
+| Integrations "139+" | small mint cap | |
+| Contact claim ("FUTURE TECH FORMULA") | C, the words set live | |
+| 404 | A as a rounded panel on white | The number is centred on the mass and sized from it. |
+| Menu dialog | C | Hidden below 760px wide or 800px tall: it is pinned to the viewport's corner, and on those screens the links reached it. |
+| Footer | ink, mint mass top-left | Fixed size. The wordmark starts 216px down (150px below 900px), so it always stands on the field. |
+
+**No mass** in the case-study results panels, the demo panel, the download
+page's demo band, or beside the `/technologia/` intro.
+
+- An independent review counted eight masses on `/case-studies/`. Four of them
+  were identical results panels, against a rule of one per frame.
+- The demo panel sits right above the footer's mass.
+- The `/technologia/` intro was a render with no words. As an empty frame it
+  read as a missing thumbnail and put a second satellite in the hero's frame.
+
+**Never two same-coloured masses across a section boundary.** A full-bleed mint
+404, or a mint demo band, would have met the footer's mint mass. Both became
+panels on white instead.
 
 ## Components
 
-- Announcement bar: fixed green top bar at `--gi-z-bar`, dismissible. **The dismissal is scoped to the announcement, not to the bar** — `data-campaign` on the element (currently `v4`) becomes the cookie key `gi_bar_hidden_v4`. The original generic `gi_bar_hidden` key meant closing one message pre-dismissed the next, so a v5 launch would land silently for anyone who had closed the v4 bar; the 24h expiry existed only to paper over that, which in turn made a deliberate dismissal reappear the next morning. With the key carrying the campaign, a new announcement is a new cookie and always shows, so the lifetime can be honest about intent: one year. Bumping `campaign` in the component is what re-shows the bar to everyone. Everything on it is **ink on green** (`#0a0a12`, 12.47:1) — the theme's white-on-green read at 1.6:1. The primary CTA is a solid dark pill (white on ink, 19.72:1), the secondary an ink-outline ghost, and the close control a 44×44 target with an ink `:focus-visible` ring; no `!important`, all colors from tokens. `--gi-bar-h` starts at 44px and is then **measured from the live element** by `main.js` (ResizeObserver) — it renders 47px at 1440 and 66px at 390, where the message wraps above the two CTAs. Body margin and the header's `top` both offset from it, so a hard-coded height desynced the header on phones.
+**Announcement bar.** Ink, in flow above the sticky header, so nothing measures
+anything. It is a named `<aside>` landmark. The v4 badge is the design system's
+NEW badge (mint on ink), raised to ink-700 so it reads as a badge on an ink
+bar. Dismissal is scoped to the campaign: `data-campaign="v4"` becomes the
+cookie `gi_bar_hidden_v4`, which lasts one year. Bumping the campaign
+re-shows the bar to everyone.
 
-- Header: fixed, transparent over the dark hero, hides on scroll-down and returns on scroll-up with a solid `#0a0a12` background once scrolled off the hero (so it never floats transparent over light content). Contains the logo (adapts white→dark by context) and the MENU/CLOSE control.
-- Fullscreen menu: three dark tone columns, staggered scaleX wipe-in, white text, green hover, scroll-locked, decorative sphere clipped; close-X and socials white over the dark columns.
-- Hero: dark, autoplay-muted-loop video (re-encoded, poster + WebM/MP4, lazy below fold), H1 in a decorative "circle" outline, dual CTAs, trust line.
-- Use-case loops (home section 2, `TextImgLink.astro`): four muted loops, each in a `.ratio` box at `--bs-aspect-ratio: 55.82%` with `object-fit: cover` and an 8px radius, on `section.bg-light` (`#f3f4fb`). They are designed to have **no visible frame** — the scene dissolves into the page — so a replacement has to meet four rules:
+**Header.** Sticky. At the top of a page it takes the hero's colour
+(`body[data-hero]`). Once the page moves it turns white with a 1px mist-200
+line, and it hides on the way down.
 
-  1. **The frame edge decodes to the page background, `rgb(243,244,251)`.** Dissolve the render into the background in post (not by eye), encode RGB→YUV with the BT.709 matrix explicitly (ffmpeg's swscale defaults to BT.601) in limited range, and tag the streams `bt709`/`tv`. The background becomes Y/Cb/Cr 226/131/127; ffmpeg decodes that back to exactly `(243,244,251)` and Chromium to `(243,244,250)` — one level of blue is the floor, because one chroma step moves blue by about two levels, so no 8-bit YUV value lands on 251 in every decoder. The previous `use_02` missed by up to 4 levels in every channel and showed a faint rectangle; `scripts/verify-video-seam.mjs` measures the decoded edge in the browser and fails above 1 level.
-  2. **Size for the slot, not for the source.** The slot paints 1329×742 device px on a 1440 retina laptop and 905×505 on a 1920 desktop; **1440×804** covers both at ≥1:1 and matches the 55.82% ratio exactly, so `cover` crops nothing. (The older loops are 1280×714 — slightly under the retina case.)
-  3. **Poster = frame 0** of the same encode, so the swap from poster to video is invisible. WebM (VP9) is listed first, MP4 (H.264, `+faststart`) second.
-  4. **A changed loop gets a new filename.** `/video/` is cached for a month; overwriting `use_02.mp4` would leave returning visitors on the old file.
+- At 1100px and wider it shows six links, the language switch, and one button,
+  the download (primary).
+- Below 1100px the links fold into a full-screen `<dialog>` opened with
+  `showModal()`, which gives focus containment, an inert page and Escape. Its
+  only accent button is the download.
+- Below 480px the bar drops its download button, because the hero and the
+  menu both carry it.
+- With JavaScript off, the links become a horizontally scrolling row.
 
-  Row 1 is `connect-systems` (6.0 s, 30 fps): the light edition of the hero's gravity-well language, rendered in Blender/Cycles from `media-src/video/connect-systems/`, which also holds the FHD master and the post pipeline. Its label chips (ERP, CRM, WMS, API, SQL, EDI) are language-neutral on purpose — the same file plays on `/` and `/en/`.
-- Section renderer: ACF-derived layouts — `text_img_link`, `text_img`, `icons` (tech tiles with hand-drawn blob SVG backgrounds + the client-logo-wall variant), `quote`, `text_boxes`, `text_columns`, `pricing`, `faq`, `downloads`, `contact_form`, `links`.
-- Two inline animated hero SVGs (developer orbital scene, business network scene) — self-contained, on the homepage.
-- Integrations directory: intro ("139+" + protocol badges) then per-category bordered-cell grid of name/sub tiles.
-- ROI calculator: dark island, `#1a1b2e` background, `#242538` cards, green KPI values, range sliders with green thumbs. The four-column cost breakdown **restacks below 600px** into one card per phase (phase as title, three labelled figure rows via `data-label` + `::before`); explicit ARIA roles keep the table readable once `display: block` flattens it. Its `<style>` must stay `is:global` — the rows are injected by script and never carry Astro's scoping attribute.
-- ESB explainer (`/czym-jest-esb/`): editorial long-form — lede, point-to-point-vs-ESB SVG diagram, dark pull-quote band, green checklist, native `<details>` FAQ + FAQPage JSON-LD.
-- Demo form (`DemoSection.astro`): the site's one conversion surface, rebuilt off the CF7 scaffolding — the class soup only ever existed to satisfy WordPress, and every `!important` in it was fighting theme rules scoped to `form .form-row …`, which the form never matched. Field `name` attributes are unchanged so the Phase 3 endpoint sees the payload it was specified against. Two-column grid collapsing to one at 640px; it needs `max-width: none` because `legacy.css` ships a blanket `form { max-width: 26.5625rem }` for the theme's own narrow contact form, which was silently squeezing this one to 425px inside a 640px card.
+**Buttons.**
 
-  Its palette is local to the section rather than drawn from tokens, because the section sits on slate `#464861` and nothing else on the site does. The card lifts to `#535568` and the input well **recesses** to `#393b4d` — the inverse of the theme's original `rgba(#fff,.10)` well, which was *lighter* than its card. That inversion is the load-bearing decision: no white-alpha placeholder can clear 4.5:1 on a lighter-than-card well (0.70 alpha tops out at 3.70, and by then it no longer reads as placeholder), so darkening the well fixed the placeholder (5.15:1), the error red and the green focus accent in one move — and a recessed well is the more honest affordance anyway. Error *text* has to be lighter than its own border because it sits on the card, not in the well: `#ffc2c2` for text (4.77:1), `#ff8f8f` for the border (3.32:1, the 1.4.11 non-text floor).
+- Styles: primary (ink), accent (mint, one per view), secondary (ink
+  outline), link. On ink, primary inverts to on-ink.
+- Heights: 36, 44 and 52px. The label is Epilogue 600 at 14px for every size.
+- States: hover steps the fill one level over 150ms; pressed is
+  `scale(.97)`. The satellite appears inside a button as an 8px `.btn-dot`.
+- The footer's download is secondary, because the demo button above it is
+  already the view's accent.
 
-  Behavior is "smart and instant": per-field validation that resolves live once a field has been visited but never scolds a field being filled for the first time, free-mail detection on the work-email field, company name inferred from the email domain and offered as a fill-in chip, idempotent Polish phone formatting (matched on the raw `+48` prefix, not the digit string — digits alone can't tell a country code from a number), and a submit button that morphs in place into pending → success with no reload. It still POSTs natively with JS off. `?demo-preview=success` renders the success panel for design work.
+**Forms.**
 
-  Two gotchas are baked into the file. Anything script-injected via `innerHTML` never receives Astro's `data-astro-cid-*` attribute, so scoped styles silently miss it — every hint, chip and message lives in the template and script only toggles `hidden`/`textContent` (same root cause as the ROI calculator's `is:global`). And `hidden` is only a UA-stylesheet `display:none`, so an author rule setting `display` on the same element outranks it; `.demo-section [hidden] { display: none !important }` is what keeps the success panel from rendering *under* a still-visible form.
+- Inputs are 44px, radius 10, white, with a mist-200 border. On focus the
+  border turns ink and the ring is read from the surface.
+- Error text is red-700 on light and red-300 on ink.
+- The checkbox and radio are custom-drawn over real inputs.
 
-- Other forms: contact (`ContactForm.astro`), footer newsletter (`Newsletter.astro`), and the pre-existing MailerLite embed on `/pobieranie/` (form `gAV0lr`, untouched — it works, and its `universal.js` widget is not worth re-implementing).
+**Cards.**
 
-- Form delivery (`src/lib/mailerlite.ts`, `src/scripts/ml-forms.ts`): all three hand-built surfaces post straight to MailerLite's embedded-form endpoint, `POST assets.mailerlite.com/jsonp/{account}/forms/{form}/subscribe`, with a `URLSearchParams` body. That last detail is load-bearing: a `URLSearchParams` body makes the request CORS-*simple*, so there is no preflight and no server of our own to keep alive. Setting **any** custom header — including a well-meaning `Accept` — re-triggers the preflight and breaks it. JSONP, despite the path segment, does not work.
+- Default: white, 1px mist-200, radius 16, padding 24. A card that is a link
+  lifts 3px on hover.
+- On ink, cards are ink-700.
+- Stat and CTA cards are listed under The mass above.
 
-  Three separate MailerLite forms feed **one** group, GRAVITY. The split exists purely for attribution: `Demo (www)`, `Kontakt (www)` and `Newsletter (www)` each report their own conversion count, while the audience stays single. The contact form's request type rides along in the `typ_zapytania` custom field rather than as a fourth form.
+**Grids.** The logo wall and the integrations directory are bordered-cell grids
+(hairlines, no gaps), two columns on phones. The technologies are four across,
+two by two, or one column, and never three plus one.
 
-  Every surface degrades: with JS off each `<form>` has a real `action` pointing at its own MailerLite endpoint and posts natively. With JS on, three response branches are handled distinctly — success, a field-level error (`errors.fields.email`, rendered as an inline Polish tip next to the input rather than a banner), and a network failure, which falls back to a prefilled `mailto:` so a lead is never simply lost. Two honeypots (an off-screen `website_url` and a form-open timestamp) are stripped from the payload and, when tripped, show success while sending nothing.
+**FAQ.** A native `<details>` with a plus that turns into a minus. Its heading
+is "FAQ" at H1 size: on `/cennik/` and `/kalkulator/` it used to be a small
+label, and the ESB page already had the heading.
 
-- Cookie consent (`CookieConsent.astro`): the WP plugin's notice was force-hidden on the live site, which meant GA4 ran on every visitor with no consent recorded anywhere. The replacement makes two commitments. **Nothing loads before the answer**: the `<script src>` is not in the document at all: `Site.astro` declares Consent Mode v2 defaults (everything denied) and publishes `giEnableAnalytics()` / `giDisableAnalytics()`, and the tag is injected on demand. Before consent there is zero traffic to googletagmanager.com, which is a stronger position than Consent Mode's cookieless pings. **Refusing costs exactly what accepting costs**: two filled buttons, identical geometry, same row, one click each, no × that quietly means "ask again on the next page".
+**Use-case videos.** Each sits in a framed panel, `.til-frame`: 1px mist-200,
+radius 24, filled `rgb(243,244,251)`, which is the colour the current loops
+were rendered against.
 
-  The gate covers two Google properties, both from the WordPress build: GA4 `G-EWVWPJGYVM` (`_ga*`) and Google Ads `AW-11029031415` (`_gcl*`). One `gtag.js` request is fetched with the GA4 id and both are then `config`-ed against it — that is how Google intends multiple ids to share a page, and it keeps the "exactly one network request after consent" property the harness asserts. The choice stays binary because the two arrive together: there is no state in which analytics runs and advertising doesn't, so separate switches would describe an architecture that doesn't exist. What the second tag does change is the copy — the paragraph names advertising explicitly, because a consent that doesn't say what it consents to isn't informed. A three-tier preferences drawer over a single real decision would be theatre, and theatre is what trains people to click Accept without reading.
+- The frame is `content-box`, so its 1440/804 ratio is the video's own box.
+  With `border-box`, `object-fit` cropped the loop to a box two pixels off its
+  shape.
+- They start only when in view (IntersectionObserver) and carry no `autoplay`.
 
-  Withdrawal lives in the footer of every page, clears the stored answer **and actively deletes `_ga*` and `_gcl*`** — Consent Mode stops new writes but doesn't clear what a previous "accept" already stored, and withdrawal that leaves those on the device isn't withdrawal. The cookie lasts six months, not a year, so consent gets revisited.
+**Case studies.** Each study is a dossier:
 
-  Placement is the bottom edge on purpose: the announcement bar owns the top and `main.js` measures its height into `--gi-bar-h`, so a second fixed element up there would either cover the bar or corrupt that measurement. On phones the bar is held under a third of the viewport height by tightening leading, gaps and padding rather than by truncating the paragraph — the paragraph is the legal substance.
+- a logo plate, the client in mono and the title at H2;
+- a sticky mist fact sheet beside the story, which is set at reading measure;
+- the results on an ink panel with mint ticks.
 
-  Two traps are documented in the file because both cost a debugging cycle. `legacy.css` carries the old theme's HTML5 reset, including `aside{display:block}` — an *author* rule, so it outranks the UA's `[hidden]{display:none}` and the `hidden` attribute silently stops working; anything using `hidden` on a sectioning element needs an explicit `[hidden]{display:none}`. And Astro appends `[data-astro-cid-…]` to **every** compound selector, so `.col-7 .gi-consent-link` emits at specificity (0,4,0) and outranks `.gi-consent-link[hidden]` at (0,3,0). Never declare `display` on an element you also control with `hidden`; let a wrapper do the layout.
+**ESB explainer.** The point-to-point and bus diagrams are drawn as
+design-system panels in SVG. The warning signs use amber dots (tone is a dot,
+never a fill). The benefits sit in a card with mint ticks.
 
-  Behavior is verified by `consent.mjs` (56 assertions): no request before a decision, all four consent signals denied by default and granted together on accept, equal button geometry and 44px targets, no overlap with the announcement bar, persistence across pages, one `gtag.js` load carrying both tag ids, full `_ga*` / `_gcl*` deletion on withdrawal, focus moved into the reopened bar, nothing at all with JS off (correct — with JS off nothing was ever loaded to consent to), the 375px height budget, and the lead-event pair below.
+**Icons.** Lucide (`lucide-static`, imported `?raw`) at stroke 1.75.
+`iconSvg()` rewrites only the root `<svg>` tag: stripping attributes from
+child elements once deleted the rect geometry of two icons. LinkedIn is the
+one custom glyph.
 
-### Google tags on the live WordPress site
-
-Three ids ran on `gravity-integration.com`; two are ported and one is deliberately left for a decision.
-
-`G-EWVWPJGYVM` (GA4) came from Code Snippets snippet 17 at `wp_head` priority 1. `AW-11029031415` (Google Ads) was injected sitewide by a "Head & Footer Code" plugin as a bare `gtag('config', …)`. There is **no conversion label anywhere** — not in the theme, not in the 21 snippets, not in the rendered HTML — so the Ads tag does remarketing and audience collection only, with conversions imported from GA4. Both are now consent-gated as described above.
-
-`GT-K5LVDQD` is **not ported, pending confirmation.** It is a Google tag container installed by the **Site Kit** plugin, which shipped its own `gtag.js` alongside snippet 17's, set `gtag("set","linker",{"domains":["gravity-integration.com"]})` and `developer_id.dZTNiMT`, and exposed `window._googlesitekit`. It almost certainly routes to the same GA4 property, which would mean the live site has been double-counting every pageview since Site Kit was installed. **To confirm:** open the Google tag UI (`tagmanager.google.com` → Google tags, or Admin → Data Streams → the stream's *Configure tag settings* in GA4) and check which destinations `GT-K5LVDQD` is configured to send to. If the only destination is `G-EWVWPJGYVM`, it is pure duplication and should stay unported. If it carries a destination the other two don't, it needs adding to the same consent gate before launch.
-
-Deliberately not ported: reCAPTCHA v3 (site key `6Lctf…`, badge hidden by snippet 11), replaced by a honeypot plus a submit-timing trap; and MailerLite Universal, which ran sitewide with popups enabled and now loads only on `/pobieranie/`. Absent from both the old and new sites: Meta pixel, LinkedIn Insight, Hotjar, Clarity, Bing UET, HubSpot, and any `GTM-` container or `UA-` property.
-
-### Lead events
-
-WordPress fired `gtag('event','generate_lead', …)` on `wpcf7mailsent`. The rebuilt forms initially only pushed to `dataLayer` — and since there is no GTM container on this site, nothing consumed those pushes: GA4 would have recorded zero leads, taking any Ads conversion imported from that event down with it. `trackLead()` in `ml-forms.ts` restores the real event and is called from all three surfaces (contact, newsletter, demo), identically, so the metric is one number rather than three that have to be summed.
-
-Two details are deliberate. The event is addressed with `send_to` to the GA4 property, because both ids share one `gtag.js` instance and an unaddressed event would fan out to the Ads tag as well — which is how an unlabelled conversion appears in an Ads account nobody configured. And when consent was refused, the call still executes: the `gtag` shim always exists, so the event queues into `dataLayer` and reaches nothing, because no tag was ever loaded. `consent.mjs` asserts both directions — the event fires exactly once with the right `send_to` after accept, and after reject the submission still reaches MailerLite while zero requests to googletagmanager.com are attempted.
-
-- Footer: logo + a right-aligned meta row (consent settings, dynamic-year copyright) laid out by a flex wrapper. The consent control is a real `<button>` — it performs an action, it doesn't navigate — rendered `hidden` and un-hidden by script, so the no-JS footer never offers a control that can't work.
-
-- Outbound links (`src/lib/links.ts`): the documentation site (`docs.gravity-integration.com`) always opens in a new tab. That is a policy, not an attribute, so it is stated once — `NEW_TAB_HOSTS` — and every renderer asks `linkTarget()` / `linkRel()` / `opensNewTab()` rather than trusting the data. It has to work that way because the CMS export is inconsistent: the same docs URL ships as `_blank` in one section's JSON, bare in another, and the fullscreen menu's link was hand-written with no target at all (`/pobieranie/`'s was hand-written over plain `http`, now upgraded). `linkTarget` only ever escalates — a declared `_blank` on any other host is honored, never downgraded — so adding a host to the array is the whole extension mechanism.
-
-  Three layers enforce it, in falling order of authority. The helper covers everything the five section renderers emit. The two hand-written cases (`Header.astro`'s menu item, `pobieranie.json`'s inline HTML) are corrected at the source, so the markup is right with JS off. `initOutboundLinks()` in `main.js` is a runtime sweep for docs links authored into future content-JSON body copy, where no renderer sees them — a net, not the mechanism; if it never fires, a missed link merely opens in the same tab.
-
-  Every such link carries a `.visually-hidden` " (otwiera się w nowej karcie)" note, because WCAG 3.2.2 wants a change of context announced and a visible ↗ marker on every docs link would clutter a fullscreen menu whose typography *is* the design. The utility had to be added to `site.css` — the theme's Bootstrap build shipped without it — and uses `clip-path: inset(50%)` plus `white-space: nowrap` so it can't reflow the line box it sits in. Confirmed: the menu item's box is unchanged at 268×38 alongside its siblings' 38px, and the announcement-bar ghost pill still measures 145×28. Links that already have an `aria-label` (the SVG-only LinkedIn anchor, which previously had *no* accessible name at all) fold the note into the label instead of appending a second one.
+**Favicons and OG images.** `scripts/build-brand.mjs` generates the mark (mass
+plus satellite, §01) as `mark.svg` and `mark-16`…`mark-512.png`, along with
+`og-gravity.png` and `og-gravity-en.png`.
 
 ## Motion
 
-Locomotive Scroll and GSAP are gone; motion is native. The one animation that genuinely needed GSAP — the homepage tech-tiles **blob morph** (hand-drawn outlines behind each icon, cycling through blob shapes on a 16s loop: a 4s rest at the base shape, then three 4s linear legs back to it, staggered 0.1s per tile) — runs as **SMIL** `<animate attributeName="d">` instead. It is the one case where SMIL beats CSS: Firefox still doesn't support `d` as a CSS property, and all seven blob paths share the same command signature (`M` + 9×`C` + `Z`), which is what makes plain `d` interpolation legal without a morph plugin. The theme randomized each tile's two target shapes at runtime; a static build assigns them deterministically (offset by 3 through the set) so no two tiles share a shape or travel in lockstep. Because CSS cannot reach SMIL, a small script gates it: `prefers-reduced-motion: reduce` freezes the timeline at t=0 (the static blob), and an IntersectionObserver pauses it while the band is off-screen. Both use `pauseAnimations()`/`unpauseAnimations()` rather than removing the `<animate>` nodes, so a mid-session change to the OS setting is reversible; with JS off the morph simply runs, which is the correct fallback for pure decoration. Reveal-on-view via IntersectionObserver toggling `.is-inview` on `[data-scroll-opacity]` (content is visible by default — reveals enhance, never gate). Header hide/show and background transition on scroll. Menu columns wipe in with staggered `scaleX` and a cubic ease-out; links and tiles use short color/opacity transitions; a light scroll-speed parallax on decorative elements. The demo form's feedback is drawn rather than faded: validity ticks and the success checkmark are SVG paths with `pathLength="1"` and `stroke-dasharray: 1`, transitioned on `stroke-dashoffset` over an ease-out-expo curve, and the card holds its pre-swap height for 500ms on success so the page doesn't jump under the cursor at the exact moment the user gets good news. Under `prefers-reduced-motion` every stroke snaps to `dashoffset: 0` and the durations zero out — except the submit spinner, which keeps turning (slowed to 2.4s) because it is communicating "still working", not decorating. Every animation has a `prefers-reduced-motion: reduce` path (instant/opacity-1), and a no-JS fallback keeps everything visible. Curves are ease-out (no bounce/elastic).
+The design system's motion rules (§05):
+
+- **Entries** fall toward the core on `cubic-bezier(.55,0,.1,1)` over
+  240–400ms.
+- **Hover** takes 150ms.
+- **Nothing bounces.**
+
+On the site:
+
+- **Reveal:** `[data-reveal]` rises 16px and fades in when it enters the view
+  (IntersectionObserver). Content is visible by default and is hidden only once
+  script is known to run. It is instant under `prefers-reduced-motion`, and
+  print forces it visible.
+- **Masses** drift into place on reveal over `--dur-slow` (400ms), and the home
+  hero's mass, satellite and H1 enter on the same curve. v1-era durations of
+  600–900ms were brought down to the 400ms maximum.
+- **Header** hides and shows on scroll; the menu fades and settles 12px.
+- **Forms** draw their ticks with `stroke-dashoffset`. The submit spinner keeps
+  turning under reduced motion, because it says "still working".
+
+## Behaviour carried over from v1
+
+None of this changed in the redesign. The hooks, ids and classes the scripts
+address were kept, so the v1 harnesses still apply (with the v2 selector
+updates noted in `CLAUDE.md`).
+
+**Form delivery** (`src/lib/mailerlite.ts`, `src/scripts/ml-forms.ts`). Every
+surface posts straight to MailerLite's embedded-form endpoint, `POST
+assets.mailerlite.com/jsonp/{account}/forms/{form}/subscribe`, with a
+`URLSearchParams` body.
+
+- **The body type is load-bearing.** A `URLSearchParams` body makes the request
+  CORS-simple, so there is no preflight and no server of our own. Setting any
+  custom header, including `Accept`, re-triggers the preflight and breaks it.
+- **Forms and groups.** Separate forms (`Demo (www)`, `Kontakt (www)`,
+  `Newsletter (www)`, plus the download form) feed one group, GRAVITY, so each
+  surface reports its own conversions. The contact form's request type rides
+  in the `typ_zapytania` field. Its values stay Polish in both languages,
+  because they are data, not copy.
+- **Response handling.** Three branches are handled separately:
+  - success;
+  - a field error, which appears as an inline tip next to the input;
+  - a network failure, which falls back to a prefilled `mailto:`.
+- **Without JavaScript** every form has a real `action` and posts natively.
+- **Anti-spam.** An off-screen `website_url` honeypot and a form-open
+  timestamp are stripped from the payload. When either is tripped, the form
+  shows success and sends nothing.
+- **v2 markup.** The message area is `.form-output` (with `data-tone`), and the
+  submit is a `<button class="form-submit">` whose `.form-submit-label` holds
+  the text. The e-mail field sits in a `.form-control` wrapper that receives
+  `.form-tip`.
+
+**Cookie consent** (`CookieConsent.astro`). The panel is a `<div
+role="dialog">`, because ARIA does not allow that role on `<aside>`. It is an
+ink-700 toast, the design system's "card on ink", so it still has an edge where
+it floats over the hero's mass.
+
+- **Nothing loads before the answer.** The tag is injected only after
+  "Akceptuję". Consent Mode v2 defaults are declared as all denied.
+- **Refusing costs exactly what accepting costs.** The two buttons sit in two
+  equal grid columns, whichever label is longer, and each takes one click.
+- **Withdrawal** is in the footer of every page. It clears the stored answer
+  and deletes `_ga*` and `_gcl*`.
+- **Duration.** The answer lasts six months.
+- **Verified by** `consent.mjs`, with 56 assertions.
+
+**Google tags.**
+
+- **GA4** `G-EWVWPJGYVM` and **Ads** `AW-11029031415` are consent-gated
+  together. One `gtag.js` load configures both ids.
+- **Not ported:** `GT-K5LVDQD`, pending confirmation of its destinations.
+  reCAPTCHA v3 and sitewide MailerLite Universal are also not ported.
+- **MailerLite's pop-up tag** loads only on Polish pages, only after consent.
+  `verify-mailerlite-consent.mjs` checks this.
+- **Ads download conversion.** A successful download-form submission fires
+  one `conversion` to `adsDownloadConversion` in `site.json`
+  (`AW-11029031415/t7n0CKye-tocEPfThosp`, the "Pobranie gravity.integration
+  (gated)" action) through `trackDownloadConversion()`. An empty value
+  disables it. `verify-ads-conversion.mjs` checks both states.
+
+**Lead events.** `trackLead()` fires `gtag('event','generate_lead',{send_to:
+'G-EWVWPJGYVM', value: 1})` exactly once per successful submission from every
+surface. It is addressed to GA4 so it does not fan out to the Ads tag.
+Surface-specific `dataLayer` events (`newsletter_subscribed`,
+`direct_download`, …) still fire alongside it.
+
+**Outbound links** (`src/lib/links.ts`). `docs.gravity-integration.com` always
+opens in a new tab, and that is the policy stated in `NEW_TAB_HOSTS`. Every
+such link carries a visually hidden "(opens in a new tab)" note.
+`initOutboundLinks()` in `main.js` sweeps up docs links authored into body
+copy.
+
+## Replacing a use-case loop
+
+The four loops on the home page are v1 renders. They will be remade to match
+the system. Whatever the new ones look like, four rules from v1 still hold:
+
+1. **The frame edge decodes to the panel fill.** Today that fill is
+   `rgb(243,244,251)`, the colour the old renders were made for. Encode with the
+   BT.709 matrix explicitly (swscale defaults to BT.601), in limited range, and
+   tag the stream `bt709`/`tv`. That background then decodes to exactly
+   `(243,244,251)` in ffmpeg and to `(243,244,250)` in Chromium. If the new
+   loops are rendered against a different colour, change `.til-frame`'s fill
+   and `BG` in `verify-video-seam.mjs` together.
+   - Current state: `connect-systems` passes at Δ≤1.
+   - `use_01`, `use_03` and `use_04` are 3–5 levels off. They show as a faint
+     rectangle inside the frame on a good screen, and they are the ones being
+     replaced.
+2. **Size for the slot:** 1440×804. That covers the 2× slot and matches the
+   frame's ratio exactly, so `object-fit: cover` crops nothing.
+3. **The poster is frame 0** of the same encode. WebM (VP9) comes first and MP4
+   (H.264, `+faststart`) second.
+4. **A changed loop gets a new filename.** `/video/` is cached for a month.
 
 ## Accessibility
 
-WCAG 2.1 AA. Dark slate/ink body text clears 4.5:1 on light; green text on light is always `--gi-green-deep`; white nav text sits only on sufficiently dark columns and at large sizes. Keyboard operable (native `<details>`, real `<a>`/`<button>`, Escape closes the menu, scroll-lock while open). `prefers-reduced-motion` honored throughout. `lang="pl"`; English kept i18n-ready. Alt text carried from the CMS on content and logo imagery.
+The target is WCAG 2.2 AA. Four harnesses check it (listed in `CLAUDE.md`):
+
+- `verify-axe.mjs`: axe-core over 20 routes at 1440 and 390, plus the consent
+  panel and the open menu. Result: 0 violations.
+- `verify-harden-a11y.mjs` with `measure-focus-pairs.py`: 16 focus
+  indicators, each measured against its backdrop at 3:1 or more, reached with
+  a real Tab.
+- `verify-harden-names.mjs`: accessible names from Chrome's accessibility tree.
+- `verify-overflow.mjs`: no clipped or cut text at 320–1440.
+
+**Landmarks:**
+
+- the announcement `<aside>`;
+- the header, whose navigation carries a label;
+- `<main>` with `tabindex="-1"`, the target of the skip link;
+- the footer, whose navigation carries a label;
+- the consent dialog.
+
+## Leftovers
+
+About 2.3MB of v1-only files are still in `public/` and are no longer
+referenced by any page:
+
+- `theme/static/*.svg`;
+- the Telegraf fonts;
+- the old favicon set (`mstile-*`, `apple-touch-icon-*`);
+- `og-homehero.png` and `media/og-homehero.png`;
+- `video/homehero.*`, v1's hero video;
+- `uploads/etl-scaled.jpg`, `uploads/heropricing.webp` and
+  `uploads/contact.webp`.
+
+They were left in place so the redesign's diff stays about the redesign.
+Deploys never delete anything on the server anyway (see `DEPLOY.md`), so
+removing them from the repo only shrinks future deploy folders. Keep
+`favicon.ico`: browsers request it by default.

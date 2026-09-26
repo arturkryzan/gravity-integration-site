@@ -17,6 +17,12 @@ static Astro build, content in Git as JSON, served as plain files from Artur's
 own Apache box. No Node, no PHP, no database on the server. Forms post straight
 from the browser to MailerLite.
 
+**v2 (branch `design-v2`, September 2026)** is the same site rebuilt onto the
+new design system, "Mass" v2.0. The copy, URLs, SEO, forms, consent and
+analytics are unchanged; every line of markup and CSS was written again.
+`DESIGN.md` is the visual system and says what came from where. The design
+system itself is `2_0/Gravity Design System.html`, beside the repo, not in it.
+
 Polish at the root, English under `/en/`. Twenty routes: ten Polish pages,
 eight English, plus two 404s.
 
@@ -24,7 +30,11 @@ eight English, plus two 404s.
 
 ```
 SITES/gravity-integration/          the project folder — media, docs, deploy artefacts
-  gravity-integration-site/         THIS REPO. All code lives here.
+  gravity-integration-site/         the v1 clone (main)
+  2_0/                              the v2 design system and the v2 work:
+    Gravity Design System.html      the design system (§01–§08), read-only
+    gravity-integration-site/       a clone on branch design-v2 — v2 lives here
+    gravity-v2-preview/             a built v2 site; PREVIEW.command serves it
   gravity-deploy-YYYYMMDD/          a built site, ready to upload. Disposable.
   READ-BEFORE-UPLOADING.txt         upload instructions in plain text
   START-HERE.md                     Artur's brief. Keep it in step with this file.
@@ -63,9 +73,13 @@ src/
                             intrinsic image dimensions (CLS guard)
   i18n/                     ui.ts (strings), routes.ts (slug ↔ URL, NOT_OFFERED),
                             sitemap-data.mjs (must stay .mjs — see traps)
-  lib/                      case-study parser, media resolver, MailerLite, links
+  lib/                      case-study parser, media resolver, MailerLite, links,
+                            html.ts (clean() + typeset() for heading breaks),
+                            icons.ts (Lucide, ?raw)
   scripts/ml-forms.ts       shared form runtime: submit, validation, GA4 events
-  styles/tokens.css         design tokens (brand green #27EA93)
+  styles/tokens.css         design tokens: the design system's block verbatim,
+                            then the site's layer (fluid type scale, z-index…)
+  styles/base.css           surfaces, type classes, buttons, forms, cards
 public/                     copied verbatim into dist/ — media, video, fonts,
                             favicons, .htaccess, robots.txt, .well-known/
 media-src/                  originals of re-encoded assets, plus orphans/
@@ -90,29 +104,45 @@ that is `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Running locally,
 `npx playwright install chromium` once and then omit `CHROME` entirely —
 `executablePath: undefined` makes Playwright use its own.
 
-| Harness | What it proves | Invocation |
+| Harness | What it proves | Clean output |
 |---|---|---|
-| `verify-final-two.mjs` | 60 assertions across both locales | `ORIGIN=http://127.0.0.1:8412 node scripts/verify-final-two.mjs` |
-| `verify-delivery.mjs` | walks the **extracted archive**, not `dist/` | `ORIGIN=http://127.0.0.1:8414 node scripts/verify-delivery.mjs` |
-| `regress-pixels.mjs` | Polish pages, pixel diff vs a baseline build | `HIDE=layout node scripts/regress-pixels.mjs` |
-| `audit-impeccable.mjs` | 18 routes × 4 viewports → `/tmp/audit-raw.json` | `ORIGIN=http://127.0.0.1:8501 node scripts/audit-impeccable.mjs` |
-| `shoot-routes.mjs` | screenshots for pixel diffing | `ORIGIN=http://127.0.0.1:8601 node scripts/shoot-routes.mjs` |
-| `diff-shots.mjs` | compares two shot directories | `node scripts/diff-shots.mjs A B /tmp/shots-diff` |
-| `verify-video-seam.mjs` | the `connect-systems` loop plays, fits its slot, and its decoded edge melts into `#f3f4fb` (≤1 level) on `/` and `/en/` | `ORIGIN=http://127.0.0.1:8412 node scripts/verify-video-seam.mjs` |
+| `verify-final-two.mjs` | the download is the one highlighted action on the bar and in the menu dialog (contrast, hover, focus, modal behaviour) at 1440/768/390; the post-submit direct-download link in both locales | `69 passed, 0 failed` |
+| `consent.mjs` | nothing loads before consent; equal buttons; withdrawal clears cookies; one `generate_lead` | `56 passed, 0 failed` |
+| `ml-forms-routed.mjs` | the request each form builds and how it renders each MailerLite reply — **intercepted, nothing is sent** | `ALL ASSERTIONS PASSED` (two `ERR_FAILED` console lines are the network-failure case) |
+| `verify-ads-conversion.mjs` | the download conversion guard and `generate_lead` | `12 passed, 0 failed` |
+| `verify-mailerlite-consent.mjs` | the MailerLite pop-up tag waits for consent and never loads on `/en/` | `clean — …` |
+| `verify-harden-names.mjs` | accessible names, from Chrome's accessibility tree | `all accessible names and announced values verified` |
+| `verify-harden-a11y.mjs` + `measure-focus-pairs.py` | 16 focus indicators, reached with a real Tab, ≥3:1 against their backdrop | `all focus indicators verified at >= 3.0:1` |
+| `verify-axe.mjs` | axe-core, WCAG 2.2 AA + best practice, 20 routes × 1440/390, the consent panel, the open menu | `0 violations` |
+| `verify-overflow.mjs` | no text off-screen, spilling, or cut by a clipping frame, 20 routes × 6 widths | `0 problems` |
+| `verify-video-seam.mjs` | the `connect-systems` loop plays, fits its frame uncropped, and its edge decodes to the frame's fill (≤1 level) | `22 passed, 0 failed` |
+| `verify-delivery.mjs` | walks the **extracted archive**, not `dist/` | `clean — 8 English pages, …` |
+| `shots.mjs` | full-page screenshots for looking at: `ROUTES=/,/cennik/ WIDTHS=1440,390 OUT=dir` | — |
 
-`regress-pixels.mjs` **needs `HIDE=layout`**. Without it the footer switcher
-keeps a box the baseline never had, every mobile page grows ~15 px, and you get
-a screenful of alarming diffs that mean nothing. Clean is 20 of 22 identical;
-the two misses are the home hero at both widths, whose floating spheres never
-land on the same frame twice.
+All take `ORIGIN=http://127.0.0.1:8412` (the served `dist/`) and `CHROME=…`.
+
+**Never run `ml-forms-e2e.mjs`.** It submits the real forms and creates
+subscribers in the live MailerLite account — a write, which the rule below
+forbids. `ml-forms-routed.mjs` covers the same client code without sending
+anything.
+
+`verify-final-two.mjs` was rewritten for v2 (v1's version clicked a
+`button.hamburger` that no longer exists). `verify-overflow.mjs` and
+`verify-axe.mjs` are new in v2; `axe-core` is a devDependency for the latter.
+`verify-overflow.mjs` takes `INJECT_CSS` to re-create a known fault and prove
+it can see one — do that before trusting a clean run.
+
+**v1-era harnesses that no longer apply** — they target v1 markup, v1 colours
+or a v1 baseline, and fail or pass for reasons that mean nothing now:
+`regress-pixels.mjs` / `regress-pl.mjs` (pixel diffs against a v1 baseline —
+make a v2 baseline before reusing), `audit-*.mjs`, `probe-*.mjs`,
+`verify-polish.mjs`, `verify-menu-control.mjs` (v1's MENU lockup),
+`verify-adapt.mjs`, `verify-harden-contrast.mjs`, and the `legacy.css` tools
+(`css-usage.mjs`, `strip-css.mjs`, `removed-css.mjs`, `polish-sweep.mjs`) —
+`legacy.css` is gone.
 
 `verify-delivery.mjs` exists because the only fault this project has ever
 shipped was in the packaging rather than the build.
-
-Clean output, for reference:
-
-- `verify-final-two.mjs` → `60 passed, 0 failed`
-- `verify-delivery.mjs` → `clean — 8 English pages, switcher round-trips, 2 Polish-only pages claim no twin, /en/roi-calculator/ gone, 404 present`
 
 ## The one rule that outranks everything
 
@@ -224,6 +254,27 @@ Specific ones:
   not the character — diagnose the actual bytes with `cat -A` before editing,
   and use a script rather than `Edit` when they differ.
 
+From the v2 rebuild:
+
+- **Text cut by a frame is invisible to `scrollWidth`.** Every cropped mass
+  lives in an `overflow: hidden` frame. An unbreakable word (a no-break-space
+  phrase, "gravity.integration") overflowing a grid track widens the element
+  with it, the frame cuts the line, and the page still reports no overflow.
+  Element-box checks miss it too. `verify-overflow.mjs` measures each line of
+  text (a Range) against its clipping ancestor; that is what finally saw it.
+- **An `auto` or bare `1fr` grid track grows to min-content.** Use
+  `minmax(0, 1fr)`. The Polish copy binds phrases with no-break spaces, and a
+  bound phrase is one long word to the layout.
+- **A mass pinned to the viewport collides with content that flows.** The menu
+  dialog's mass sat under the links on every phone. Pin masses to the
+  element whose content they must clear, or drop them where there's no room.
+- **Mass geometry sized in `vw` drifts from text sized in `px`.** The page
+  hero's arc climbed faster than its padding grew and uncovered the title
+  from ~420px up. Size the circle and its clearance from the same box.
+- **A focus ring hard-coded for ink vanishes on white and on mint.** Read
+  `--focus-gap` / `--focus-ring` from the surface; never write white + mint
+  into a component.
+
 In a cloud sandbox specifically: bash cwd resets between calls, so start every
 command with `cd <repo> &&`; calls die at a two-minute ceiling, so background
 long jobs with `(setsid CMD > log 2>&1 < /dev/null &)` and poll;
@@ -231,6 +282,11 @@ long jobs with `(setsid CMD > log 2>&1 < /dev/null &)` and poll;
 so issue it alone.
 
 ## Delivering changes back
+
+**v2** was delivered as a clone in `2_0/gravity-integration-site/`, on branch
+`design-v2`, branched from a `main` whose tree equals the v1 patch series'
+(`c81ce515…`). Artur pushes it himself. Everything below still applies to
+patches against either branch.
 
 If the session can push, push. If it cannot — a sandbox with no write
 credential for GitHub is the normal case — deliver a `git format-patch` series
@@ -260,11 +316,11 @@ resulting tree before telling anyone it is safe to run.
 |---|---|---|
 | `README.md` | stack, layout, getting started | current |
 | `DEPLOY.md` | the server run-book | current |
-| `DESIGN.md` | visual system: tokens, type scale, motion | current |
+| `DESIGN.md` | the v2 visual system: tokens, type scale, the mass, components, motion, and the v1 behaviour carried over | current (rewritten for v2) |
 | `PRODUCT.md` | product context | current |
-| `AUDIT.md` | the re-audit, 16/20, eleven open findings | current |
-| `OPTIMIZE.md` | the weight-reduction pass, 18.1 MB → 6.0 MB | current |
-| `POLISH.md` | the design-system pass | current |
+| `AUDIT.md` | the v1 re-audit, 16/20, eleven open findings | historical — v1 markup |
+| `OPTIMIZE.md` | the weight-reduction pass, 18.1 MB → 6.0 MB | current for media; v1 CSS figures |
+| `POLISH.md` | the v1 design-system pass | historical — superseded by v2 |
 | `EN-PLAN.md` | the English build as it was *planned* | historical |
 | `HANDOFF.md` | the English build as it *happened* | mostly current — **two known errors** |
 | `packaging/APPLY.txt` | notes shipped with a patch series | **one known error** |

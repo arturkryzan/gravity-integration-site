@@ -1,8 +1,12 @@
 # gravity-integration.com
 
 The marketing site for **gravity.integration**, an enterprise service bus /
-integration platform. Polish-first, EN-ready (i18n routing is pre-wired but not
-yet populated).
+integration platform. Polish at the root, English under `/en/`.
+
+**v2** (branch `design-v2`) rebuilds the site onto the gravity.integration
+design system v2.0, "Mass" — mint field, ink mass, one cropped circle as the
+only graphic device. Copy, URLs, SEO, forms, consent and analytics are
+unchanged from v1. See `DESIGN.md`.
 
 This is a rebuild: the site ran on WordPress with a pile of accumulated code
 snippets, and was moved to a static Astro build served as plain files from our
@@ -13,8 +17,9 @@ deploy is `rsync` of a folder.
 
 - **Astro 7**, static output, `@astrojs/sitemap`
 - **Node 22.12+** required (Astro 7 engine constraint — `npm ci` refuses older)
-- **Fonts:** Epilogue + Inter, self-hosted via Fontsource. No Google Fonts CDN,
-  so no third-party request on first paint.
+- **Fonts:** Epilogue + JetBrains Mono, self-hosted via Fontsource. No Google
+  Fonts CDN, so no third-party request on first paint.
+- **Icons:** Lucide (`lucide-static`), inlined at build time.
 - **Content:** git-based JSON collections, migrated 1:1 from WordPress/ACF.
   Editing copy means editing a JSON file and rebuilding — no CMS to keep alive.
 - **URL policy:** `trailingSlash: 'always'`. All 10 WordPress-era URLs are
@@ -44,13 +49,14 @@ src/
   lib/                      case-study parser, media resolver, MailerLite,
                             link helpers
   scripts/ml-forms.ts       shared form runtime: submit, validation, GA4 events
-  styles/tokens.css         design tokens (brand green #27EA93)
+  styles/tokens.css         design tokens: the design system's, verbatim, plus
+                            the site's layer (fluid type scale, z-index, …)
+  styles/base.css           surfaces, type, buttons, forms, cards
 public/                     copied verbatim into dist/ — media, video, fonts,
                             favicons, .htaccess, robots.txt, .well-known/
 deploy/nginx-gravity.conf   nginx equivalent of public/.htaccess
-scripts/                    one-off Playwright harnesses used during the
-                            rebuild (audits, form e2e, screenshots) — not part
-                            of the build
+scripts/                    Playwright harnesses — which ones are current for
+                            v2 is listed in CLAUDE.md. Not part of the build.
 ```
 
 ## Forms
@@ -66,9 +72,11 @@ Form IDs live in `src/lib/mailerlite.ts`.
 
 ## Design system
 
-`DESIGN.md` documents the visual system — tokens, type scale, section
-patterns, motion rules — and `PRODUCT.md` captures the product context behind
-it. `AUDIT.md` is the accessibility/performance audit from the pre-launch pass.
+`DESIGN.md` documents the v2 visual system — tokens, the fluid type scale,
+where the mass is used and why, components, motion — and the v1 behaviour it
+carries over. The design system itself is `2_0/Gravity Design System.html`,
+beside the repo. `PRODUCT.md` captures the product context. `AUDIT.md` and
+`POLISH.md` are the v1 audit and polish passes (historical).
 
 ## Deploying
 

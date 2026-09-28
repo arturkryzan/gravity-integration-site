@@ -3,9 +3,9 @@
   "slug": "integracje",
   "url": "/integracje/",
   "seo": {
-    "title": "Integracje gravity.integration — 139+ konektorów ERP, CRM, WMS | ESB",
-    "description": "Pełna lista integracji gravity.integration: systemy ERP (SAP, Comarch, enova), CRM, WMS, e-commerce, marketplace, bazy danych, kurierzy i więcej. 139+ gotowych konektorów.",
-    "focusKeyword": "integracje ESB"
+    "title": "Integracje: 139+ konektorów ERP, CRM, WMS | gravity.integration",
+    "description": "139+ gotowych konektorów: ERP (SAP, Comarch, Subiekt GT, enova365), CRM, WMS, e-commerce, Allegro, BaseLinker, kurierzy, KSeF, bazy danych i API.",
+    "focusKeyword": "integracje ERP, konektory ESB, integracja BaseLinker"
   },
   "h1": "<h1><span style=\"text-decoration: underline;\">Integracje</span> gravity.integration</h1>\n",
   "decorative": true,

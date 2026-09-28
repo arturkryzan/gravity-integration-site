@@ -6,10 +6,12 @@ import Site from '../../layouts/Site.astro';
 import PageHero from '../../components/PageHero.astro';
 import IntegrationsGrid from '../../components/IntegrationsGrid.astro';
 import DemoSection from '../../components/DemoSection.astro';
+import { softwareApplication } from '../../lib/structured-data';
 
 const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('integracje', lang);
 const page = entry.data;
+const schema = [await softwareApplication(lang)];
 ---
 
 <Site
@@ -19,6 +21,7 @@ const page = entry.data;
   slug={page.slug}
   draft={page.draft}
   bodyClass={`page page-${page.slug}`}
+  schema={schema}
 >
   <PageHero h1={page.h1} />
   <IntegrationsGrid />

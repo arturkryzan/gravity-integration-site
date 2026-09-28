@@ -13,7 +13,7 @@ import { getPage } from '../../i18n/routes';
 import { localeOf, t } from '../../i18n/ui';
 import Site from '../../layouts/Site.astro';
 import DownloadPage from '../../components/DownloadPage.astro';
-import site from '../../data/site.json';
+import { softwareApplication } from '../../lib/structured-data';
 
 const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
@@ -27,34 +27,12 @@ const crumbs = [
   { label: s('nav.docs'), anchor: 'section3' },
 ];
 
-/* Rich result: the thing on this page is downloadable software with a free
-   offer. Claims mirror the visible copy (Windows, free for testing), and `url`
-   is derived from the entry so the English twin describes its own URL rather
-   than pointing search engines back at the Polish one. */
-const offerDescription =
-  lang === 'en'
-    ? 'Free full version for testing and training purposes'
-    : 'Bezpłatna pełna wersja do celów testowych i szkoleniowych';
-/* The offer is free either way, but a price of zero still has to be quoted in
-   a currency, and the two sites don't quote the same one: Polish sells in PLN,
-   English in EUR. Hard-coding PLN here would have the English page's structured
-   data contradict the prices printed on its own pricing page. */
-const offerCurrency = lang === 'en' ? 'EUR' : 'PLN';
-const jsonLd = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'gravity.integration',
-  operatingSystem: 'Windows',
-  applicationCategory: 'BusinessApplication',
-  softwareVersion: '4',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: offerCurrency,
-    description: offerDescription,
-  },
-  url: new URL(page.url, site.siteUrl).href,
-});
+/* JSON-LD: the thing on this page is downloadable software — Windows,
+   version 4, free for testing — with its paid plans. One description of the
+   product for every page that carries it (src/lib/structured-data.ts): the
+   offers come from this locale's pricing page, so the English page quotes EUR
+   and the Polish one PLN, as their pricing pages do. */
+const schema = [await softwareApplication(lang)];
 ---
 
 <Site
@@ -64,9 +42,7 @@ const jsonLd = JSON.stringify({
   slug={page.slug}
   draft={page.draft}
   bodyClass={`page page-${page.slug}`}
+  schema={schema}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={jsonLd} />
-  </Fragment>
   <DownloadPage crumbs={crumbs} />
 </Site>

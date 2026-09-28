@@ -3,9 +3,9 @@
   "slug": "case-studies",
   "url": "/case-studies/",
   "seo": {
-    "title": "Case Studies — wdrożenia gravity.integration w polskich firmach",
-    "description": "Case studies gravity.integration — jak TIP-TOPOL, Kapitan Navi, ELMET Poznań i NAC zautomatyzowały integrację danych. Realne efekty wdrożeń ESB w polskich firmach.",
-    "focusKeyword": "case study integracja ERP, wdrożenie ETL"
+    "title": "Case studies: integracja ERP z kurierami, RCP i e-commerce",
+    "description": "Cztery wdrożenia: ERP z kurierami DPD, InPost i GLS (TIP-TOPOL), RCP Roger z ERP (Kapitan Navi), BaseLinker (ELMET Poznań) i sklep cStore (NAC).",
+    "focusKeyword": "case study integracja ERP, integracja ERP z kurierami"
   },
   "h1": "<h1>Case Studies</h1>\n",
   "decorative": true,

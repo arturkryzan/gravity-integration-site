@@ -18,8 +18,10 @@ own Apache box. No Node, no PHP, no database on the server. Forms post straight
 from the browser to MailerLite.
 
 **v2 (branch `design-v2`, September 2026)** is the same site rebuilt onto the
-new design system, "Mass" v2.0. The copy, URLs, SEO, forms, consent and
-analytics are unchanged; every line of markup and CSS was written again.
+new design system, "Mass" v2.0. The copy, URLs, forms, consent and
+analytics are unchanged; every line of markup and CSS was written again. The
+meta and structured data were then rewritten for search and AI assistants —
+see "Meta and structured data" below.
 `DESIGN.md` is the visual system and says what came from where. The design
 system itself is `2_0/Gravity Design System.html`, beside the repo, not in it.
 
@@ -64,10 +66,11 @@ artifact. A green check means the tree still builds. It does not deploy.
 
 ```
 src/
-  pages/                    routes; [...slug] renders the JSON page collection
-  layouts/Site.astro        head, SEO, GA4/consent, JSON-LD shell
+  pages/                    routes; [...slug] renders the JSON page collection;
+                            llms.txt.ts writes /llms.txt from the content
+  layouts/Site.astro        head, SEO, GA4/consent, the JSON-LD graph
   components/               17 section components (hero, pricing, ROI calc, …)
-  content/pages/*.json      page content: sections, verbatim SEO meta, h1
+  content/pages/*.json      page content: sections, SEO meta, h1
   content/case-studies/     4 case studies (anchors #section0…#section6 kept)
   data/                     clients, 139 integrations, site config, redirects,
                             intrinsic image dimensions (CLS guard)
@@ -75,7 +78,7 @@ src/
                             sitemap-data.mjs (must stay .mjs — see traps)
   lib/                      case-study parser, media resolver, MailerLite, links,
                             html.ts (clean() + typeset() for heading breaks),
-                            icons.ts (Lucide, ?raw)
+                            icons.ts (Lucide, ?raw), structured-data.ts (JSON-LD)
   scripts/ml-forms.ts       shared form runtime: submit, validation, GA4 events
   styles/tokens.css         design tokens: the design system's block verbatim,
                             then the site's layer (fluid type scale, z-index…)
@@ -117,6 +120,7 @@ that is `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Running locally,
 | `verify-axe.mjs` | axe-core, WCAG 2.2 AA + best practice, 20 routes × 1440/390, the consent panel, the open menu | `0 violations` |
 | `verify-overflow.mjs` | no text off-screen, spilling, or cut by a clipping frame, 20 routes × 6 widths | `0 problems` |
 | `verify-use-cases.mjs` | the four animated use-case panels on the home page on Playwright's clock, 4 sizes × 2 locales: live and covering the frame, the 1440/804 ratio, no text in any panel, the stop button (named, described by its row's heading, stops and restarts), off-screen panels don't move, reduced motion draws a still with no button, without the script the field and the mass remain; writes frames to `OUT` | `360 passed, 0 failed` |
+| `verify-meta.mjs` | titles within ~600px (Arial 20px), descriptions 110–160 characters, both unique; OG equal to them; every JSON-LD block parses and agrees with the head; the product's offers at the prices the pricing page prints, in its currency; each FAQPage asks exactly the questions its page shows; `/llms.txt` served, every page listed, every link 200. Proven to catch a long title, a changed FAQ question, a wrong price, a duplicate description and a dead llms.txt link | `364 passed, 0 failed` |
 | `verify-delivery.mjs` | walks the **extracted archive**, not `dist/` | `clean — 8 English pages, …` |
 | `shots.mjs` | full-page screenshots for looking at: `ROUTES=/,/cennik/ WIDTHS=1440,390 OUT=dir` | — |
 
@@ -185,6 +189,40 @@ Read-only MailerLite calls are fine. Anything that writes is not.
   replacement link. Do not "fix" it.
 - **"Share capital: 100,000 PLN" on `/en/contact/` stays.** It is a fact from
   the Polish register about a Polish company.
+
+## Meta and structured data
+
+Rewritten in September 2026 for search engines and for AI assistants — the
+ones that answer questions from the web and cite what they read. The rules
+that produced it; keep to them when a page changes:
+
+- **Every claim is printed on the site** — on the page itself, or on the page
+  it summarises (the connector list on /integracje/, the prices on /cennik/,
+  "24/7" on the home page): 139+ connectors, about 15 minutes, Windows, free
+  for testing. No superlative the copy doesn't make.
+- **Titles fit ~600px** of Arial 20px, Google's desktop cut: keyword first on
+  inner pages, the brand first on the two home pages. **Descriptions 110–160
+  characters**, the most useful fact inside the first 120 (what a phone
+  shows). Unique per page. `verify-meta.mjs` enforces all of it.
+- **No city in the meta.** Bielsko-Biała or Poznań is Artur's call
+  (`site.json` → `todo.kontaktCity`); until he makes it the meta names
+  neither. The structured data gives the registered office, which /kontakt/
+  prints.
+- **Structured data is generated, never hand-written.**
+  `src/lib/structured-data.ts` builds one @id-linked graph per page —
+  Organization, WebSite, the page, and on the product pages the
+  SoftwareApplication with its offers — from `site.json`, the pricing page's
+  own `pricing` section and ui.ts. FAQPage markup is built from the page's own
+  `faq` section. Change a price or an answer in the content and the markup
+  follows. Hand-written JSON-LD drifts: the calculator's was a condensed copy
+  of its FAQ that no longer matched it.
+- **No ratings.** Search Console lists the product markup as missing
+  `aggregateRating`/`review`. Expected: the site has no reviews to mark up, and
+  invented ones are out.
+- **`/llms.txt`** (the llmstxt.org convention) is written at build by
+  `src/pages/llms.txt.ts` from the same data: what the product is, the facts
+  people ask about, every connector by name, every page with its title and
+  description. A new file in the docroot; nothing on the server had the name.
 
 ## Deploying
 

@@ -11,11 +11,14 @@ import Site from '../../layouts/Site.astro';
 import HomeHero from '../../components/HomeHero.astro';
 import SectionRenderer from '../../components/SectionRenderer.astro';
 import DemoSection from '../../components/DemoSection.astro';
+import { softwareApplication } from '../../lib/structured-data';
 
 const lang = localeOf(Astro.currentLocale);
 const s = t(lang);
 const entry = await getPage('home', lang);
 const page = entry.data;
+/* the product, with its offers, in this page's JSON-LD graph */
+const schema = [await softwareApplication(lang)];
 
 /* The business row's second CTA points at the ROI calculator, which English
    doesn't have (NOT_OFFERED in routes.ts). Spreading an object rather than
@@ -54,6 +57,7 @@ const overrides = {
   draft={page.draft}
   bodyClass="home"
   heroTone="mint"
+  schema={schema}
 >
   <HomeHero h1={page.h1} />
   <SectionRenderer

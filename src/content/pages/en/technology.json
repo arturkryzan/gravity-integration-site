@@ -6,8 +6,8 @@
   "url": "/en/technology/",
   "seo": {
     "title": "gravity.integration technology — more than an ESB",
-    "description": "Discover the technologies behind gravity.integration: Always-on-data, firstSIGNAL, IntelliChain, Powers AI. A next-generation enterprise service bus.",
-    "focusKeyword": "next-generation ESB, data integration platform, enterprise service bus"
+    "description": "Four in-house technologies behind gravity.integration: Always-on-data, firstSIGNAL, IntelliChain and Powers AI. An ESB that runs 24/7 and feeds data to AI.",
+    "focusKeyword": "next-generation ESB, AI-ready ESB, enterprise service bus"
   },
   "h1": "<h1><span style=\"text-decoration: underline;\">More</span> than an ESB</h1>\n",
   "decorative": true,

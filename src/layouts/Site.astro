@@ -20,6 +20,7 @@ import '../styles/base.css';
 import site from '../data/site.json';
 import { localeOf, t, LOCALE_TAG, OG_LOCALE, DEFAULT_LOCALE } from '../i18n/ui';
 import { alternates } from '../i18n/routes';
+import { ID, organization, website, type Node } from '../lib/structured-data';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 import Header from '../components/Header.astro';
@@ -43,6 +44,11 @@ interface Props {
   ogImage?: string;
   /** override for special pages — the 404 sets `noindex,follow` */
   robots?: string;
+  /** Further JSON-LD nodes for this page's graph — the product on the
+   *  product pages (see src/lib/structured-data.ts). */
+  schema?: Node[];
+  /** The page's schema.org type: WebPage, or a subtype such as ContactPage. */
+  pageType?: string;
 }
 const {
   title,
@@ -54,6 +60,8 @@ const {
   heroTone = 'mint',
   ogImage,
   robots = draft ? 'noindex,follow' : 'index,follow',
+  schema = [],
+  pageType = 'WebPage',
 } = Astro.props;
 const canonical = new URL(path, site.siteUrl).href;
 
@@ -76,6 +84,29 @@ const s = t(lang);
 /* The share image carries the home headline, so each language has its own
    (scripts/build-brand.mjs renders both). */
 const shareImage = ogImage ?? (lang === 'en' ? '/og-gravity-en.png' : '/og-gravity.png');
+
+/* One JSON-LD graph: the company, the site, this page, and whatever the page
+   adds (the product, on the product pages). Linked by @id rather than nested,
+   so each thing is described once and every page points at the same one.
+   `<` is escaped so no string in the data can close the script element. */
+const graph = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    organization(),
+    website(),
+    {
+      '@type': pageType,
+      '@id': `${canonical}#webpage`,
+      url: canonical,
+      name: title,
+      description,
+      inLanguage: LOCALE_TAG[lang],
+      isPartOf: { '@id': ID.website },
+      ...(schema.some((n) => n['@id'] === ID.software) ? { about: { '@id': ID.software } } : {}),
+    },
+    ...schema,
+  ],
+}).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -132,29 +163,7 @@ const shareImage = ogImage ?? (lang === 'en' ? '/og-gravity-en.png' : '/og-gravi
     <link rel="apple-touch-icon" href="/favicons/mark-180.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: site.company.name,
-        url: site.siteUrl,
-        logo: new URL('/favicons/mark-512.png', site.siteUrl).href,
-        sameAs: [site.linkedin],
-      })}
-    />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: title,
-        description,
-        url: canonical,
-        inLanguage: LOCALE_TAG[lang],
-        isPartOf: { '@type': 'WebSite', name: site.siteName, url: site.siteUrl },
-      })}
-    />
+    <script type="application/ld+json" set:html={graph} />
 
     <!-- GA4 + Google Ads — the same two properties the WP site ran
          (G-EWVWPJGYVM from Code Snippets, AW-11029031415 from the Head & Footer

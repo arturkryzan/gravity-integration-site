@@ -5,9 +5,9 @@
   "slug": "integracje",
   "url": "/en/integrations/",
   "seo": {
-    "title": "gravity.integration integrations — 139+ connectors for ERP, CRM, WMS | ESB",
-    "description": "All gravity.integration integrations: ERP systems (SAP, Comarch, enova), CRM, WMS, e-commerce, marketplaces, databases, couriers and more. 139+ connectors.",
-    "focusKeyword": "ESB integrations"
+    "title": "139+ integrations for ERP, CRM and WMS | gravity.integration",
+    "description": "139+ ready-made connectors: ERP (SAP, Dynamics 365, Comarch), CRM, WMS, e-commerce, Amazon, Allegro, BaseLinker, couriers, KSeF, databases, APIs.",
+    "focusKeyword": "ERP integrations, ESB connectors"
   },
   "h1": "<h1>gravity.integration <span style=\"text-decoration: underline;\">integrations</span></h1>\n",
   "decorative": true,

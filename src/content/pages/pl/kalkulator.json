@@ -3,9 +3,9 @@
   "slug": "kalkulator",
   "url": "/kalkulator/",
   "seo": {
-    "title": "Kalkulator ROI integracji danych - gravity.integration",
-    "description": "Oblicz, ile zaoszczędzisz na projektach integracyjnych z gravity.integration. Interaktywny kalkulator ROI — sprawdź redukcję kosztów, czasu wdrożenia i liczbę dodatkowych projektów.",
-    "focusKeyword": "kalkulator ROI integracja,ESB korzyści,ROI inwestycji"
+    "title": "Kalkulator ROI integracji danych | gravity.integration",
+    "description": "Policz, ile zaoszczędzisz na integracjach: kalkulator ROI porównuje obecny koszt i czas projektów z gravity.integration, które skraca realizację nawet o 60%.",
+    "focusKeyword": "kalkulator ROI integracji, koszt integracji systemów"
   },
   "h1": "<h1>Kalkulator <span style=\"text-decoration: underline;\">ROI</span></h1>\n",
   "decorative": true,

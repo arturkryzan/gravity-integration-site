@@ -3,9 +3,9 @@
   "slug": "cennik",
   "url": "/cennik/",
   "seo": {
-    "title": "Cennik gravity.integration — od wersji darmowej do Enterprise",
-    "description": "Cennik platformy ESB gravity.integration. Darmowa wersja Community, plany Professional i Enterprise. Korzystne ceny, polski producent, pełne wsparcie.",
-    "focusKeyword": "cennik ETL, platforma ETL cena"
+    "title": "Cennik gravity.integration — ESB za darmo lub od 2 999 PLN/rok",
+    "description": "0 PLN do testów, 2 999 PLN/rok za jedno zastosowanie komercyjne, 7 999 PLN/rok bez limitu połączeń. Ceny netto za instancję, bez limitu użytkowników.",
+    "focusKeyword": "cennik ESB, szyna ESB cena"
   },
   "h1": "<h1>Cennik</h1>",
   "decorative": false,

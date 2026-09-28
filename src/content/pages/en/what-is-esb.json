@@ -5,9 +5,9 @@
   "slug": "czym-jest-esb",
   "url": "/en/what-is-esb/",
   "seo": {
-    "title": "What is an ESB? The Enterprise Service Bus explained | gravity.integration",
-    "description": "Learn what an Enterprise Service Bus (ESB) is and how an integration bus connects ERP, WMS, MES and e-commerce systems — and when a company needs one.",
-    "focusKeyword": "what is an ESB"
+    "title": "What is an ESB? The enterprise service bus explained",
+    "description": "An enterprise service bus (ESB) is middleware that connects ERP, WMS, MES and e-commerce systems. How it works, when you need one and what it costs.",
+    "focusKeyword": "what is an ESB, enterprise service bus"
   },
   "h1": "<h1><span style=\"text-decoration: underline;\">What</span> is an ESB?</h1>",
   "decorative": true,

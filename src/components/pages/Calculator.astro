@@ -6,8 +6,11 @@
  * rates, so it answered an English visitor's question in the wrong currency at
  * the wrong scale. The reasoning is written out at NOT_OFFERED in routes.ts.
  *
- * What stayed is the locale-awareness below — the English FAQ rich result, the
- * English hero alt text, `getPage` keyed on `lang`. None of it runs today,
+ * What stayed is the locale-awareness below — the FAQ rich result, built from
+ * whichever locale's FAQ section the page shows, `getPage` keyed on `lang` —
+ * and src/data/kalkulator-faq-jsonld.en.json, no longer read by anything: it
+ * holds the only English translation of these six questions, the start of
+ * the FAQ section an English page would need. None of it runs today,
  * because the only route pointing here is Polish. It is left wired because
  * bringing the page back is a content decision (euro defaults and ranges for
  * the two sliders, plus a euro pass over the runtime JS in RoiCalculator.astro,
@@ -22,15 +25,16 @@ import PageHero from '../../components/PageHero.astro';
 import SectionRenderer from '../../components/SectionRenderer.astro';
 import RoiCalculator from '../../components/RoiCalculator.astro';
 import Newsletter from '../../components/Newsletter.astro';
-/* One FAQ rich result per language — a page must only claim answers it
-   actually shows, so each locale carries its own condensed Q&A. */
-import faqJsonLdPl from '../../data/kalkulator-faq-jsonld.json?raw';
-import faqJsonLdEn from '../../data/kalkulator-faq-jsonld.en.json?raw';
+import { faqPage } from '../../lib/structured-data';
 
 const lang = localeOf(Astro.currentLocale);
 const entry = await getPage('kalkulator', lang);
 const page = entry.data;
-const faqJsonLd = lang === 'en' ? faqJsonLdEn : faqJsonLdPl;
+/* The FAQ rich result is built from the FAQ section the page shows, so it
+   claims exactly the answers a reader can open — not a condensed copy kept
+   in step by hand, which is what it used to be. */
+const faq = faqPage(page.sections);
+const faqJsonLd = faq && JSON.stringify(faq).replace(/</g, '\\u003c');
 /* calculator sits between text_columns (section0) and faq (section1) — snippet 19's insertion point */
 ---
 
@@ -43,7 +47,7 @@ const faqJsonLd = lang === 'en' ? faqJsonLdEn : faqJsonLdPl;
   bodyClass={`page page-${page.slug}`}
 >
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={faqJsonLd} />
+    {faqJsonLd && <script type="application/ld+json" set:html={faqJsonLd} />}
   </Fragment>
   <PageHero h1={page.h1} />
   <SectionRenderer sections={page.sections.slice(0, 1)} />

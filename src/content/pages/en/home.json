@@ -5,9 +5,9 @@
   "slug": "home",
   "url": "/en/",
   "seo": {
-    "title": "gravity.integration — next-generation enterprise service bus | Integrate ERP, CRM and WMS",
-    "description": "A next-generation enterprise service bus. Download free, install in 15 minutes and integrate ERP, CRM and WMS. Always-on-data, AI, 139+ connectors.",
-    "focusKeyword": "enterprise service bus, ERP integration platform, data integration"
+    "title": "gravity.integration — enterprise service bus for ERP, CRM, WMS",
+    "description": "An enterprise service bus with 139+ connectors for ERP, CRM, WMS and e-commerce. No-code setup, installs in 15 minutes, free to test, from 799 EUR/year.",
+    "focusKeyword": "enterprise service bus, ESB software, ERP integration"
   },
   "h1": "The next-generation ESB — integrate ERP, CRM and WMS in 15 minutes",
   "decorative": true,

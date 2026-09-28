@@ -5,8 +5,8 @@
   "slug": "cennik",
   "url": "/en/pricing/",
   "seo": {
-    "title": "gravity.integration pricing — from a free version to Enterprise",
-    "description": "Pricing for the gravity.integration ESB platform. Free for testing, commercial plans from 799 EUR/year. One simple rate, full support.",
+    "title": "gravity.integration pricing — free to test, from 799 EUR/year",
+    "description": "Free for testing and training, 799 EUR/year for one commercial use case, 1,799 EUR/year for unlimited connections. Net prices per instance, no user limit.",
     "focusKeyword": "ESB pricing, integration platform price"
   },
   "h1": "<h1>Pricing</h1>",

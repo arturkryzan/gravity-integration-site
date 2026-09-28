@@ -10,6 +10,8 @@ import PageHero from '../../components/PageHero.astro';
 import SectionRenderer from '../../components/SectionRenderer.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import DemoSection from '../../components/DemoSection.astro';
+import { localeOf } from '../../i18n/ui';
+import { faqPage, softwareApplication } from '../../lib/structured-data';
 
 interface Props {
   page: any;
@@ -24,6 +26,15 @@ const DEMO_PAGES = ['technologia', 'cennik', 'case-studies', 'czym-jest-esb'];
 const QUIET = ['polityka-prywatnosci'];
 const quiet = QUIET.includes(page.slug);
 
+/* JSON-LD: the pages about the product carry it (with its offers), the
+   contact page says it is one, and a page with an FAQ section states its
+   questions and answers — the ones it shows, word for word. */
+const PRODUCT_PAGES = ['technologia', 'cennik'];
+const lang = localeOf(Astro.currentLocale);
+const schema = PRODUCT_PAGES.includes(page.slug) ? [await softwareApplication(lang)] : [];
+const faq = faqPage(page.sections);
+const faqJsonLd = faq && JSON.stringify(faq).replace(/</g, '\\u003c');
+
 const crumbs = page.sections
   .map((s: any, i: number) => ({ label: s.nav_li, anchor: `section${i}` }))
   .filter((c: any) => c.label);
@@ -37,7 +48,12 @@ const crumbs = page.sections
   draft={page.draft}
   bodyClass={`page page-${page.slug}`}
   heroTone={quiet ? 'mist' : 'mint'}
+  schema={schema}
+  pageType={page.slug === 'kontakt' ? 'ContactPage' : 'WebPage'}
 >
+  <Fragment slot="head">
+    {faqJsonLd && <script type="application/ld+json" set:html={faqJsonLd} />}
+  </Fragment>
   <PageHero h1={page.h1} crumbs={crumbs} variant={quiet ? 'quiet' : 'mass'} />
   <SectionRenderer sections={page.sections} options={quiet ? { 0: { document: true } } : {}} />
   {page.newsletter && <Newsletter />}

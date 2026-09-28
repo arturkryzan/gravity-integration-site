@@ -5,8 +5,13 @@
     "name": "Caffeine Minds sp. z o.o.",
     "krs": "0000500700",
     "nip": "7811898493",
+    "regon": "302741139",
     "address": "ul. Jasielska 16, 60-476 Poznań",
-    "group": "DM Investments sp. z o.o."
+    "postal": { "street": "ul. Jasielska 16", "code": "60-476", "city": "Poznań", "country": "PL" },
+    "email": "contact@caffeine-minds.com",
+    "url": "https://caffeine-minds.com/",
+    "group": "DM Investments sp. z o.o.",
+    "groupUrl": "https://dminvestments.pl/"
   },
   "ga4": "G-EWVWPJGYVM",
   "googleAds": "AW-11029031415",
@@ -17,7 +22,7 @@
   "marketingCount": "139+",
   "priceAnchor": "od 2 999 PLN/rok",
   "todo": {
-    "kontaktCity": "Bielsko-Biała (meta/copy) vs Poznań (KRS) — decyzja Artura",
+    "kontaktCity": "Bielsko-Biała vs Poznań (KRS) — decyzja Artura. Od 09.2026 meta nie podaje miasta; JSON-LD podaje adres rejestrowy z /kontakt/ (Poznań).",
     "nacCaseStudy": "branża, miasto, metryki, cytat"
   }
 }

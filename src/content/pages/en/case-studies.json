@@ -5,8 +5,8 @@
   "slug": "case-studies",
   "url": "/en/case-studies/",
   "seo": {
-    "title": "Case Studies — gravity.integration deployments in Polish companies",
-    "description": "gravity.integration case studies — how TIP-TOPOL, Kapitan Navi, ELMET Poznań and NAC automated their data integration. Real results of ESB deployments.",
+    "title": "gravity.integration case studies — ERP integration in practice",
+    "description": "Four deployments: ERP to couriers DPD, InPost, GLS (TIP-TOPOL), Roger RCP to ERP (Kapitan Navi), BaseLinker (ELMET Poznań), cStore shop (NAC).",
     "focusKeyword": "ERP integration case study, ESB deployment"
   },
   "h1": "<h1>Case Studies</h1>\n",

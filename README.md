@@ -5,8 +5,10 @@ integration platform. Polish at the root, English under `/en/`.
 
 **v2** (branch `design-v2`) rebuilds the site onto the gravity.integration
 design system v2.0, "Mass" — mint field, ink mass, one cropped circle as the
-only graphic device. Copy, URLs, SEO, forms, consent and analytics are
-unchanged from v1. See `DESIGN.md`.
+only graphic device. Copy, URLs, forms, consent and analytics are unchanged
+from v1. See `DESIGN.md`. Titles, descriptions and structured data were
+rewritten for search and AI assistants in September 2026 — CLAUDE.md,
+"Meta and structured data", has the rules.
 
 This is a rebuild: the site ran on WordPress with a pile of accumulated code
 snippets, and was moved to a static Astro build served as plain files from our
@@ -39,15 +41,16 @@ npm run preview      # serve the built output
 
 ```
 src/
-  pages/                    routes; [...slug] renders the JSON page collection
-  layouts/Site.astro        head, SEO, GA4/consent, JSON-LD shell
+  pages/                    routes; [...slug] renders the JSON page collection;
+                            llms.txt.ts writes /llms.txt from the content
+  layouts/Site.astro        head, SEO, GA4/consent, the JSON-LD graph
   components/               17 section components (hero, pricing, ROI calc, …)
-  content/pages/*.json      10 pages: sections, verbatim SEO meta, h1
+  content/pages/*.json      10 pages: sections, SEO meta (title, description), h1
   content/case-studies/     4 case studies (anchors #section0…#section6 kept)
   data/                     clients, 139 integrations, site config, redirects,
                             intrinsic image dimensions (CLS guard)
   lib/                      case-study parser, media resolver, MailerLite,
-                            link helpers
+                            link helpers, structured-data.ts (JSON-LD)
   scripts/ml-forms.ts       shared form runtime: submit, validation, GA4 events
   styles/tokens.css         design tokens: the design system's, verbatim, plus
                             the site's layer (fluid type scale, z-index, …)

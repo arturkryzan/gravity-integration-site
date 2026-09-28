@@ -4,8 +4,8 @@
   "url": "/czym-jest-esb/",
   "seo": {
     "title": "Czym jest ESB? Szyna integracyjna dla firm | gravity.integration",
-    "description": "Dowiedz się, czym jest Enterprise Service Bus (ESB) i jak szyna integracyjna łączy systemy ERP, WMS, MES i e‑commerce. Poznaj korzyści wdrożenia ESB w firmie.",
-    "focusKeyword": "czym jest ESB"
+    "description": "ESB (Enterprise Service Bus) to szyna integracyjna, przez którą ERP, WMS, MES i e-commerce wymieniają dane. Jak działa, kiedy się opłaca, ile kosztuje.",
+    "focusKeyword": "czym jest ESB, szyna integracyjna"
   },
   "h1": "<h1><span style=\"text-decoration: underline;\">Czym</span> jest ESB?</h1>",
   "decorative": true,

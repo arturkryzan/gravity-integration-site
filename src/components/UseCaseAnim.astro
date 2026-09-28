@@ -1,0 +1,156 @@
+---
+/* One of the four use-case panels on the home page, animated.
+ *
+ * They replace the four rendered films (use_01, connect-systems, use_03,
+ * use_04) with the design system's own parts, drawn live on a canvas by
+ * src/scripts/use-case-anims.js; that file says what each one shows and why.
+ * No text is drawn in any of them.
+ *
+ * What is here works without the script: the frame's field and its mass (and
+ * in 01 the satellite), placed from src/lib/use-case-scenes.js, which is the
+ * system's key visual and the whole panel for anyone without JavaScript.
+ *
+ * With the script the field and the mass stay as they are — painting a
+ * static full-frame shape on every frame is most of what a canvas animation
+ * costs — and two canvases carry the rest: `uc-under`, painted once, holds
+ * what is static but sits under the mass (04's roads); `uc-over`, cleared
+ * every frame, holds only what moves. 01's mass moves, so the script moves
+ * this element with a composited transform.
+ *
+ * The stop button is shown by the script, and only where the panel moves
+ * (never under reduced motion). It is described by the row's heading, so the
+ * five "Pause the animation" buttons on the page say which one they stop. */
+import { FRAME, SCENES } from '../lib/use-case-scenes.js';
+import { localeOf, t } from '../i18n/ui';
+import Icon from './ui/Icon.astro';
+
+type Scene = keyof typeof SCENES;
+interface Props {
+  scene: Scene;
+  /** id of the heading this panel illustrates */
+  describedBy?: string;
+}
+const { scene, describedBy } = Astro.props;
+const s = t(localeOf(Astro.currentLocale));
+const g = SCENES[scene];
+const pct = (v: number, of: number) => `${+((v / of) * 100).toFixed(3)}%`;
+const circle = (c: { x: number; y: number; r: number }) =>
+  `left:${pct(c.x - c.r, FRAME.w)};top:${pct(c.y - c.r, FRAME.h)};width:${pct(2 * c.r, FRAME.w)}`;
+---
+
+<div class:list={['uc', `uc--${g.field}`]} data-scene={scene} data-reveal>
+  <canvas class="uc-canvas uc-under" aria-hidden="true"></canvas>
+  <span class:list={['uc-disc', 'uc-mass', `uc-disc--${g.mass.color}`]} style={circle(g.mass)} aria-hidden="true"></span>
+  {'sat' in g && g.sat && <span class="uc-disc uc-sat uc-disc--ink" style={circle(g.sat)} aria-hidden="true" />}
+  <canvas class="uc-canvas uc-over" aria-hidden="true"></canvas>
+  <button
+    type="button"
+    class:list={['uc-pause', `uc-pause--${g.pause.corner}`, `uc-pause--on-${g.pause.surface}`, 'btn btn--secondary btn--sm', `surface-${g.pause.surface}`]}
+    aria-pressed="false"
+    aria-describedby={describedBy}
+    hidden
+  >
+    <span class="visually-hidden">{s('anim.pause')}</span>
+    <Icon name="pause" class="uc-pause-i uc-pause-i--pause" size={16} />
+    <Icon name="play" class="uc-pause-i uc-pause-i--play" size={16} />
+  </button>
+</div>
+
+<script src="../scripts/use-case-anims.js"></script>
+
+<style>
+  /* content-box with a 1px border on every field, so all four panels have
+     the same outer size as the white one, which needs its hairline (the
+     system's one border: 1px mist-200 on white). */
+  .uc {
+    position: relative;
+    box-sizing: content-box;
+    overflow: hidden;
+    isolation: isolate;
+    aspect-ratio: 1440 / 804;
+    border: 1px solid transparent;
+    border-radius: var(--radius-xl);
+  }
+  .uc--mint {
+    background: var(--mint-500);
+  }
+  .uc--mist {
+    background: var(--mist-100);
+  }
+  .uc--white {
+    background: var(--white);
+    border-color: var(--mist-200);
+  }
+  .uc--ink {
+    background: var(--ink-900);
+  }
+
+  .uc-disc {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  .uc-disc--ink {
+    background: var(--ink-900);
+  }
+  .uc-disc--mint {
+    background: var(--mint-500);
+  }
+  /* with the script the satellite is drawn (it moves); the mass stays */
+  .uc[data-live] .uc-sat {
+    display: none;
+  }
+  .uc[data-scene='consolidate'][data-live] .uc-mass {
+    will-change: transform;
+  }
+
+  .uc-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* The system's small secondary button, on whichever surface its corner
+     is: the ring and glyph from the surface, the hover one step along it. */
+  .uc-pause {
+    position: absolute;
+    z-index: 1;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+  .uc-pause--top {
+    top: 12px;
+  }
+  .uc-pause--bottom {
+    bottom: 12px;
+  }
+  .uc-pause--on-ink {
+    --btn-hover: var(--ink-700);
+  }
+  .uc-pause--on-mint {
+    --btn-hover: var(--mint-600);
+  }
+  .uc-pause--on-white {
+    --btn-hover: var(--mist-100);
+  }
+  .uc-pause[aria-pressed='false'] :global(.uc-pause-i--play),
+  .uc-pause[aria-pressed='true'] :global(.uc-pause-i--pause) {
+    display: none;
+  }
+
+  @media print {
+    .uc-canvas,
+    .uc-pause {
+      display: none;
+    }
+    .uc[data-live] .uc-disc {
+      display: block;
+      visibility: visible;
+      transform: none !important;
+    }
+  }
+</style>

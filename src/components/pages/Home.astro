@@ -28,24 +28,20 @@ const roiCta = isOffered('kalkulator', lang)
   : {};
 
 /* live-site row overrides (was snippets 30 + 12):
-   section0 row0 → developers SVG animation, row1 → business SVG + extra CTA
-   section2 rows → use-case videos
-
-   Row 1 ("Połącz każdy system") is `connect-systems`, rendered in Blender from
-   media-src/video/connect-systems/ — a new name rather than a new use_02,
-   because /video/ is cached for a month and a replaced file would keep
-   returning visitors on the old loop. DESIGN.md → "Use-case loops" has the
-   rules a replacement has to meet (edge colour, size, poster). */
+   section0 row0 → developers panel, row1 → business panel + extra CTA
+   section2 rows → the four animated use-case panels (UseCaseAnim.astro),
+   which replaced v1's rendered films use_01, connect-systems, use_03 and
+   use_04, in that order. */
 const overrides = {
   0: {
-    0: { media: 'svg-dev' },
-    1: { media: 'svg-biz', ...roiCta },
+    0: { media: 'svg-dev' as const },
+    1: { media: 'svg-biz' as const, ...roiCta },
   },
   2: {
-    0: { media: { video: 'use_01' } },
-    1: { media: { video: 'connect-systems' } },
-    2: { media: { video: 'use_03' } },
-    3: { media: { video: 'use_04' } },
+    0: { media: { scene: 'consolidate' as const } },
+    1: { media: { scene: 'connect' as const } },
+    2: { media: { scene: 'partners' as const } },
+    3: { media: { scene: 'control' as const } },
   },
 };
 ---

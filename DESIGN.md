@@ -205,6 +205,7 @@ left exactly as written.
 | Page heroes (`PageHero.astro`) | A, compact | Below 900px the mass is drawn from the title box itself: diameter 220%, centred at 66%, with 22% + 20px bottom padding. The arc therefore passes 48px under the title's last line at every width. When it was sized from the viewport, the start of the title stood on the mint field from about 420px up. |
 | Privacy policy | D | |
 | Home audience panels | C (developers), A (business) | Proportional: the type is sized in container units and the circles in percentages. The longest line in either language stays more than 8% inside the mass. |
+| Home use-case panels | 01 A (mint, ink mass bottom-right) · 02 the horizon on D's colours (mist, mint) · 03 A on white (hairline) · 04 C (ink, mint mass top-left) | Animated; see "The use-case panels". Every field of the palette once, the inverted frame once, the masses alternating ink and mint down the page, and no mass in another product's corner. |
 | Home tech band, `/technologia/` TextBoxes | ink band, mint mass top-right | A TextBoxes band that follows a quote drops its mass, because the quote's horizon already is one. |
 | Quote bands | B | |
 | Pricing: unlimited licence | "stat" card: ink + mass | The implementation offer card is plain mint, because the stat card above it already holds the frame's mass. |
@@ -283,14 +284,10 @@ two by two, or one column, and never three plus one.
 is "FAQ" at H1 size: on `/cennik/` and `/kalkulator/` it used to be a small
 label, and the ESB page already had the heading.
 
-**Use-case videos.** Each sits in a framed panel, `.til-frame`: 1px mist-200,
-radius 24, filled `rgb(243,244,251)`, which is the colour the current loops
-were rendered against.
-
-- The frame is `content-box`, so its 1440/804 ratio is the video's own box.
-  With `border-box`, `object-fit` cropped the loop to a box two pixels off its
-  shape.
-- They start only when in view (IntersectionObserver) and carry no `autoplay`.
+**Use-case panels.** `UseCaseAnim.astro`, radius 24, ratio 1440/804, one
+field each; only the white one draws its hairline (the other three carry a
+transparent 1px border so all four are the same size). See "The use-case
+panels" below.
 
 **Case studies.** Each study is a dossier:
 
@@ -331,6 +328,9 @@ On the site:
 - **Header** hides and shows on scroll; the menu fades and settles 12px.
 - **Forms** draw their ticks with `stroke-dashoffset`. The submit spinner keeps
   turning under reduced motion, because it says "still working".
+
+**The use-case panels** on the home page are animated from the same parts
+(see "The use-case panels" below).
 
 **The home hero** is the key visual in motion, "every tool falls in"
 (`src/scripts/hero-fall.js`, with the states in `HomeHero.astro`). It is built
@@ -448,27 +448,45 @@ such link carries a visually hidden "(opens in a new tab)" note.
 `initOutboundLinks()` in `main.js` sweeps up docs links authored into body
 copy.
 
-## Replacing a use-case loop
+## The use-case panels
 
-The four loops on the home page are v1 renders. They will be remade to match
-the system. Whatever the new ones look like, four rules from v1 still hold:
+The four rows of "01–04" on the home page used to carry v1's rendered films
+(`use_01`, `connect-systems`, `use_03`, `use_04`: marble spheres, a stopwatch,
+a motorway interchange). They are now drawn live from the system's own parts
+(`src/scripts/use-case-anims.js`, geometry in `src/lib/use-case-scenes.js`,
+markup in `UseCaseAnim.astro`). Each translates its film and the copy beside
+it, and **none of them draws any text**.
 
-1. **The frame edge decodes to the panel fill.** Today that fill is
-   `rgb(243,244,251)`, the colour the old renders were made for. Encode with the
-   BT.709 matrix explicitly (swscale defaults to BT.601), in limited range, and
-   tag the stream `bt709`/`tv`. That background then decodes to exactly
-   `(243,244,251)` in ffmpeg and to `(243,244,250)` in Chromium. If the new
-   loops are rendered against a different colour, change `.til-frame`'s fill
-   and `BG` in `verify-video-seam.mjs` together.
-   - Current state: `connect-systems` passes at Δ≤1.
-   - `use_01`, `use_03` and `use_04` are 3–5 levels off. They show as a faint
-     rectangle inside the frame on a good screen, and they are the ones being
-     replaced.
-2. **Size for the slot:** 1440×804. That covers the 2× slot and matches the
-   frame's ratio exactly, so `object-fit: cover` crops nothing.
-3. **The poster is frame 0** of the same encode. WebM (VP9) comes first and MP4
-   (H.264, `+faststart`) second.
-4. **A changed loop gets a new filename.** `/video/` is cached for a month.
+| Row | The copy says | The film showed | The panel shows |
+|---|---|---|---|
+| 01 | one tool instead of dozens of scripts; fewer errors | a cluster of small black spheres beside one green sphere | Mint field. Two dozen small ink pieces in three shapes (scripts, CSV files, manual exports) twitch on their own; a red error dot blinks among them. The mass falls into Gravity's corner and takes them nearest first, growing with each; what is left is the key visual, one mass and one satellite, still. Then it sinks out through its corner and the next lot appears. |
+| 02 | connect every system, whatever it is; no more silos | a central sphere, six labelled systems lighting up | Mist field, the bus as a mint horizon. Systems of every shape and size travel an orbit above it; each arrives as an outline (a silo), and as it passes the bus reaches up, it fills with the bus's mint, and data moves system → bus → system. |
+| 03 | partners and suppliers plugged in in hours, not months; orders, invoices, stock levels as they happen | a stopwatch | White field, ink mass in Gravity's corner. Partners' systems come in from outside the frame and plug into the mass's edge in one move (the half inside turns mint), and documents in three shapes sweep round inside the mass between them. |
+| 04 | see every flow and every error; replace or switch off systems safely | a motorway interchange with light on its lanes | Ink field, mint mass top-left. Roads (ink-700 on ink) merge into the mass like ramps, traffic on each. An item turns red and stops; the lane queues, clears and moves. Then a system is switched off and a different one takes its place while every other road keeps flowing. |
+
+**How they are built.**
+
+- Every scene is a pure function of time: `draw(ctx, t)` paints the frame at
+  `t` seconds. The loops cannot drift, the reduced-motion still is simply
+  `poster`, and `verify-use-cases.mjs` seeks to exact moments. Randomness is
+  seeded.
+- The colour rule is a clip: whatever crosses the mass's edge is drawn twice,
+  in the field's colour outside and in the mass's inside (03's partners).
+- Sizes are in a 1440 × 804 frame. On small panels (phones) strokes, dots and
+  tokens are drawn up to 35% heavier so they survive 350px.
+- The system's signal red appears only as a dot, for an error (01, 04).
+
+**Behaviour.**
+
+- A panel runs only while it is on screen and the tab is visible, and it starts
+  its story from the beginning each time it comes into view.
+- Each has a stop button (WCAG 2.2.2), in whichever corner stays on one
+  surface for the whole loop, described by its row's heading. Reduced motion
+  gets the still and no button.
+- Without JavaScript, and in print, the panel is its field and its mass (01
+  also its satellite).
+- They replaced about 1 MB of video and posters that every visitor downloaded;
+  the panels are a few KB of script.
 
 ## Accessibility
 
@@ -476,7 +494,7 @@ The target is WCAG 2.2 AA. Four harnesses check it (listed in `CLAUDE.md`):
 
 - `verify-axe.mjs`: axe-core over 20 routes at 1440 and 390, plus the consent
   panel and the open menu. Result: 0 violations.
-- `verify-harden-a11y.mjs` with `measure-focus-pairs.py`: 17 focus
+- `verify-harden-a11y.mjs` with `measure-focus-pairs.py`: 18 focus
   indicators, each measured against its backdrop at 3:1 or more, reached with
   a real Tab.
 - `verify-harden-names.mjs`: accessible names from Chrome's accessibility tree.

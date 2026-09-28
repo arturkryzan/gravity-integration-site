@@ -4,22 +4,21 @@
 
      • the audience pair ("Pobierz, zainstaluj, integruj" / "Zastąp
        konsultantów…"), whose media are the two AudiencePanel frames;
-     • the four use cases, whose media are the looping videos.
+     • the four use cases, whose media are the animated panels
+       (UseCaseAnim.astro) that replaced v1's four rendered films.
 
    `overrides` lets a page swap a row's media and add links, replicating what
-   snippets 12/30 did on the live site. The videos are the current ones, kept
-   until the new set is made to match the system; until then they sit in a
-   framed panel rather than pretending to melt into a background they were
-   never rendered for. */
+   snippets 12/30 did on the live site. */
 import { mediaSrc, mediaAlt, mediaRatio, mediaDims } from '../../lib/media';
 import { linkTarget, linkRel, opensNewTab } from '../../lib/links';
 import { clean } from '../../lib/html';
 import AudiencePanel from '../AudiencePanel.astro';
+import UseCaseAnim from '../UseCaseAnim.astro';
 import Icon from '../ui/Icon.astro';
 import { localeOf, t } from '../../i18n/ui';
 
 interface RowOverride {
-  media?: 'svg-dev' | 'svg-biz' | { video: string };
+  media?: 'svg-dev' | 'svg-biz' | { scene: 'consolidate' | 'connect' | 'partners' | 'control' };
   extraLinks?: Array<{ title: string; url: string }>;
 }
 
@@ -44,11 +43,15 @@ const s = t(localeOf(Astro.currentLocale));
         const img = row.img && typeof row.img === 'object' ? row.img : null;
         const flip = i % 2 === 1;
         const external = link ? opensNewTab(link.url, link.target) : false;
+        /* An animated panel's stop button is described by its row's heading. */
+        const scene = ov.media && typeof ov.media === 'object' ? ov.media.scene : null;
+        const headingId = scene ? `til-${index}-h${i}` : null;
+        const text = headingId ? clean(row.text).replace(/<h2(?=[\s>])/, `<h2 id="${headingId}"`) : clean(row.text);
         return (
           <div class:list={['til-row', { 'til-row--flip': flip }]}>
             <div class="til-copy" data-reveal>
               {numbered && <span class="label-num til-num">{String(i + 1).padStart(2, '0')}</span>}
-              <div class="prose til-prose" set:html={clean(row.text)} />
+              <div class="prose til-prose" set:html={text} />
               {(link || ov.extraLinks?.length) && (
                 <div class="til-actions">
                   {link && (
@@ -88,26 +91,8 @@ const s = t(localeOf(Astro.currentLocale));
                 <AudiencePanel variant="dev" />
               ) : ov.media === 'svg-biz' ? (
                 <AudiencePanel variant="biz" />
-              ) : ov.media && typeof ov.media === 'object' ? (
-                <div class="til-frame" data-reveal>
-                  {/* No `autoplay` attribute — deliberately. An autoplaying
-                      video is fetched as soon as it is eligible to play, which
-                      overrides preload="none"; measured on v1, all four loops
-                      downloaded on every cold load. Playback is started from
-                      the IntersectionObserver below instead. */}
-                  <video
-                    loop
-                    muted
-                    playsinline
-                    preload="none"
-                    poster={`/video/${ov.media.video}-poster.jpg`}
-                    width="1440"
-                    height="804"
-                  >
-                    <source src={`/video/${ov.media.video}.webm`} type="video/webm" />
-                    <source src={`/video/${ov.media.video}.mp4`} type="video/mp4" />
-                  </video>
-                </div>
+              ) : scene ? (
+                <UseCaseAnim scene={scene} describedBy={headingId ?? undefined} />
               ) : img && mediaSrc(img) ? (
                 <div class="til-frame til-frame--img" style={`--ratio: ${mediaRatio(img)}`} data-reveal>
                   <img src={mediaSrc(img)} alt={mediaAlt(img)} loading="lazy" decoding="async" {...(mediaDims(img) ?? {})} />
@@ -179,55 +164,16 @@ const s = t(localeOf(Astro.currentLocale));
     margin-top: 8px;
   }
 
-  /* The current loops were rendered for v1's page colour; framed, their edge
-     is a panel rather than a near-miss. */
-  /* content-box, so the 1440/804 ratio is the video's own box and the
-     hairline sits outside it — with border-box the loop would be cropped by
-     object-fit to fit a box two pixels off its shape. */
+  /* A row whose media is an ordinary image. */
   .til-frame {
-    box-sizing: content-box;
     overflow: hidden;
     border: 1px solid var(--mist-200);
     border-radius: var(--radius-xl);
-    background: rgb(243 244 251);
-    aspect-ratio: 1440 / 804;
+    background: var(--mist-100);
   }
-  .til-frame video,
   .til-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .til-frame--img {
-    aspect-ratio: auto;
-    background: var(--mist-100);
-  }
 </style>
-
-<script>
-  /* These videos have no `autoplay` attribute, so this is the only thing that
-     ever starts them — `load()` begins the download, so it must not run until
-     the element is near the viewport. */
-  const vids = document.querySelectorAll<HTMLVideoElement>('.til-frame video[preload="none"]');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const start = (v: HTMLVideoElement) => {
-    v.load();
-    /* Reduced motion: load the poster and first frame, but don't loop. */
-    if (reduce.matches) return;
-    v.play().catch(() => {});
-  };
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (es) =>
-        es.forEach((e) => {
-          if (!e.isIntersecting) return;
-          start(e.target as HTMLVideoElement);
-          io.unobserve(e.target);
-        }),
-      { rootMargin: '200px' },
-    );
-    vids.forEach((v) => io.observe(v));
-  } else {
-    vids.forEach(start);
-  }
-</script>

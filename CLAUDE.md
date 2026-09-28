@@ -108,15 +108,15 @@ that is `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Running locally,
 |---|---|---|
 | `verify-final-two.mjs` | the download is the one highlighted action on the bar and in the menu dialog (contrast, hover, focus, modal behaviour) at 1440/768/390; the post-submit direct-download link in both locales | `69 passed, 0 failed` |
 | `consent.mjs` | nothing loads before consent; equal buttons; withdrawal clears cookies; one `generate_lead` | `56 passed, 0 failed` |
-| `ml-forms-routed.mjs` | the request each form builds and how it renders each MailerLite reply — **intercepted, nothing is sent** | `ALL ASSERTIONS PASSED` (two `ERR_FAILED` console lines are the network-failure case) |
+| `ml-forms-routed.mjs` | the request each form builds and how it renders each MailerLite reply — **intercepted, nothing is sent**; runs under reduced motion, because its too-fast spam trap races a click against a 2s clock | `ALL ASSERTIONS PASSED` (two `ERR_FAILED` console lines are the network-failure case) |
 | `verify-ads-conversion.mjs` | the download conversion guard and `generate_lead` | `12 passed, 0 failed` |
 | `verify-mailerlite-consent.mjs` | the MailerLite pop-up tag waits for consent and never loads on `/en/` | `clean — …` |
 | `verify-harden-names.mjs` | accessible names, from Chrome's accessibility tree | `all accessible names and announced values verified` |
-| `verify-harden-a11y.mjs` + `measure-focus-pairs.py` | 17 focus indicators, reached with a real Tab, ≥3:1 against their backdrop | `all focus indicators verified at >= 3.0:1` |
+| `verify-harden-a11y.mjs` + `measure-focus-pairs.py` | 18 focus indicators, reached with a real Tab, ≥3:1 against their backdrop | `all focus indicators verified at >= 3.0:1` |
 | `verify-hero-anim.mjs` | the home hero animation on Playwright's clock, 7 sizes × 2 locales: the hand-over and the 3s way back when the script never arrives, the entrance landing at rest, the loop, pause and resume, reduced motion (static, and switched on mid-run), the turned frame, a load scrolled away, crossing 1000px mid-loop, click-to-capture; writes frames to `OUT` | `232 passed, 0 failed` |
 | `verify-axe.mjs` | axe-core, WCAG 2.2 AA + best practice, 20 routes × 1440/390, the consent panel, the open menu | `0 violations` |
 | `verify-overflow.mjs` | no text off-screen, spilling, or cut by a clipping frame, 20 routes × 6 widths | `0 problems` |
-| `verify-video-seam.mjs` | the `connect-systems` loop plays, fits its frame uncropped, and its edge decodes to the frame's fill (≤1 level) | `22 passed, 0 failed` |
+| `verify-use-cases.mjs` | the four animated use-case panels on the home page on Playwright's clock, 4 sizes × 2 locales: live and covering the frame, the 1440/804 ratio, no text in any panel, the stop button (named, described by its row's heading, stops and restarts), off-screen panels don't move, reduced motion draws a still with no button, without the script the field and the mass remain; writes frames to `OUT` | `360 passed, 0 failed` |
 | `verify-delivery.mjs` | walks the **extracted archive**, not `dist/` | `clean — 8 English pages, …` |
 | `shots.mjs` | full-page screenshots for looking at: `ROUTES=/,/cennik/ WIDTHS=1440,390 OUT=dir` | — |
 
@@ -276,7 +276,11 @@ From the v2 rebuild:
   `--focus-gap` / `--focus-ring` from the surface; never write white + mint
   into a component.
 
-In a cloud sandbox specifically: bash cwd resets between calls, so start every
+In a cloud sandbox specifically: there is no GPU, so every animated frame is
+composited in software and main-thread costs measured there overstate a real
+machine many times over — a single 20px CSS dot moving every frame costs 16%
+of the main thread at DPR 2. Measure an animation against that baseline
+before optimising it. Bash cwd resets between calls, so start every
 command with `cd <repo> &&`; calls die at a two-minute ceiling, so background
 long jobs with `(setsid CMD > log 2>&1 < /dev/null &)` and poll;
 `pkill -f 'http.server'` returns exit 144 and takes the invoking shell with it,

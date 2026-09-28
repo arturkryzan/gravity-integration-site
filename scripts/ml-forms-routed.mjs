@@ -37,7 +37,11 @@ function assert(label, actual, expected) {
 }
 
 async function session(mode) {
-  const ctx = await browser.newContext({ locale: 'pl-PL' });
+  /* Reduced motion: the home page's animations (the hero, the use-case
+     panels just above the demo form) cost frames in a GPU-less sandbox, and
+     the too-fast trap below races Playwright's click against a 2s wall clock.
+     The forms don't depend on motion. */
+  const ctx = await browser.newContext({ locale: 'pl-PL', reducedMotion: 'reduce' });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   page.on('console', (m) => {

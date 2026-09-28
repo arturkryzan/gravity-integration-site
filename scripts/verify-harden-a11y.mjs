@@ -58,6 +58,7 @@ const CASES = [
   ['/case-studies/', '.phero-nav a', 'clip'], // section pill on the mint hero
   ['/cennik/', '.pr-card--hot .btn', 'clip'], // accent button on ink
   ['/', '.hero-pause', 'clip'], // the hero animation's stop control, on the mass (shown once the mass has landed)
+  ['/', '.uc-pause', 'clip'], // the first use-case panel's stop control, on its mint field
 ];
 
 const PAD = 16;

@@ -314,6 +314,16 @@ From the v2 rebuild:
   `--focus-gap` / `--focus-ring` from the surface; never write white + mint
   into a component.
 
+Delivering files to Artur's Mac through the bridge: **a staged file name is
+a cache key.** Committing `outputs/gravity-deploy-20260928.zip` a second
+time wrote the earlier session's zip of that name to the Mac, with a fresh
+mtime, and reported success. Stage every delivery under a name not used
+before, and compare its sha256 on the device before extracting it. The same
+lesson one level down: an `http.server` left running from an earlier session
+kept port 8414, so the new one died on "address in use" and
+`verify-delivery.mjs` passed against the *old* package. Check what a port
+serves before trusting a run against it.
+
 In a cloud sandbox specifically: there is no GPU, so every animated frame is
 composited in software and main-thread costs measured there overstate a real
 machine many times over — a single 20px CSS dot moving every frame costs 16%

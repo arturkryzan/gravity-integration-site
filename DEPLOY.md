@@ -421,6 +421,7 @@ The server files that ship inside the build:
 | `robots.txt` | Allows everything, points at the sitemap |
 | `sitemap-index.xml` + `sitemap-0.xml` | Regenerated on every build — 18 URLs, both languages |
 | `.well-known/security.txt` | Security contact (expires 2027-07-31 — bump it then) |
+| `llms.txt` | The site in brief for AI assistants (the llmstxt.org convention) — regenerated on every build from the content |
 
 ---
 

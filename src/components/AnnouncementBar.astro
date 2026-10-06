@@ -8,12 +8,15 @@
  * nothing left to measure.
  *
  * Ink because the hero under it is mint: two mint bands would read as one.
- * The download is the bar's accent (mint on ink), the changelog a link.
+ * One line, and the line is the link: "Nowa wersja już dostępna" →
+ * /pobieranie/ (October 2026; it replaced v4's badge, button and changelog
+ * link). The X closes it.
  *
  * The dismissal is scoped to the announcement, not to the bar: `campaign`
- * becomes the cookie key `gi_bar_hidden_v4`, so a new announcement is a new
- * cookie and always shows, and closing this one means closed for a year. */
-const campaign = 'v4';
+ * becomes the cookie key `gi_bar_hidden_<campaign>`, so a new announcement is
+ * a new cookie and always shows — including to everyone who closed the v4
+ * one — and closing this one means closed for a year. */
+const campaign = 'new-version-2610';
 
 import Icon from './ui/Icon.astro';
 import { linkUrl } from '../i18n/routes';
@@ -27,21 +30,10 @@ const downloadHref = await linkUrl('pobieranie', lang);
     landmark, so a screen reader's landmark list reaches it. */}
 <aside id="gi-announce-bar" class="announce surface-ink" data-campaign={campaign} aria-label={s('bar.aria')}>
   <div class="container announce-in">
-    <span class="announce-msg">
-      <span class="badge badge--new">v4</span>
+    <a class="announce-link" href={downloadHref}>
       <span>{s('bar.msg')}</span>
-    </span>
-    <span class="announce-actions">
-      <a class="btn btn--accent btn--sm announce-cta" href={downloadHref}>{s('bar.download')}</a>
-      {/* The changelog lives on docs.gravity-integration.com. */}
-      <a
-        class="announce-link"
-        href="https://docs.gravity-integration.com/informacje-podstawowe/changelog"
-        target="_blank"
-        rel="noopener"
-        >{s('bar.changelog')}<span class="visually-hidden">{s('a11y.newTab')}</span></a
-      >
-    </span>
+      <Icon name="arrow-right" size={16} class="announce-arrow" />
+    </a>
     <button id="gi-bar-close" type="button" class="announce-close" aria-label={s('bar.close')}>
       <Icon name="x" size={16} />
     </button>
@@ -75,40 +67,29 @@ const downloadHref = await linkUrl('pobieranie', lang);
     padding-right: calc(var(--gutter) + 40px);
     padding-left: calc(var(--gutter) + 40px);
   }
-  .announce-msg {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font: 500 14px / 1.3 var(--font-sans);
-    color: var(--on-ink);
-  }
-  /* The system's NEW badge — mint on ink — raised to ink-700 so it reads
-     as a badge on a bar that is itself ink. */
-  .announce-msg .badge {
-    padding: 4px 8px;
-    font-size: 11px;
-    background: var(--ink-700);
-    color: var(--mint-500);
-  }
-  .announce-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .announce-cta {
-    min-height: 32px;
-    padding: 0 14px;
-  }
+  /* The whole line is the link: mint on ink, the system's accent, with the
+     arrow nudging on hover. 44px tall so it is a full-size target. */
   .announce-link {
     display: inline-flex;
     align-items: center;
-    min-height: 32px;
-    font: 600 13px / 1.2 var(--font-sans);
-    color: var(--on-ink);
+    gap: 8px;
+    min-height: 44px;
+    font: 600 14px / 1.3 var(--font-sans);
+    color: var(--mint-500);
+    text-decoration: underline;
+    text-decoration-color: transparent;
     text-underline-offset: 5px;
+    transition: text-decoration-color var(--dur-fast) ease;
   }
   .announce-link:hover {
-    color: var(--mint-500);
+    text-decoration-color: currentColor;
+  }
+  .announce-link :global(.announce-arrow) {
+    flex: none;
+    transition: transform var(--dur-fast) ease;
+  }
+  .announce-link:hover :global(.announce-arrow) {
+    transform: translateX(3px);
   }
   .announce-close {
     position: absolute;
@@ -135,13 +116,15 @@ const downloadHref = await linkUrl('pobieranie', lang);
       padding-left: var(--gutter);
       padding-block: 10px;
     }
-    .announce-msg {
+    .announce-link {
       font-size: 13px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .announce-close {
+    .announce-close,
+    .announce-link,
+    .announce-link :global(.announce-arrow) {
       transition: none;
     }
   }

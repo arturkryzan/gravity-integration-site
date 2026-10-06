@@ -126,9 +126,7 @@ const pl = {
   'lang.switchTo': 'Zmień język na angielski',
 
   /* Announcement bar ---------------------------------------------------- */
-  'bar.msg': 'gravity.integration v4 już dostępna',
-  'bar.download': 'Pobierz teraz',
-  'bar.changelog': 'Sprawdź zmiany',
+  'bar.msg': 'Nowa wersja już dostępna',
   'bar.close': 'Zamknij pasek z ogłoszeniem',
   'bar.aria': 'Ogłoszenie',
 
@@ -430,9 +428,7 @@ const en: Partial<Record<UiKey, string>> = {
      The changelog behind bar.changelog lives on docs.gravity-integration.com —
      whether those docs are English is an EN-PLAN.md open question. The label
      translates either way. */
-  'bar.msg': 'gravity.integration v4 is here',
-  'bar.download': 'Download now',
-  'bar.changelog': "See what's new",
+  'bar.msg': 'A new version is available',
   'bar.close': 'Close the announcement bar',
   'bar.aria': 'Announcement',
 

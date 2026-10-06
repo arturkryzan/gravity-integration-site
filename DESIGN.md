@@ -233,11 +233,13 @@ panels on white instead.
 ## Components
 
 **Announcement bar.** Ink, in flow above the sticky header, so nothing measures
-anything. It is a named `<aside>` landmark. The v4 badge is the design system's
-NEW badge (mint on ink), raised to ink-700 so it reads as a badge on an ink
-bar. Dismissal is scoped to the campaign: `data-campaign="v4"` becomes the
-cookie `gi_bar_hidden_v4`, which lasts one year. Bumping the campaign
-re-shows the bar to everyone.
+anything. It is a named `<aside>` landmark. Since October 2026 it is one line
+and an X: the line is the link ("Nowa wersja już dostępna" → /pobieranie/,
+"A new version is available" → /en/download/), mint on ink, 44px tall, its
+arrow nudging on hover. Dismissal is scoped to the campaign:
+`data-campaign="new-version-2610"` becomes the cookie
+`gi_bar_hidden_new-version-2610`, which lasts one year. Bumping the campaign
+re-shows the bar to everyone — this one did, to everyone who closed v4's.
 
 **Header.** Sticky. At the top of a page it takes the hero's colour
 (`body[data-hero]`). Once the page moves it turns white with a 1px mist-200

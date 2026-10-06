@@ -8,7 +8,7 @@
     "Graffiti.ERP",
     "Grafbuilder"
   ],
-  "navLabel": "NAC",
+  "navLabel": "NAC · cStore",
   "rows": [
     {
       "text": "<h2><strong>NAC</strong><br />\nIntegracja platformy e-commerce cStore z Graffiti.ERP</h2>\n<p><strong>Firma:</strong> NAC<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>Platforma e-commerce:</strong> cStore (B2B/B2C)</p>\n",

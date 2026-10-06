@@ -1,0 +1,48 @@
+{
+  "order": 4,
+  "anchor": "section8",
+  "slug": "nac-emag",
+  "company": "NAC (New American Concept)",
+  "systems": [
+    "eMAG",
+    "Uniq",
+    "Graffiti.ERP"
+  ],
+  "navLabel": "NAC · eMAG",
+  "rows": [
+    {
+      "text": "<h2><strong>NAC</strong><br />\nIntegracja Graffiti.ERP z&nbsp;magazynem zewnętrznym eMAG</h2>\n<p><strong>Firma:</strong> NAC<br />\n<strong>System ERP:</strong> Graffiti.ERP<br />\n<strong>Magazyn zewnętrzny:</strong> eMAG<br />\n<strong>Wymiana danych:</strong> pliki XML przez FTP, system Uniq</p>\n",
+      "img": {
+        "file": "media/nac-logo.png",
+        "url": null,
+        "alt": "Logo firmy NAC — New American Concept",
+        "width": 800,
+        "height": 400,
+        "wpId": 366
+      },
+      "link": ""
+    },
+    {
+      "text": "<h3>Wyzwanie</h3>\n<p>NAC korzysta z&nbsp;magazynu zewnętrznego prowadzonego przez eMAG. Każde przesunięcie międzymagazynowe zaczyna się od&nbsp;dyspozycji —&nbsp;awiza, które magazyn udostępnia jako plik XML na&nbsp;serwerze FTP —&nbsp;a&nbsp;kończy potwierdzeniem wydania, którego magazyn oczekuje w&nbsp;systemie Uniq. Obsługiwane ręcznie, każde awizo oznacza pobranie pliku, przepisanie danych do&nbsp;Graffiti.ERP i&nbsp;odesłanie informacji zwrotnej, a&nbsp;każde opóźnienie lub pomyłka rozjeżdża stany w&nbsp;ERP i&nbsp;w&nbsp;magazynie.</p>\n",
+      "img": {
+        "file": "media/emag-logo.png",
+        "url": null,
+        "alt": "Logo eMAG",
+        "width": 800,
+        "height": 400
+      },
+      "link": ""
+    },
+    {
+      "text": "<h3>Rozwiązanie</h3>\n<p>gravity.integration prowadzi cały obieg awiza —&nbsp;od&nbsp;pobrania dyspozycji po&nbsp;potwierdzenie wydania (← z&nbsp;magazynu, → do&nbsp;magazynu):</p>\n<p>• <strong>Pobranie dyspozycji (←)</strong> —&nbsp;gravity.integration loguje się do&nbsp;zasobu FTP magazynu i&nbsp;pobiera dyspozycje przesunięcia międzymagazynowego (awiza) w&nbsp;postaci plików XML<br />\n• <strong>Import do&nbsp;Graffiti.ERP</strong> —&nbsp;szyna przetwarza plik i&nbsp;wywołuje funkcje SQL, które zapisują dane awiza w&nbsp;bazie ERP<br />\n• <strong>Dokumenty magazynowe</strong> —&nbsp;Graffiti.ERP generuje na&nbsp;tej podstawie dokumenty magazynowe; ich&nbsp;zatwierdzenie oznacza realizację awiza<br />\n• <strong>Informacja zwrotna (→)</strong> —&nbsp;po&nbsp;zatwierdzeniu dokumentu związanego z&nbsp;awizem wydania gravity.integration przesyła do&nbsp;systemu Uniq informację o&nbsp;wygenerowanym dokumencie WZ</p>\n",
+      "img": null,
+      "link": ""
+    },
+    {
+      "text": "<h3>Rezultaty</h3>\n<p>• Awiza z&nbsp;magazynu eMAG trafiają do&nbsp;Graffiti.ERP automatycznie —&nbsp;bez&nbsp;ręcznego pobierania plików i&nbsp;przepisywania danych<br />\n• Dokumenty magazynowe powstają w&nbsp;ERP wprost z&nbsp;dyspozycji, więc stany po&nbsp;obu stronach pozostają zgodne<br />\n• Magazyn dostaje informację o&nbsp;dokumencie WZ w&nbsp;systemie Uniq po&nbsp;zatwierdzeniu dokumentu w&nbsp;ERP —&nbsp;bez&nbsp;dodatkowej pracy po&nbsp;stronie NAC</p>\n",
+      "img": null,
+      "link": ""
+    }
+  ],
+  "todo": "branża/miasto/metryki/cytat — do uzupełnienia"
+}

@@ -46,7 +46,7 @@ src/
   layouts/Site.astro        head, SEO, GA4/consent, the JSON-LD graph
   components/               17 section components (hero, pricing, ROI calc, …)
   content/pages/*.json      10 pages: sections, SEO meta (title, description), h1
-  content/case-studies/     4 case studies (anchors #section0…#section6 kept)
+  content/case-studies/     5 case studies (anchors #section0…#section8; WP-era ones kept)
   data/                     clients, 139 integrations, site config, redirects,
                             intrinsic image dimensions (CLS guard)
   lib/                      case-study parser, media resolver, MailerLite,

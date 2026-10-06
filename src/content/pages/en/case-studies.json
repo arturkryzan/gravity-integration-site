@@ -6,7 +6,7 @@
   "url": "/en/case-studies/",
   "seo": {
     "title": "gravity.integration case studies — ERP integration in practice",
-    "description": "Four deployments: ERP to couriers DPD, InPost, GLS (TIP-TOPOL), Roger RCP to ERP (Kapitan Navi), BaseLinker (ELMET Poznań), cStore shop (NAC).",
+    "description": "Five deployments: ERP to couriers DPD, InPost, GLS (TIP-TOPOL), Roger RCP to ERP (Kapitan Navi), BaseLinker (ELMET Poznań), cStore and eMAG warehouse (NAC).",
     "focusKeyword": "ERP integration case study, ESB deployment"
   },
   "h1": "<h1>Case Studies</h1>\n",
@@ -165,7 +165,7 @@
     },
     {
       "acf_fc_layout": "text_img_link",
-      "nav_li": "NAC",
+      "nav_li": "NAC · cStore",
       "rows": [
         {
           "text": "<h2><strong>NAC</strong><br />\nIntegrating the cStore e-commerce platform with Graffiti.ERP</h2>\n<p><strong>Company:</strong> NAC<br />\n<strong>ERP system:</strong> Graffiti.ERP<br />\n<strong>E-commerce platform:</strong> cStore (B2B/B2C)</p>\n",
@@ -210,6 +210,52 @@
         },
         {
           "text": "<h3>Results</h3>\n<p>• Fully automated data exchange between cStore and Graffiti.ERP — no manual retyping of orders or documents<br />\n• Stock and prices consistent in real time, including pricing groups and reserved quantities for B2B customers<br />\n• One complete view of a partner's orders on the platform — whatever the sales channel<br />\n• Invoices (PDF in the Graffiti variant) and warehouse documents available to the customer on demand<br />\n• Scalability — a growing number of B2B partners and product indexes handled with no extra workload</p>\n",
+          "img": null,
+          "link": ""
+        }
+      ]
+    },
+    {
+      "acf_fc_layout": "text_img",
+      "nav_li": null,
+      "text": "<style>#section7 .container-fluid { padding-top: 1rem !important; padding-bottom: 0 !important; } #section7 .row { padding-top: 0 !important; } #section7 { padding-top: 2rem !important; padding-bottom: 2rem !important; }</style>\n<p>&nbsp;</p>\n",
+      "img": null,
+      "img_placement": "left"
+    },
+    {
+      "acf_fc_layout": "text_img_link",
+      "nav_li": "NAC · eMAG",
+      "rows": [
+        {
+          "text": "<h2><strong>NAC</strong><br />\nIntegrating Graffiti.ERP with an external warehouse run by eMAG</h2>\n<p><strong>Company:</strong> NAC<br />\n<strong>ERP system:</strong> Graffiti.ERP<br />\n<strong>External warehouse:</strong> eMAG<br />\n<strong>Data exchange:</strong> XML files over FTP, the Uniq system</p>\n",
+          "img": {
+            "file": "media/nac-logo.png",
+            "url": null,
+            "alt": "NAC — New American Concept company logo",
+            "width": 800,
+            "height": 400,
+            "wpId": 366
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Challenge</h3>\n<p>NAC uses an external warehouse run by eMAG. Every inter-warehouse transfer starts with a disposition — an advice note the warehouse publishes as an XML file on an FTP server — and ends with a confirmation of the goods issue, which the warehouse expects in its Uniq system. Handled by hand, every advice note means fetching a file, retyping it into Graffiti.ERP and sending the confirmation back, and every delay or slip puts stock levels in the ERP and the warehouse out of step.</p>\n",
+          "img": {
+            "file": "media/emag-logo.png",
+            "url": null,
+            "alt": "eMAG logo",
+            "width": 800,
+            "height": 400
+          },
+          "link": ""
+        },
+        {
+          "text": "<h3>Solution</h3>\n<p>gravity.integration runs the whole advice-note cycle, from fetching the disposition to confirming the goods issue (← from the warehouse, → to the warehouse):</p>\n<p>• <strong>Fetching dispositions (←)</strong> — gravity.integration logs in to the warehouse's FTP resource and downloads inter-warehouse transfer dispositions (advice notes) as XML files<br />\n• <strong>Import into Graffiti.ERP</strong> — the bus processes the file and calls SQL functions that write the advice data into the ERP database<br />\n• <strong>Warehouse documents</strong> — Graffiti.ERP generates warehouse documents from them; confirming those documents fulfils the advice note<br />\n• <strong>Feedback (→)</strong> — once the document tied to an issue advice is confirmed, gravity.integration sends the Uniq system the details of the goods-issue note (WZ) it produced</p>\n",
+          "img": null,
+          "link": ""
+        },
+        {
+          "text": "<h3>Results</h3>\n<p>• Advice notes from the eMAG warehouse reach Graffiti.ERP automatically — no manual file downloads, no retyping<br />\n• Warehouse documents are created in the ERP straight from the dispositions, so stock levels stay consistent on both sides<br />\n• The warehouse receives the goods-issue (WZ) details in Uniq once the document is confirmed in the ERP — with no extra work at NAC</p>\n",
           "img": null,
           "link": ""
         }

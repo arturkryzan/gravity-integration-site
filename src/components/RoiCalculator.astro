@@ -218,7 +218,7 @@ const GI = {
 
 <script is:inline define:vars={{ GI }}>
 (function(){
-  var LIC1=2999,LICM=7999,DR=.60,TR=.40,MR=.70,DS=.50,TS=.25,DPS=.10,MS=.15;
+  var LIC1=3999,LICM=7999,DR=.60,TR=.40,MR=.70,DS=.50,TS=.25,DPS=.10,MS=.15;
   var fmt=function(n){return n.toLocaleString(GI.locale)};
   var sl={p:document.getElementById("s-projects"),d:document.getElementById("s-days"),t:document.getElementById("s-team"),r:document.getElementById("s-rate"),tl:document.getElementById("s-tool")};
   function calc(){
@@ -228,7 +228,7 @@ const GI = {
     document.getElementById("v-team").textContent=T;
     document.getElementById("v-rate").textContent=fmt(R);
     document.getElementById("v-tool").textContent=fmt(TL);
-    /* A range input announces its raw `value` — "2999", no grouping, no
+    /* A range input announces its raw `value` — "3999", no grouping, no
        currency. These two are money, so say so; the three counts above are
        already unambiguous from their labels and get no valuetext. */
     sl.r.setAttribute("aria-valuetext",fmt(R)+GI.pln);

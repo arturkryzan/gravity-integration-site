@@ -3,8 +3,8 @@
   "slug": "cennik",
   "url": "/cennik/",
   "seo": {
-    "title": "Cennik gravity.integration — ESB za darmo lub od 2 999 PLN/rok",
-    "description": "0 PLN do testów, 2 999 PLN/rok za jedno zastosowanie komercyjne, 7 999 PLN/rok bez limitu połączeń. Ceny netto za instancję, bez limitu użytkowników.",
+    "title": "Cennik gravity.integration — ESB za darmo lub od 3 999 PLN/rok",
+    "description": "0 PLN do testów, 3 999 PLN/rok za jedno zastosowanie komercyjne, 7 999 PLN/rok bez limitu połączeń. Ceny netto za instancję, bez limitu użytkowników.",
     "focusKeyword": "cennik ESB, szyna ESB cena"
   },
   "h1": "<h1>Cennik</h1>",
@@ -15,7 +15,7 @@
       "acf_fc_layout": "text_columns",
       "nav_li": null,
       "text0": "<p>gravity.integration jest produktem w&nbsp;fazie ciągłego rozwoju, który&nbsp;współtworzymy razem z&nbsp;Wami. Dlatego postawiliśmy na&nbsp;niespotykaną nigdzie indziej politykę cenową wśród narzędzi tej&nbsp;klasy. Po&nbsp;pierwsze, możesz pobrać <a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">gravity.integration całkowicie za&nbsp;darmo</a>, a&nbsp;następnie używać bez&nbsp;ograniczeń dotyczących przesyłu danych a&nbsp;także przez&nbsp;14 dni używać oprogramowania komercyjnie.</p>\n",
-      "text1": "<p>Po&nbsp;drugie, jeśli zdecydujesz się na&nbsp;zastosowanie komercyjne, obowiązuje tylko&nbsp;dwie, proste ceny: 2999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za&nbsp;instancję. Nie&nbsp;obowiązują Cię żadne ograniczenia w&nbsp;budowaniu środowiska integracyjnego, a&nbsp;<a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na&nbsp;rynku</a>! Porównaj sam gravity z&nbsp;konkurencją, gwarantujemy, że&nbsp;wrócisz!</p>\n"
+      "text1": "<p>Po&nbsp;drugie, jeśli zdecydujesz się na&nbsp;zastosowanie komercyjne, obowiązuje tylko&nbsp;dwie, proste ceny: 3999 PLN rocznie dla pojedynczego zastosowania lub 7999 PLN dla nieograniczonej liczby połączeń rocznie za&nbsp;instancję. Nie&nbsp;obowiązują Cię żadne ograniczenia w&nbsp;budowaniu środowiska integracyjnego, a&nbsp;<a href=\"#section1\" data-scroll=\"\" data-scroll-to=\"\">cena jest niespotykana na&nbsp;rynku</a>! Porównaj sam gravity z&nbsp;konkurencją, gwarantujemy, że&nbsp;wrócisz!</p>\n"
     },
     {
       "acf_fc_layout": "pricing",
@@ -32,7 +32,7 @@
         {
           "name": "Pojedyncze zastosowanie komercyjne",
           "text": "<ul>\n<li>Jedno zastosowanie komercyjne.</li>\n<li>Pełne wsparcie.</li>\n<li>Cena netto za&nbsp;instancję.</li>\n</ul>\n",
-          "price": "2999",
+          "price": "3999",
           "currency": "PLN",
           "btn": "Kup licencję",
           "btn_link": "https://buy.stripe.com/14A8wP2aB9NSeFtdtZ38402"
@@ -69,7 +69,7 @@
         },
         {
           "que": "Czym różni się „Pojedyncze zastosowanie komercyjne\" od&nbsp;pełnej licencji komercyjnej?",
-          "ans": "<p>Liczbą zastosowań, nie&nbsp;funkcjami &#8211; instalator i&nbsp;możliwości oprogramowania są identyczne.</p>\n<p><strong>Pojedyncze zastosowanie</strong> (2&nbsp;999&nbsp;zł netto rocznie) obejmuje jeden cel biznesowy realizowany na&nbsp;jednej instancji: np.&nbsp;przesyłanie rejestracji czasu pracy z&nbsp;systemu RCP do&nbsp;ERP, jak u&nbsp;<a href=\"/case-studies/#section2\">Kapitana Navi</a>, albo połączenie ERP z&nbsp;firmami kurierskimi, jak w&nbsp;<a href=\"/case-studies/#section0\">TIP-TOPOL</a>. Takie zastosowanie może technicznie składać się z&nbsp;kilku projektów i&nbsp;przepływów danych &#8211; liczy się to, że&nbsp;wszystkie służą temu jednemu celowi.</p>\n<p><strong>Pełna licencja komercyjna</strong> (7&nbsp;999&nbsp;zł netto rocznie) znosi ten limit: na&nbsp;jednej instancji budujesz dowolną liczbę połączeń między dowolną liczbą systemów &#8211; ERP, WMS, CRM, e-commerce, kurierzy, KSeF &#8211; i&nbsp;otrzymujesz wsparcie priorytetowe.</p>\n<p>Prosta zasada wyboru: jedno konkretne zadanie do&nbsp;zautomatyzowania → pojedyncze zastosowanie; szyna danych dla całej firmy → pełna licencja. Zobacz, jak wyglądają oba warianty w&nbsp;praktyce, w&nbsp;naszych <a href=\"/case-studies/\">case studies</a>.</p>\n"
+          "ans": "<p>Liczbą zastosowań, nie&nbsp;funkcjami &#8211; instalator i&nbsp;możliwości oprogramowania są identyczne.</p>\n<p><strong>Pojedyncze zastosowanie</strong> (3&nbsp;999&nbsp;zł netto rocznie) obejmuje jeden cel biznesowy realizowany na&nbsp;jednej instancji: np.&nbsp;przesyłanie rejestracji czasu pracy z&nbsp;systemu RCP do&nbsp;ERP, jak u&nbsp;<a href=\"/case-studies/#section2\">Kapitana Navi</a>, albo połączenie ERP z&nbsp;firmami kurierskimi, jak w&nbsp;<a href=\"/case-studies/#section0\">TIP-TOPOL</a>. Takie zastosowanie może technicznie składać się z&nbsp;kilku projektów i&nbsp;przepływów danych &#8211; liczy się to, że&nbsp;wszystkie służą temu jednemu celowi.</p>\n<p><strong>Pełna licencja komercyjna</strong> (7&nbsp;999&nbsp;zł netto rocznie) znosi ten limit: na&nbsp;jednej instancji budujesz dowolną liczbę połączeń między dowolną liczbą systemów &#8211; ERP, WMS, CRM, e-commerce, kurierzy, KSeF &#8211; i&nbsp;otrzymujesz wsparcie priorytetowe.</p>\n<p>Prosta zasada wyboru: jedno konkretne zadanie do&nbsp;zautomatyzowania → pojedyncze zastosowanie; szyna danych dla całej firmy → pełna licencja. Zobacz, jak wyglądają oba warianty w&nbsp;praktyce, w&nbsp;naszych <a href=\"/case-studies/\">case studies</a>.</p>\n"
         },
         {
           "que": "Czy&nbsp;z&nbsp;jednej licencji gravity.integration może korzystać wielu użytkowników?",

@@ -132,7 +132,7 @@ const pl = {
 
   /* Home hero ----------------------------------------------------------- */
   'hero.sub':
-    '139+ konektorów, Always\u2011on\u2011data, instalacja lokalna. Plany od\u00A02\u00A0999 PLN/rok. Pobierz i\u00A0sprawdź dziś.',
+    '139+ konektorów, Always\u2011on\u2011data, instalacja lokalna. Plany od\u00A03\u00A0999 PLN/rok. Pobierz i\u00A0sprawdź dziś.',
   'hero.download': 'Pobierz za darmo',
   'hero.demo': 'Umów 15\u2011min demo',
   'hero.social':
@@ -246,7 +246,7 @@ const pl = {
   'dl.cap3Html':
     '<strong>Routing, retry i\u00A0uwierzytelnianie</strong> (OAuth\u00A02.0, mTLS) konfigurujesz wizualnie — bez\u00A0pisania kodu.',
   'dl.spec':
-    'Wersja\u00A04 · Windows · licencja komercyjna od\u00A02\u00A0999\u00A0PLN/rok dopiero, gdy\u00A0wychodzisz poza\u00A0testy.',
+    'Wersja\u00A04 · Windows · licencja komercyjna od\u00A03\u00A0999\u00A0PLN/rok dopiero, gdy\u00A0wychodzisz poza\u00A0testy.',
   'dl.shot.alt':
     'Wizualny edytor przepływów gravity.integration — projekt integracji RCP z bazą PostgreSQL',
   'dl.clients.h': 'Pracuje już m.in.\u00A0w:',
